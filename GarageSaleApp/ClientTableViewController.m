@@ -47,6 +47,13 @@
 
     // Add title and menu button
     self.navigationItem.title = @"Clientes";
+    
+    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
+    self.navigationItem.leftBarButtonItem = menuButton;
+    
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newClient:)];
+    self.navigationItem.rightBarButtonItem = addButton;
+    
 
     // To have access to shared arrays from AppDelegate
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -63,6 +70,16 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (void)menuButtonClicked:(id)sender
+{
+    [self.revealViewController revealToggleAnimated:YES];
+}
+
+- (void)newClient:(id)sender
+{
+    // code for adding a new product
 }
 
 - (void)didReceiveMemoryWarning
