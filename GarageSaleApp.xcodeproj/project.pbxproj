@@ -1,0 +1,583 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C00ED0E019644A5A0045A65E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0DF19644A5A0045A65E /* Foundation.framework */; };
+		C00ED0E219644A5A0045A65E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0E119644A5A0045A65E /* CoreGraphics.framework */; };
+		C00ED0E419644A5A0045A65E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0E319644A5A0045A65E /* UIKit.framework */; };
+		C00ED0EA19644A5A0045A65E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C00ED0E819644A5A0045A65E /* InfoPlist.strings */; };
+		C00ED0EC19644A5A0045A65E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED0EB19644A5A0045A65E /* main.m */; };
+		C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED0EF19644A5A0045A65E /* AppDelegate.m */; };
+		C00ED0F319644A5A0045A65E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C00ED0F119644A5A0045A65E /* Main.storyboard */; };
+		C00ED0F819644A5A0045A65E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C00ED0F719644A5A0045A65E /* Images.xcassets */; };
+		C00ED0FF19644A5A0045A65E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0FE19644A5A0045A65E /* XCTest.framework */; };
+		C00ED10019644A5A0045A65E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0DF19644A5A0045A65E /* Foundation.framework */; };
+		C00ED10119644A5A0045A65E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0E319644A5A0045A65E /* UIKit.framework */; };
+		C00ED10919644A5A0045A65E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C00ED10719644A5A0045A65E /* InfoPlist.strings */; };
+		C00ED10B19644A5A0045A65E /* GarageSaleAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED10A19644A5A0045A65E /* GarageSaleAppTests.m */; };
+		C00ED11619644AA80045A65E /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED11519644AA80045A65E /* SWRevealViewController.m */; };
+		C00ED12319644B4F0045A65E /* MenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED11E19644B4F0045A65E /* MenuItem.m */; };
+		C00ED12419644B4F0045A65E /* MenuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED12019644B4F0045A65E /* MenuModel.m */; };
+		C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED12219644B4F0045A65E /* MenuViewController.m */; };
+		C0815E0E19644C250021A153 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E0D19644C250021A153 /* Client.m */; };
+		C0815E1119644C2D0021A153 /* ClientModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1019644C2D0021A153 /* ClientModel.m */; };
+		C0815E1419644C390021A153 /* OpportunityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1319644C390021A153 /* OpportunityModel.m */; };
+		C0815E1719644C460021A153 /* Product.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1619644C460021A153 /* Product.m */; };
+		C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1919644C4D0021A153 /* ProductModel.m */; };
+		C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1C196455350021A153 /* ProductDetailViewController.m */; };
+		C0815E20196455590021A153 /* ProductTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1F196455590021A153 /* ProductTableViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C00ED10219644A5A0045A65E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C00ED0D419644A5A0045A65E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C00ED0DB19644A5A0045A65E;
+			remoteInfo = GarageSaleApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C00ED0DC19644A5A0045A65E /* GarageSaleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GarageSaleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C00ED0DF19644A5A0045A65E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		C00ED0E119644A5A0045A65E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C00ED0E319644A5A0045A65E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		C00ED0E719644A5A0045A65E /* GarageSaleApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GarageSaleApp-Info.plist"; sourceTree = "<group>"; };
+		C00ED0E919644A5A0045A65E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C00ED0EB19644A5A0045A65E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C00ED0ED19644A5A0045A65E /* GarageSaleApp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GarageSaleApp-Prefix.pch"; sourceTree = "<group>"; };
+		C00ED0EE19644A5A0045A65E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		C00ED0EF19644A5A0045A65E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		C00ED0F219644A5A0045A65E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C00ED0F719644A5A0045A65E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		C00ED0FD19644A5A0045A65E /* GarageSaleAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GarageSaleAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C00ED0FE19644A5A0045A65E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		C00ED10619644A5A0045A65E /* GarageSaleAppTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GarageSaleAppTests-Info.plist"; sourceTree = "<group>"; };
+		C00ED10819644A5A0045A65E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C00ED10A19644A5A0045A65E /* GarageSaleAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GarageSaleAppTests.m; sourceTree = "<group>"; };
+		C00ED11419644AA80045A65E /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		C00ED11519644AA80045A65E /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		C00ED11D19644B4F0045A65E /* MenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItem.h; sourceTree = "<group>"; };
+		C00ED11E19644B4F0045A65E /* MenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuItem.m; sourceTree = "<group>"; };
+		C00ED11F19644B4F0045A65E /* MenuModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuModel.h; sourceTree = "<group>"; };
+		C00ED12019644B4F0045A65E /* MenuModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuModel.m; sourceTree = "<group>"; };
+		C00ED12119644B4F0045A65E /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
+		C00ED12219644B4F0045A65E /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
+		C0815E0C19644C250021A153 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
+		C0815E0D19644C250021A153 /* Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
+		C0815E0F19644C2D0021A153 /* ClientModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientModel.h; sourceTree = "<group>"; };
+		C0815E1019644C2D0021A153 /* ClientModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientModel.m; sourceTree = "<group>"; };
+		C0815E1219644C390021A153 /* OpportunityModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpportunityModel.h; sourceTree = "<group>"; };
+		C0815E1319644C390021A153 /* OpportunityModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpportunityModel.m; sourceTree = "<group>"; };
+		C0815E1519644C460021A153 /* Product.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Product.h; sourceTree = "<group>"; };
+		C0815E1619644C460021A153 /* Product.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Product.m; sourceTree = "<group>"; };
+		C0815E1819644C4D0021A153 /* ProductModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductModel.h; sourceTree = "<group>"; };
+		C0815E1919644C4D0021A153 /* ProductModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductModel.m; sourceTree = "<group>"; };
+		C0815E1B196455350021A153 /* ProductDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductDetailViewController.h; sourceTree = "<group>"; };
+		C0815E1C196455350021A153 /* ProductDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductDetailViewController.m; sourceTree = "<group>"; };
+		C0815E1E196455590021A153 /* ProductTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewController.h; sourceTree = "<group>"; };
+		C0815E1F196455590021A153 /* ProductTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductTableViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C00ED0D919644A5A0045A65E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00ED0E219644A5A0045A65E /* CoreGraphics.framework in Frameworks */,
+				C00ED0E419644A5A0045A65E /* UIKit.framework in Frameworks */,
+				C00ED0E019644A5A0045A65E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C00ED0FA19644A5A0045A65E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00ED0FF19644A5A0045A65E /* XCTest.framework in Frameworks */,
+				C00ED10119644A5A0045A65E /* UIKit.framework in Frameworks */,
+				C00ED10019644A5A0045A65E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C00ED0D319644A5A0045A65E = {
+			isa = PBXGroup;
+			children = (
+				C00ED0E519644A5A0045A65E /* GarageSaleApp */,
+				C00ED10419644A5A0045A65E /* GarageSaleAppTests */,
+				C00ED0DE19644A5A0045A65E /* Frameworks */,
+				C00ED0DD19644A5A0045A65E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C00ED0DD19644A5A0045A65E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C00ED0DC19644A5A0045A65E /* GarageSaleApp.app */,
+				C00ED0FD19644A5A0045A65E /* GarageSaleAppTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C00ED0DE19644A5A0045A65E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C00ED0DF19644A5A0045A65E /* Foundation.framework */,
+				C00ED0E119644A5A0045A65E /* CoreGraphics.framework */,
+				C00ED0E319644A5A0045A65E /* UIKit.framework */,
+				C00ED0FE19644A5A0045A65E /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C00ED0E519644A5A0045A65E /* GarageSaleApp */ = {
+			isa = PBXGroup;
+			children = (
+				C00ED0EE19644A5A0045A65E /* AppDelegate.h */,
+				C00ED0EF19644A5A0045A65E /* AppDelegate.m */,
+				C00ED0F119644A5A0045A65E /* Main.storyboard */,
+				C00ED0F719644A5A0045A65E /* Images.xcassets */,
+				C00ED11819644AB70045A65E /* Product */,
+				C00ED11C19644B000045A65E /* About */,
+				C00ED11B19644AEF0045A65E /* Menu */,
+				C00ED11A19644AE00045A65E /* Client */,
+				C00ED11919644AD80045A65E /* Opportunity */,
+				C00ED11719644AAE0045A65E /* Reveal */,
+				C00ED0E619644A5A0045A65E /* Supporting Files */,
+			);
+			path = GarageSaleApp;
+			sourceTree = "<group>";
+		};
+		C00ED0E619644A5A0045A65E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C00ED0E719644A5A0045A65E /* GarageSaleApp-Info.plist */,
+				C00ED0E819644A5A0045A65E /* InfoPlist.strings */,
+				C00ED0EB19644A5A0045A65E /* main.m */,
+				C00ED0ED19644A5A0045A65E /* GarageSaleApp-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C00ED10419644A5A0045A65E /* GarageSaleAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				C00ED10A19644A5A0045A65E /* GarageSaleAppTests.m */,
+				C00ED10519644A5A0045A65E /* Supporting Files */,
+			);
+			path = GarageSaleAppTests;
+			sourceTree = "<group>";
+		};
+		C00ED10519644A5A0045A65E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C00ED10619644A5A0045A65E /* GarageSaleAppTests-Info.plist */,
+				C00ED10719644A5A0045A65E /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C00ED11719644AAE0045A65E /* Reveal */ = {
+			isa = PBXGroup;
+			children = (
+				C00ED11419644AA80045A65E /* SWRevealViewController.h */,
+				C00ED11519644AA80045A65E /* SWRevealViewController.m */,
+			);
+			name = Reveal;
+			sourceTree = "<group>";
+		};
+		C00ED11819644AB70045A65E /* Product */ = {
+			isa = PBXGroup;
+			children = (
+				C0815E1519644C460021A153 /* Product.h */,
+				C0815E1619644C460021A153 /* Product.m */,
+				C0815E1819644C4D0021A153 /* ProductModel.h */,
+				C0815E1919644C4D0021A153 /* ProductModel.m */,
+				C0815E1E196455590021A153 /* ProductTableViewController.h */,
+				C0815E1F196455590021A153 /* ProductTableViewController.m */,
+				C0815E1B196455350021A153 /* ProductDetailViewController.h */,
+				C0815E1C196455350021A153 /* ProductDetailViewController.m */,
+			);
+			name = Product;
+			sourceTree = "<group>";
+		};
+		C00ED11919644AD80045A65E /* Opportunity */ = {
+			isa = PBXGroup;
+			children = (
+				C0815E1219644C390021A153 /* OpportunityModel.h */,
+				C0815E1319644C390021A153 /* OpportunityModel.m */,
+			);
+			name = Opportunity;
+			sourceTree = "<group>";
+		};
+		C00ED11A19644AE00045A65E /* Client */ = {
+			isa = PBXGroup;
+			children = (
+				C0815E0C19644C250021A153 /* Client.h */,
+				C0815E0D19644C250021A153 /* Client.m */,
+				C0815E0F19644C2D0021A153 /* ClientModel.h */,
+				C0815E1019644C2D0021A153 /* ClientModel.m */,
+			);
+			name = Client;
+			sourceTree = "<group>";
+		};
+		C00ED11B19644AEF0045A65E /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				C00ED11D19644B4F0045A65E /* MenuItem.h */,
+				C00ED11E19644B4F0045A65E /* MenuItem.m */,
+				C00ED11F19644B4F0045A65E /* MenuModel.h */,
+				C00ED12019644B4F0045A65E /* MenuModel.m */,
+				C00ED12119644B4F0045A65E /* MenuViewController.h */,
+				C00ED12219644B4F0045A65E /* MenuViewController.m */,
+			);
+			name = Menu;
+			sourceTree = "<group>";
+		};
+		C00ED11C19644B000045A65E /* About */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = About;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C00ED0DB19644A5A0045A65E /* GarageSaleApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C00ED10E19644A5A0045A65E /* Build configuration list for PBXNativeTarget "GarageSaleApp" */;
+			buildPhases = (
+				C00ED0D819644A5A0045A65E /* Sources */,
+				C00ED0D919644A5A0045A65E /* Frameworks */,
+				C00ED0DA19644A5A0045A65E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GarageSaleApp;
+			productName = GarageSaleApp;
+			productReference = C00ED0DC19644A5A0045A65E /* GarageSaleApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C00ED0FC19644A5A0045A65E /* GarageSaleAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C00ED11119644A5A0045A65E /* Build configuration list for PBXNativeTarget "GarageSaleAppTests" */;
+			buildPhases = (
+				C00ED0F919644A5A0045A65E /* Sources */,
+				C00ED0FA19644A5A0045A65E /* Frameworks */,
+				C00ED0FB19644A5A0045A65E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C00ED10319644A5A0045A65E /* PBXTargetDependency */,
+			);
+			name = GarageSaleAppTests;
+			productName = GarageSaleAppTests;
+			productReference = C00ED0FD19644A5A0045A65E /* GarageSaleAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C00ED0D419644A5A0045A65E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Federico Amprimo";
+				TargetAttributes = {
+					C00ED0FC19644A5A0045A65E = {
+						TestTargetID = C00ED0DB19644A5A0045A65E;
+					};
+				};
+			};
+			buildConfigurationList = C00ED0D719644A5A0045A65E /* Build configuration list for PBXProject "GarageSaleApp" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C00ED0D319644A5A0045A65E;
+			productRefGroup = C00ED0DD19644A5A0045A65E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C00ED0DB19644A5A0045A65E /* GarageSaleApp */,
+				C00ED0FC19644A5A0045A65E /* GarageSaleAppTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C00ED0DA19644A5A0045A65E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00ED0F819644A5A0045A65E /* Images.xcassets in Resources */,
+				C00ED0EA19644A5A0045A65E /* InfoPlist.strings in Resources */,
+				C00ED0F319644A5A0045A65E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C00ED0FB19644A5A0045A65E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00ED10919644A5A0045A65E /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C00ED0D819644A5A0045A65E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0815E1119644C2D0021A153 /* ClientModel.m in Sources */,
+				C0815E1719644C460021A153 /* Product.m in Sources */,
+				C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */,
+				C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */,
+				C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */,
+				C00ED12319644B4F0045A65E /* MenuItem.m in Sources */,
+				C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */,
+				C00ED12419644B4F0045A65E /* MenuModel.m in Sources */,
+				C00ED0EC19644A5A0045A65E /* main.m in Sources */,
+				C0815E20196455590021A153 /* ProductTableViewController.m in Sources */,
+				C0815E1419644C390021A153 /* OpportunityModel.m in Sources */,
+				C00ED11619644AA80045A65E /* SWRevealViewController.m in Sources */,
+				C0815E0E19644C250021A153 /* Client.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C00ED0F919644A5A0045A65E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00ED10B19644A5A0045A65E /* GarageSaleAppTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C00ED10319644A5A0045A65E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C00ED0DB19644A5A0045A65E /* GarageSaleApp */;
+			targetProxy = C00ED10219644A5A0045A65E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		C00ED0E819644A5A0045A65E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C00ED0E919644A5A0045A65E /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		C00ED0F119644A5A0045A65E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C00ED0F219644A5A0045A65E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		C00ED10719644A5A0045A65E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C00ED10819644A5A0045A65E /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C00ED10C19644A5A0045A65E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		C00ED10D19644A5A0045A65E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C00ED10F19644A5A0045A65E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GarageSaleApp/GarageSaleApp-Prefix.pch";
+				INFOPLIST_FILE = "GarageSaleApp/GarageSaleApp-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		C00ED11019644A5A0045A65E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GarageSaleApp/GarageSaleApp-Prefix.pch";
+				INFOPLIST_FILE = "GarageSaleApp/GarageSaleApp-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C00ED11219644A5A0045A65E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/GarageSaleApp.app/GarageSaleApp";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GarageSaleApp/GarageSaleApp-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "GarageSaleAppTests/GarageSaleAppTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		C00ED11319644A5A0045A65E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/GarageSaleApp.app/GarageSaleApp";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GarageSaleApp/GarageSaleApp-Prefix.pch";
+				INFOPLIST_FILE = "GarageSaleAppTests/GarageSaleAppTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C00ED0D719644A5A0045A65E /* Build configuration list for PBXProject "GarageSaleApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C00ED10C19644A5A0045A65E /* Debug */,
+				C00ED10D19644A5A0045A65E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C00ED10E19644A5A0045A65E /* Build configuration list for PBXNativeTarget "GarageSaleApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C00ED10F19644A5A0045A65E /* Debug */,
+				C00ED11019644A5A0045A65E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C00ED11119644A5A0045A65E /* Build configuration list for PBXNativeTarget "GarageSaleAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C00ED11219644A5A0045A65E /* Debug */,
+				C00ED11319644A5A0045A65E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C00ED0D419644A5A0045A65E /* Project object */;
+}
