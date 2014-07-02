@@ -7,12 +7,22 @@
 //
 
 #import "AppDelegate.h"
+#import "ProductModel.h"
+#import "ClientModel.h"
 
 @implementation AppDelegate
+
+@synthesize sharedArrayProducts;
+@synthesize sharedArrayClients;
+@synthesize sharedArrayOpportunities;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    // Load Shared Arrays with Data
+    sharedArrayProducts = [[[ProductModel alloc] init] getProducts:sharedArrayProducts];
+    sharedArrayClients = [[[ClientModel alloc] init] getClients:sharedArrayClients];
     return YES;
 }
 							

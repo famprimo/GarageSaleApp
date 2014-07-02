@@ -1,32 +1,19 @@
 //
-//  ProductTableViewController.m
+//  ClientTableViewController.m
 //  GarageSaleApp
 //
 //  Created by Federico Amprimo on 2/07/14.
 //  Copyright (c) 2014 Federico Amprimo. All rights reserved.
 //
 
-#import "ProductTableViewController.h"
+#import "ClientTableViewController.h"
 #import "SWRevealViewController.h"
-#import "Product.h"
-#import "ProductModel.h"
-#import "ProductDetailViewController.h"
-#import "AppDelegate.h"
 
-@interface ProductTableViewController ()
-{
-    // Data for the table
-    NSMutableArray *_myData;
-    
-    AppDelegate *mainDelegate;
-    
-    // The product that is selected from the table
-    Product *_selectedProduct;
+@interface ClientTableViewController ()
 
-}
 @end
 
-@implementation ProductTableViewController
+@implementation ClientTableViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -40,22 +27,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     // For the reveal menu to work
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 
-    // To have access to shared arrays from AppDelegate
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    // Remember to set ViewControler as the delegate and datasource
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    
-    // Get the listing data
-    _myData = mainDelegate.sharedArrayProducts;
-    
     // Uncomment the following line to preserve selection between presentations.
-    self.clearsSelectionOnViewWillAppear = NO;
+    // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -71,50 +48,28 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 1;
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return _myData.count;
+    return 0;
 }
 
+/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Retrieve cell
-    NSString *cellIdentifier = @"Cell";
-    UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
-    // Get the listing to be shown
-    Product *myProduct = _myData[indexPath.row];
+    // Configure the cell...
     
-    // Get references to images and labels of cell
-    UIImageView *pictureCell = (UIImageView*)[myCell.contentView viewWithTag:1];
-    UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:2];
-    UILabel *codeLabel = (UILabel*)[myCell.contentView viewWithTag:3];
-    UILabel *priceLabel = (UILabel*)[myCell.contentView viewWithTag:4];
-    
-    // Set table cell labels to listing data
-    nameLabel.text = myProduct.name;
-    codeLabel.text = myProduct.GS_code;
-    priceLabel.text = [NSString stringWithFormat:@"%@%.f", myProduct.currency, myProduct.published_price];
-    pictureCell.image = [UIImage imageWithData:myProduct.picture];
-    
-    return myCell;
+    return cell;
 }
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"Row selected at row %i", indexPath.row);
-    
-    // Set selected listing to var
-    _selectedProduct = _myData[indexPath.row];
-    
-    // Manually call segue to detail view controller
-    // [self performSegueWithIdentifier:@"ProductSelectionSegue" sender:self];
-}
+*/
 
 /*
 // Override to support conditional editing of the table view.

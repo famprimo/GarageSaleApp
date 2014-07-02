@@ -94,7 +94,7 @@
     switch (item.screenType) {
         case ScreenTypeClient:
             // Go to client screen
-            //[self performSegueWithIdentifier:@"GoToClientSegue" sender:self];
+            [self performSegueWithIdentifier:@"GoToClientSegue" sender:self];
             break;
             
         case ScreenTypeProduct:

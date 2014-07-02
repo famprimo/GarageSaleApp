@@ -24,6 +24,8 @@
 		C00ED12319644B4F0045A65E /* MenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED11E19644B4F0045A65E /* MenuItem.m */; };
 		C00ED12419644B4F0045A65E /* MenuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED12019644B4F0045A65E /* MenuModel.m */; };
 		C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED12219644B4F0045A65E /* MenuViewController.m */; };
+		C02486F019646AA5005DCBE6 /* ClientTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02486EF19646AA5005DCBE6 /* ClientTableViewController.m */; };
+		C02486F319646ADA005DCBE6 /* ClientDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02486F219646ADA005DCBE6 /* ClientDetailViewController.m */; };
 		C0815E0E19644C250021A153 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E0D19644C250021A153 /* Client.m */; };
 		C0815E1119644C2D0021A153 /* ClientModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1019644C2D0021A153 /* ClientModel.m */; };
 		C0815E1419644C390021A153 /* OpportunityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1319644C390021A153 /* OpportunityModel.m */; };
@@ -69,6 +71,10 @@
 		C00ED12019644B4F0045A65E /* MenuModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuModel.m; sourceTree = "<group>"; };
 		C00ED12119644B4F0045A65E /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
 		C00ED12219644B4F0045A65E /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
+		C02486EE19646AA5005DCBE6 /* ClientTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientTableViewController.h; sourceTree = "<group>"; };
+		C02486EF19646AA5005DCBE6 /* ClientTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientTableViewController.m; sourceTree = "<group>"; };
+		C02486F119646ADA005DCBE6 /* ClientDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientDetailViewController.h; sourceTree = "<group>"; };
+		C02486F219646ADA005DCBE6 /* ClientDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientDetailViewController.m; sourceTree = "<group>"; };
 		C0815E0C19644C250021A153 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		C0815E0D19644C250021A153 /* Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
 		C0815E0F19644C2D0021A153 /* ClientModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientModel.h; sourceTree = "<group>"; };
@@ -147,10 +153,10 @@
 				C00ED0F119644A5A0045A65E /* Main.storyboard */,
 				C00ED0F719644A5A0045A65E /* Images.xcassets */,
 				C00ED11819644AB70045A65E /* Product */,
-				C00ED11C19644B000045A65E /* About */,
-				C00ED11B19644AEF0045A65E /* Menu */,
 				C00ED11A19644AE00045A65E /* Client */,
+				C00ED11B19644AEF0045A65E /* Menu */,
 				C00ED11919644AD80045A65E /* Opportunity */,
+				C00ED11C19644B000045A65E /* About */,
 				C00ED11719644AAE0045A65E /* Reveal */,
 				C00ED0E619644A5A0045A65E /* Supporting Files */,
 			);
@@ -226,6 +232,10 @@
 				C0815E0D19644C250021A153 /* Client.m */,
 				C0815E0F19644C2D0021A153 /* ClientModel.h */,
 				C0815E1019644C2D0021A153 /* ClientModel.m */,
+				C02486EE19646AA5005DCBE6 /* ClientTableViewController.h */,
+				C02486EF19646AA5005DCBE6 /* ClientTableViewController.m */,
+				C02486F119646ADA005DCBE6 /* ClientDetailViewController.h */,
+				C02486F219646ADA005DCBE6 /* ClientDetailViewController.m */,
 			);
 			name = Client;
 			sourceTree = "<group>";
@@ -347,6 +357,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C02486F019646AA5005DCBE6 /* ClientTableViewController.m in Sources */,
+				C02486F319646ADA005DCBE6 /* ClientDetailViewController.m in Sources */,
 				C0815E1119644C2D0021A153 /* ClientModel.m in Sources */,
 				C0815E1719644C460021A153 /* Product.m in Sources */,
 				C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */,
