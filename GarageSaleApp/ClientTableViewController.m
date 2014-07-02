@@ -8,8 +8,22 @@
 
 #import "ClientTableViewController.h"
 #import "SWRevealViewController.h"
+#import "Client.h"
+#import "ClientModel.h"
+#import "AppDelegate.h"
+#import "ClientDetailViewController.h"
 
 @interface ClientTableViewController ()
+{
+    // Data for the table
+    NSMutableArray *_myData;
+    
+    AppDelegate *mainDelegate;
+    
+    // The product that is selected from the table
+    Client *_selectedClient;
+    
+}
 
 @end
 
@@ -31,8 +45,21 @@
     // For the reveal menu to work
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 
+    // Add title and menu button
+    self.navigationItem.title = @"Clientes";
+
+    // To have access to shared arrays from AppDelegate
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    // Remember to set ViewControler as the delegate and datasource
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    
+    // Get the listing data
+    _myData = mainDelegate.sharedArrayClients;
+
     // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -48,28 +75,45 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return _myData.count;
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    // Retrieve cell
+    NSString *cellIdentifier = @"Cell";
+    UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
-    // Configure the cell...
+    // Get the listing to be shown
+    Client *myClient = _myData[indexPath.row];
     
-    return cell;
+    // Get references to images and labels of cell
+    UIImageView *pictureCell = (UIImageView*)[myCell.contentView viewWithTag:1];
+    UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:2];
+    
+    // Set table cell labels to listing data
+    pictureCell.image = [UIImage imageWithData:myClient.picture];
+    nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
+    
+    return myCell;
 }
-*/
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Set selected listing to var
+    _selectedClient = _myData[indexPath.row];
+    
+    // Manually call segue to detail view controller
+    // [self performSegueWithIdentifier:@"ClientSelectionSegue" sender:self];
+}
+
 
 /*
 // Override to support conditional editing of the table view.

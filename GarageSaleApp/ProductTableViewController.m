@@ -44,6 +44,15 @@
     // For the reveal menu to work
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 
+    // Add title and menu button
+    self.navigationItem.title = @"Productos";
+    /*
+     self.navigationItem.leftBarButtonItem = self.editButtonItem;
+     
+     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+     self.navigationItem.rightBarButtonItem = addButton;
+     */
+
     // To have access to shared arrays from AppDelegate
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -97,10 +106,10 @@
     UILabel *priceLabel = (UILabel*)[myCell.contentView viewWithTag:4];
     
     // Set table cell labels to listing data
+    pictureCell.image = [UIImage imageWithData:myProduct.picture];
     nameLabel.text = myProduct.name;
     codeLabel.text = myProduct.GS_code;
     priceLabel.text = [NSString stringWithFormat:@"%@%.f", myProduct.currency, myProduct.published_price];
-    pictureCell.image = [UIImage imageWithData:myProduct.picture];
     
     return myCell;
 }
