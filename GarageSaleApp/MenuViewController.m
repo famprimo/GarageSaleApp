@@ -8,7 +8,6 @@
 
 #import "MenuViewController.h"
 #import "SWRevealViewController.h"
-#import "ProductViewController.h"
 
 @interface MenuViewController ()
 {
@@ -26,7 +25,6 @@
     if (self) {
         // Custom initialization
         
-        self.currentScreen = ScreenTypeProduct;
     }
     return self;
 }
@@ -37,7 +35,7 @@
     // Do any additional setup after loading the view.
     
     // Get the Product data
-    _productList = [[[ProductModel alloc] init] getProducts:_productList];
+    //_productList = [[[ProductModel alloc] init] getProducts:_productList];
     
     // Set self as the data source and delegate for the table view
     self.tableView.delegate = self;
@@ -64,7 +62,7 @@
 
 - (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60.0;
+    return 80.0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -78,8 +76,8 @@
     MenuItem *item = self.menuItems[indexPath.row];
     
     // Get image view
-    UIImageView *iconImageView = (UIImageView *)[menuCell viewWithTag:2];
     UILabel *menuItemTitle = (UILabel *)[menuCell viewWithTag:1];
+    UIImageView *iconImageView = (UIImageView *)[menuCell viewWithTag:2];
     
     // Set menu item text and icon
     menuItemTitle.text = item.menuTitle;
@@ -93,12 +91,10 @@
     // Check with item was tapped
     MenuItem *item = self.menuItems[indexPath.row];
     
-    self.currentScreen = item.screenType;
-    
     switch (item.screenType) {
         case ScreenTypeClient:
             // Go to client screen
-            [self performSegueWithIdentifier:@"GoToClientSegue" sender:self];
+            //[self performSegueWithIdentifier:@"GoToClientSegue" sender:self];
             break;
             
         case ScreenTypeProduct:
@@ -108,12 +104,12 @@
             
         case ScreenTypeOpportunity:
             // Go to opportunity screen
-            [self performSegueWithIdentifier:@"GoToOpportunitySegue" sender:self];
+            //[self performSegueWithIdentifier:@"GoToOpportunitySegue" sender:self];
             break;
             
         case ScreenTypeAbout:
             // Go to about screen
-            [self performSegueWithIdentifier:@"GoToAboutSegue" sender:self];
+            //[self performSegueWithIdentifier:@"GoToAboutSegue" sender:self];
             break;
             
         default:

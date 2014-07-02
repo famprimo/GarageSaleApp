@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "MenuModel.h"
 #import "MenuItem.h"
-#import "ProductModel.h"
 
 @interface MenuViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
@@ -17,7 +16,5 @@
 @property (strong, nonatomic) NSArray *menuItems;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-
-@property (nonatomic) int currentScreen;
 
 @end

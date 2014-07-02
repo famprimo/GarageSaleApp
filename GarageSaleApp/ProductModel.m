@@ -110,15 +110,16 @@
     return products;
 }
 
+
 - (Client*)getClient:(Product*)productBase
 {
-    
+    Client *clientFound = [[Client alloc] init];
+    /*
     // To have access to shared arrays from AppDelegate
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    Client *clientFound = [[Client alloc] init];
-    
+ 
     for (int i = 0; i < mainDelegate.sharedArrayClients.count; i++)
     {
         Client* clientTemp = [mainDelegate.sharedArrayClients objectAtIndex: i];
@@ -128,9 +129,9 @@
             break;
         }
     }
-    
+     */
     return clientFound;
-}
 
+}
 
 @end
