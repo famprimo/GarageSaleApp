@@ -8,6 +8,7 @@
 
 #import "ProductDetailViewController.h"
 #import "Product.h"
+#import "ProductModel.h"
 #import "Client.h"
 
 @interface ProductDetailViewController ()
@@ -63,10 +64,15 @@
         Product *productSelected = [[Product alloc] init];
         productSelected = (Product *)_detailItem;
         
+        Client *clientSelected = (Client *)[[[ProductModel alloc] init] getClient:productSelected];
+
         self.labelName.text = productSelected.name;
         self.labelDescription.text = productSelected.description;
         self.imageProduct.image = [UIImage imageWithData:productSelected.picture];
         
+        self.labelClientName.text = clientSelected.name;
+        self.labelClientZone.text = clientSelected.zone;
+        self.imageClient.image = [UIImage imageWithData:clientSelected.picture];
     }
 }
 

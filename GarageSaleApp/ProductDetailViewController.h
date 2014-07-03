@@ -15,4 +15,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelDescription;
 @property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
 
+@property (weak, nonatomic) IBOutlet UIImageView *imageClient;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientName;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientZone;
+
 @end

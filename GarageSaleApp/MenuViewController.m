@@ -79,10 +79,13 @@
     UILabel *menuItemTitle = (UILabel *)[menuCell viewWithTag:1];
     UIImageView *iconImageView = (UIImageView *)[menuCell viewWithTag:2];
     
+    // UIImageView *picMenu = [[UIImageView alloc] initWithImage:[UIImage imageNamed:item.menuIcon]];
+    // iconImageView = picMenu;
+    
     // Set menu item text and icon
     menuItemTitle.text = item.menuTitle;
     iconImageView.image = [UIImage imageNamed:item.menuIcon];
-    
+
     return menuCell;
 }
 

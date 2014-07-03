@@ -114,7 +114,7 @@
 - (Client*)getClient:(Product*)productBase
 {
     Client *clientFound = [[Client alloc] init];
-    /*
+    
     // To have access to shared arrays from AppDelegate
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -129,7 +129,7 @@
             break;
         }
     }
-     */
+    
     return clientFound;
 
 }
