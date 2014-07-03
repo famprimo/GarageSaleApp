@@ -7,6 +7,7 @@
 //
 
 #import "ProductTableViewController.h"
+#import "ProductDetailViewController.h"
 #import "SWRevealViewController.h"
 #import "Product.h"
 #import "ProductModel.h"
@@ -53,6 +54,8 @@
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newProduct:)];
     self.navigationItem.rightBarButtonItem = addButton;
     
+    self.detailViewController = (ProductDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
+
 
     // To have access to shared arrays from AppDelegate
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -63,6 +66,10 @@
     
     // Get the listing data
     _myData = mainDelegate.sharedArrayProducts;
+    
+    // Assign detail view with first item
+    _selectedProduct = [_myData firstObject];
+    [self.detailViewController setDetailItem:_selectedProduct];
     
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
@@ -132,9 +139,11 @@
     // Set selected listing to var
     _selectedProduct = _myData[indexPath.row];
     
-    // Manually call segue to detail view controller
-    // [self performSegueWithIdentifier:@"ProductSelectionSegue" sender:self];
+    // Refresh detail view with selected item
+    [self.detailViewController setDetailItem:_selectedProduct];
+
 }
+
 
 /*
 // Override to support conditional editing of the table view.

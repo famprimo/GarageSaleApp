@@ -114,10 +114,14 @@
     // Get references to images and labels of cell
     UIImageView *pictureCell = (UIImageView*)[myCell.contentView viewWithTag:1];
     UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:2];
+    UILabel *zoneLabel = (UILabel*)[myCell.contentView viewWithTag:3];
+    UILabel *phoneLabel = (UILabel*)[myCell.contentView viewWithTag:4];
     
     // Set table cell labels to listing data
     pictureCell.image = [UIImage imageWithData:myClient.picture];
     nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
+    zoneLabel.text = [NSString stringWithFormat:@"Vive en %@", myClient.zone];
+    phoneLabel.text = myClient.phone1;
     
     return myCell;
 }

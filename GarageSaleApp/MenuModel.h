@@ -10,6 +10,6 @@
 
 @interface MenuModel : NSObject
 
-- (NSArray *)getMenuItem;
+- (NSMutableArray *)getMenuItem;
 
 @end

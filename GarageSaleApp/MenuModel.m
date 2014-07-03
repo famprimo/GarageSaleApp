@@ -11,7 +11,7 @@
 
 @implementation MenuModel
 
-- (NSArray *)getMenuItem
+- (NSMutableArray *)getMenuItem
 {
     NSMutableArray *menuItemArray = [[NSMutableArray alloc] init];
     

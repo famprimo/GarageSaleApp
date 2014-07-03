@@ -13,7 +13,7 @@
 @interface MenuViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) MenuModel *model;
-@property (strong, nonatomic) NSArray *menuItems;
+@property (strong, nonatomic) NSMutableArray *menuItems;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 

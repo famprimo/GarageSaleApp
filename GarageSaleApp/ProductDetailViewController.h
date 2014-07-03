@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProductDetailViewController : UIViewController
+@interface ProductDetailViewController : UIViewController <UISplitViewControllerDelegate>
+
+@property (strong, nonatomic) id detailItem;
+@property (weak, nonatomic) IBOutlet UILabel *labelName;
+@property (weak, nonatomic) IBOutlet UILabel *labelDescription;
+@property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
 
 @end

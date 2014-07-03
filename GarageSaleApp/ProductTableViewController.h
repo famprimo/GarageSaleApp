@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class ProductDetailViewController;
+
 @interface ProductTableViewController : UITableViewController
+
+@property (strong, nonatomic) ProductDetailViewController *detailViewController;
 
 @end
