@@ -80,7 +80,7 @@
         Client *clientSelected = (Client *)[[[ProductModel alloc] init] getClient:productSelected];
 
         // Position of first item
-        int positionY = 30;
+        int positionY = 250;
 
         // Set Product Image
         self.imageProduct.image = [UIImage imageWithData:productSelected.picture];
@@ -92,18 +92,25 @@
         self.imageProduct.frame = imageProductFrame;
        
         // Set Product Name
-        self.labelName.text = productSelected.name;
         positionY = positionY + self.imageProduct.frame.size.height + 20;
+        self.labelName.text = productSelected.name;
         CGRect labelNameFrame = self.labelName.frame;
         labelNameFrame.origin.x = marginLeft;
         labelNameFrame.origin.y = positionY;
         labelNameFrame.size.width = marginRight - marginLeft;
-        labelNameFrame.size.height = 40;
+        labelNameFrame.size.height = 60;
         self.labelName.frame = labelNameFrame;       
         
-        // Set Client Image
-        self.imageClient.image = [UIImage imageWithData:clientSelected.picture];
+        // Set label "Offered by"
         positionY = positionY + self.labelName.frame.size.height + 20;
+        CGRect labelOfferedbyFrame = self.labelOfferedBy.frame;
+        labelOfferedbyFrame.origin.x = marginLeft;
+        labelOfferedbyFrame.origin.y = positionY;
+        self.labelOfferedBy.frame = labelOfferedbyFrame;
+
+        // Set Client Image
+        positionY = positionY + self.labelOfferedBy.frame.size.height + 10;
+        self.imageClient.image = [UIImage imageWithData:clientSelected.picture];
         CGRect imageClientFrame = self.imageClient.frame;
         imageClientFrame.origin.x = marginLeft;
         imageClientFrame.origin.y = positionY;
@@ -119,7 +126,13 @@
         labelClientNameFrame.size.width = 200;
         labelClientNameFrame.size.height = 20;
         self.labelClientName.frame = labelClientNameFrame;
-        
+
+        // Set image "Zone Icon"
+        CGRect imageZoneIconFrame = self.imageZoneIcon.frame;
+        imageZoneIconFrame.origin.x = marginLeft + 60;
+        imageZoneIconFrame.origin.y = positionY + 30;
+        self.imageZoneIcon.frame = imageZoneIconFrame;
+
         // Set Client Zone
         self.labelClientZone.text = clientSelected.zone;
         CGRect labelClientZoneFrame = self.labelClientZone.frame;
@@ -129,9 +142,16 @@
         labelClientZoneFrame.size.height = 20;
         self.labelClientZone.frame = labelClientZoneFrame;
         
-        // Set Product Description
-        self.labelDescription.text = productSelected.description;
+        // Set label "Details"
         positionY = positionY + self.imageClient.frame.size.height + 20;
+        CGRect labelDetailsFrame = self.labelDetails.frame;
+        labelDetailsFrame.origin.x = marginLeft;
+        labelDetailsFrame.origin.y = positionY;
+        self.labelDetails.frame = labelDetailsFrame;
+        
+        // Set Product Description
+        positionY = positionY + self.labelDetails.frame.size.height + 10;
+        self.labelDescription.text = productSelected.description;
         CGRect labelDescriptionFrame = self.labelDescription.frame;
         labelDescriptionFrame.origin.x = marginLeft;
         labelDescriptionFrame.origin.y = positionY;
@@ -144,7 +164,7 @@
 
         // Set content size of scrollview
         self.scrollViewProduct.contentSize = CGSizeMake(marginRight + margin, positionY);
-
+        //[self.scrollViewProduct setContentOffset:CGPointMake(0, 0)];
     }
 }
 
