@@ -19,4 +19,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelClientName;
 @property (weak, nonatomic) IBOutlet UILabel *labelClientZone;
 
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollViewProduct;
 @end
