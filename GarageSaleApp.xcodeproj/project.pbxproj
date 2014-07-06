@@ -26,6 +26,8 @@
 		C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED12219644B4F0045A65E /* MenuViewController.m */; };
 		C02486F019646AA5005DCBE6 /* ClientTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02486EF19646AA5005DCBE6 /* ClientTableViewController.m */; };
 		C02486F319646ADA005DCBE6 /* ClientDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02486F219646ADA005DCBE6 /* ClientDetailViewController.m */; };
+		C029BA671969D26000125C4F /* CustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA641969D26000125C4F /* CustomSegue.m */; };
+		C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA661969D26000125C4F /* CustomUnwindSegue.m */; };
 		C0815E0E19644C250021A153 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E0D19644C250021A153 /* Client.m */; };
 		C0815E1119644C2D0021A153 /* ClientModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1019644C2D0021A153 /* ClientModel.m */; };
 		C0815E1419644C390021A153 /* OpportunityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1319644C390021A153 /* OpportunityModel.m */; };
@@ -33,6 +35,7 @@
 		C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1919644C4D0021A153 /* ProductModel.m */; };
 		C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1C196455350021A153 /* ProductDetailViewController.m */; };
 		C0815E20196455590021A153 /* ProductTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1F196455590021A153 /* ProductTableViewController.m */; };
+		C0C2FE381967B67C00D686FA /* ProductImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0C2FE371967B67C00D686FA /* ProductImageViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +78,10 @@
 		C02486EF19646AA5005DCBE6 /* ClientTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientTableViewController.m; sourceTree = "<group>"; };
 		C02486F119646ADA005DCBE6 /* ClientDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientDetailViewController.h; sourceTree = "<group>"; };
 		C02486F219646ADA005DCBE6 /* ClientDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientDetailViewController.m; sourceTree = "<group>"; };
+		C029BA631969D26000125C4F /* CustomSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSegue.h; sourceTree = "<group>"; };
+		C029BA641969D26000125C4F /* CustomSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSegue.m; sourceTree = "<group>"; };
+		C029BA651969D26000125C4F /* CustomUnwindSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUnwindSegue.h; sourceTree = "<group>"; };
+		C029BA661969D26000125C4F /* CustomUnwindSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUnwindSegue.m; sourceTree = "<group>"; };
 		C0815E0C19644C250021A153 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		C0815E0D19644C250021A153 /* Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
 		C0815E0F19644C2D0021A153 /* ClientModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientModel.h; sourceTree = "<group>"; };
@@ -89,6 +96,8 @@
 		C0815E1C196455350021A153 /* ProductDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductDetailViewController.m; sourceTree = "<group>"; };
 		C0815E1E196455590021A153 /* ProductTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewController.h; sourceTree = "<group>"; };
 		C0815E1F196455590021A153 /* ProductTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductTableViewController.m; sourceTree = "<group>"; };
+		C0C2FE361967B67C00D686FA /* ProductImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductImageViewController.h; sourceTree = "<group>"; };
+		C0C2FE371967B67C00D686FA /* ProductImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductImageViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +167,7 @@
 				C00ED11919644AD80045A65E /* Opportunity */,
 				C00ED11C19644B000045A65E /* About */,
 				C00ED11719644AAE0045A65E /* Reveal */,
+				C029BA621969D20400125C4F /* Custom Segues */,
 				C00ED0E619644A5A0045A65E /* Supporting Files */,
 			);
 			path = GarageSaleApp;
@@ -212,6 +222,8 @@
 				C0815E1F196455590021A153 /* ProductTableViewController.m */,
 				C0815E1B196455350021A153 /* ProductDetailViewController.h */,
 				C0815E1C196455350021A153 /* ProductDetailViewController.m */,
+				C0C2FE361967B67C00D686FA /* ProductImageViewController.h */,
+				C0C2FE371967B67C00D686FA /* ProductImageViewController.m */,
 			);
 			name = Product;
 			sourceTree = "<group>";
@@ -258,6 +270,17 @@
 			children = (
 			);
 			name = About;
+			sourceTree = "<group>";
+		};
+		C029BA621969D20400125C4F /* Custom Segues */ = {
+			isa = PBXGroup;
+			children = (
+				C029BA631969D26000125C4F /* CustomSegue.h */,
+				C029BA641969D26000125C4F /* CustomSegue.m */,
+				C029BA651969D26000125C4F /* CustomUnwindSegue.h */,
+				C029BA661969D26000125C4F /* CustomUnwindSegue.m */,
+			);
+			name = "Custom Segues";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -362,11 +385,14 @@
 				C0815E1119644C2D0021A153 /* ClientModel.m in Sources */,
 				C0815E1719644C460021A153 /* Product.m in Sources */,
 				C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */,
+				C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */,
 				C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */,
 				C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */,
 				C00ED12319644B4F0045A65E /* MenuItem.m in Sources */,
 				C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */,
 				C00ED12419644B4F0045A65E /* MenuModel.m in Sources */,
+				C029BA671969D26000125C4F /* CustomSegue.m in Sources */,
+				C0C2FE381967B67C00D686FA /* ProductImageViewController.m in Sources */,
 				C00ED0EC19644A5A0045A65E /* main.m in Sources */,
 				C0815E20196455590021A153 /* ProductTableViewController.m in Sources */,
 				C0815E1419644C390021A153 /* OpportunityModel.m in Sources */,

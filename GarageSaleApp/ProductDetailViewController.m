@@ -10,6 +10,10 @@
 #import "Product.h"
 #import "ProductModel.h"
 #import "Client.h"
+#import "ProductImageViewController.h"
+#import "CustomSegue.h"
+#import "CustomUnwindSegue.h"
+
 
 @interface ProductDetailViewController ()
 {
@@ -78,6 +82,11 @@
         productSelected = (Product *)_detailItem;
         
         Client *clientSelected = (Client *)[[[ProductModel alloc] init] getClient:productSelected];
+
+        // Add tap gesture recognizer to picture
+        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapPicture:)];
+        tapRecognizer.numberOfTapsRequired = 2;
+        [self.imageProduct addGestureRecognizer:tapRecognizer];
 
         // Position of first item
         int positionY = 250;
@@ -168,15 +177,55 @@
     }
 }
 
-/*
+- (void)tapPicture:(UITapGestureRecognizer *)sender
+{
+    NSLog(@"Tap Recognized");
+    
+    
+    // Segue to the image
+    [self performSegueWithIdentifier:@"ProductImageSegue" sender:self];
+    
+}
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    
+    NSLog(@"Image tapped");
+    
+    if([segue isKindOfClass:[CustomSegue class]]) {
+        // Set the start point for the animation to center of the button for the animation
+        ((CustomSegue *)segue).originatingPoint = self.imageProduct.center;
+    }
+
+    Product *productSelected = [[Product alloc] init];
+    productSelected = (Product *)_detailItem;
+
+    ProductImageViewController *imageVC = segue.destinationViewController;
+    imageVC.selectedProduct = productSelected;
+
 }
-*/
+
+// This is the IBAction method referenced in the Storyboard Exit for the Unwind segue.
+// It needs to be here to create a link for the unwind segue.
+// But we'll do nothing with it.
+- (IBAction)unwindFromViewController:(UIStoryboardSegue *)sender {
+}
+
+// We need to over-ride this method from UIViewController to provide a custom segue for unwinding
+- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController fromViewController:(UIViewController *)fromViewController identifier:(NSString *)identifier {
+    // Instantiate a new CustomUnwindSegue
+    CustomUnwindSegue *segue = [[CustomUnwindSegue alloc] initWithIdentifier:identifier source:fromViewController destination:toViewController];
+    // Set the target point for the animation to the center of the button in this VC
+    segue.targetPoint = self.imageProduct.center;
+    return segue;
+}
+
+
 
 @end

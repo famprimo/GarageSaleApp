@@ -103,6 +103,50 @@
     // Add client #4 to the array
     [clients addObject:tempClient];
 
+    // Create client #5
+    tempClient = [[Client alloc] init];
+    tempClient.client_id = @"00005";
+    tempClient.name = @"Ivan";
+    tempClient.last_name = @"Rosado";
+    tempClient.sex = @"M";
+    tempClient.zone = @"Magdalena";
+    tempClient.address = @"La Mar 414";
+    tempClient.phone1 = @"98-589-4819";
+    tempClient.phone2 = @"445-2566";
+    tempClient.phone3 = @"";
+    tempClient.email = @"irosado@hotmail.com";
+    tempClient.preference = @"F";
+    tempClient.facebook_id = @"https://www.facebook.com/ivan.rosado.963";
+    tempClient.picture_link = @"https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xaf1/t1.0-9/1796525_10152246429229306_801627707_n.jpg";
+    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    tempClient.notes = @"XXXX";
+    tempClient.agent_id = @"00001";
+    
+    // Add client #5 to the array
+    [clients addObject:tempClient];
+
+    // Create client #6
+    tempClient = [[Client alloc] init];
+    tempClient.client_id = @"00006";
+    tempClient.name = @"Mily";
+    tempClient.last_name = @"de la Cruz";
+    tempClient.sex = @"F";
+    tempClient.zone = @"Surco";
+    tempClient.address = @"La Castellana 2342";
+    tempClient.phone1 = @"99-144-1515";
+    tempClient.phone2 = @"725-2666";
+    tempClient.phone3 = @"";
+    tempClient.email = @"mdelacruz@gmail.com";
+    tempClient.preference = @"F";
+    tempClient.facebook_id = @"https://www.facebook.com/mily.delacruz.90";
+    tempClient.picture_link = @"https://fbcdn-sphotos-e-a.akamaihd.net/hphotos-ak-prn2/t1.0-9/534197_483266975032862_774796863_n.jpg";
+    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    tempClient.notes = @"XXXX";
+    tempClient.agent_id = @"00001";
+    
+    // Add client #6 to the array
+    [clients addObject:tempClient];
+
     // Return the producct array as the return value
     return clients;
 }
