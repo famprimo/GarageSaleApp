@@ -37,7 +37,7 @@
     tempProduct.agent_id = @"00001";
 
     
-    // Add listing #1 to the array
+    // Add product #1 to the array
     [products addObject:tempProduct];
     
     // Create product #2
@@ -59,7 +59,7 @@
     tempProduct.notes = @"";
     tempProduct.agent_id = @"00001";
 
-    // Add listing #2 to the array
+    // Add product #2 to the array
     [products addObject:tempProduct];
 
     // Create product #3
@@ -81,7 +81,7 @@
     tempProduct.notes = @"";
     tempProduct.agent_id = @"00001";
 
-    // Add listing #3 to the array
+    // Add product #3 to the array
     [products addObject:tempProduct];
 
     // Create product #4
@@ -103,7 +103,7 @@
     tempProduct.notes = @"";
     tempProduct.agent_id = @"00001";
 
-    // Add listing #4 to the array
+    // Add product #4 to the array
     [products addObject:tempProduct];
 
     // Return the producct array as the return value
@@ -134,4 +134,25 @@
 
 }
 
+- (NSMutableArray*)getOpportunitiesFromProduct:(Product *)productSelected
+{
+    NSMutableArray *opportunities = [[NSMutableArray alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    
+    for (int i = 0; i < mainDelegate.sharedArrayOpportunities.count; i++)
+    {
+        Opportunity *opportunityTemp = [mainDelegate.sharedArrayOpportunities objectAtIndex: i];
+        if (productSelected.product_id == opportunityTemp.product_id)
+        {
+            [opportunities addObject:opportunityTemp];
+        }
+    }
+    
+    return opportunities;
+
+}
 @end

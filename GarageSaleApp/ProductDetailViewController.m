@@ -82,6 +82,8 @@
         productSelected = (Product *)_detailItem;
         
         Client *clientSelected = (Client *)[[[ProductModel alloc] init] getClient:productSelected];
+        
+        NSMutableArray *opportunitiesSelected = [[[ ProductModel alloc] init] getOpportunitiesFromProduct:productSelected];
 
         // Add tap gesture recognizer to picture
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapPicture:)];

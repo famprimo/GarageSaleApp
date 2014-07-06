@@ -28,6 +28,7 @@
 		C02486F319646ADA005DCBE6 /* ClientDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02486F219646ADA005DCBE6 /* ClientDetailViewController.m */; };
 		C029BA671969D26000125C4F /* CustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA641969D26000125C4F /* CustomSegue.m */; };
 		C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA661969D26000125C4F /* CustomUnwindSegue.m */; };
+		C029BA6B1969EF9400125C4F /* Opportunity.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA6A1969EF9400125C4F /* Opportunity.m */; };
 		C0815E0E19644C250021A153 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E0D19644C250021A153 /* Client.m */; };
 		C0815E1119644C2D0021A153 /* ClientModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1019644C2D0021A153 /* ClientModel.m */; };
 		C0815E1419644C390021A153 /* OpportunityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1319644C390021A153 /* OpportunityModel.m */; };
@@ -82,6 +83,8 @@
 		C029BA641969D26000125C4F /* CustomSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSegue.m; sourceTree = "<group>"; };
 		C029BA651969D26000125C4F /* CustomUnwindSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomUnwindSegue.h; sourceTree = "<group>"; };
 		C029BA661969D26000125C4F /* CustomUnwindSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUnwindSegue.m; sourceTree = "<group>"; };
+		C029BA691969EF9400125C4F /* Opportunity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Opportunity.h; sourceTree = "<group>"; };
+		C029BA6A1969EF9400125C4F /* Opportunity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Opportunity.m; sourceTree = "<group>"; };
 		C0815E0C19644C250021A153 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		C0815E0D19644C250021A153 /* Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
 		C0815E0F19644C2D0021A153 /* ClientModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientModel.h; sourceTree = "<group>"; };
@@ -163,8 +166,8 @@
 				C00ED0F719644A5A0045A65E /* Images.xcassets */,
 				C00ED11819644AB70045A65E /* Product */,
 				C00ED11A19644AE00045A65E /* Client */,
-				C00ED11B19644AEF0045A65E /* Menu */,
 				C00ED11919644AD80045A65E /* Opportunity */,
+				C00ED11B19644AEF0045A65E /* Menu */,
 				C00ED11C19644B000045A65E /* About */,
 				C00ED11719644AAE0045A65E /* Reveal */,
 				C029BA621969D20400125C4F /* Custom Segues */,
@@ -231,6 +234,8 @@
 		C00ED11919644AD80045A65E /* Opportunity */ = {
 			isa = PBXGroup;
 			children = (
+				C029BA691969EF9400125C4F /* Opportunity.h */,
+				C029BA6A1969EF9400125C4F /* Opportunity.m */,
 				C0815E1219644C390021A153 /* OpportunityModel.h */,
 				C0815E1319644C390021A153 /* OpportunityModel.m */,
 			);
@@ -390,6 +395,7 @@
 				C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */,
 				C00ED12319644B4F0045A65E /* MenuItem.m in Sources */,
 				C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */,
+				C029BA6B1969EF9400125C4F /* Opportunity.m in Sources */,
 				C00ED12419644B4F0045A65E /* MenuModel.m in Sources */,
 				C029BA671969D26000125C4F /* CustomSegue.m in Sources */,
 				C0C2FE381967B67C00D686FA /* ProductImageViewController.m in Sources */,

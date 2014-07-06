@@ -7,7 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Opportunity.h"
+#import "Product.h"
 
 @interface OpportunityModel : NSObject
+
+- (NSMutableArray*)getOpportunities:(NSMutableArray*)clientList;
 
 @end

@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "ProductModel.h"
 #import "ClientModel.h"
+#import "OpportunityModel.h"
 
 @implementation AppDelegate
 
@@ -23,6 +24,7 @@
     // Load Shared Arrays with Data
     sharedArrayProducts = [[[ProductModel alloc] init] getProducts:sharedArrayProducts];
     sharedArrayClients = [[[ClientModel alloc] init] getClients:sharedArrayClients];
+    sharedArrayOpportunities = [[[OpportunityModel alloc] init] getOpportunities:sharedArrayOpportunities];
     return YES;
 }
 							
