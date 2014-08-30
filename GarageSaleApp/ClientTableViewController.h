@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class ClientDetailViewController;
+
 @interface ClientTableViewController : UITableViewController
+
+@property (strong, nonatomic) ClientDetailViewController *detailViewController;
 
 @end

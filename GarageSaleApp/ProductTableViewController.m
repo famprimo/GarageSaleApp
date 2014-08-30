@@ -11,7 +11,6 @@
 #import "SWRevealViewController.h"
 #import "Product.h"
 #import "ProductModel.h"
-#import "ProductDetailViewController.h"
 #import "AppDelegate.h"
 
 @interface ProductTableViewController ()
@@ -55,7 +54,6 @@
     self.navigationItem.rightBarButtonItem = addButton;
     
     self.detailViewController = (ProductDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
-
 
     // To have access to shared arrays from AppDelegate
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];

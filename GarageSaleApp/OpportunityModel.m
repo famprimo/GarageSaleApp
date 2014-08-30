@@ -8,6 +8,7 @@
 
 #import "OpportunityModel.h"
 #import "Opportunity.h"
+#import "AppDelegate.h"
 
 @implementation OpportunityModel
 
@@ -103,5 +104,61 @@
     return opportunities;
 }
 
+- (Client*)getClient:(Opportunity*)opportunitySelected
+{
+    Client *clientFound = [[Client alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    // Look for the Client objetct
+    for (int i = 0; i < mainDelegate.sharedArrayClients.count; i++)
+    {
+        Client* clientTemp = [mainDelegate.sharedArrayClients objectAtIndex: i];
+        if (opportunitySelected.client_id == clientTemp.client_id)
+        {
+            clientFound = clientTemp;
+            break;
+        }
+    }
+    
+    return clientFound;
+}
+
+- (Client*)getOwner:(Opportunity*)opportunitySelected
+{
+    Client *ownerFound = [[Client alloc] init];
+    NSString *clientId = [[NSString alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    // Look for client_id in the Product class
+    for (int i = 0; i < mainDelegate.sharedArrayProducts.count; i++)
+    {
+        Product* productTemp = [mainDelegate.sharedArrayProducts objectAtIndex: i];
+        if (opportunitySelected.product_id == productTemp.product_id)
+        {
+            clientId = productTemp.client_id;
+            break;
+        }
+    }
+
+    // Look for the Client objetct
+    for (int i = 0; i < mainDelegate.sharedArrayClients.count; i++)
+    {
+        Client* clientTemp = [mainDelegate.sharedArrayClients objectAtIndex: i];
+        if (clientId == clientTemp.client_id)
+        {
+            ownerFound = clientTemp;
+            break;
+        }
+    }
+    
+    return ownerFound;
+
+}
 
 @end

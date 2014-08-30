@@ -7,11 +7,11 @@
 //
 
 #import "ClientTableViewController.h"
+#import "ClientDetailViewController.h"
 #import "SWRevealViewController.h"
 #import "Client.h"
 #import "ClientModel.h"
 #import "AppDelegate.h"
-#import "ClientDetailViewController.h"
 
 @interface ClientTableViewController ()
 {
@@ -24,7 +24,6 @@
     Client *_selectedClient;
     
 }
-
 @end
 
 @implementation ClientTableViewController
@@ -53,7 +52,8 @@
     
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newClient:)];
     self.navigationItem.rightBarButtonItem = addButton;
-    
+  
+    self.detailViewController = (ClientDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
 
     // To have access to shared arrays from AppDelegate
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -65,6 +65,11 @@
     // Get the listing data
     _myData = mainDelegate.sharedArrayClients;
 
+    
+    // Assign detail view with first item
+    _selectedClient = [_myData firstObject];
+    [self.detailViewController setDetailItem:_selectedClient];
+    
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
     
@@ -131,8 +136,8 @@
     // Set selected listing to var
     _selectedClient = _myData[indexPath.row];
     
-    // Manually call segue to detail view controller
-    // [self performSegueWithIdentifier:@"ClientSelectionSegue" sender:self];
+    // Refresh detail view with selected item
+    [self.detailViewController setDetailItem:_selectedClient];
 }
 
 

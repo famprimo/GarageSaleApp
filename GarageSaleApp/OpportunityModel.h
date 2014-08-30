@@ -9,9 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "Opportunity.h"
 #import "Product.h"
+#import "Client.h"
 
 @interface OpportunityModel : NSObject
 
 - (NSMutableArray*)getOpportunities:(NSMutableArray*)clientList;
+
+- (Client*)getClient:(Opportunity*)opportunitySelected;
+- (Client*)getOwner:(Opportunity*)opportunitySelected;
 
 @end
