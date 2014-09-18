@@ -30,7 +30,8 @@
     tempClient.preference = @"F";
     tempClient.facebook_id = @"https://www.facebook.com/georghette";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpa1/t1.0-1/p160x160/10432499_10154193269290034_3773311256858868392_n.jpg";
-    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
     
@@ -52,7 +53,8 @@
     tempClient.preference = @"F";
     tempClient.facebook_id = @"https://www.facebook.com/natalia.gallardo.16547";
     tempClient.picture_link = @"https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-xap1/t1.0-9/10177352_10152306607879355_3463040953093391515_n.jpg";
-    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
     
@@ -74,7 +76,8 @@
     tempClient.preference = @"F";
     tempClient.facebook_id = @"https://www.facebook.com/melisa.celi.1";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/t1.0-1/p160x160/10343013_10152545434713487_289713323910298441_n.jpg";
-    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
     
@@ -96,7 +99,8 @@
     tempClient.preference = @"F";
     tempClient.facebook_id = @"https://www.facebook.com/amparo.gonzalez.946";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/t1.0-1/c7.0.160.160/p160x160/65036_10151780886293183_681281220_n.jpg";
-    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
     
@@ -118,7 +122,8 @@
     tempClient.preference = @"F";
     tempClient.facebook_id = @"https://www.facebook.com/ivan.rosado.963";
     tempClient.picture_link = @"https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xaf1/t1.0-9/1796525_10152246429229306_801627707_n.jpg";
-    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
     
@@ -140,7 +145,8 @@
     tempClient.preference = @"F";
     tempClient.facebook_id = @"https://www.facebook.com/mily.delacruz.90";
     tempClient.picture_link = @"https://fbcdn-sphotos-e-a.akamaihd.net/hphotos-ak-prn2/t1.0-9/534197_483266975032862_774796863_n.jpg";
-    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
     

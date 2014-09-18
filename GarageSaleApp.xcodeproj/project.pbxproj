@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C008BA3119C3CAD9008616E4 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = C008BA3019C3CAD9008616E4 /* Message.m */; };
+		C008BA3419C3CAEC008616E4 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C008BA3319C3CAEC008616E4 /* MessageModel.m */; };
+		C008BA3719C3CB82008616E4 /* MessageTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C008BA3619C3CB82008616E4 /* MessageTableViewController.m */; };
+		C008BA3A19C3CBCA008616E4 /* MessageDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C008BA3919C3CBCA008616E4 /* MessageDetailViewController.m */; };
 		C00ED0E019644A5A0045A65E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0DF19644A5A0045A65E /* Foundation.framework */; };
 		C00ED0E219644A5A0045A65E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0E119644A5A0045A65E /* CoreGraphics.framework */; };
 		C00ED0E419644A5A0045A65E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0E319644A5A0045A65E /* UIKit.framework */; };
@@ -50,6 +54,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C008BA2F19C3CAD9008616E4 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		C008BA3019C3CAD9008616E4 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		C008BA3219C3CAEC008616E4 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
+		C008BA3319C3CAEC008616E4 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
+		C008BA3519C3CB82008616E4 /* MessageTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableViewController.h; sourceTree = "<group>"; };
+		C008BA3619C3CB82008616E4 /* MessageTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewController.m; sourceTree = "<group>"; };
+		C008BA3819C3CBCA008616E4 /* MessageDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageDetailViewController.h; sourceTree = "<group>"; };
+		C008BA3919C3CBCA008616E4 /* MessageDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageDetailViewController.m; sourceTree = "<group>"; };
 		C00ED0DC19644A5A0045A65E /* GarageSaleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GarageSaleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C00ED0DF19644A5A0045A65E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C00ED0E119644A5A0045A65E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -127,6 +139,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C008BA2E19C3CAB3008616E4 /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				C008BA2F19C3CAD9008616E4 /* Message.h */,
+				C008BA3019C3CAD9008616E4 /* Message.m */,
+				C008BA3219C3CAEC008616E4 /* MessageModel.h */,
+				C008BA3319C3CAEC008616E4 /* MessageModel.m */,
+				C008BA3519C3CB82008616E4 /* MessageTableViewController.h */,
+				C008BA3619C3CB82008616E4 /* MessageTableViewController.m */,
+				C008BA3819C3CBCA008616E4 /* MessageDetailViewController.h */,
+				C008BA3919C3CBCA008616E4 /* MessageDetailViewController.m */,
+			);
+			name = Message;
+			sourceTree = "<group>";
+		};
 		C00ED0D319644A5A0045A65E = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +191,7 @@
 				C00ED0EF19644A5A0045A65E /* AppDelegate.m */,
 				C00ED0F119644A5A0045A65E /* Main.storyboard */,
 				C00ED0F719644A5A0045A65E /* Images.xcassets */,
+				C008BA2E19C3CAB3008616E4 /* Message */,
 				C00ED11819644AB70045A65E /* Product */,
 				C00ED11A19644AE00045A65E /* Client */,
 				C00ED11919644AD80045A65E /* Opportunity */,
@@ -386,11 +414,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				C02486F019646AA5005DCBE6 /* ClientTableViewController.m in Sources */,
+				C008BA3719C3CB82008616E4 /* MessageTableViewController.m in Sources */,
 				C02486F319646ADA005DCBE6 /* ClientDetailViewController.m in Sources */,
 				C0815E1119644C2D0021A153 /* ClientModel.m in Sources */,
 				C0815E1719644C460021A153 /* Product.m in Sources */,
 				C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */,
 				C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */,
+				C008BA3A19C3CBCA008616E4 /* MessageDetailViewController.m in Sources */,
 				C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */,
 				C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */,
 				C00ED12319644B4F0045A65E /* MenuItem.m in Sources */,
@@ -402,8 +432,10 @@
 				C00ED0EC19644A5A0045A65E /* main.m in Sources */,
 				C0815E20196455590021A153 /* ProductTableViewController.m in Sources */,
 				C0815E1419644C390021A153 /* OpportunityModel.m in Sources */,
+				C008BA3119C3CAD9008616E4 /* Message.m in Sources */,
 				C00ED11619644AA80045A65E /* SWRevealViewController.m in Sources */,
 				C0815E0E19644C250021A153 /* Client.m in Sources */,
+				C008BA3419C3CAEC008616E4 /* MessageModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -30,7 +30,8 @@
     tempProduct.published_price = 290.0;
     tempProduct.type = @"S";
     tempProduct.picture_link = @"https://fbcdn-sphotos-a-a.akamaihd.net/hphotos-ak-ash3/t1.0-9/10365873_837130456315654_6991006075101245277_n.jpg";
-    tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"F";
     tempProduct.notes = @"";
@@ -53,7 +54,8 @@
     tempProduct.initial_price = 300.0;
     tempProduct.published_price = 250.0;
     tempProduct.picture_link = @"https://fbcdn-sphotos-d-a.akamaihd.net/hphotos-ak-prn1/t1.0-9/10341676_838515596177140_687032528327336304_n.jpg";
-    tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"F";
     tempProduct.notes = @"";
@@ -75,7 +77,8 @@
     tempProduct.initial_price = 1200.0;
     tempProduct.published_price = 1100.0;
     tempProduct.picture_link = @"https://fbcdn-sphotos-b-a.akamaihd.net/hphotos-ak-prn1/t1.0-9/10269440_835477799814253_5669782238393768165_n.jpg";
-    tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"F";
     tempProduct.notes = @"";
@@ -97,7 +100,8 @@
     tempProduct.initial_price = 100000.0;
     tempProduct.published_price = 99900.0;
     tempProduct.picture_link = @"https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-xpf1/t1.0-9/1493150_830659133629453_2983286650637139401_n.jpg";
-    tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"F";
     tempProduct.notes = @"";

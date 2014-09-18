@@ -10,12 +10,14 @@
 #import "ProductModel.h"
 #import "ClientModel.h"
 #import "OpportunityModel.h"
+#import "MessageModel.h"
 
 @implementation AppDelegate
 
 @synthesize sharedArrayProducts;
 @synthesize sharedArrayClients;
 @synthesize sharedArrayOpportunities;
+@synthesize sharedArrayMessages;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -25,6 +27,7 @@
     sharedArrayProducts = [[[ProductModel alloc] init] getProducts:sharedArrayProducts];
     sharedArrayClients = [[[ClientModel alloc] init] getClients:sharedArrayClients];
     sharedArrayOpportunities = [[[OpportunityModel alloc] init] getOpportunities:sharedArrayOpportunities];
+    sharedArrayMessages = [[[MessageModel alloc] init] getMessages:sharedArrayMessages];
     return YES;
 }
 							

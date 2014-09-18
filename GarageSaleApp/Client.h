@@ -21,7 +21,7 @@
 @property (strong, nonatomic) NSString *phone3;
 @property (strong, nonatomic) NSString *email;
 @property (strong, nonatomic) NSString *preference;
-@property (nonatomic) Boolean *owner;
+//@property (nonatomic) Boolean *owner;
 @property (strong, nonatomic) NSString *facebook_id;
 @property (strong, nonatomic) NSString *picture_link;
 @property (strong, nonatomic) NSData *picture;

@@ -14,7 +14,13 @@
 - (NSMutableArray *)getMenuItem
 {
     NSMutableArray *menuItemArray = [[NSMutableArray alloc] init];
-    
+
+    MenuItem *item0 = [[MenuItem alloc] init];
+    item0.menuTitle = @"Mensajes";
+    item0.menuIcon = @"ProductMenuIcon";
+    item0.screenType = ScreenTypeMessages;
+    [menuItemArray addObject:item0];
+
     MenuItem *item1 = [[MenuItem alloc] init];
     item1.menuTitle = @"Productos";
     item1.menuIcon = @"ProductMenuIcon";

@@ -95,6 +95,11 @@
     MenuItem *item = self.menuItems[indexPath.row];
     
     switch (item.screenType) {
+        case ScreenTypeMessages:
+            // Go to product screen
+            [self performSegueWithIdentifier:@"GoToMessageSegue" sender:self];
+            break;
+
         case ScreenTypeClient:
             // Go to client screen
             [self performSegueWithIdentifier:@"GoToClientSegue" sender:self];
