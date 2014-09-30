@@ -112,7 +112,7 @@
     UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:2];
     
     // Set table cell labels to listing data
-    nameLabel.text = myMessage.from_facebook_name;
+    nameLabel.text = myMessage.fb_from_name;
     messageLabel.text = myMessage.message;
     
     return myCell;

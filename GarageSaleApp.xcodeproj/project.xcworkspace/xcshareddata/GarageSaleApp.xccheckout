@@ -10,29 +10,29 @@
 	<string>GarageSaleApp</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>8CD93E9F-124E-4E88-ABEE-EF684BF7F237</key>
+		<key>4A54DCC5F097B2E2C98B8506B487898766F4E490</key>
 		<string>https://github.com/famprimo/GarageSaleApp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>GarageSaleApp.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>8CD93E9F-124E-4E88-ABEE-EF684BF7F237</key>
+		<key>4A54DCC5F097B2E2C98B8506B487898766F4E490</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/famprimo/GarageSaleApp.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>8CD93E9F-124E-4E88-ABEE-EF684BF7F237</string>
+	<string>4A54DCC5F097B2E2C98B8506B487898766F4E490</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>8CD93E9F-124E-4E88-ABEE-EF684BF7F237</string>
+			<string>4A54DCC5F097B2E2C98B8506B487898766F4E490</string>
 			<key>IDESourceControlWCCName</key>
 			<string>GarageSaleApp</string>
 		</dict>

@@ -11,6 +11,7 @@
 #import "ClientModel.h"
 #import "OpportunityModel.h"
 #import "MessageModel.h"
+#import <FacebookSDK/FacebookSDK.h>
 
 @implementation AppDelegate
 
@@ -23,6 +24,9 @@
 {
     // Override point for customization after application launch.
     
+    [FBLoginView class];
+    [FBProfilePictureView class];
+
     // Load Shared Arrays with Data
     sharedArrayProducts = [[[ProductModel alloc] init] getProducts:sharedArrayProducts];
     sharedArrayClients = [[[ClientModel alloc] init] getClients:sharedArrayClients];
@@ -30,6 +34,13 @@
     sharedArrayMessages = [[[MessageModel alloc] init] getMessages:sharedArrayMessages];
     return YES;
 }
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+    return wasHandled;
+}
+
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {

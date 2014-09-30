@@ -22,7 +22,7 @@
     tempProduct.product_id = @"00001";
     tempProduct.client_id = @"00001";
     tempProduct.name = @"Bicicleta Monark aro 20";
-    tempProduct.description = @"En perfecto estado. Comprada en 560 soles. MIRAFLORES";
+    tempProduct.desc = @"En perfecto estado. Comprada en 560 soles. MIRAFLORES";
     tempProduct.facebook_id = @"XXXX";
     tempProduct.album_id = @"XXXX";
     tempProduct.currency = @"S/.";
@@ -47,7 +47,7 @@
     tempProduct.client_id = @"00001";
     tempProduct.GS_code = @"GS3056";
     tempProduct.name = @"Mecedora Graco";
-    tempProduct.description = @"Tiene un sonidito casi imperceptible. Comprado en USA el año pasado. Solo ha sido usado durante 5 meses y muy poco. La Aurora - MIRAFLORES";
+    tempProduct.desc = @"Tiene un sonidito casi imperceptible. Comprado en USA el año pasado. Solo ha sido usado durante 5 meses y muy poco. La Aurora - MIRAFLORES";
     tempProduct.facebook_id = @"XXXX";
     tempProduct.album_id = @"XXXX";
     tempProduct.currency = @"S/.";
@@ -70,7 +70,7 @@
     tempProduct.client_id = @"00002";
     tempProduct.GS_code = @"GS3205";
     tempProduct.name = @"HP Pavilion g6-1b70us 15.6'";
-    tempProduct.description = @"Comprada hace un año, en perfecto estado. Notebook (2.4 GHz Intel Core i3-370M Processor, 4 GB RAM, 500 GB Hard Drive, Windows... by HP. SAN ISIDRO";
+    tempProduct.desc = @"Comprada hace un año, en perfecto estado. Notebook (2.4 GHz Intel Core i3-370M Processor, 4 GB RAM, 500 GB Hard Drive, Windows... by HP. SAN ISIDRO";
     tempProduct.facebook_id = @"XXXX";
     tempProduct.album_id = @"XXXX";
     tempProduct.currency = @"S/.";
@@ -93,7 +93,7 @@
     tempProduct.client_id = @"00002";
     tempProduct.GS_code = @"GS9999";
     tempProduct.name = @"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit";
-    tempProduct.description = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id eleifend mi, id faucibus lectus. In interdum sapien et nibh rhoncus, tempus scelerisque felis ullamcorper. Nunc facilisis rutrum elit. Nam at justo vitae ligula vulputate tempus et sit amet nisi. Donec in purus ac tortor commodo lacinia vel non odio. Nam erat lacus, vehicula vitae lobortis et, ullamcorper id augue. Morbi fermentum, elit sit amet faucibus tristique, magna magna venenatis massa, at porttitor libero sem et erat. Duis eu velit sagittis ipsum iaculis pulvinar. Pellentesque ut risus metus. Etiam dignissim accumsan imperdiet. Cras vel sem lobortis, tempor eros ac, tempor dolor. Proin mollis egestas erat, a placerat sapien vestibulum quis. Phasellus non felis elit. Phasellus malesuada semper purus, non tincidunt libero vehicula ac. Sed nec libero purus. Ut tempus, mi sit amet condimentum venenatis, enim magna rutrum sapien, eget blandit libero nulla et odio. Nunc volutpat libero mattis ligula facilisis mattis. Curabitur eu auctor ipsum. Mauris non varius lorem. Ut et libero adipiscing, condimentum ligula vestibulum, fringilla ipsum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus lectus ipsum, sodales non elementum congue, posuere condimentum metus. Ut aliquet et risus sit amet rhoncus. Nunc bibendum posuere varius. Fusce dui eros, sodales in facilisis id, ultrices eget massa. Donec cursus auctor nunc eu imperdiet. Pellentesque auctor dictum ultricies. Aliquam pretium vel erat quis ornare. Vestibulum interdum ultricies rhoncus. Sed tincidunt sollicitudin diam, at facilisis odio scelerisque id. Phasellus fringilla malesuada felis, vitae luctus mi gravida sed. Ut varius nec nisl vitae feugiat. Fusce tempus libero leo, a varius nisl dignissim ac. Sed non sollicitudin nisi. Aliquam vulputate ligula eu lacus dignissim placerat";
+    tempProduct.desc = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id eleifend mi, id faucibus lectus. In interdum sapien et nibh rhoncus, tempus scelerisque felis ullamcorper. Nunc facilisis rutrum elit. Nam at justo vitae ligula vulputate tempus et sit amet nisi. Donec in purus ac tortor commodo lacinia vel non odio. Nam erat lacus, vehicula vitae lobortis et, ullamcorper id augue. Morbi fermentum, elit sit amet faucibus tristique, magna magna venenatis massa, at porttitor libero sem et erat. Duis eu velit sagittis ipsum iaculis pulvinar. Pellentesque ut risus metus. Etiam dignissim accumsan imperdiet. Cras vel sem lobortis, tempor eros ac, tempor dolor. Proin mollis egestas erat, a placerat sapien vestibulum quis. Phasellus non felis elit. Phasellus malesuada semper purus, non tincidunt libero vehicula ac. Sed nec libero purus. Ut tempus, mi sit amet condimentum venenatis, enim magna rutrum sapien, eget blandit libero nulla et odio. Nunc volutpat libero mattis ligula facilisis mattis. Curabitur eu auctor ipsum. Mauris non varius lorem. Ut et libero adipiscing, condimentum ligula vestibulum, fringilla ipsum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus lectus ipsum, sodales non elementum congue, posuere condimentum metus. Ut aliquet et risus sit amet rhoncus. Nunc bibendum posuere varius. Fusce dui eros, sodales in facilisis id, ultrices eget massa. Donec cursus auctor nunc eu imperdiet. Pellentesque auctor dictum ultricies. Aliquam pretium vel erat quis ornare. Vestibulum interdum ultricies rhoncus. Sed tincidunt sollicitudin diam, at facilisis odio scelerisque id. Phasellus fringilla malesuada felis, vitae luctus mi gravida sed. Ut varius nec nisl vitae feugiat. Fusce tempus libero leo, a varius nisl dignissim ac. Sed non sollicitudin nisi. Aliquam vulputate ligula eu lacus dignissim placerat";
     tempProduct.facebook_id = @"XXXX";
     tempProduct.album_id = @"XXXX";
     tempProduct.currency = @"S/.";

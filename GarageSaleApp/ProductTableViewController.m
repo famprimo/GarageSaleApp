@@ -132,7 +132,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"Row selected at row %i", indexPath.row);
+    NSLog(@"Row selected at row %li", (long)indexPath.row);
     
     // Set selected listing to var
     _selectedProduct = _myData[indexPath.row];

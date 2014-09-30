@@ -83,7 +83,7 @@
         
         Client *clientSelected = (Client *)[[[ProductModel alloc] init] getClient:productSelected];
         
-        NSMutableArray *opportunitiesSelected = [[[ ProductModel alloc] init] getOpportunitiesFromProduct:productSelected];
+        // NSMutableArray *opportunitiesSelected = [[[ ProductModel alloc] init] getOpportunitiesFromProduct:productSelected];
 
         // Add tap gesture recognizer to picture
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapPicture:)];
@@ -162,7 +162,7 @@
         
         // Set Product Description
         positionY = positionY + self.labelDetails.frame.size.height + 10;
-        self.labelDescription.text = productSelected.description;
+        self.labelDescription.text = productSelected.desc;
         CGRect labelDescriptionFrame = self.labelDescription.frame;
         labelDescriptionFrame.origin.x = marginLeft;
         labelDescriptionFrame.origin.y = positionY;
