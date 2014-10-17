@@ -12,6 +12,7 @@
 #import "Message.h"
 #import "MessageModel.h"
 #import "AppDelegate.h"
+#import <FacebookSDK/FacebookSDK.h>
 
 @interface MessageTableViewController ()
 {
@@ -50,6 +51,9 @@
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
     
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ClientMenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(refreshButtonClicked:)];
+    self.navigationItem.rightBarButtonItem = refreshButton;
+    
     self.detailViewController = (MessageDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
     
     // To have access to shared arrays from AppDelegate
@@ -68,9 +72,7 @@
     
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
 }
 
 - (void)menuButtonClicked:(id)sender
@@ -78,11 +80,24 @@
     [self.revealViewController revealToggleAnimated:YES];
 }
 
+- (void)refreshButtonClicked:(id)sender
+{
+    NSMutableArray *newMessagesArray = [[NSMutableArray alloc] init];
+    newMessagesArray = [self makeFBRequestForNewNotifications:_myData];
+
+    NSLog(@"Array!");
+    // [_myData addObjectsFromArray:newMessagesArray];
+    
+    
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 
 #pragma mark - Table view data source
 
@@ -129,52 +144,142 @@
 
 
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
 
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+ */
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 /*
-#pragma mark - Navigation
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+ {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+#pragma mark - Contact with Facebook
+
+- (NSMutableArray*) makeFBRequestForNewNotifications:(NSMutableArray*)messagesArray;
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    MessageModel *messagesMethods = [[MessageModel alloc] init];
+    NSMutableArray *newMessagesArrayFinal = [[NSMutableArray alloc] init];
+    
+    [FBRequestConnection startWithGraphPath:@"me/notifications?fields=application,link&include_read=true"
+                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                              
+                              if (!error) {  // FB request was a success!
+                                  
+                                  if (result[@"data"]) {   // There is FB data!
+                                      
+                                      NSArray *jsonArray = result[@"data"];
+                                      NSMutableArray *newMessagesArray = [[NSMutableArray alloc] init];
+                                      
+                                      // Get new notifactions
+                                      newMessagesArray = [messagesMethods getNewNotifications:jsonArray withMessagesArray:messagesArray];
+                                      
+                                      // Get message details for those notifications
+                                      newMessagesArray = [self makeFBRequestForMessageDetails:newMessagesArray];
+                                      
+                                     // Sorting arrays
+                                      NSArray *sortedArray;
+                                      sortedArray = [newMessagesArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+                                          NSDate *first = [(Message*)a datetime];
+                                          NSDate *second = [(Message*)b datetime];
+                                          return [first compare:second];
+                                      }];
+                                      
+                                      [newMessagesArrayFinal addObjectsFromArray:sortedArray];
+                                      
+                                  }
+                                  
+                              } else {
+                                  // An error occurred, we need to handle the error
+                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                                  NSLog(@"error %@", error.description);
+                              }
+                          }];
+    
+    return newMessagesArrayFinal;
 }
-*/
+
+- (NSMutableArray*) makeFBRequestForMessageDetails:(NSMutableArray*)messagesArray;
+{
+    
+    MessageModel *messagesMethods = [[MessageModel alloc] init];
+    NSMutableArray *updatedMessagesArray = [[NSMutableArray alloc] init];
+    
+    // Create string for FB request
+    NSMutableString *requestMessagesList = [[NSMutableString alloc] init];
+    [requestMessagesList appendString:@"?ids="];
+    [requestMessagesList appendString:[messagesMethods getMessagesIDs:messagesArray]];
+    
+    // NSLog(@"request para FB: %@", requestMessagesList);
+    
+    [FBRequestConnection startWithGraphPath:requestMessagesList
+                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                              
+                              if (!error) { // FB request was a success!
+                                  
+                                  Message *tempMessage;
+                                  
+                                  for (int i=0; i<messagesArray.count; i=i+1)
+                                  {
+                                      tempMessage = [[Message alloc] init];
+                                      tempMessage = (Message *)messagesArray[i];
+                                      
+                                      tempMessage.message = result[tempMessage.fb_msg_id][@"message"];
+                                      tempMessage.fb_from_id = result[tempMessage.fb_msg_id][@"from"][@"id"];
+                                      tempMessage.fb_from_name = result[tempMessage.fb_msg_id][@"from"][@"name"];
+                                      
+                                      [updatedMessagesArray addObject:tempMessage];
+                                      
+                                      /// LLAMAR A UN METODO QUE AGREGUE LOS NUEVOS MENSAJES!!!
+                                  }
+                                  
+                              }
+                              else {
+                                  // An error occurred, we need to handle the error
+                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                                  NSLog(@"error %@", error.description);
+                              }
+                          } ];
+    
+    return updatedMessagesArray;
+}
 
 @end

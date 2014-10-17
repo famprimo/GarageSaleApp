@@ -7,14 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FacebookSDK/FacebookSDK.h>
 #import "MenuModel.h"
 #import "MenuItem.h"
 
-@interface MenuViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface MenuViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, FBLoginViewDelegate>
 
 @property (strong, nonatomic) MenuModel *model;
 @property (strong, nonatomic) NSMutableArray *menuItems;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+@property (strong, nonatomic) IBOutlet FBProfilePictureView *profilePictureView;
+@property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 
 @end

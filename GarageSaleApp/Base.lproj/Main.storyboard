@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
         <!--Reveal View Controller-->
@@ -206,7 +206,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cRY-sT-xdg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2017" y="1886"/>
+            <point key="canvasLocation" x="2247" y="2058"/>
         </scene>
         <!--Message Detail View Controller-->
         <scene sceneID="Ze5-GV-JtH">
@@ -221,14 +221,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cXb-RT-kL0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="567" y="-1165"/>
+            <point key="canvasLocation" x="591" y="-997"/>
         </scene>
-        <!--Message Table View Controller - Root View Controller-->
+        <!--Root View Controller-->
         <scene sceneID="XAF-z8-R8R">
             <objects>
                 <tableViewController clearsSelectionOnViewWillAppear="NO" id="g6y-SC-rOY" customClass="MessageTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="81" sectionHeaderHeight="22" sectionFooterHeight="22" id="WFf-3Q-Oy6">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="308" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -297,12 +297,12 @@
             </objects>
             <point key="canvasLocation" x="-447" y="-1667"/>
         </scene>
-        <!--Client Table View Controller - Root View Controller-->
+        <!--Root View Controller-->
         <scene sceneID="EYY-wO-Dut">
             <objects>
                 <tableViewController clearsSelectionOnViewWillAppear="NO" id="mtq-GA-Xqt" customClass="ClientTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" id="IQE-w6-Dyt">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="308" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -314,7 +314,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="pEn-cd-pyR">
-                                            <rect key="frame" x="10" y="10" width="60" height="60"/>
+                                            <rect key="frame" x="8" y="7" width="36" height="60"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3Et-4z-Chy">
@@ -380,12 +380,12 @@
             </objects>
             <point key="canvasLocation" x="1033" y="1418"/>
         </scene>
-        <!--Product Table View Controller - Root View Controller-->
+        <!--Root View Controller-->
         <scene sceneID="RmI-xf-WGf">
             <objects>
                 <tableViewController clearsSelectionOnViewWillAppear="NO" id="cth-Pc-T8J" customClass="ProductTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" id="rDR-hj-OI8">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="308" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -397,7 +397,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="FFp-Kh-NVp">
-                                            <rect key="frame" x="7" y="0.0" width="80" height="79"/>
+                                            <rect key="frame" x="5" y="-1" width="44" height="76"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Product name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="MTF-2y-wMn">
@@ -433,7 +433,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G3D-dZ-uSS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3262" y="-1184"/>
+            <point key="canvasLocation" x="2850" y="-1405"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="KNg-Zh-9Pn">
@@ -448,7 +448,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pUo-xO-0HL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2730" y="-1185"/>
+            <point key="canvasLocation" x="2454" y="-1405"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="eXR-Lz-H2i">
@@ -464,7 +464,7 @@
             </objects>
             <point key="canvasLocation" x="1746" y="-718"/>
         </scene>
-        <!--Menu View Controller - Garage Sale-->
+        <!--Garage Sale-->
         <scene sceneID="n3x-Ah-D5y">
             <objects>
                 <viewController title="Garage Sale" id="VNd-Q9-HmO" customClass="MenuViewController" sceneMemberID="viewController">
@@ -473,9 +473,9 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" id="lY6-Az-r1u">
-                                <rect key="frame" x="0.0" y="35" width="768" height="989"/>
+                                <rect key="frame" x="0.0" y="80" width="768" height="862"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MenuItemCell" rowHeight="80" id="uCo-1f-w7C">
                                         <rect key="frame" x="0.0" y="22" width="768" height="80"/>
@@ -496,16 +496,30 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Facebook" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OM2-XN-QGe">
+                                <rect key="frame" x="120" y="30" width="242" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" id="70a-yD-5TZ" customClass="FBProfilePictureView">
+                                <rect key="frame" x="70" y="30" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     </view>
                     <connections>
+                        <outlet property="nameLabel" destination="OM2-XN-QGe" id="uIe-NM-42D"/>
+                        <outlet property="profilePictureView" destination="70a-yD-5TZ" id="YDC-eT-reU"/>
                         <outlet property="tableView" destination="lY6-Az-r1u" id="7Mj-bf-L2M"/>
                         <segue destination="lhS-ZC-2dE" kind="custom" identifier="GoToProductSegue" customClass="SWRevealViewControllerSegue" id="G7v-hA-5wL"/>
                         <segue destination="7fb-BL-HW0" kind="custom" identifier="GoToClientSegue" customClass="SWRevealViewControllerSegue" id="2KC-3w-iij"/>
@@ -514,7 +528,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gEv-P6-6rV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-434" y="224"/>
+            <point key="canvasLocation" x="-530" y="224"/>
         </scene>
     </scenes>
     <resources>
@@ -526,6 +540,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="N7o-Eh-oio"/>
+        <segue reference="zTi-fb-gC5"/>
     </inferredMetricsTieBreakers>
 </document>

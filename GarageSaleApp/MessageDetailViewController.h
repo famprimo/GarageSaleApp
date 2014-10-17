@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Message.h"
+#import "MessageModel.h"
 
 @interface MessageDetailViewController : UIViewController
 
