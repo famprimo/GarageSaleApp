@@ -82,12 +82,7 @@
 
 - (void)refreshButtonClicked:(id)sender
 {
-    NSMutableArray *newMessagesArray = [[NSMutableArray alloc] init];
-    newMessagesArray = [self makeFBRequestForNewNotifications:_myData];
-
-    NSLog(@"Array!");
-    // [_myData addObjectsFromArray:newMessagesArray];
-    
+    [self makeFBRequestForNewNotifications:_myData];
     
 }
 
@@ -194,10 +189,9 @@
 
 #pragma mark - Contact with Facebook
 
-- (NSMutableArray*) makeFBRequestForNewNotifications:(NSMutableArray*)messagesArray;
+- (void) makeFBRequestForNewNotifications:(NSMutableArray*)messagesArray;
 {
     MessageModel *messagesMethods = [[MessageModel alloc] init];
-    NSMutableArray *newMessagesArrayFinal = [[NSMutableArray alloc] init];
     
     [FBRequestConnection startWithGraphPath:@"me/notifications?fields=application,link&include_read=true"
                           completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -212,18 +206,12 @@
                                       // Get new notifactions
                                       newMessagesArray = [messagesMethods getNewNotifications:jsonArray withMessagesArray:messagesArray];
                                       
-                                      // Get message details for those notifications
-                                      newMessagesArray = [self makeFBRequestForMessageDetails:newMessagesArray];
-                                      
-                                     // Sorting arrays
-                                      NSArray *sortedArray;
-                                      sortedArray = [newMessagesArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-                                          NSDate *first = [(Message*)a datetime];
-                                          NSDate *second = [(Message*)b datetime];
-                                          return [first compare:second];
-                                      }];
-                                      
-                                      [newMessagesArrayFinal addObjectsFromArray:sortedArray];
+                                      if (newMessagesArray.count >0) { // New Messages!
+                                          
+                                          // Get message details for those notifications
+                                          [self makeFBRequestForMessageDetails:newMessagesArray];
+                                          
+                                      }
                                       
                                   }
                                   
@@ -234,22 +222,19 @@
                               }
                           }];
     
-    return newMessagesArrayFinal;
 }
 
-- (NSMutableArray*) makeFBRequestForMessageDetails:(NSMutableArray*)messagesArray;
+- (void) makeFBRequestForMessageDetails:(NSMutableArray*)messagesArray;
 {
     
     MessageModel *messagesMethods = [[MessageModel alloc] init];
-    NSMutableArray *updatedMessagesArray = [[NSMutableArray alloc] init];
     
     // Create string for FB request
     NSMutableString *requestMessagesList = [[NSMutableString alloc] init];
     [requestMessagesList appendString:@"?ids="];
     [requestMessagesList appendString:[messagesMethods getMessagesIDs:messagesArray]];
     
-    // NSLog(@"request para FB: %@", requestMessagesList);
-    
+    // Make FB request
     [FBRequestConnection startWithGraphPath:requestMessagesList
                           completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                               
@@ -257,6 +242,7 @@
                                   
                                   Message *tempMessage;
                                   
+                                  // Get details and create array
                                   for (int i=0; i<messagesArray.count; i=i+1)
                                   {
                                       tempMessage = [[Message alloc] init];
@@ -266,10 +252,20 @@
                                       tempMessage.fb_from_id = result[tempMessage.fb_msg_id][@"from"][@"id"];
                                       tempMessage.fb_from_name = result[tempMessage.fb_msg_id][@"from"][@"name"];
                                       
-                                      [updatedMessagesArray addObject:tempMessage];
+                                      // Insert new message to array and add row to table
+                                      [self addNewMessage:tempMessage];
                                       
-                                      /// LLAMAR A UN METODO QUE AGREGUE LOS NUEVOS MENSAJES!!!
                                   }
+                                  
+                                  /*
+                                  // Sort array
+                                  NSArray *sortedArray;
+                                  sortedArray = [newMessagesArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+                                      NSDate *first = [(Message*)a datetime];
+                                      NSDate *second = [(Message*)b datetime];
+                                      return [first compare:second];
+                                  }];
+                                  */
                                   
                               }
                               else {
@@ -279,7 +275,13 @@
                               }
                           } ];
     
-    return updatedMessagesArray;
+}
+
+- (void) addNewMessage:(Message*)newMessage;
+{
+    [_myData insertObject:newMessage atIndex:0];
+    [self.tableView reloadData];
+    
 }
 
 @end

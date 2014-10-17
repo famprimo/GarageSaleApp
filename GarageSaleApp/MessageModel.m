@@ -12,9 +12,11 @@
 
 - (NSMutableArray*)getMessages:(NSMutableArray*)messageList;
 {
-    // Array to hold the listing data
+    // Array to hold the listing data and formatter for FB dates
     NSMutableArray *messages = [[NSMutableArray alloc] init];
-    
+    NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+    [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+
     // Create message #1
     Message *tempMessage = [[Message alloc] init];
     tempMessage.fb_notif_id = @"153344961539458_1378402423";
@@ -29,6 +31,7 @@
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"N";
     tempMessage.type = @"I";
+    tempMessage.datetime = [formatFBdates dateFromString:@"2014-06-20T16:41:15+0000"];
    
     // Add message #1 to the array
     [messages addObject:tempMessage];
@@ -46,6 +49,7 @@
     tempMessage.from_client_id = @"00004";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"P";
+    tempMessage.datetime = [formatFBdates dateFromString:@"2014-05-10T16:41:15+0000"];
     
     // Add message #2 to the array
     [messages addObject:tempMessage];

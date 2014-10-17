@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GarageSaleApp/MessageTableViewController.m"
-            timestampString = "435208940.237972"
+            timestampString = "435259940.871846"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "280"
-            endingLineNumber = "280"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
             landmarkName = "-makeFBRequestForMessageDetails:"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,28 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GarageSaleApp/MessageTableViewController.m"
-            timestampString = "435208952.927363"
+            timestampString = "435259890.659191"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "-makeFBRequestForNewNotifications:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GarageSaleApp/MessageTableViewController.m"
-            timestampString = "435209017.507673"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
-            landmarkName = "-makeFBRequestForMessageDetails:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
