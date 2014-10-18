@@ -19,7 +19,6 @@
 
     // Create message #1
     Message *tempMessage = [[Message alloc] init];
-    tempMessage.fb_notif_id = @"153344961539458_1378402423";
     tempMessage.fb_msg_id = @"153344961539458_1378402423";
     tempMessage.fb_from_id = @"10203554768023190";
     tempMessage.fb_from_name = @"Mily de la Cruz";
@@ -38,7 +37,6 @@
     
     // Create message #2
     tempMessage = [[Message alloc] init];
-    tempMessage.fb_notif_id = @"notif_329073340603857_14353045";
     tempMessage.fb_msg_id = @"1469889866608936_1408489028";
     tempMessage.fb_from_id = @"10152156045491377";
     tempMessage.fb_from_name = @"Amparo Gonzalez";
@@ -58,18 +56,20 @@
     return messages;
 }
 
-- (BOOL)existNotification:(NSString*)notificationToValidate withMessagesArray:(NSMutableArray*)messageList;
+- (BOOL)existMessage:(NSString*)messageIDToValidate withMessagesArray:(NSMutableArray*)messageList;
 {
+    // Review an array of Messages to check if a given Message ID exists
+    
     BOOL exists = NO;
     
-    Message *messageToValidate = [[Message alloc] init];
-   
+    Message *messageToReview = [[Message alloc] init];
+    
     for (int i=0; i<messageList.count; i=i+1)
     {
-        messageToValidate = [[Message alloc] init];
-        messageToValidate = (Message *)messageList[i];
+        messageToReview = [[Message alloc] init];
+        messageToReview = (Message *)messageList[i];
         
-        if ([messageToValidate.fb_notif_id isEqual:notificationToValidate])
+        if ([messageToReview.fb_msg_id isEqual:messageIDToValidate])
         {
             exists = YES;
             break;
@@ -78,11 +78,12 @@
     return exists;
 }
 
+
 - (NSString*)getPhotoID:(NSString*)facebookLink;
 {
-    NSString *photoID;
+    // Search for 'fbid=' on a Facebook link to get photo_id
     
-    // Search for 'fbid=' to get photo_id
+    NSString *photoID;
     
     NSRange searchForPhotoId = [facebookLink rangeOfString:@"fbid="];
     NSRange searchForDelimiter = [facebookLink rangeOfString:@"&"];
@@ -98,10 +99,10 @@
 
 - (NSString*)getCommentID:(NSString*)facebookLink;
 {
+    // Search for 'comment_id=' on a Facebook link to get _id
+    
     NSString *commentID;
 
-    // Search for 'comment_id=' to get _id
-  
     NSRange searchForCommentId = [facebookLink rangeOfString:@"comment_id="];
     
     int locationCommentID = (int) searchForCommentId.location + 11;
@@ -117,60 +118,6 @@
     return commentID;
 }
 
-
-- (NSMutableArray*)getNewNotifications:(NSArray*)arrayResultsData withMessagesArray:(NSMutableArray*)messageList;
-{
-    // Method that takes the result of a call to FB and return the new notifications
-    
-    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
-    
-    Message *tempMessage = [[Message alloc] init];
-    MessageModel *messagesMethods = [[MessageModel alloc] init];
-    
-    // Look for "Photos" notifications
-    
-    for (int i=0; i<arrayResultsData.count; i=i+1)
-    {
-        NSDictionary *newMessage = arrayResultsData[i];
-        
-        if ([newMessage[@"application"][@"name"] isEqual: @"Photos"]) {
-            
-            if (![messagesMethods existNotification:newMessage[@"id"] withMessagesArray:messageList]) {
-                // It's a new notification!
-                
-                tempMessage = [[Message alloc] init];
-                tempMessage.fb_notif_id = newMessage[@"id"];
-                tempMessage.fb_link = newMessage[@"link"];
-                tempMessage.fb_created_time = newMessage[@"created_time"];
-                
-                NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
-                [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-                tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time];
-                
-                // PARA MOSTRAR LOS MENSAJES USAR https://github.com/nikilster/NSDate-Time-Ago
-                
-                
-                NSMutableString *msgIDfromLink = [[NSMutableString alloc] init];
-                
-                [msgIDfromLink appendString:[messagesMethods getPhotoID:tempMessage.fb_link]];
-                tempMessage.fb_photo_id = msgIDfromLink;
-                
-                [msgIDfromLink appendString:@"_"];
-                
-                [msgIDfromLink appendString:[messagesMethods getCommentID:tempMessage.fb_link]];
-                
-                tempMessage.fb_msg_id = msgIDfromLink;
-                
-                // Add new message object
-                [messagesArray addObject:tempMessage];
-                
-            }
-        }
-    }
-    
-    return messagesArray;
-    
-}
 
 - (NSString*)getMessagesIDs:(NSMutableArray*)messagesArray;
 {

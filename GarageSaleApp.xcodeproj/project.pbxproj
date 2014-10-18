@@ -34,6 +34,7 @@
 		C029BA671969D26000125C4F /* CustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA641969D26000125C4F /* CustomSegue.m */; };
 		C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA661969D26000125C4F /* CustomUnwindSegue.m */; };
 		C029BA6B1969EF9400125C4F /* Opportunity.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA6A1969EF9400125C4F /* Opportunity.m */; };
+		C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */; };
 		C0815E0E19644C250021A153 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E0D19644C250021A153 /* Client.m */; };
 		C0815E1119644C2D0021A153 /* ClientModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1019644C2D0021A153 /* ClientModel.m */; };
 		C0815E1419644C390021A153 /* OpportunityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1319644C390021A153 /* OpportunityModel.m */; };
@@ -99,6 +100,8 @@
 		C029BA661969D26000125C4F /* CustomUnwindSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUnwindSegue.m; sourceTree = "<group>"; };
 		C029BA691969EF9400125C4F /* Opportunity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Opportunity.h; sourceTree = "<group>"; };
 		C029BA6A1969EF9400125C4F /* Opportunity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Opportunity.m; sourceTree = "<group>"; };
+		C05C6A8319F1D5B800BCF9BD /* NSDate+NVTimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NVTimeAgo.h"; sourceTree = "<group>"; };
+		C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NVTimeAgo.m"; sourceTree = "<group>"; };
 		C0815E0C19644C250021A153 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		C0815E0D19644C250021A153 /* Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
 		C0815E0F19644C2D0021A153 /* ClientModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientModel.h; sourceTree = "<group>"; };
@@ -203,6 +206,7 @@
 				C00ED11C19644B000045A65E /* About */,
 				C00ED11719644AAE0045A65E /* Reveal */,
 				C029BA621969D20400125C4F /* Custom Segues */,
+				C05C6A8219F1D56100BCF9BD /* Date Time Ago */,
 				C00ED0E619644A5A0045A65E /* Supporting Files */,
 			);
 			path = GarageSaleApp;
@@ -320,6 +324,15 @@
 			name = "Custom Segues";
 			sourceTree = "<group>";
 		};
+		C05C6A8219F1D56100BCF9BD /* Date Time Ago */ = {
+			isa = PBXGroup;
+			children = (
+				C05C6A8319F1D5B800BCF9BD /* NSDate+NVTimeAgo.h */,
+				C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */,
+			);
+			name = "Date Time Ago";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -418,6 +431,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C02486F019646AA5005DCBE6 /* ClientTableViewController.m in Sources */,
+				C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */,
 				C008BA3719C3CB82008616E4 /* MessageTableViewController.m in Sources */,
 				C02486F319646ADA005DCBE6 /* ClientDetailViewController.m in Sources */,
 				C0815E1119644C2D0021A153 /* ClientModel.m in Sources */,

@@ -12,10 +12,10 @@
 @interface MessageModel : NSObject
 
 - (NSMutableArray*)getMessages:(NSMutableArray*)messageList;
-- (BOOL)existNotification:(NSString*)notificationToValidate withMessagesArray:(NSMutableArray*)messageList;
+- (BOOL)existNotification:(NSString*)notificationIDToValidate withMessagesArray:(NSMutableArray*)messageList;
+- (BOOL)existMessage:(NSString*)messageIDToValidate withMessagesArray:(NSMutableArray*)messageList;
 - (NSString*)getPhotoID:(NSString*)facebookLink;
 - (NSString*)getCommentID:(NSString*)facebookLink;
-- (NSMutableArray*)getNewNotifications:(NSArray*)arrayResultsData withMessagesArray:(NSMutableArray*)messageList;
 - (NSString*)getMessagesIDs:(NSMutableArray*)messagesArray;
 
 @end

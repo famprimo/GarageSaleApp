@@ -10,28 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GarageSaleApp/MessageTableViewController.m"
-            timestampString = "435259940.871846"
+            timestampString = "435287036.80117"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "234"
-            endingLineNumber = "234"
-            landmarkName = "-makeFBRequestForMessageDetails:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GarageSaleApp/MessageTableViewController.m"
-            timestampString = "435259890.659191"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "203"
-            endingLineNumber = "203"
-            landmarkName = "-makeFBRequestForNewNotifications:"
+            startingLineNumber = "279"
+            endingLineNumber = "279"
+            landmarkName = "-makeFBRequestForPhotosDetails:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
