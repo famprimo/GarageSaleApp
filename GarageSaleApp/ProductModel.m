@@ -138,7 +138,7 @@
     return nextID;
 }
 
-- (BOOL)addNewProduct:(Client*)newProduct;
+- (BOOL)addNewProduct:(Product*)newProduct;
 {
     BOOL updateSuccessful = YES;
     

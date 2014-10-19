@@ -15,7 +15,6 @@
 #import "ClientModel.h"
 #import "Product.h"
 #import "ProductModel.h"
-#import "AppDelegate.h"
 #import <FacebookSDK/FacebookSDK.h>
 #import "NSDate+NVTimeAgo.h"
 
@@ -23,8 +22,6 @@
 {
     // Data for the table
     NSMutableArray *_myData;
-    
-    AppDelegate *mainDelegate;
     
     // The product that is selected from the table
     Message *_selectedMessage;
@@ -47,6 +44,8 @@
 {
     [super viewDidLoad];
     
+    MessageModel *messagesMethods = [[MessageModel alloc] init];
+
     // For the reveal menu to work
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     
@@ -61,15 +60,12 @@
     
     self.detailViewController = (MessageDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
     
-    // To have access to shared arrays from AppDelegate
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
     // Get the listing data
-    _myData = mainDelegate.sharedArrayMessages;
+    _myData = messagesMethods.getMessagesArray;
     
     // Assign detail view with first item
     _selectedMessage = [_myData firstObject];
@@ -126,11 +122,21 @@
     UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:1];
     UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:2];
     UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:3];
+    UILabel *newmarkLabel = (UILabel*)[myCell.contentView viewWithTag:4];
     
     // Set table cell labels to listing data
     nameLabel.text = myMessage.fb_from_name;
     messageLabel.text = myMessage.message;
     datetimeLabel.text = [myMessage.datetime formattedAsTimeAgo];
+    
+    if ([myMessage.status isEqualToString:@"N"])
+    {
+        newmarkLabel.text = @"o";
+    }
+    else
+    {
+        newmarkLabel.text = @"";
+    }
         
     return myCell;
 }
@@ -250,22 +256,32 @@
                                           
                                           newProduct.product_id = productID;
                                           newProduct.client_id = @"";
-                                          newProduct.GS_code = @"";
                                           newProduct.name = @"New Product";
-                                          newProduct.desc = @"Tiene un sonidito casi imperceptible. Comprado en USA el año pasado. Solo ha sido usado durante 5 meses y muy poco. La Aurora - MIRAFLORES";
+                                          newProduct.desc = result[photosArray[i]][@"name"];
                                           newProduct.fb_photo_id = photoID;
+                                          
+                                          // BUSCAR EN LA DESCRIPCION PARA TOMAR CURRENCY, PUBLISHED PRICE Y GS_CODE
+
+                                          newProduct.GS_code = @"";
                                           newProduct.currency = @"";
                                           newProduct.initial_price = 0;
                                           newProduct.published_price = 0;
-                                          newProduct.publishing_date = [dateFormat dateFromString:@"20140301"];
-                                          newProduct.picture_link = @"https://fbcdn-sphotos-d-a.akamaihd.net/hphotos-ak-prn1/t1.0-9/10341676_838515596177140_687032528327336304_n.jpg";
-                                          //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-                                          newProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
+                                          
+                                          NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+                                          [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+                                          newProduct.publishing_date = [formatFBdates dateFromString:result[photosArray[i]][@"created_time"]];
+                                          newProduct.last_update = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
+                                          
+                                          newProduct.picture_link = result[photosArray[i]][@"picture"];
+                                          newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
                                           newProduct.additional_pictures = @"";
                                           newProduct.status = @"N";
                                           newProduct.promotion_piority = 2;
                                           newProduct.notes = @"";
                                           newProduct.agent_id = @"00001";
+                                          
+                                          
+                                          [productMethods addNewProduct:newProduct];
 
                                       }
 

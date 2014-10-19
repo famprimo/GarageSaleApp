@@ -11,9 +11,8 @@
 
 @implementation MessageModel
 
-- (NSMutableArray*)getMessages:(NSMutableArray*)messageList;
+- (NSMutableArray*)getMessages:(NSMutableArray*)messageList; // Updates the array with message list with new messages from database
 {
-    // Array to hold the listing data and formatter for FB dates
     NSMutableArray *messages = [[NSMutableArray alloc] init];
     NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
     [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
@@ -29,7 +28,7 @@
     tempMessage.product_id = @"00001";
     tempMessage.client_id = @"00006";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"N";
+    tempMessage.status = @"R";
     tempMessage.type = @"I";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-06-20T16:41:15+0000"];
    
@@ -46,7 +45,7 @@
     tempMessage.fb_photo_id = @"XXXXX";
     tempMessage.client_id = @"00004";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"P";
+    tempMessage.status = @"D";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-05-10T16:41:15+0000"];
     
     // Add message #2 to the array
@@ -56,10 +55,22 @@
     return messages;
 }
 
-- (BOOL)existMessage:(NSString*)messageIDToValidate;
+- (NSMutableArray*)getMessagesArray; // Return an array with all messages
 {
-    // Review an array of Messages to check if a given Message ID exists
+    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
     
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+    messagesArray = mainDelegate.sharedArrayMessages;
+    
+    return messagesArray;
+}
+
+
+- (BOOL)existMessage:(NSString*)messageIDToValidate; // Review an array of Messages to check if a given Message ID exists
+{
     BOOL exists = NO;
     
     // To have access to shared arrays from AppDelegate
@@ -83,10 +94,8 @@
 }
 
 
-- (NSString*)getPhotoID:(NSString*)facebookLink;
+- (NSString*)getPhotoID:(NSString*)facebookLink; // Search for 'fbid=' on a Facebook link to get photo_id
 {
-    // Search for 'fbid=' on a Facebook link to get photo_id
-    
     NSString *photoID;
     
     NSRange searchForPhotoId = [facebookLink rangeOfString:@"fbid="];
@@ -101,10 +110,8 @@
 }
 
 
-- (NSString*)getCommentID:(NSString*)facebookLink;
+- (NSString*)getCommentID:(NSString*)facebookLink; // Search for 'comment_id=' on a Facebook link to get _id
 {
-    // Search for 'comment_id=' on a Facebook link to get _id
-    
     NSString *commentID;
 
     NSRange searchForCommentId = [facebookLink rangeOfString:@"comment_id="];
@@ -123,10 +130,8 @@
 }
 
 
-- (NSString*)getMessagesIDs:(NSMutableArray*)messagesArray;
+- (NSString*)getMessagesIDs:(NSMutableArray*)messagesArray; // Method that returns the IDs of all the Messages in the array sent
 {
-    // Method that returns the IDs of all the Messages in the array sent
-    
     Message *tempMessage;
         
     NSMutableString *messagesIDList = [[NSMutableString alloc] init];

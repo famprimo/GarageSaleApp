@@ -19,9 +19,9 @@
 @synthesize sharedArrayClients;
 @synthesize sharedArrayOpportunities;
 @synthesize sharedArrayMessages;
-@synthesize lastCientID;
-@synthesize lastMessageID;
 @synthesize lastProductID;
+@synthesize lastCientID;
+@synthesize lastOpportunityID;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
