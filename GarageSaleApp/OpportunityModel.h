@@ -14,7 +14,7 @@
 @interface OpportunityModel : NSObject
 
 - (NSMutableArray*)getOpportunities:(NSMutableArray*)clientList;
-
+- (NSString*)getNextOpportunityID;
 - (Client*)getClient:(Opportunity*)opportunitySelected;
 - (Client*)getOwner:(Opportunity*)opportunitySelected;
 

@@ -14,7 +14,10 @@
 @interface ProductModel : NSObject
 
 - (NSMutableArray*)getProducts:(NSMutableArray*)productList;
+- (NSString*)getNextProductID;
+- (BOOL)addNewProduct:(Client*)newProduct;
 - (Client*)getClient:(Product*)productFound;
 - (NSMutableArray*)getOpportunitiesFromProduct:(Product*)productSelected;
+- (NSString*)getProductIDfromFbPhotoId:(NSString*)photoFbIdToValidate;
 
 @end

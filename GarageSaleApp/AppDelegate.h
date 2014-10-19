@@ -17,5 +17,8 @@
 @property(nonatomic,retain) NSMutableArray *sharedArrayClients;
 @property(nonatomic,retain) NSMutableArray *sharedArrayOpportunities;
 @property(nonatomic,retain) NSMutableArray *sharedArrayMessages;
+@property(nonatomic) int lastProductID;
+@property(nonatomic) int lastCientID;
+@property(nonatomic) int lastOpportunityID;
 
 @end

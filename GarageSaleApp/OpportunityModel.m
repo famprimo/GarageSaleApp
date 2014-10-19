@@ -20,11 +20,11 @@
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"yyyyMMdd"];
     
-    // Create product #1
+    // Create opportunity #1
     Opportunity *tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000001";
     tempOpportunity.product_id = @"00001";
-    tempOpportunity.client_id = @"00003";
+    tempOpportunity.buyer_id = @"00003";
     tempOpportunity.date = [dateFormat dateFromString:@"20140501"];
     tempOpportunity.initial_price = 290.0;
     tempOpportunity.price_sold = 0;
@@ -36,11 +36,11 @@
     // Add opportunity #1 to the array
     [opportunities addObject:tempOpportunity];
 
-    // Create product #2
+    // Create opportunity #2
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000002";
     tempOpportunity.product_id = @"00001";
-    tempOpportunity.client_id = @"00004";
+    tempOpportunity.buyer_id = @"00004";
     tempOpportunity.date = [dateFormat dateFromString:@"20140530"];
     tempOpportunity.initial_price = 290.0;
     tempOpportunity.price_sold = 0;
@@ -52,11 +52,11 @@
     // Add opportunity #2 to the array
     [opportunities addObject:tempOpportunity];
 
-    // Create product #3
+    // Create opportunity #3
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000003";
     tempOpportunity.product_id = @"00003";
-    tempOpportunity.client_id = @"00001";
+    tempOpportunity.buyer_id = @"00001";
     tempOpportunity.date = [dateFormat dateFromString:@"20140302"];
     tempOpportunity.initial_price = 1100.0;
     tempOpportunity.price_sold = 0;
@@ -68,11 +68,11 @@
     // Add opportunity #3 to the array
     [opportunities addObject:tempOpportunity];
 
-    // Create product #4
+    // Create opportunity #4
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000004";
     tempOpportunity.product_id = @"00004";
-    tempOpportunity.client_id = @"00005";
+    tempOpportunity.buyer_id = @"00005";
     tempOpportunity.date = [dateFormat dateFromString:@"20131201"];
     tempOpportunity.initial_price = 100000;
     tempOpportunity.price_sold = 990000;
@@ -84,11 +84,11 @@
     // Add opportunity #4 to the array
     [opportunities addObject:tempOpportunity];
 
-    // Create product #5
+    // Create opportunity #5
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000005";
     tempOpportunity.product_id = @"00002";
-    tempOpportunity.client_id = @"00006";
+    tempOpportunity.buyer_id = @"00006";
     tempOpportunity.date = [dateFormat dateFromString:@"20140601"];
     tempOpportunity.initial_price = 250.0;
     tempOpportunity.price_sold = 0;
@@ -99,9 +99,25 @@
     
     // Add opportunity #5 to the array
     [opportunities addObject:tempOpportunity];
+    
+    // Set last opportuniy ID
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    mainDelegate.lastOpportunityID = 5;
 
     // Return the producct array as the return value
     return opportunities;
+}
+
+- (NSString*)getNextOpportunityID;
+{
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    mainDelegate.lastOpportunityID = mainDelegate.lastOpportunityID + 1;
+    
+    NSString *nextID = [NSString stringWithFormat:@"%d", mainDelegate.lastOpportunityID];
+    
+    return nextID;
 }
 
 - (Client*)getClient:(Opportunity*)opportunitySelected
@@ -116,7 +132,7 @@
     for (int i = 0; i < mainDelegate.sharedArrayClients.count; i++)
     {
         Client* clientTemp = [mainDelegate.sharedArrayClients objectAtIndex: i];
-        if (opportunitySelected.client_id == clientTemp.client_id)
+        if (opportunitySelected.buyer_id == clientTemp.client_id)
         {
             clientFound = clientTemp;
             break;

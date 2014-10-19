@@ -12,5 +12,8 @@
 @interface ClientModel : NSObject
 
 - (NSMutableArray*)getClients:(NSMutableArray*)clientList;
+- (NSString*)getNextClientID;
+- (BOOL)addNewClient:(Client*)newClient;
+- (NSString*)getClientIDfromFbId:(NSString*)clientFbIdToValidate;
 
 @end

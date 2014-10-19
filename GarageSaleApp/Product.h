@@ -15,20 +15,20 @@
 @property (strong, nonatomic) NSString *GS_code;
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *desc;
-@property (strong, nonatomic) NSString *facebook_id;
-@property (strong, nonatomic) NSString *album_id;
-@property (strong, nonatomic) NSString *currency;
+@property (strong, nonatomic) NSString *fb_photo_id;
+@property (strong, nonatomic) NSString *currency; // (S/.) (US$)
 @property (nonatomic) float initial_price;
 @property (nonatomic) float published_price;
 @property (strong, nonatomic) NSDate *publishing_date;
-@property (strong, nonatomic) NSDate *final_date;
-@property (strong, nonatomic) NSString *type;
+@property (strong, nonatomic) NSDate *sold_date;
+@property (strong, nonatomic) NSDate *last_update;
+@property (strong, nonatomic) NSString *type; // (S)ales (A)dvertising
 @property (strong, nonatomic) NSString *picture_link;
 @property (strong, nonatomic) NSData *picture;
 @property (strong, nonatomic) NSString *additional_pictures;
-@property (strong, nonatomic) NSString *status;
+@property (strong, nonatomic) NSString *status; // (N)ew (U)pdated (S)old (D)isabled
 @property (strong, nonatomic) NSDate *last_promotion_date;
-@property (nonatomic) int promotion_piority;
+@property (nonatomic) int promotion_piority; // 1,2,3 (default is 2)
 @property (strong, nonatomic) NSString *notes;
 @property (strong, nonatomic) NSString *agent_id;
 

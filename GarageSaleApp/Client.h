@@ -13,18 +13,18 @@
 @property (strong, nonatomic) NSString *client_id;
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *last_name;
-@property (strong, nonatomic) NSString *sex;
+@property (strong, nonatomic) NSString *sex; // (M)ale (F)emale
 @property (strong, nonatomic) NSString *zone;
 @property (strong, nonatomic) NSString *address;
 @property (strong, nonatomic) NSString *phone1;
 @property (strong, nonatomic) NSString *phone2;
 @property (strong, nonatomic) NSString *phone3;
 @property (strong, nonatomic) NSString *email;
-@property (strong, nonatomic) NSString *preference;
-//@property (nonatomic) Boolean *owner;
-@property (strong, nonatomic) NSString *facebook_id;
+@property (strong, nonatomic) NSString *preference; // (E)mail (F)acebook
+@property (strong, nonatomic) NSString *fb_cient_id;
 @property (strong, nonatomic) NSString *picture_link;
 @property (strong, nonatomic) NSData *picture;
+@property (strong, nonatomic) NSString *status; // (N)ew (U)pdated (D)isabled
 @property (strong, nonatomic) NSDate *last_inventory;
 @property (strong, nonatomic) NSString *notes;
 @property (strong, nonatomic) NSString *agent_id;

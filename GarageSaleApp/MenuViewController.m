@@ -164,13 +164,14 @@
     NSLog(@"%@", user.name);
     self.nameLabel.text = user.name;
     self.profilePictureView.profileID = user.objectID;
-    
-    [self requestPermissions];
 }
 
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView
 {
     NSLog(@"You are logged in!");
+    
+    //[self requestPermissions];
+
 }
 
 - (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView
@@ -225,7 +226,7 @@
 - (void)requestPermissions;
 {
     // These are the permissions we need:
-    NSArray *permissionsNeeded = @[@"public_profile", @"manage_notifications", @"read_stream", @"user_photos"];
+    NSArray *permissionsNeeded = @[@"public_profile", @"manage_notifications", @"read_stream", @"user_photos", @"user_friends"];
     
     // Request the permissions the user currently has
     [FBRequestConnection startWithGraphPath:@"/me/permissions"

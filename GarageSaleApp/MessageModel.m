@@ -7,6 +7,7 @@
 //
 
 #import "MessageModel.h"
+#import "AppDelegate.h"
 
 @implementation MessageModel
 
@@ -22,11 +23,11 @@
     tempMessage.fb_msg_id = @"153344961539458_1378402423";
     tempMessage.fb_from_id = @"10203554768023190";
     tempMessage.fb_from_name = @"Mily de la Cruz";
-    tempMessage.fb_link = @"XXXXX";
     tempMessage.message = @"Me interesa. Enviar datos al inbox";
     tempMessage.fb_created_time = @"2014-09-20T18:45:38+0000";
     tempMessage.fb_photo_id = @"XXXXX";
-    tempMessage.from_client_id = @"00006";
+    tempMessage.product_id = @"00001";
+    tempMessage.client_id = @"00006";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"N";
     tempMessage.type = @"I";
@@ -40,11 +41,10 @@
     tempMessage.fb_msg_id = @"1469889866608936_1408489028";
     tempMessage.fb_from_id = @"10152156045491377";
     tempMessage.fb_from_name = @"Amparo Gonzalez";
-    tempMessage.fb_link = @"XXXXX";
     tempMessage.message = @"Cuales son las medidas?";
     tempMessage.fb_created_time = @"2014-09-20T18:45:38+0000";
     tempMessage.fb_photo_id = @"XXXXX";
-    tempMessage.from_client_id = @"00004";
+    tempMessage.client_id = @"00004";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"P";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-05-10T16:41:15+0000"];
@@ -56,18 +56,22 @@
     return messages;
 }
 
-- (BOOL)existMessage:(NSString*)messageIDToValidate withMessagesArray:(NSMutableArray*)messageList;
+- (BOOL)existMessage:(NSString*)messageIDToValidate;
 {
     // Review an array of Messages to check if a given Message ID exists
     
     BOOL exists = NO;
     
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
     Message *messageToReview = [[Message alloc] init];
     
-    for (int i=0; i<messageList.count; i=i+1)
+    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
     {
         messageToReview = [[Message alloc] init];
-        messageToReview = (Message *)messageList[i];
+        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
         
         if ([messageToReview.fb_msg_id isEqual:messageIDToValidate])
         {

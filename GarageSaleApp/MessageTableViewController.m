@@ -11,6 +11,10 @@
 #import "SWRevealViewController.h"
 #import "Message.h"
 #import "MessageModel.h"
+#import "Client.h"
+#import "ClientModel.h"
+#import "Product.h"
+#import "ProductModel.h"
 #import "AppDelegate.h"
 #import <FacebookSDK/FacebookSDK.h>
 #import "NSDate+NVTimeAgo.h"
@@ -141,55 +145,6 @@
 }
 
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
 #pragma mark - Contact with Facebook
 
 - (void) makeFBRequestForNewNotifications;
@@ -257,6 +212,8 @@
 {
     
     MessageModel *messagesMethods = [[MessageModel alloc] init];
+    ClientModel *clientMethods = [[ClientModel alloc] init];
+    ProductModel *productMethods = [[ProductModel alloc] init];
     
     // Create string for FB request
     NSMutableString *requestPhotosList = [[NSMutableString alloc] init];
@@ -274,47 +231,90 @@
                               
                               if (!error) { // FB request was a success!
                                   
-                                  
                                   // Get details and create array
                                   for (int i=0; i<photosArray.count; i=i+1)
                                   {
                                       
-                                      NSLog(@"ID de la foto: %@", result[photosArray[i]][@"id"]);
+                                      // Review each photo
+                                      NSString *photoID = result[photosArray[i]][@"id"];
                                       
-                                      /*
-                                       Message *tempMessage;
+                                      // Review if product exists
+                                      NSString *productID = [productMethods getProductIDfromFbPhotoId:photoID];
+                                      
+                                      if ([productID  isEqual: @"Not Found"])
+                                      {
+                                          // New product!
+                                          productID = [productMethods getNextProductID];
+                                          
+                                          Product *newProduct = [[Product alloc] init];
+                                          
+                                          newProduct.product_id = productID;
+                                          newProduct.client_id = @"";
+                                          newProduct.GS_code = @"";
+                                          newProduct.name = @"New Product";
+                                          newProduct.desc = @"Tiene un sonidito casi imperceptible. Comprado en USA el año pasado. Solo ha sido usado durante 5 meses y muy poco. La Aurora - MIRAFLORES";
+                                          newProduct.fb_photo_id = photoID;
+                                          newProduct.currency = @"";
+                                          newProduct.initial_price = 0;
+                                          newProduct.published_price = 0;
+                                          newProduct.publishing_date = [dateFormat dateFromString:@"20140301"];
+                                          newProduct.picture_link = @"https://fbcdn-sphotos-d-a.akamaihd.net/hphotos-ak-prn1/t1.0-9/10341676_838515596177140_687032528327336304_n.jpg";
+                                          //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+                                          newProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
+                                          newProduct.additional_pictures = @"";
+                                          newProduct.status = @"N";
+                                          newProduct.promotion_piority = 2;
+                                          newProduct.notes = @"";
+                                          newProduct.agent_id = @"00001";
 
-                                       tempMessage.fb_from_id = result[tempMessage.fb_msg_id][@"from"][@"id"];
-                                      tempMessage.fb_from_name = result[tempMessage.fb_msg_id][@"from"][@"name"];
-                                      
-                                      tempMessage = [[Message alloc] init];
-                                      tempMessage = (Message *)messagesArray[i];
-                                   
-                                      tempMessage = [[Message alloc] init];
-                                      tempMessage.fb_notif_id = newMessage[@"id"];
-                                      tempMessage.fb_link = newMessage[@"link"];
-                                      tempMessage.fb_created_time = newMessage[@"created_time"];
-                                      
-                                      NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
-                                      [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-                                      tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time];
-                                      
-                                      NSMutableString *msgIDfromLink = [[NSMutableString alloc] init];
-                                      
-                                      [msgIDfromLink appendString:[messagesMethods getPhotoID:tempMessage.fb_link]];
-                                      tempMessage.fb_photo_id = msgIDfromLink;
-                                      
-                                      [msgIDfromLink appendString:@"_"];
-                                      
-                                      [msgIDfromLink appendString:[messagesMethods getCommentID:tempMessage.fb_link]];
-                                      
-                                      tempMessage.fb_msg_id = msgIDfromLink;
-                                   
+                                      }
 
-                                      
-                                      // Insert new message to array and add row to table
-                                      [self addNewMessage:tempMessage];
-                                      */
+                                      // Review each comment
+                                      NSArray *jsonArray = result[photosArray[i]][@"comments"][@"data"];
+
+                                      for (int i=0; i<jsonArray.count; i=i+1)
+                                      {
+                                          NSDictionary *newMessage = jsonArray[i];
+                                          
+                                          // Validate if the comment/message exists
+                                          if (![messagesMethods existMessage:newMessage[@"id"]])
+                                          {
+                                              // New message!
+                                              Message *tempMessage = [[Message alloc] init];
+                                              
+                                              tempMessage.fb_msg_id = newMessage[@"id"];
+                                              tempMessage.fb_from_id = newMessage[@"from"][@"id"];
+                                              tempMessage.fb_from_name = newMessage[@"from"][@"name"];
+                                              tempMessage.message = newMessage[@"message"];
+                                              
+                                              tempMessage.fb_created_time = newMessage[@"created_time"];
+                                              NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+                                              [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+                                              tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time];
+                                              
+                                              tempMessage.fb_photo_id = photoID;
+                                              tempMessage.product_id = productID;
+                                              tempMessage.agent_id = @"00001";
+                                              tempMessage.status = @"N";
+                                              tempMessage.type = @"P";
+                                              
+                                              // Review if client exists
+                                              NSString *fromClientID = [clientMethods getClientIDfromFbId:tempMessage.fb_from_id];
+                                              
+                                              if ([fromClientID  isEqual: @"Not Found"])
+                                              {
+                                                  // New client!
+                                              }
+                                              else
+                                              {
+                                                  tempMessage.client_id = fromClientID;
+                                              }
+
+                                              // Insert new message to array and add row to table
+                                              [self addNewMessage:tempMessage];
+                                              
+                                          }
+                                      }
                                       
                                   }
                                   
@@ -330,7 +330,7 @@
 
 - (void) addNewMessage:(Message*)newMessage;
 {
-    // Insert message to Array
+    // Insert message to table array
     [_myData insertObject:newMessage atIndex:0];
     
     // Sort array to be sure new messages are on top
@@ -342,141 +342,17 @@
     }];
     
     // Update database
+    // [mainDelegate.sharedArrayMessages insertObject:newMessage atIndex:0]; // DEBE SER CON UN METODO DE MESSAGEMODEL!!
     
     // Reload table
-    [self.tableView reloadData];
+    [UIView transitionWithView:self.tableView
+                      duration:0.5f
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^(void) {
+                        [self.tableView reloadData];
+                    } completion:NULL];
     
 }
-
-/*
- 
- - (void) makeFBRequestForNewNotifications:(NSMutableArray*)messagesArray;
- {
- [FBRequestConnection startWithGraphPath:@"me/notifications?fields=application,link&include_read=true"
- completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
- 
- if (!error) {  // FB request was a success!
- 
- if (result[@"data"]) {   // There is FB data!
- 
- NSArray *jsonArray = result[@"data"];
- NSMutableArray *newMessagesArray = [[NSMutableArray alloc] init];
- 
- // Get new notifactions
- newMessagesArray = [self getNewNotifications:jsonArray withMessagesArray:messagesArray];
- 
- if (newMessagesArray.count >0) { // New Messages!
- 
- // Get message details for those notifications
- [self makeFBRequestForMessageDetails:newMessagesArray];
- 
- }
- 
- }
- 
- } else {
- // An error occurred, we need to handle the error
- // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
- NSLog(@"error %@", error.description);
- }
- }];
- 
-}
- 
-- (NSMutableArray*)getNewNotifications:(NSArray*)arrayResultsData withMessagesArray:(NSMutableArray*)messageList;
-{
-    // Method that takes the result of a call to FB and return the new notifications
- 
-    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
- 
-    Message *tempMessage = [[Message alloc] init];
-    MessageModel *messagesMethods = [[MessageModel alloc] init];
- 
-    // Look for "Photos" notifications
- 
-    for (int i=0; i<arrayResultsData.count; i=i+1)
-    {
-        NSDictionary *newMessage = arrayResultsData[i];
- 
-        if ([newMessage[@"application"][@"name"] isEqual: @"Photos"]) {
- 
-            if (![messagesMethods existNotification:newMessage[@"id"] withMessagesArray:messageList]) {
-                // It's a new notification!
- 
-                tempMessage = [[Message alloc] init];
-                tempMessage.fb_notif_id = newMessage[@"id"];
-                tempMessage.fb_link = newMessage[@"link"];
-                tempMessage.fb_created_time = newMessage[@"created_time"];
-                
-                NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
-                [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-                tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time];
-                
-                NSMutableString *msgIDfromLink = [[NSMutableString alloc] init];
-                
-                [msgIDfromLink appendString:[messagesMethods getPhotoID:tempMessage.fb_link]];
-                tempMessage.fb_photo_id = msgIDfromLink;
-                
-                [msgIDfromLink appendString:@"_"];
-                
-                [msgIDfromLink appendString:[messagesMethods getCommentID:tempMessage.fb_link]];
-                
-                tempMessage.fb_msg_id = msgIDfromLink;
-                
-                // Add new message object
-                [messagesArray addObject:tempMessage];
-                
-            }
-        }
-    }
-    
-    return messagesArray;
-    
-}
-
-- (void) makeFBRequestForMessageDetails:(NSMutableArray*)messagesArray;
-{
-    
-    MessageModel *messagesMethods = [[MessageModel alloc] init];
-    
-    // Create string for FB request
-    NSMutableString *requestMessagesList = [[NSMutableString alloc] init];
-    [requestMessagesList appendString:@"?ids="];
-    [requestMessagesList appendString:[messagesMethods getMessagesIDs:messagesArray]];
-    
-    // Make FB request
-    [FBRequestConnection startWithGraphPath:requestMessagesList
-                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                              
-                              if (!error) { // FB request was a success!
-                                  
-                                  Message *tempMessage;
-                                  
-                                  // Get details and create array
-                                  for (int i=0; i<messagesArray.count; i=i+1)
-                                  {
-                                      tempMessage = [[Message alloc] init];
-                                      tempMessage = (Message *)messagesArray[i];
-                                      
-                                      tempMessage.message = result[tempMessage.fb_msg_id][@"message"];
-                                      tempMessage.fb_from_id = result[tempMessage.fb_msg_id][@"from"][@"id"];
-                                      tempMessage.fb_from_name = result[tempMessage.fb_msg_id][@"from"][@"name"];
-                                      
-                                      // Insert new message to array and add row to table
-                                      [self addNewMessage:tempMessage];
-                                      
-                                  }
-                                  
-                              }
-                              else {
-                                  // An error occurred, we need to handle the error
-                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                  NSLog(@"error %@", error.description);
-                              }
-                          } ];
-    
-}
- */
 
 
 @end

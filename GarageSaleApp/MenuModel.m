@@ -8,6 +8,7 @@
 
 #import "MenuModel.h"
 #import "MenuItem.h"
+#import "AppDelegate.h"
 
 @implementation MenuModel
 
