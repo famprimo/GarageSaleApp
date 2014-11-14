@@ -12,6 +12,9 @@
 #import "Product.h"
 #import "ProductModel.h"
 #import "AppDelegate.h"
+#import <FacebookSDK/FacebookSDK.h>
+#import "NSDate+NVTimeAgo.h"
+
 
 @interface ProductTableViewController ()
 {
@@ -50,8 +53,8 @@
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
      
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newProduct:)];
-    self.navigationItem.rightBarButtonItem = addButton;
+    UIBarButtonItem *filterButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"EmptyFilter"] style:UIBarButtonItemStylePlain target:self action:@selector(filterButtonClicked:)];
+    self.navigationItem.rightBarButtonItem = filterButton;
     
     self.detailViewController = (ProductDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
 
@@ -72,8 +75,12 @@
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    // Initialize the refresh control.
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.backgroundColor = [UIColor whiteColor];
+    self.refreshControl.tintColor = [UIColor grayColor];
+    [self.refreshControl addTarget:self action:@selector(refreshTableGesture:) forControlEvents:UIControlEventValueChanged];
+
 }
 
 - (void)menuButtonClicked:(id)sender
@@ -81,10 +88,17 @@
     [self.revealViewController revealToggleAnimated:YES];
 }
 
-- (void)newProduct:(id)sender
+- (void)refreshTableGesture:(id)sender
 {
-    // code for adding a new product
+    [self makeFBRequestForPhotos];
+    
 }
+
+- (void)filterButtonClicked:(id)sender
+{
+    //
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -120,12 +134,36 @@
     UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:2];
     UILabel *codeLabel = (UILabel*)[myCell.contentView viewWithTag:3];
     UILabel *priceLabel = (UILabel*)[myCell.contentView viewWithTag:4];
+    UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:5];
+    UIImageView *soldImage = (UIImageView*)[myCell.contentView viewWithTag:6];
     
     // Set table cell labels to listing data
     pictureCell.image = [UIImage imageWithData:myProduct.picture];
     nameLabel.text = myProduct.name;
     codeLabel.text = myProduct.GS_code;
     priceLabel.text = [NSString stringWithFormat:@"%@%.f", myProduct.currency, myProduct.published_price];
+    
+    // Set mark and sold message depending on message status
+    if ([myProduct.status isEqualToString:@"N"])
+    {
+        markImage.image = [UIImage imageNamed:@"BlueDot"];
+        soldImage.image = [UIImage imageNamed:@"Blank"];
+    }
+    else if ([myProduct.status isEqualToString:@"S"])
+    {
+        markImage.image = [UIImage imageNamed:@"Blank"];
+        soldImage.image = [UIImage imageNamed:@"Sold"];
+    }
+    else if ([myProduct.status isEqualToString:@"D"])
+    {
+        markImage.image = [UIImage imageNamed:@"Denied"];
+        soldImage.image = [UIImage imageNamed:@"Blank"];
+    }
+    else
+    {
+        markImage.image = [UIImage imageNamed:@"Blank"];
+        soldImage.image = [UIImage imageNamed:@"Blank"];
+    }
     
     return myCell;
 }
@@ -143,53 +181,136 @@
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+#pragma mark - Contact with Facebook
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+- (void) makeFBRequestForPhotos;
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+    [self.refreshControl endRefreshing];
+    
+    /*
+    ProductModel *productMethods = [[ProductModel alloc] init];
+    
+    // Create string for FB request
+    NSMutableString *requestPhotosList = @"me/photos/uploaded";
+    
+    // Make FB request
+    [FBRequestConnection startWithGraphPath:requestPhotosList
+                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                              
+                              if (!error) { // FB request was a success!
+                                  
+                                  // Get details and create array
+                                  for (int i=0; i<photosArray.count; i=i+1)
+                                  {
+                                      
+                                      // Review each photo
+                                      NSString *photoID = result[photosArray[i]][@"id"];
+                                      
+                                      // Review if product exists
+                                      NSString *productID = [productMethods getProductIDfromFbPhotoId:photoID];
+                                      
+                                      if ([productID  isEqual: @"Not Found"])
+                                      {
+                                          // New product!
+                                          productID = [productMethods getNextProductID];
+                                          
+                                          Product *newProduct = [[Product alloc] init];
+                                          
+                                          newProduct.product_id = productID;
+                                          newProduct.client_id = @"";
+                                          newProduct.name = @"New Product";
+                                          newProduct.desc = result[photosArray[i]][@"name"];
+                                          newProduct.fb_photo_id = photoID;
+                                          
+                                          // BUSCAR EN LA DESCRIPCION PARA TOMAR CURRENCY, PUBLISHED PRICE Y GS_CODE
+                                          
+                                          newProduct.GS_code = @"GS";
+                                          newProduct.currency = @"S/.";
+                                          newProduct.initial_price = 0;
+                                          newProduct.published_price = 0;
+                                          
+                                          NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+                                          [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+                                          newProduct.publishing_date = [formatFBdates dateFromString:result[photosArray[i]][@"created_time"]];
+                                          newProduct.last_update = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
+                                          
+                                          newProduct.picture_link = result[photosArray[i]][@"picture"];
+                                          newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
+                                          newProduct.additional_pictures = @"";
+                                          newProduct.status = @"N";
+                                          newProduct.promotion_piority = 2;
+                                          newProduct.notes = @"";
+                                          newProduct.agent_id = @"00001";
+                                          
+                                          
+                                          [productMethods addNewProduct:newProduct];
+                                          
+                                      }
+                                      
+                                      // Review each comment
+                                      NSArray *jsonArray = result[photosArray[i]][@"comments"][@"data"];
+                                      
+                                      for (int i=0; i<jsonArray.count; i=i+1)
+                                      {
+                                          NSDictionary *newMessage = jsonArray[i];
+                                          
+                                          // Validate if the comment/message exists
+                                          if (![messagesMethods existMessage:newMessage[@"id"]])
+                                          {
+                                              // New message!
+                                              Message *tempMessage = [[Message alloc] init];
+                                              
+                                              tempMessage.fb_msg_id = newMessage[@"id"];
+                                              tempMessage.fb_from_id = newMessage[@"from"][@"id"];
+                                              tempMessage.fb_from_name = newMessage[@"from"][@"name"];
+                                              tempMessage.message = newMessage[@"message"];
+                                              
+                                              tempMessage.fb_created_time = newMessage[@"created_time"];
+                                              NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+                                              [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+                                              tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time];
+                                              
+                                              tempMessage.fb_photo_id = photoID;
+                                              tempMessage.product_id = productID;
+                                              tempMessage.agent_id = @"00001";
+                                              tempMessage.status = @"N";
+                                              tempMessage.type = @"P";
+                                              
+                                              // Review if client exists
+                                              NSString *fromClientID = [clientMethods getClientIDfromFbId:tempMessage.fb_from_id];
+                                              
+                                              if ([fromClientID  isEqual: @"Not Found"])
+                                              {
+                                                  // New client!
+                                                  // AGREGAR A UN ARREGLO TODOS LOS NUEVOS CLIENTES Y AL FINAL LLAMAR A OTRO METODO
+                                                  // QUE PARA CADA NUEVO CLIENTE, HAGA UN LLAMADA A FACEBOOK PARA CONSEGUIR LOS DATOS
+                                                  // 10152717477283825?fields=first_name,last_name,gender,picture
+                                                  // AL RECIBIR CADA RESPUESTA, LLAMA A UN METODO DE CLIENT QUE LO AGREGA
+                                              }
+                                              else
+                                              {
+                                                  tempMessage.client_id = fromClientID;
+                                              }
+                                              
+                                              // Insert new message to array and add row to table
+                                              [self addNewMessage:tempMessage];
+                                              
+                                          }
+                                      }
+                                      
+                                  }
+                                  
+                              }
+                              else {
+                                  // An error occurred, we need to handle the error
+                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                                  NSLog(@"error %@", error.description);
+                              }
+                          } ];
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
+    
+     */
+    
 }
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

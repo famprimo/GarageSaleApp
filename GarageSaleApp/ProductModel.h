@@ -19,5 +19,6 @@
 - (Client*)getClient:(Product*)productFound;
 - (NSMutableArray*)getOpportunitiesFromProduct:(Product*)productSelected;
 - (NSString*)getProductIDfromFbPhotoId:(NSString*)photoFbIdToValidate;
+- (UIImage*)getImageFromProductId:(NSString*)productIDtoSearch;
 
 @end

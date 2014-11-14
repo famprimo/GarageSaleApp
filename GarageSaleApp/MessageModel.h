@@ -17,5 +17,6 @@
 - (NSString*)getPhotoID:(NSString*)facebookLink; // Search for 'fbid=' on a Facebook link to get photo_id
 - (NSString*)getCommentID:(NSString*)facebookLink; // Search for 'comment_id=' on a Facebook link to get _id
 - (NSString*)getMessagesIDs:(NSMutableArray*)messagesArray; // Method that returns the IDs of all the Messages in the array sent
+- (int)numberOfMessagesNotReplied; // Method that returns the total number of messages not replied yet
 
 @end

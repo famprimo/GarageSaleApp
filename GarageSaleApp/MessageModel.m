@@ -28,8 +28,8 @@
     tempMessage.product_id = @"00001";
     tempMessage.client_id = @"00006";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"R";
-    tempMessage.type = @"I";
+    tempMessage.status = @"P";
+    tempMessage.type = @"P";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-06-20T16:41:15+0000"];
    
     // Add message #1 to the array
@@ -43,9 +43,11 @@
     tempMessage.message = @"Cuales son las medidas?";
     tempMessage.fb_created_time = @"2014-09-20T18:45:38+0000";
     tempMessage.fb_photo_id = @"XXXXX";
+    tempMessage.product_id = @"";
     tempMessage.client_id = @"00004";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"D";
+    tempMessage.status = @"R";
+    tempMessage.type = @"I";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-05-10T16:41:15+0000"];
     
     // Add message #2 to the array
@@ -147,6 +149,35 @@
     }
     
     return messagesIDList;
+}
+
+- (int)numberOfMessagesNotReplied; // Method that returns the total number of messages not replied yet
+{
+    int numberOfMessages = 0;
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Message *messageToReview = [[Message alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    {
+        messageToReview = [[Message alloc] init];
+        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
+        
+        if ([messageToReview.status isEqualToString:@"R"])
+        {
+                // Do not need to count
+        }
+        else
+        {
+            numberOfMessages = numberOfMessages + 1;
+        }
+    }
+    
+    return numberOfMessages;
+
 }
 
 @end

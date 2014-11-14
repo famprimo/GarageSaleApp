@@ -50,13 +50,13 @@
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     
     // Add title and menu button
-    self.navigationItem.title = @"Mensajes";
+    self.navigationItem.title = [self updateTableTitle];
     
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
     
-    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ClientMenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(refreshButtonClicked:)];
-    self.navigationItem.rightBarButtonItem = refreshButton;
+    UIBarButtonItem *filterButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"EmptyFilter"] style:UIBarButtonItemStylePlain target:self action:@selector(filterButtonClicked:)];
+    self.navigationItem.rightBarButtonItem = filterButton;
     
     self.detailViewController = (MessageDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
     
@@ -73,6 +73,13 @@
     
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
+    
+    // Initialize the refresh control.
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.backgroundColor = [UIColor whiteColor];
+    self.refreshControl.tintColor = [UIColor grayColor];
+    [self.refreshControl addTarget:self action:@selector(refreshTableGesture:) forControlEvents:UIControlEventValueChanged];
+
 
 }
 
@@ -81,10 +88,34 @@
     [self.revealViewController revealToggleAnimated:YES];
 }
 
-- (void)refreshButtonClicked:(id)sender
+- (void)refreshTableGesture:(id)sender
 {
     [self makeFBRequestForNewNotifications];
     
+}
+
+- (void)filterButtonClicked:(id)sender
+{
+    //
+}
+
+- (NSString*)updateTableTitle
+{
+    NSString *tableTitle = [[NSString alloc] init];
+
+    MessageModel *messageMethods = [[MessageModel alloc] init];
+    
+    int numberOfMessagesToDisplay = [messageMethods numberOfMessagesNotReplied];
+    
+    if (numberOfMessagesToDisplay == 0)
+    {
+        tableTitle = @"Mensajes";
+    }
+    else
+    {
+        tableTitle = [NSString stringWithFormat:@"Mensajes (%i)", numberOfMessagesToDisplay];
+    }
+    return tableTitle;
 }
 
 - (void)didReceiveMemoryWarning
@@ -111,6 +142,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    ProductModel *productMethods = [[ProductModel alloc] init];
+
     // Retrieve cell
     NSString *cellIdentifier = @"Cell";
     UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -122,22 +156,43 @@
     UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:1];
     UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:2];
     UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:3];
-    UILabel *newmarkLabel = (UILabel*)[myCell.contentView viewWithTag:4];
+    UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:4];
+    UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:5];
     
     // Set table cell labels to listing data
     nameLabel.text = myMessage.fb_from_name;
     messageLabel.text = myMessage.message;
     datetimeLabel.text = [myMessage.datetime formattedAsTimeAgo];
-    
+
+    // Set mark depending on message status
     if ([myMessage.status isEqualToString:@"N"])
     {
-        newmarkLabel.text = @"o";
+        markImage.image = [UIImage imageNamed:@"BlueDot"];
     }
-    else
+    else if ([myMessage.status isEqualToString:@"R"])
     {
-        newmarkLabel.text = @"";
+        markImage.image = [UIImage imageNamed:@"Replied"];
     }
-        
+    else if ([myMessage.status isEqualToString:@"P"])
+    {
+        markImage.image = [UIImage imageNamed:@"Blank"];
+    }
+
+    
+    // Set image for product or message
+    if ([myMessage.type isEqualToString:@"P"])
+    {
+        productImage.image = [productMethods getImageFromProductId:myMessage.product_id];
+    }
+    else if ([myMessage.type isEqualToString:@"I"])
+    {
+        productImage.image = [UIImage imageNamed:@"Message"];
+    }
+    else if ([myMessage.type isEqualToString:@"W"])
+    {
+        productImage.image = [UIImage imageNamed:@"Message"];
+    }
+
     return myCell;
 }
 
@@ -172,10 +227,14 @@
                                           
                                           // Get message details for those notifications
                                           [self makeFBRequestForPhotosDetails:photosArray];
-                                          
                                       }
-                                      
+                                    
                                   }
+                                  else
+                                  {
+                                      [self.refreshControl endRefreshing];
+                                  }
+                                
                                   
                               } else {
                                   // An error occurred, we need to handle the error
@@ -262,8 +321,8 @@
                                           
                                           // BUSCAR EN LA DESCRIPCION PARA TOMAR CURRENCY, PUBLISHED PRICE Y GS_CODE
 
-                                          newProduct.GS_code = @"";
-                                          newProduct.currency = @"";
+                                          newProduct.GS_code = @"GS";
+                                          newProduct.currency = @"S/.";
                                           newProduct.initial_price = 0;
                                           newProduct.published_price = 0;
                                           
@@ -320,6 +379,10 @@
                                               if ([fromClientID  isEqual: @"Not Found"])
                                               {
                                                   // New client!
+                                                  // AGREGAR A UN ARREGLO TODOS LOS NUEVOS CLIENTES Y AL FINAL LLAMAR A OTRO METODO
+                                                  // QUE PARA CADA NUEVO CLIENTE, HAGA UN LLAMADA A FACEBOOK PARA CONSEGUIR LOS DATOS
+                                                  // 10152717477283825?fields=first_name,last_name,gender,picture
+                                                  // AL RECIBIR CADA RESPUESTA, LLAMA A UN METODO DE CLIENT QUE LO AGREGA
                                               }
                                               else
                                               {
@@ -333,6 +396,11 @@
                                       }
                                       
                                   }
+                                  
+                                  // Disable refresh icon and update table title
+                                  
+                                  [self.refreshControl endRefreshing];
+                                  self.navigationItem.title = [self updateTableTitle];
                                   
                               }
                               else {

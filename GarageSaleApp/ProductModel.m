@@ -37,7 +37,7 @@
     //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
     tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
     tempProduct.additional_pictures = @"";
-    tempProduct.status = @"U";
+    tempProduct.status = @"S";
     tempProduct.promotion_piority = 2;
     tempProduct.notes = @"";
     tempProduct.agent_id = @"00001";
@@ -221,6 +221,32 @@
         }
     }
     return productID;
+}
+
+- (UIImage*)getImageFromProductId:(NSString*)productIDtoSearch;
+{
+    // Review the array of Products and returns the image related to the product
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    UIImage *productImage = nil;
+    
+    Product *productToReview = [[Product alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayProducts.count; i=i+1)
+    {
+        productToReview = [[Product alloc] init];
+        productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
+        
+        if ([productToReview.product_id isEqual:productIDtoSearch])
+        {
+            productImage = [UIImage imageWithData:productToReview.picture];
+            break;
+        }
+    }
+    return productImage;
 }
 
 

@@ -14,7 +14,7 @@
 		<string>https://github.com/famprimo/GarageSaleApp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>GarageSaleApp.xcodeproj/project.xcworkspace</string>
+	<string>GarageSaleApp.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>4A54DCC5F097B2E2C98B8506B487898766F4E490</key>

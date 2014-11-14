@@ -15,5 +15,6 @@
 - (NSString*)getNextClientID;
 - (BOOL)addNewClient:(Client*)newClient;
 - (NSString*)getClientIDfromFbId:(NSString*)clientFbIdToValidate;
+- (UIImage*)getImageFromClientId:(NSString*)clientIDtoSearch;
 
 @end

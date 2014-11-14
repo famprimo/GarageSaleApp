@@ -244,4 +244,30 @@
 }
 
 
+- (UIImage*)getImageFromClientId:(NSString*)clientIDtoSearch;
+{
+    // Review the array of clients and return the related picture
+    
+    UIImage *clientImage = nil;
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Client *clientToReview = [[Client alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayClients.count; i=i+1)
+    {
+        clientToReview = [[Client alloc] init];
+        clientToReview = (Client *)mainDelegate.sharedArrayClients[i];
+        
+        if ([clientToReview.fb_cient_id isEqual:clientIDtoSearch])
+        {
+            clientImage = [UIImage imageWithData:clientToReview.picture];
+            break;
+        }
+    }
+    return clientImage;
+}
+
 @end
