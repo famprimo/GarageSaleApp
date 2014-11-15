@@ -10,8 +10,9 @@
 
 @class ProductDetailViewController;
 
-@interface ProductTableViewController : UITableViewController
+@interface ProductTableViewController : UITableViewController <UISearchBarDelegate, UISearchDisplayDelegate>
 
 @property (strong, nonatomic) ProductDetailViewController *detailViewController;
+@property IBOutlet UISearchBar *productSearchBar;
 
 @end

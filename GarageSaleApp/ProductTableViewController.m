@@ -15,11 +15,14 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import "NSDate+NVTimeAgo.h"
 
-
 @interface ProductTableViewController ()
 {
+    
     // Data for the table
     NSMutableArray *_myData;
+    
+    // Data for the search
+    NSMutableArray *_mySearchData;
     
     AppDelegate *mainDelegate;
     
@@ -30,6 +33,8 @@
 @end
 
 @implementation ProductTableViewController
+
+@synthesize productSearchBar;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -99,12 +104,64 @@
     //
 }
 
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark Content Filtering & UISearchDisplayController Delegate Methods
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    // Remove all objects from the filtered search array
+    [_mySearchData removeAllObjects];
+    NSArray *tempArray;
+    
+    // Filter the array using the search text
+    if (![searchText isEqualToString:@""])
+    {
+        NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
+        tempArray = [_myData filteredArrayUsingPredicate:resultPredicate];
+    }
+    else
+    {
+        tempArray = [NSArray arrayWithArray:_myData];
+    }
+    
+    // Further filter the array with the scope
+    if ([scope isEqualToString:@"Nuevos"])
+    {
+        NSPredicate *scopePredicate = [NSPredicate predicateWithFormat:@"status contains[c] %@",@"N"];
+        tempArray = [tempArray filteredArrayUsingPredicate:scopePredicate];
+    }
+    
+    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
+    
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    // Tells the table data source to reload when text changes
+    [self filterContentForSearchText:searchString scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+{
+    // Tells the table data source to reload when scope bar selection changes
+    [self filterContentForSearchText:self.searchDisplayController.searchBar.text scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+
 
 #pragma mark - Table view data source
 
@@ -114,20 +171,47 @@
     return 1;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 80;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return _myData.count;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return _mySearchData.count;
+        
+    } else {
+        return _myData.count;
+    }
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    /*
     // Retrieve cell
-    NSString *cellIdentifier = @"Cell";
+    static NSString *cellIdentifier = @"Cell";
     UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
+    // This is added for a Search Bar - otherwise it will crash
+    if (!myCell) {
+        myCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
+    */
+    
     // Get the listing to be shown
-    Product *myProduct = _myData[indexPath.row];
+    // Check to see whether the normal table or search results table is being displayed and set the object from the appropriate array
+    UITableViewCell *myCell;
+    Product *myProduct = [[Product alloc] init];
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        myCell = [self.tableView dequeueReusableCellWithIdentifier:@"Cell"];
+        myProduct = _mySearchData[indexPath.row];;
+    } else {
+        myCell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+        myProduct = _myData[indexPath.row];
+    }
     
     // Get references to images and labels of cell
     UIImageView *pictureCell = (UIImageView*)[myCell.contentView viewWithTag:1];
@@ -173,7 +257,11 @@
     NSLog(@"Row selected at row %li", (long)indexPath.row);
     
     // Set selected listing to var
-    _selectedProduct = _myData[indexPath.row];
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        _selectedProduct = _mySearchData[indexPath.row];;
+    } else {
+        _selectedProduct = _myData[indexPath.row];
+    }
     
     // Refresh detail view with selected item
     [self.detailViewController setDetailItem:_selectedProduct];
