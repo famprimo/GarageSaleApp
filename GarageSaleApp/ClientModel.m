@@ -15,10 +15,14 @@
 {
     // Array to hold the listing data
     NSMutableArray *clients = [[NSMutableArray alloc] init];
+    NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+    [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
     
     // Create client #1
     Client *tempClient = [[Client alloc] init];
     tempClient.client_id = @"00001";
+    tempClient.fb_client_id = @"10152779700000001";
+    tempClient.type = @"F";
     tempClient.name = @"Georghette";
     tempClient.last_name = @"Juliette Sutta";
     tempClient.sex = @"F";
@@ -29,11 +33,14 @@
     tempClient.phone3 = @"";
     tempClient.email = @"georghette@hotmail.com";
     tempClient.preference = @"F";
-    tempClient.fb_cient_id = @"10152779700000001";
-    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpa1/t1.0-1/p160x160/10432499_10154193269290034_3773311256858868392_n.jpg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/p160x160/13227_10154822754980034_3516905964764442388_n.jpg?oh=ec5c9467d94a78fd8c33a85bd0eb0a82&oe=55087E5B&__gda__=1426066228_4f50ac543640da7bea4a89f6bfd7353e";
+    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
     tempClient.status = @"U";
+    tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
     
@@ -43,6 +50,8 @@
     // Create client #2
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00002";
+    tempClient.fb_client_id = @"10152779700000002";
+    tempClient.type = @"F";
     tempClient.name = @"Natalia";
     tempClient.last_name = @"Gallardo";
     tempClient.sex = @"F";
@@ -53,13 +62,15 @@
     tempClient.phone3 = @"";
     tempClient.email = @"ngallardo@hotmail.com";
     tempClient.preference = @"F";
-    tempClient.fb_cient_id = @"10152779700000002";
-    tempClient.picture_link = @"https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-xap1/t1.0-9/10177352_10152306607879355_3463040953093391515_n.jpg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
-    tempClient.status = @"U";
+    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/p160x160/10177352_10152306607879355_3463040953093391515_n.jpg?oh=4ba670df935912f9dce6e0a5a151a1d3&oe=551CEBAA&__gda__=1423084861_dc45ddcedfa5fa77850e4e241840ab7b";
+    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    tempClient.status = @"V";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
+    tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     
     // Add client #2 to the array
     [clients addObject:tempClient];
@@ -67,6 +78,8 @@
     // Create client #3
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00003";
+    tempClient.fb_client_id = @"10152779700000003";
+    tempClient.type = @"F";
     tempClient.name = @"Melisa";
     tempClient.last_name = @"Celi";
     tempClient.sex = @"F";
@@ -77,13 +90,15 @@
     tempClient.phone3 = @"";
     tempClient.email = @"mceli@hotmail.com";
     tempClient.preference = @"F";
-    tempClient.fb_cient_id = @"10152779700000003";
-    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/t1.0-1/p160x160/10343013_10152545434713487_289713323910298441_n.jpg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpa1/v/t1.0-1/p160x160/10343013_10152545434713487_289713323910298441_n.jpg?oh=5e643c07a9d10ef1d61d17e7d8c312fa&oe=550CA916&__gda__=1427863572_60212911c0480e4b78f345ba994f6431";
+    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
     tempClient.status = @"U";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
+    tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     
     // Add client #3 to the array
     [clients addObject:tempClient];
@@ -91,6 +106,8 @@
     // Create client #4
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00004";
+    tempClient.fb_client_id = @"10152779700000004";
+    tempClient.type = @"F";
     tempClient.name = @"Amparo";
     tempClient.last_name = @"Gonzalez";
     tempClient.sex = @"F";
@@ -101,13 +118,15 @@
     tempClient.phone3 = @"";
     tempClient.email = @"agonzalez@hotmail.com";
     tempClient.preference = @"F";
-    tempClient.fb_cient_id = @"10152779700000004";
-    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/t1.0-1/c7.0.160.160/p160x160/65036_10151780886293183_681281220_n.jpg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c7.0.160.160/p160x160/65036_10151780886293183_681281220_n.jpg?oh=d767b44f62d1770f6e658f883621d0c9&oe=5508CB6C&__gda__=1423050886_d0126388bf46bda903090bdb61f9b782";
+    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
     tempClient.status = @"U";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
+    tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     
     // Add client #4 to the array
     [clients addObject:tempClient];
@@ -115,6 +134,8 @@
     // Create client #5
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00005";
+    tempClient.fb_client_id = @"10152779700000005";
+    tempClient.type = @"F";
     tempClient.name = @"Ivan";
     tempClient.last_name = @"Rosado";
     tempClient.sex = @"M";
@@ -125,13 +146,15 @@
     tempClient.phone3 = @"";
     tempClient.email = @"irosado@hotmail.com";
     tempClient.preference = @"F";
-    tempClient.fb_cient_id = @"10152779700000005";
-    tempClient.picture_link = @"https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xaf1/t1.0-9/1796525_10152246429229306_801627707_n.jpg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
-    tempClient.status = @"U";
+    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/p100x100/10511237_10152645380304306_8224228609259690732_n.jpg?oh=9f8678b442f63fa897d72cb59515805b&oe=5515A7CD&__gda__=1427114842_e102a1ee5b6fa91558a3860061290846";
+    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    tempClient.status = @"B";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
+    tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     
     // Add client #5 to the array
     [clients addObject:tempClient];
@@ -139,6 +162,8 @@
     // Create client #6
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00006";
+    tempClient.fb_client_id = @"10152779700000006";
+    tempClient.type = @"F";
     tempClient.name = @"Mily";
     tempClient.last_name = @"de la Cruz";
     tempClient.sex = @"F";
@@ -149,13 +174,15 @@
     tempClient.phone3 = @"";
     tempClient.email = @"mdelacruz@gmail.com";
     tempClient.preference = @"F";
-    tempClient.fb_cient_id = @"10152779700000006";
-    tempClient.picture_link = @"https://fbcdn-sphotos-e-a.akamaihd.net/hphotos-ak-prn2/t1.0-9/534197_483266975032862_774796863_n.jpg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
-    tempClient.status = @"U";
+    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c170.50.621.621/s100x100/534197_483266975032862_774796863_n.jpg?oh=210d0b95aea49f4295413e99db77324e&oe=55128B4D&__gda__=1426615286_87328eba86c85ceac37239096b249a00";
+    tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
+    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    tempClient.status = @"V";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
+    tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     
     // Add client #6 to the array
     [clients addObject:tempClient];
@@ -163,6 +190,8 @@
     // Create client #7
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00007";
+    tempClient.fb_client_id = @"10152779728868825";
+    tempClient.type = @"F";
     tempClient.name = @"Freddy";
     tempClient.last_name = @"Amprimo";
     tempClient.sex = @"M";
@@ -173,21 +202,23 @@
     tempClient.phone3 = @"";
     tempClient.email = @"famprimo@yahoo.com";
     tempClient.preference = @"F";
-    tempClient.fb_cient_id = @"10152779728868825";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpa1/v/t1.0-1/c0.9.50.50/p50x50/1926687_10152319376343825_154047482_n.jpg?oh=883e2eda27e2c25c4c025e7b89560b18&oe=54EB9661&__gda__=1420518876_85f7c4249b20122d1a3bb986fe3fecc9";
     tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
     //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
-    tempClient.status = @"U";
+    tempClient.status = @"V";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
+    tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     
-    // Add client #6 to the array
+    // Add client #7 to the array
     [clients addObject:tempClient];
 
     // Set last product ID
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    mainDelegate.lastCientID = 6;
+    mainDelegate.lastCientID = 7;
 
     // Return the producct array as the return value
     return clients;
@@ -199,7 +230,8 @@
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     mainDelegate.lastCientID = mainDelegate.lastCientID + 1;
 
-    NSString *nextID = [NSString stringWithFormat:@"%d", mainDelegate.lastCientID];
+    NSString *nextID = [NSString stringWithFormat:@"00000000%d", mainDelegate.lastCientID];
+    nextID = [nextID substringFromIndex:[nextID length] - 7];
     
     return nextID;
 }
@@ -234,7 +266,7 @@
         clientToReview = [[Client alloc] init];
         clientToReview = (Client *)mainDelegate.sharedArrayClients[i];
         
-        if ([clientToReview.fb_cient_id isEqual:clientFbIdToValidate])
+        if ([clientToReview.fb_client_id isEqual:clientFbIdToValidate])
         {
             clientID = clientToReview.client_id;
             break;
@@ -261,13 +293,36 @@
         clientToReview = [[Client alloc] init];
         clientToReview = (Client *)mainDelegate.sharedArrayClients[i];
         
-        if ([clientToReview.fb_cient_id isEqual:clientIDtoSearch])
+        if ([clientToReview.client_id isEqual:clientIDtoSearch])
         {
             clientImage = [UIImage imageWithData:clientToReview.picture];
             break;
         }
     }
     return clientImage;
+}
+
+- (Client*)getClientFromClientId:(NSString*)clientIDtoSearch;
+{
+    // Review the array of clients and return the related object
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Client *clientToReview = [[Client alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayClients.count; i=i+1)
+    {
+        clientToReview = [[Client alloc] init];
+        clientToReview = (Client *)mainDelegate.sharedArrayClients[i];
+        
+        if ([clientToReview.client_id isEqual:clientIDtoSearch])
+        {
+            break;
+        }
+    }
+    return clientToReview;
 }
 
 @end

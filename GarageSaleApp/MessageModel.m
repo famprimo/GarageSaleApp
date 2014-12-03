@@ -25,7 +25,7 @@
     tempMessage.message = @"Me interesa. Enviar datos al inbox";
     tempMessage.fb_created_time = @"2014-09-20T18:45:38+0000";
     tempMessage.fb_photo_id = @"XXXXX";
-    tempMessage.product_id = @"00001";
+    tempMessage.product_id = @"0000001";
     tempMessage.client_id = @"00006";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"P";

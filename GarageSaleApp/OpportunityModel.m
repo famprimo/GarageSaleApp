@@ -23,7 +23,7 @@
     // Create opportunity #1
     Opportunity *tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000001";
-    tempOpportunity.product_id = @"00001";
+    tempOpportunity.product_id = @"0000001";
     tempOpportunity.buyer_id = @"00003";
     tempOpportunity.date = [dateFormat dateFromString:@"20140501"];
     tempOpportunity.initial_price = 290.0;
@@ -39,7 +39,7 @@
     // Create opportunity #2
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000002";
-    tempOpportunity.product_id = @"00001";
+    tempOpportunity.product_id = @"0000001";
     tempOpportunity.buyer_id = @"00004";
     tempOpportunity.date = [dateFormat dateFromString:@"20140530"];
     tempOpportunity.initial_price = 290.0;
@@ -55,7 +55,7 @@
     // Create opportunity #3
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000003";
-    tempOpportunity.product_id = @"00003";
+    tempOpportunity.product_id = @"0000003";
     tempOpportunity.buyer_id = @"00001";
     tempOpportunity.date = [dateFormat dateFromString:@"20140302"];
     tempOpportunity.initial_price = 1100.0;
@@ -71,7 +71,7 @@
     // Create opportunity #4
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000004";
-    tempOpportunity.product_id = @"00004";
+    tempOpportunity.product_id = @"0000004";
     tempOpportunity.buyer_id = @"00005";
     tempOpportunity.date = [dateFormat dateFromString:@"20131201"];
     tempOpportunity.initial_price = 100000;
@@ -87,7 +87,7 @@
     // Create opportunity #5
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000005";
-    tempOpportunity.product_id = @"00002";
+    tempOpportunity.product_id = @"0000002";
     tempOpportunity.buyer_id = @"00006";
     tempOpportunity.date = [dateFormat dateFromString:@"20140601"];
     tempOpportunity.initial_price = 250.0;

@@ -22,7 +22,7 @@
     
     // Create product #1
     Product *tempProduct = [[Product alloc] init];
-    tempProduct.product_id = @"00001";
+    tempProduct.product_id = @"0000001";
     tempProduct.client_id = @"00001";
     tempProduct.GS_code = @"GS0001";
     tempProduct.name = @"Bicicleta Monark aro 20";
@@ -48,7 +48,7 @@
     
     // Create product #2
     tempProduct = [[Product alloc] init];
-    tempProduct.product_id = @"00002";
+    tempProduct.product_id = @"0000002";
     tempProduct.client_id = @"00001";
     tempProduct.GS_code = @"GS3056";
     tempProduct.name = @"Mecedora Graco";
@@ -72,7 +72,7 @@
 
     // Create product #3
     tempProduct = [[Product alloc] init];
-    tempProduct.product_id = @"00003";
+    tempProduct.product_id = @"0000003";
     tempProduct.client_id = @"00002";
     tempProduct.GS_code = @"GS3205";
     tempProduct.name = @"HP Pavilion g6-1b70us 15.6'";
@@ -96,7 +96,7 @@
 
     // Create product #4
     tempProduct = [[Product alloc] init];
-    tempProduct.product_id = @"00004";
+    tempProduct.product_id = @"0000004";
     tempProduct.client_id = @"00002";
     tempProduct.GS_code = @"GS9999";
     tempProduct.name = @"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit";
@@ -133,7 +133,8 @@
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     mainDelegate.lastProductID = mainDelegate.lastProductID + 1;
     
-    NSString *nextID = [NSString stringWithFormat:@"%d", mainDelegate.lastProductID];
+    NSString *nextID = [NSString stringWithFormat:@"00000000%d", mainDelegate.lastProductID];
+    nextID = [nextID substringFromIndex:[nextID length] - 7];
     
     return nextID;
 }
@@ -249,5 +250,27 @@
     return productImage;
 }
 
+- (Product*)getProductFromProductId:(NSString*)productIDtoSearch;
+{
+    // Review the array of Products and returns Product object related
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Product *productToReview = [[Product alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayProducts.count; i=i+1)
+    {
+        productToReview = [[Product alloc] init];
+        productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
+        
+        if ([productToReview.product_id isEqual:productIDtoSearch])
+        {
+            break;
+        }
+    }
+    return productToReview;
+}
 
 @end

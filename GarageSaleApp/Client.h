@@ -11,6 +11,8 @@
 @interface Client : NSObject
 
 @property (strong, nonatomic) NSString *client_id;
+@property (strong, nonatomic) NSString *fb_client_id;
+@property (strong, nonatomic) NSString *type; // (F)acebook (O)ffline
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *last_name;
 @property (strong, nonatomic) NSString *sex; // (M)ale (F)emale
@@ -21,11 +23,12 @@
 @property (strong, nonatomic) NSString *phone3;
 @property (strong, nonatomic) NSString *email;
 @property (strong, nonatomic) NSString *preference; // (E)mail (F)acebook
-@property (strong, nonatomic) NSString *fb_cient_id;
 @property (strong, nonatomic) NSString *picture_link;
 @property (strong, nonatomic) NSData *picture;
-@property (strong, nonatomic) NSString *status; // (N)ew (U)pdated (D)isabled
-@property (strong, nonatomic) NSDate *last_inventory;
+@property (strong, nonatomic) NSString *status; // (N)ew (U)pdated (V)erified (B)anned
+@property (strong, nonatomic) NSDate *created_time;
+@property (strong, nonatomic) NSDate *last_interacted_time;
+@property (strong, nonatomic) NSDate *last_inventory_time;
 @property (strong, nonatomic) NSString *notes;
 @property (strong, nonatomic) NSString *agent_id;
 

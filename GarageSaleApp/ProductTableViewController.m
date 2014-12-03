@@ -141,6 +141,35 @@
     
 }
 
+-(void) searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+{
+    
+    // Remove all objects from the filtered search array
+    NSArray *tempArray;
+    
+    if (_mySearchData == nil)
+    {
+        tempArray = [NSMutableArray arrayWithArray:_myData];
+    }
+    else
+    {
+        tempArray = [NSMutableArray arrayWithArray:_mySearchData];
+    }
+    
+    [_mySearchData removeAllObjects];
+
+    // Remove all objects from the filtered search array
+    
+    // Further filter the array with the scope
+    if (selectedScope == 1)
+    {
+        NSPredicate *scopePredicate = [NSPredicate predicateWithFormat:@"status contains[c] %@",@"N"];
+        tempArray = [tempArray filteredArrayUsingPredicate:scopePredicate];
+    }
+    
+    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
+}
+
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
     // Tells the table data source to reload when text changes

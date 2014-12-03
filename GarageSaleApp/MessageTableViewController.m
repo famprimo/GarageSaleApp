@@ -144,6 +144,7 @@
 {
     
     ProductModel *productMethods = [[ProductModel alloc] init];
+    Product *productRelatedToMessage = [[Product alloc] init];
 
     // Retrieve cell
     NSString *cellIdentifier = @"Cell";
@@ -158,10 +159,14 @@
     UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:3];
     UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:4];
     UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:5];
+    UIImageView *soldImage = (UIImageView*)[myCell.contentView viewWithTag:6];
     
     // Set table cell labels to listing data
     nameLabel.text = myMessage.fb_from_name;
+    
     messageLabel.text = myMessage.message;
+    //[messageLabel sizeToFit];
+    
     datetimeLabel.text = [myMessage.datetime formattedAsTimeAgo];
 
     // Set mark depending on message status
@@ -178,11 +183,22 @@
         markImage.image = [UIImage imageNamed:@"Blank"];
     }
 
-    
+    soldImage.image = [UIImage imageNamed:@"Blank"];
+
     // Set image for product or message
     if ([myMessage.type isEqualToString:@"P"])
     {
-        productImage.image = [productMethods getImageFromProductId:myMessage.product_id];
+        //productImage.image = [productMethods getImageFromProductId:myMessage.product_id];
+        
+        productRelatedToMessage = [productMethods getProductFromProductId:myMessage.product_id];
+        productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
+        
+        // Set sold image if product is sold
+        if ([productRelatedToMessage.status isEqualToString:@"S"])
+        {
+            soldImage.image = [UIImage imageNamed:@"Sold"];
+        }
+
     }
     else if ([myMessage.type isEqualToString:@"I"])
     {
@@ -379,6 +395,21 @@
                                               if ([fromClientID  isEqual: @"Not Found"])
                                               {
                                                   // New client!
+                                                  
+                                                  Client *newClient = [[Client alloc] init];
+                                                  
+                                                  newClient.client_id = [clientMethods getNextClientID];
+                                                  newClient.fb_client_id = tempMessage.fb_from_id;
+                                                  newClient.type = @"F";
+                                                  newClient.name = tempMessage.fb_from_name; // TEMPORAL
+                                                  newClient.preference = @"F";
+                                                  newClient.status = @"N";
+                                                  newClient.created_time = [NSDate date];
+                                                  newClient.last_interacted_time = tempMessage.datetime;
+                                                  
+                                                  [clientMethods addNewClient:newClient];
+                                                  
+                                                  
                                                   // AGREGAR A UN ARREGLO TODOS LOS NUEVOS CLIENTES Y AL FINAL LLAMAR A OTRO METODO
                                                   // QUE PARA CADA NUEVO CLIENTE, HAGA UN LLAMADA A FACEBOOK PARA CONSEGUIR LOS DATOS
                                                   // 10152717477283825?fields=first_name,last_name,gender,picture
