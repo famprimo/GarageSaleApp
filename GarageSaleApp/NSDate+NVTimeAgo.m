@@ -55,8 +55,8 @@
     
     // < 1 minute = "Just now"
     if(secondsSince < MINUTE)
-        return @"Just now";
-    
+        //return @"Just now";
+        return @"ahora";
     
     // < 1 hour = "x minutes ago"
     if(secondsSince < HOUR)
@@ -191,9 +191,11 @@
     
     //Handle Plural
     if(minutesSince == 1)
-        return @"1 minute ago";
+        //return @"1 minute ago";
+        return @"Hace 1 minuto";
     else
-        return [NSString stringWithFormat:@"%d minutes ago", minutesSince];
+        //return [NSString stringWithFormat:@"%d minutes ago", minutesSince];
+        return [NSString stringWithFormat:@"hace %d minutos", minutesSince];
 }
 
 
@@ -205,9 +207,11 @@
     
     //Handle Plural
     if(hoursSince == 1)
-        return @"1 hour ago";
+        //return @"1 hour ago";
+        return @"Hace 1 hora";
     else
-        return [NSString stringWithFormat:@"%d hours ago", hoursSince];
+        //return [NSString stringWithFormat:@"%d hours ago", hoursSince];
+        return [NSString stringWithFormat:@"hace %d horas", hoursSince];
 }
 
 
@@ -218,8 +222,12 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     //Format
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"es"]];  // Added to change language to Spanish
+    [dateFormatter setAMSymbol:@"AM"];
+    [dateFormatter setPMSymbol:@"PM"];
     [dateFormatter setDateFormat:@"h:mm a"];
-    return [NSString stringWithFormat:@"Yesterday at %@", [dateFormatter stringFromDate:self]];
+    //return [NSString stringWithFormat:@"Yesterday at %@", [dateFormatter stringFromDate:self]];
+    return [NSString stringWithFormat:@"ayer a las %@", [dateFormatter stringFromDate:self]];
 }
 
 
@@ -228,9 +236,12 @@
 {
     //Create date formatter
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-
     //Format
-    [dateFormatter setDateFormat:@"EEEE 'at' h:mm a"];
+    //[dateFormatter setDateFormat:@"EEEE 'at' h:mm a"];
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"es"]];  // Added to change language to Spanish
+    [dateFormatter setAMSymbol:@"AM"];
+    [dateFormatter setPMSymbol:@"PM"];
+    [dateFormatter setDateFormat:@"EEEE 'a las' h:mm a"];
     return [dateFormatter stringFromDate:self];
 }
 
@@ -242,7 +253,11 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     //Format
-    [dateFormatter setDateFormat:@"MMMM d 'at' h:mm a"];
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"es"]];  // Added to change language to Spanish
+    [dateFormatter setAMSymbol:@"AM"];
+    [dateFormatter setPMSymbol:@"PM"];
+    //[dateFormatter setDateFormat:@"MMMM d 'at' h:mm a"];
+    [dateFormatter setDateFormat:@"MMMM d 'a las' h:mm a"];
     return [dateFormatter stringFromDate:self];
 }
 
@@ -254,6 +269,7 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     //Format
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"es"]];  // Added to change language to Spanish
     [dateFormatter setDateFormat:@"MMMM d"];
     return [dateFormatter stringFromDate:self];
 }
@@ -266,6 +282,7 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     //Format
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"es"]];  // Added to change language to Spanish
     [dateFormatter setDateFormat:@"LLLL d, yyyy"];
     return [dateFormatter stringFromDate:self];
 }

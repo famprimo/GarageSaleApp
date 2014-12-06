@@ -249,6 +249,28 @@
     return updateSuccessful;
 }
 
+- (void)updateClient:(Client*)clientToUpdate;
+{
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Client *clientToReview = [[Client alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayClients.count; i=i+1)
+    {
+        clientToReview = [[Client alloc] init];
+        clientToReview = (Client *)mainDelegate.sharedArrayClients[i];
+        
+        if ([clientToReview.client_id isEqual:clientToUpdate.client_id])
+        {
+            [mainDelegate.sharedArrayClients replaceObjectAtIndex:i withObject:clientToUpdate];
+            break;
+        }
+    }
+
+}
+
 - (NSString*)getClientIDfromFbId:(NSString*)clientFbIdToValidate;
 {
     // Review an array of Messages to check if a given Message ID exists

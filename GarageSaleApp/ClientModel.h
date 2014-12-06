@@ -14,6 +14,7 @@
 - (NSMutableArray*)getClients:(NSMutableArray*)clientList;
 - (NSString*)getNextClientID;
 - (BOOL)addNewClient:(Client*)newClient;
+- (void)updateClient:(Client*)clientToUpdate;
 - (NSString*)getClientIDfromFbId:(NSString*)clientFbIdToValidate;
 - (UIImage*)getImageFromClientId:(NSString*)clientIDtoSearch;
 - (Client*)getClientFromClientId:(NSString*)clientIDtoSearch;

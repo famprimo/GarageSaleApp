@@ -14,6 +14,10 @@
 
 @property (strong, nonatomic) id detailItem;
 
+@property (strong, nonatomic) IBOutlet UIButton *buttonReply;
+@property (strong, nonatomic) IBOutlet UIButton *buttonAlreadyReplied;
+@property (strong, nonatomic) IBOutlet UIButton *buttonRelateToOwner;
+
 @property (strong, nonatomic) IBOutlet UILabel *labelPublishedDateReference;
 @property (strong, nonatomic) IBOutlet UILabel *labelMessageDate;
 @property (strong, nonatomic) IBOutlet UILabel *labelClientPhone;

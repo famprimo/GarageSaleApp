@@ -104,6 +104,13 @@
         imageOwnerFrame.size.width = 70;
         imageOwnerFrame.size.height = 70;
         self.imageOwner.frame = imageOwnerFrame;
+        
+        CGRect buttonRelateToOwnerFrame = self.buttonRelateToOwner.frame;
+        buttonRelateToOwnerFrame.origin.x = 70;
+        buttonRelateToOwnerFrame.origin.y = 615;
+        buttonRelateToOwnerFrame.size.width = 220;
+        buttonRelateToOwnerFrame.size.height = 44;
+        self.buttonRelateToOwner.frame = buttonRelateToOwnerFrame;
 
         // Set Message Data
         
@@ -132,15 +139,32 @@
             {
                 self.imageProductSold.image = [UIImage imageNamed:@"Sold"];
             }
-            
-            ownerRelatedToMessage = [clientMethods getClientFromClientId:productRelatedToMessage.client_id];
 
             self.labelProductDetails.text = productRelatedToMessage.desc;
-            self.imageOwner.image = [UIImage imageWithData:ownerRelatedToMessage.picture];
-            self.labelOwnerName.text = [NSString stringWithFormat:@"%@ %@", ownerRelatedToMessage.name, ownerRelatedToMessage.last_name];
-            self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",ownerRelatedToMessage.zone];
-            self.labelOwnerAddress.text = ownerRelatedToMessage.address;
-            self.labelOwnerPhones.text = ownerRelatedToMessage.phone1;
+
+            // Set data for owner if assigned
+            
+            if ([productRelatedToMessage.client_id length] > 0)
+            {
+                ownerRelatedToMessage = [clientMethods getClientFromClientId:productRelatedToMessage.client_id];
+                
+                self.imageOwner.image = [UIImage imageWithData:ownerRelatedToMessage.picture];
+                self.labelOwnerName.text = [NSString stringWithFormat:@"%@ %@", ownerRelatedToMessage.name, ownerRelatedToMessage.last_name];
+                self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",ownerRelatedToMessage.zone];
+                self.labelOwnerAddress.text = ownerRelatedToMessage.address;
+                self.labelOwnerPhones.text = ownerRelatedToMessage.phone1;
+                self.buttonRelateToOwner.hidden = YES;
+
+            }
+            else
+            {
+                self.imageOwner.image = [UIImage imageNamed:@"Blank"];
+                self.labelOwnerName.text = @"";
+                self.labelOwnerZone.text = @"";
+                self.labelOwnerAddress.text = @"";
+                self.labelOwnerPhones.text = @"";
+                self.buttonRelateToOwner.hidden = NO;
+            }
         }
         else
         {

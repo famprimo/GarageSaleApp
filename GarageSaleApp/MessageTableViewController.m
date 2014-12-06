@@ -296,6 +296,9 @@
     ClientModel *clientMethods = [[ClientModel alloc] init];
     ProductModel *productMethods = [[ProductModel alloc] init];
     
+    NSMutableArray *newClientsArray = [[NSMutableArray alloc] init];
+    
+    
     // Create string for FB request
     NSMutableString *requestPhotosList = [[NSMutableString alloc] init];
     [requestPhotosList appendString:@"?ids="];
@@ -408,12 +411,8 @@
                                                   newClient.last_interacted_time = tempMessage.datetime;
                                                   
                                                   [clientMethods addNewClient:newClient];
-                                                  
-                                                  
-                                                  // AGREGAR A UN ARREGLO TODOS LOS NUEVOS CLIENTES Y AL FINAL LLAMAR A OTRO METODO
-                                                  // QUE PARA CADA NUEVO CLIENTE, HAGA UN LLAMADA A FACEBOOK PARA CONSEGUIR LOS DATOS
-                                                  // 10152717477283825?fields=first_name,last_name,gender,picture
-                                                  // AL RECIBIR CADA RESPUESTA, LLAMA A UN METODO DE CLIENT QUE LO AGREGA
+                                                  [newClientsArray addObject:newClient];
+
                                               }
                                               else
                                               {
@@ -426,6 +425,13 @@
                                           }
                                       }
                                       
+                                  }
+                                  
+                                  // Get details for each new client found
+                                  
+                                  if (newClientsArray.count>0)
+                                  {
+                                      [self makeFBRequestForClientsDetails:newClientsArray];
                                   }
                                   
                                   // Disable refresh icon and update table title
@@ -442,6 +448,58 @@
                           } ];
     
 }
+
+
+
+- (void) makeFBRequestForClientsDetails:(NSMutableArray*)newClientsArray;
+{
+
+    ClientModel *clientMethods = [[ClientModel alloc] init];
+    
+    // Create string for FB request
+    NSMutableString *requestClientDetails = [[NSMutableString alloc] init];
+    Client *newClient = [[Client alloc] init];
+
+    for (int i=0; i<newClientsArray.count; i=i+1)
+    {
+        newClient = [[Client alloc] init];
+        newClient = (Client *)newClientsArray[i];
+
+        requestClientDetails = [[NSMutableString alloc] init];
+        [requestClientDetails appendString:newClient.fb_client_id];
+        [requestClientDetails appendString:@"?fields=first_name,last_name,gender,picture"];
+
+        // Make FB request
+        [FBRequestConnection startWithGraphPath:requestClientDetails
+                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                              
+                              if (!error) { // FB request was a success!
+                                  
+                                  newClient.name = result[@"first_name"];
+                                  newClient.last_name = result[@"last_name"];
+                                  if ([result[@"gender"] isEqualToString:@"male"])
+                                  {
+                                      newClient.sex = @"M";
+                                  }
+                                  else
+                                  {
+                                      newClient.sex = @"F";
+                                  }
+                                  newClient.picture_link = result[@"picture"][@"data"][@"url"];
+                                  newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
+                                  
+                                  [clientMethods updateClient:newClient];
+                                
+                              }
+                              else {
+                                  // An error occurred, we need to handle the error
+                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                                  NSLog(@"error %@", error.description);
+                              }
+                          } ];
+    }
+}
+
 
 - (void) addNewMessage:(Message*)newMessage;
 {
@@ -468,6 +526,5 @@
                     } completion:NULL];
     
 }
-
 
 @end
