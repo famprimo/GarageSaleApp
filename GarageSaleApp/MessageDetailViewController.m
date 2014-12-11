@@ -17,6 +17,9 @@
 
 @interface MessageDetailViewController ()
 
+// For Popover
+@property (nonatomic, strong) UIPopoverController *clientPickerPopover;
+
 @end
 
 @implementation MessageDetailViewController
@@ -179,10 +182,47 @@
             self.labelOwnerZone.text = @"";
             self.labelOwnerAddress.text = @"";
             self.labelOwnerPhones.text = @"";
+            self.buttonRelateToOwner.hidden = YES;
 
         }
         
     }
 }
+
+
+-(IBAction)showPopoverClientPicker:(id)sender;
+{
+    ClientPickerViewController *clientPickerController = [[ClientPickerViewController alloc] initWithNibName:@"ClientPickerViewController" bundle:nil];
+    clientPickerController.delegate = self;
+    
+    
+    self.clientPickerPopover = [[UIPopoverController alloc] initWithContentViewController:clientPickerController];
+    self.clientPickerPopover.popoverContentSize = CGSizeMake(350.0, 400.0);
+    [self.clientPickerPopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                          inView:self.view
+                        permittedArrowDirections:UIPopoverArrowDirectionAny
+                                        animated:YES];
+}
+
+-(void)clientSelectedfromClientPicker:(NSString *)clientIDSelected;
+{
+    // Dismiss the popover view
+    [self.clientPickerPopover dismissPopoverAnimated:YES];
+    
+    // Update the product with the client selected (owner)
+    Message *messageSelected = [[Message alloc] init];
+    messageSelected = (Message *)_detailItem;
+
+    ProductModel *productMethods = [[ProductModel alloc] init];
+    Product *productRelatedToMessage = [[Product alloc] init];
+
+    productRelatedToMessage = [productMethods getProductFromProductId:messageSelected.product_id];
+
+    productRelatedToMessage.client_id = clientIDSelected;
+    [productMethods updateProduct:productRelatedToMessage];
+    
+    [self configureView];
+}
+
 
 @end

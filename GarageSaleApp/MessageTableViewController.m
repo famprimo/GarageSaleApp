@@ -23,7 +23,7 @@
     // Data for the table
     NSMutableArray *_myData;
     
-    // The product that is selected from the table
+    // The message that is selected from the table
     Message *_selectedMessage;
     
 }

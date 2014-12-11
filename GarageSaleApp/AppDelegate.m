@@ -32,7 +32,8 @@
 
     // Load Shared Arrays with Data
     sharedArrayProducts = [[[ProductModel alloc] init] getProducts:sharedArrayProducts];
-    sharedArrayClients = [[[ClientModel alloc] init] getClients:sharedArrayClients];
+    // sharedArrayClients = [[[ClientModel alloc] init] getClients:sharedArrayClients];
+    sharedArrayClients = [[[ClientModel alloc] init] getClients];
     sharedArrayOpportunities = [[[OpportunityModel alloc] init] getOpportunities:sharedArrayOpportunities];
     sharedArrayMessages = [[[MessageModel alloc] init] getMessages:sharedArrayMessages];
     return YES;

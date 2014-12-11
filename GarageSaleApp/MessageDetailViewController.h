@@ -9,8 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "Message.h"
 #import "MessageModel.h"
+#import "ClientPickerViewController.h"
 
-@interface MessageDetailViewController : UIViewController
+// Popover help  http://www.appcoda.com/uiactionsheet-uipopovercontroller-tutorial/
+
+//@interface MessageDetailViewController : UIViewController <UIActionSheetDelegate, TestViewControllerDelegate>
+@interface MessageDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate>
 
 @property (strong, nonatomic) id detailItem;
 
@@ -36,5 +40,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *labelOwnerPhones;
 @property (strong, nonatomic) IBOutlet UIImageView *imageOwner;
 @property (strong, nonatomic) IBOutlet UILabel *imageOwnerStatus;
+
+-(IBAction)showPopoverClientPicker:(id)sender;
 
 @end

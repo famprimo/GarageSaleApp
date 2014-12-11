@@ -152,6 +152,28 @@
     return updateSuccessful;
 }
 
+- (void)updateProduct:(Product*)productToUpdate;
+{
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Product *productToReview = [[Product alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayClients.count; i=i+1)
+    {
+        productToReview = [[Product alloc] init];
+        productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
+        
+        if ([productToReview.product_id isEqual:productToUpdate.product_id])
+        {
+            [mainDelegate.sharedArrayProducts replaceObjectAtIndex:i withObject:productToUpdate];
+            break;
+        }
+    }
+    
+}
+
 - (Client*)getClient:(Product*)productBase;
 {
     Client *clientFound = [[Client alloc] init];

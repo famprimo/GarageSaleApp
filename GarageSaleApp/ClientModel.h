@@ -11,7 +11,8 @@
 
 @interface ClientModel : NSObject
 
-- (NSMutableArray*)getClients:(NSMutableArray*)clientList;
+//- (NSMutableArray*)getClients:(NSMutableArray*)clientList;
+- (NSMutableArray*)getClients;
 - (NSString*)getNextClientID;
 - (BOOL)addNewClient:(Client*)newClient;
 - (void)updateClient:(Client*)clientToUpdate;

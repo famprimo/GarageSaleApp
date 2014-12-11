@@ -34,6 +34,8 @@
 		C029BA671969D26000125C4F /* CustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA641969D26000125C4F /* CustomSegue.m */; };
 		C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA661969D26000125C4F /* CustomUnwindSegue.m */; };
 		C029BA6B1969EF9400125C4F /* Opportunity.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA6A1969EF9400125C4F /* Opportunity.m */; };
+		C042ECCF1A3934DB00AC9A4D /* ClientPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */; };
+		C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */; };
 		C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */; };
 		C0815E0E19644C250021A153 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E0D19644C250021A153 /* Client.m */; };
 		C0815E1119644C2D0021A153 /* ClientModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1019644C2D0021A153 /* ClientModel.m */; };
@@ -100,6 +102,9 @@
 		C029BA661969D26000125C4F /* CustomUnwindSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUnwindSegue.m; sourceTree = "<group>"; };
 		C029BA691969EF9400125C4F /* Opportunity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Opportunity.h; sourceTree = "<group>"; };
 		C029BA6A1969EF9400125C4F /* Opportunity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Opportunity.m; sourceTree = "<group>"; };
+		C042ECCC1A3934DB00AC9A4D /* ClientPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientPickerViewController.h; sourceTree = "<group>"; };
+		C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientPickerViewController.m; sourceTree = "<group>"; };
+		C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ClientPickerViewController.xib; sourceTree = "<group>"; };
 		C05C6A8319F1D5B800BCF9BD /* NSDate+NVTimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NVTimeAgo.h"; sourceTree = "<group>"; };
 		C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NVTimeAgo.m"; sourceTree = "<group>"; };
 		C0815E0C19644C250021A153 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
@@ -194,6 +199,7 @@
 		C00ED0E519644A5A0045A65E /* GarageSaleApp */ = {
 			isa = PBXGroup;
 			children = (
+				C03C0C6E1A34BC5400838338 /* ClientPicker */,
 				C00ED0EE19644A5A0045A65E /* AppDelegate.h */,
 				C00ED0EF19644A5A0045A65E /* AppDelegate.m */,
 				C00ED0F119644A5A0045A65E /* Main.storyboard */,
@@ -324,6 +330,16 @@
 			name = "Custom Segues";
 			sourceTree = "<group>";
 		};
+		C03C0C6E1A34BC5400838338 /* ClientPicker */ = {
+			isa = PBXGroup;
+			children = (
+				C042ECCC1A3934DB00AC9A4D /* ClientPickerViewController.h */,
+				C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */,
+				C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */,
+			);
+			name = ClientPicker;
+			sourceTree = "<group>";
+		};
 		C05C6A8219F1D56100BCF9BD /* Date Time Ago */ = {
 			isa = PBXGroup;
 			children = (
@@ -412,6 +428,7 @@
 				C00ED0F819644A5A0045A65E /* Images.xcassets in Resources */,
 				C00ED0EA19644A5A0045A65E /* InfoPlist.strings in Resources */,
 				C00ED0F319644A5A0045A65E /* Main.storyboard in Resources */,
+				C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,6 +462,7 @@
 				C019F94019D88944009528EE /* MessageModel.m in Sources */,
 				C00ED12319644B4F0045A65E /* MenuItem.m in Sources */,
 				C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */,
+				C042ECCF1A3934DB00AC9A4D /* ClientPickerViewController.m in Sources */,
 				C029BA6B1969EF9400125C4F /* Opportunity.m in Sources */,
 				C00ED12419644B4F0045A65E /* MenuModel.m in Sources */,
 				C029BA671969D26000125C4F /* CustomSegue.m in Sources */,
