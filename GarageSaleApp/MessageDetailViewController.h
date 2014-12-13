@@ -14,7 +14,7 @@
 // Popover help  http://www.appcoda.com/uiactionsheet-uipopovercontroller-tutorial/
 
 //@interface MessageDetailViewController : UIViewController <UIActionSheetDelegate, TestViewControllerDelegate>
-@interface MessageDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate>
+@interface MessageDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) id detailItem;
 
@@ -49,6 +49,14 @@
 @property (strong, nonatomic) IBOutlet UIImageView *picOwnerPhone;
 @property (strong, nonatomic) IBOutlet UIImageView *imageOwnerStatus;
 
+@property (strong, nonatomic) IBOutlet UILabel *labelOtherMessages;
+@property (strong, nonatomic) IBOutlet UITableView *tableOtherMessages;
+@property (strong, nonatomic) IBOutlet UIButton *buttonRelateToProduct;
+
+
+
 -(IBAction)showPopoverClientPicker:(id)sender;
+
+-(IBAction)relateProductToMessage:(id)sender;
 
 @end

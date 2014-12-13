@@ -53,6 +53,24 @@
     // Add message #2 to the array
     [messages addObject:tempMessage];
     
+    // Create message #3
+    tempMessage = [[Message alloc] init];
+    tempMessage.fb_msg_id = @"1469889866608936_143534523426";
+    tempMessage.fb_from_id = @"10152156045491377";
+    tempMessage.fb_from_name = @"Amparo Gonzalez";
+    tempMessage.message = @"Me gusta el perfume. Como lo consigo?";
+    tempMessage.fb_created_time = @"2014-06-10T09:41:15+0000";
+    tempMessage.fb_photo_id = @"XXXXX";
+    tempMessage.product_id = @"0000002";
+    tempMessage.client_id = @"00004";
+    tempMessage.agent_id = @"00001";
+    tempMessage.status = @"P";
+    tempMessage.type = @"P";
+    tempMessage.datetime = [formatFBdates dateFromString:@"2014-06-10T09:41:15+0000"];
+    
+    // Add message #3 to the array
+    [messages addObject:tempMessage];
+
     // Return the producct array as the return value
     return messages;
 }
@@ -70,6 +88,28 @@
     return messagesArray;
 }
 
+- (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID withoutMessage:(NSString*)messageToNotConsider; // Return an array with all messages from a client
+{
+    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Message *messageToReview = [[Message alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    {
+        messageToReview = [[Message alloc] init];
+        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
+        
+        if ([messageToReview.client_id isEqual:clientFromID] && ![messageToReview.fb_msg_id isEqualToString:messageToNotConsider])
+        {
+            [messagesArray addObject:messageToReview];
+        }
+    }    
+    return messagesArray;
+}
 
 - (BOOL)existMessage:(NSString*)messageIDToValidate; // Review an array of Messages to check if a given Message ID exists
 {
@@ -179,5 +219,28 @@
     return numberOfMessages;
 
 }
+
+- (void)updateMessage:(Message*)messageToUpdate; // Update a message
+{
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Message *messageToReview = [[Message alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    {
+        messageToReview = [[Message alloc] init];
+        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
+        
+        if ([messageToReview.fb_msg_id isEqual:messageToUpdate.fb_msg_id])
+        {
+            [mainDelegate.sharedArrayMessages replaceObjectAtIndex:i withObject:messageToUpdate];
+            break;
+        }
+    }
+    
+}
+
 
 @end

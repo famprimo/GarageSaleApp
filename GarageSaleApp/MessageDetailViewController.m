@@ -16,6 +16,14 @@
 
 
 @interface MessageDetailViewController ()
+{
+    // Data for the table
+    NSMutableArray *_myDataOtherMessages;
+    
+    // The message that is selected from the other messages table
+    Message *_selectedOtherMessage;
+    
+}
 
 // For Popover
 @property (nonatomic, strong) UIPopoverController *clientPickerPopover;
@@ -37,6 +45,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    // Remember to set ViewControler as the delegate and datasource
+    self.tableOtherMessages.delegate = self;
+    self.tableOtherMessages.dataSource = self;
     
     // Update the view
     [self configureView];
@@ -68,10 +80,10 @@
     if (self.detailItem) {
         // Asign values to objects in View
         
+        MessageModel *messageMethods = [[MessageModel alloc] init];
         Message *messageSelected = [[Message alloc] init];
         messageSelected = (Message *)_detailItem;
 
-        
         ProductModel *productMethods = [[ProductModel alloc] init];
         Product *productRelatedToMessage = [[Product alloc] init];
 
@@ -173,6 +185,8 @@
         self.imageClient.image = [UIImage imageWithData:clientRelatedToMessage.picture];
         self.labelMessageDate.text = [messageSelected.datetime formattedAsTimeAgo];
         
+        self.labelOtherMessages.text = [NSString stringWithFormat:@"Otros mensajes de %@ %@:", clientRelatedToMessage.name, clientRelatedToMessage.last_name];
+        
         
         self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
         
@@ -223,7 +237,7 @@
             else
             {
                 self.imageOwner.image = [UIImage imageNamed:@"Blank"];
-                self.LabelProductRelated.text = @"";
+                self.labelPublishedAgo.text = @"Publicado hace ... por:";
                 self.labelPublishedAgo.text = @"";
                 self.labelOwnerName.text = @"";
                 self.imageOwnerStatus.image = [UIImage imageNamed:@"Blank"];
@@ -231,11 +245,15 @@
                 self.labelOwnerAddress.text = @"";
                 self.labelOwnerPhones.text = @"";
                 self.buttonRelateToOwner.hidden = NO;
-                self.buttonSeeInFacebook.hidden = YES;
+                self.buttonSeeInFacebook.hidden = NO;
                 self.buttonMessageToOwner.hidden = YES;
                 self.picOwnerPhone.hidden = YES;
                 self.picOwnerZone.hidden = YES;
             }
+            
+            // Hide button to relate to product
+            self.buttonRelateToProduct.hidden = YES;
+
         }
         else
         {
@@ -257,8 +275,18 @@
             self.buttonMessageToOwner.hidden = YES;
             self.picOwnerPhone.hidden = YES;
             self.picOwnerZone.hidden = YES;
+            
+            // Show button to relate to product
+            self.buttonRelateToProduct.hidden = NO;
+
         }
         
+        // Other messsages from the same client
+        _myDataOtherMessages = [messageMethods getMessagesArrayFromClient:clientRelatedToMessage.client_id withoutMessage:messageSelected.fb_msg_id];
+        [self.tableOtherMessages reloadData];
+        
+        _selectedOtherMessage = [[Message alloc] init];
+ 
     }
 }
 
@@ -295,6 +323,136 @@
     [productMethods updateProduct:productRelatedToMessage];
     
     [self configureView];
+}
+
+-(IBAction)relateProductToMessage:(id)sender;
+{
+    if (_selectedOtherMessage && _selectedOtherMessage.product_id)
+    {
+        // Update the message with the product selected
+        MessageModel *messageMethods = [[MessageModel alloc] init];
+        Message *messageSelected = [[Message alloc] init];
+        messageSelected = (Message *)_detailItem;
+        
+        messageSelected.product_id = _selectedOtherMessage.product_id;
+        
+        [messageMethods updateMessage:messageSelected];
+        [self configureView];
+    }
+}
+
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    // Return the number of rows in the section.
+    return _myDataOtherMessages.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    ProductModel *productMethods = [[ProductModel alloc] init];
+    Product *productRelatedToMessage = [[Product alloc] init];
+    
+    // Retrieve cell
+    NSString *cellIdentifier = @"Cell";
+    UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    // Get the listing to be shown
+    Message *myMessage = _myDataOtherMessages[indexPath.row];
+    
+    // Get references to images and labels of cell
+    UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:1];
+    UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:2];
+    UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:3];
+    UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:4];
+    UIImageView *soldImage = (UIImageView*)[myCell.contentView viewWithTag:5];
+    
+    // Set image frames
+   
+    CGRect markImageFrame = markImage.frame;
+    markImageFrame.origin.x = 8;
+    markImageFrame.origin.y = 21;
+    markImageFrame.size.width = 10;
+    markImageFrame.size.height = 10;
+    markImage.frame = markImageFrame;
+
+    CGRect imageProductFrame = productImage.frame;
+    imageProductFrame.origin.x = 21;
+    imageProductFrame.origin.y = 21;
+    imageProductFrame.size.width = 40;
+    imageProductFrame.size.height = 40;
+    productImage.frame = imageProductFrame;
+
+    CGRect soldImageFrame = soldImage.frame;
+    soldImageFrame.origin.x = 21;
+    soldImageFrame.origin.y = 29;
+    soldImageFrame.size.width = 40;
+    soldImageFrame.size.height = 23;
+    soldImage.frame = soldImageFrame;
+
+    // Set table cell labels to listing data
+    
+    messageLabel.text = myMessage.message;
+    //[messageLabel sizeToFit];
+    
+    datetimeLabel.text = [myMessage.datetime formattedAsTimeAgo];
+    
+    // Set mark depending on message status
+    if ([myMessage.status isEqualToString:@"N"])
+    {
+        markImage.image = [UIImage imageNamed:@"BlueDot"];
+    }
+    else if ([myMessage.status isEqualToString:@"R"])
+    {
+        markImage.image = [UIImage imageNamed:@"Replied"];
+    }
+    else if ([myMessage.status isEqualToString:@"P"])
+    {
+        markImage.image = [UIImage imageNamed:@"Blank"];
+    }
+    
+    soldImage.image = [UIImage imageNamed:@"Blank"];
+    
+    // Set image for product or message
+    if ([myMessage.type isEqualToString:@"P"])
+    {
+        productRelatedToMessage = [productMethods getProductFromProductId:myMessage.product_id];
+        productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
+        
+        // Set sold image if product is sold
+        if ([productRelatedToMessage.status isEqualToString:@"S"])
+        {
+            soldImage.image = [UIImage imageNamed:@"Sold"];
+        }
+        
+    }
+    else if ([myMessage.type isEqualToString:@"I"])
+    {
+        productImage.image = [UIImage imageNamed:@"Message"];
+    }
+    else if ([myMessage.type isEqualToString:@"W"])
+    {
+        productImage.image = [UIImage imageNamed:@"Message"];
+    }
+    
+    return myCell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Set selected listing to var
+    _selectedOtherMessage = _myDataOtherMessages[indexPath.row];
+    
+
 }
 
 

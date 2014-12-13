@@ -204,8 +204,6 @@
     // Set image for product or message
     if ([myMessage.type isEqualToString:@"P"])
     {
-        //productImage.image = [productMethods getImageFromProductId:myMessage.product_id];
-        
         productRelatedToMessage = [productMethods getProductFromProductId:myMessage.product_id];
         productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
         

@@ -160,7 +160,7 @@
     
     Product *productToReview = [[Product alloc] init];
     
-    for (int i=0; i<mainDelegate.sharedArrayClients.count; i=i+1)
+    for (int i=0; i<mainDelegate.sharedArrayProducts.count; i=i+1)
     {
         productToReview = [[Product alloc] init];
         productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
@@ -171,7 +171,6 @@
             break;
         }
     }
-    
 }
 
 - (Client*)getClient:(Product*)productBase;
