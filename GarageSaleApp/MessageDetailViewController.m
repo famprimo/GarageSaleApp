@@ -87,26 +87,61 @@
         imageClientFrame.size.height = 70;
         self.imageClient.frame = imageClientFrame;
 
+        CGRect imageClientStatusFrame = self.imageClientStatus.frame;
+        imageClientStatusFrame.origin.x = 134;
+        imageClientStatusFrame.origin.y = 60;
+        imageClientStatusFrame.size.width = 10;
+        imageClientStatusFrame.size.height = 10;
+        self.imageClientStatus.frame = imageClientStatusFrame;
+
+        CGRect picClientPhoneFrame = self.picClientPhone.frame;
+        picClientPhoneFrame.origin.x = 134;
+        picClientPhoneFrame.origin.y = 121;
+        picClientPhoneFrame.size.width = 15;
+        picClientPhoneFrame.size.height = 15;
+        self.picClientPhone.frame = picClientPhoneFrame;
+
         CGRect imageProductFrame = self.imageProduct.frame;
         imageProductFrame.origin.x = 16;
-        imageProductFrame.origin.y = 478;
+        imageProductFrame.origin.y = 517;
         imageProductFrame.size.width = 70;
         imageProductFrame.size.height = 70;
         self.imageProduct.frame = imageProductFrame;
 
         CGRect imageProductSoldFrame = self.imageProductSold.frame;
         imageProductSoldFrame.origin.x = 16;
-        imageProductSoldFrame.origin.y = 492;
+        imageProductSoldFrame.origin.y = 531;
         imageProductSoldFrame.size.width = 70;
         imageProductSoldFrame.size.height = 40;
         self.imageProductSold.frame = imageProductSoldFrame;
 
         CGRect imageOwnerFrame = self.imageOwner.frame;
         imageOwnerFrame.origin.x = 16;
-        imageOwnerFrame.origin.y = 598;
+        imageOwnerFrame.origin.y = 661;
         imageOwnerFrame.size.width = 70;
         imageOwnerFrame.size.height = 70;
         self.imageOwner.frame = imageOwnerFrame;
+        
+        CGRect imageOwnerStatusFrame = self.imageOwnerStatus.frame;
+        imageOwnerStatusFrame.origin.x = 99;
+        imageOwnerStatusFrame.origin.y = 664;
+        imageOwnerStatusFrame.size.width = 10;
+        imageOwnerStatusFrame.size.height = 10;
+        self.imageOwnerStatus.frame = imageOwnerStatusFrame;
+        
+        CGRect picOwnerZoneFrame = self.picOwnerZone.frame;
+        picOwnerZoneFrame.origin.x = 99;
+        picOwnerZoneFrame.origin.y = 690;
+        picOwnerZoneFrame.size.width = 15;
+        picOwnerZoneFrame.size.height = 15;
+        self.picOwnerZone.frame = picOwnerZoneFrame;
+        
+        CGRect picOwnerPhoneFrame = self.picOwnerPhone.frame;
+        picOwnerPhoneFrame.origin.x = 99;
+        picOwnerPhoneFrame.origin.y = 736;
+        picOwnerPhoneFrame.size.width = 15;
+        picOwnerPhoneFrame.size.height = 15;
+        self.picOwnerPhone.frame = picOwnerPhoneFrame;
         
         CGRect buttonRelateToOwnerFrame = self.buttonRelateToOwner.frame;
         buttonRelateToOwnerFrame.origin.x = 70;
@@ -119,7 +154,17 @@
         
         clientRelatedToMessage = [clientMethods getClientFromClientId:messageSelected.client_id];
         
-        self.labelClientName.text = [NSString stringWithFormat:@"%@ %@", clientRelatedToMessage.name, clientRelatedToMessage.last_name];
+        // Client name and status
+        if ([clientRelatedToMessage.status isEqualToString:@"V"])
+        {
+            self.labelClientName.text = [NSString stringWithFormat:@"    %@ %@", clientRelatedToMessage.name, clientRelatedToMessage.last_name];
+            self.imageClientStatus.image = [UIImage imageNamed:@"Verified"];
+        }
+        else
+        {
+            self.labelClientName.text = [NSString stringWithFormat:@"%@ %@", clientRelatedToMessage.name, clientRelatedToMessage.last_name];
+            self.imageClientStatus.image = [UIImage imageNamed:@"Blank"];
+        }
         
         self.labelMessage.text = messageSelected.message;
         // [self.labelMessage sizeToFit];
@@ -151,22 +196,45 @@
             {
                 ownerRelatedToMessage = [clientMethods getClientFromClientId:productRelatedToMessage.client_id];
                 
+                self.LabelProductRelated.text = @"Producto al que hace referencia:";
+                self.labelPublishedAgo.text = @"Publicado hace ... por:";
                 self.imageOwner.image = [UIImage imageWithData:ownerRelatedToMessage.picture];
-                self.labelOwnerName.text = [NSString stringWithFormat:@"%@ %@", ownerRelatedToMessage.name, ownerRelatedToMessage.last_name];
                 self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",ownerRelatedToMessage.zone];
                 self.labelOwnerAddress.text = ownerRelatedToMessage.address;
                 self.labelOwnerPhones.text = ownerRelatedToMessage.phone1;
                 self.buttonRelateToOwner.hidden = YES;
-
+                
+                // Owner name and status
+                if ([ownerRelatedToMessage.status isEqualToString:@"V"])
+                {
+                    self.labelOwnerName.text = [NSString stringWithFormat:@"    %@ %@", ownerRelatedToMessage.name, ownerRelatedToMessage.last_name];
+                    self.imageOwnerStatus.image = [UIImage imageNamed:@"Verified"];
+                }
+                else
+                {
+                    self.labelOwnerName.text = [NSString stringWithFormat:@"%@ %@", ownerRelatedToMessage.name, ownerRelatedToMessage.last_name];
+                    self.imageOwnerStatus.image = [UIImage imageNamed:@"Blank"];
+                }
+                self.buttonSeeInFacebook.hidden = NO;
+                self.buttonMessageToOwner.hidden = NO;
+                self.picOwnerPhone.hidden = NO;
+                self.picOwnerZone.hidden = NO;
             }
             else
             {
                 self.imageOwner.image = [UIImage imageNamed:@"Blank"];
+                self.LabelProductRelated.text = @"";
+                self.labelPublishedAgo.text = @"";
                 self.labelOwnerName.text = @"";
+                self.imageOwnerStatus.image = [UIImage imageNamed:@"Blank"];
                 self.labelOwnerZone.text = @"";
                 self.labelOwnerAddress.text = @"";
                 self.labelOwnerPhones.text = @"";
                 self.buttonRelateToOwner.hidden = NO;
+                self.buttonSeeInFacebook.hidden = YES;
+                self.buttonMessageToOwner.hidden = YES;
+                self.picOwnerPhone.hidden = YES;
+                self.picOwnerZone.hidden = YES;
             }
         }
         else
@@ -177,13 +245,18 @@
             self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
             self.imageOwner.image = [UIImage imageNamed:@"Blank"];
 
+            self.LabelProductRelated.text = @"";
+            self.labelPublishedAgo.text = @"";
             self.labelProductDetails.text = @"";
             self.labelOwnerName.text = @"";
             self.labelOwnerZone.text = @"";
             self.labelOwnerAddress.text = @"";
             self.labelOwnerPhones.text = @"";
             self.buttonRelateToOwner.hidden = YES;
-
+            self.buttonSeeInFacebook.hidden = YES;
+            self.buttonMessageToOwner.hidden = YES;
+            self.picOwnerPhone.hidden = YES;
+            self.picOwnerZone.hidden = YES;
         }
         
     }

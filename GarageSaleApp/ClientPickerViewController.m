@@ -16,7 +16,7 @@
     
     // Data for the table
     NSMutableArray *_myData;
-    
+     
     // The client that is selected from the table
     Client *_selectedClient;
     

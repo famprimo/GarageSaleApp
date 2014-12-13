@@ -21,6 +21,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *buttonReply;
 @property (strong, nonatomic) IBOutlet UIButton *buttonAlreadyReplied;
 @property (strong, nonatomic) IBOutlet UIButton *buttonRelateToOwner;
+@property (strong, nonatomic) IBOutlet UIButton *buttonSeeInFacebook;
+@property (strong, nonatomic) IBOutlet UIButton *buttonMessageToOwner;
 
 @property (strong, nonatomic) IBOutlet UILabel *labelPublishedDateReference;
 @property (strong, nonatomic) IBOutlet UILabel *labelMessageDate;
@@ -31,7 +33,11 @@
 @property (strong, nonatomic) IBOutlet UILabel *labelProductDetails;
 @property (strong, nonatomic) IBOutlet UIImageView *imageClient;
 @property (strong, nonatomic) IBOutlet UIImageView *imageClientStatus;
+@property (strong, nonatomic) IBOutlet UIImageView *picClientPhone;
 
+
+@property (strong, nonatomic) IBOutlet UILabel *LabelProductRelated;
+@property (strong, nonatomic) IBOutlet UILabel *labelPublishedAgo;
 @property (strong, nonatomic) IBOutlet UIImageView *imageProduct;
 @property (strong, nonatomic) IBOutlet UIImageView *imageProductSold;
 @property (strong, nonatomic) IBOutlet UILabel *labelOwnerName;
@@ -39,7 +45,9 @@
 @property (strong, nonatomic) IBOutlet UILabel *labelOwnerAddress;
 @property (strong, nonatomic) IBOutlet UILabel *labelOwnerPhones;
 @property (strong, nonatomic) IBOutlet UIImageView *imageOwner;
-@property (strong, nonatomic) IBOutlet UILabel *imageOwnerStatus;
+@property (strong, nonatomic) IBOutlet UIImageView *picOwnerZone;
+@property (strong, nonatomic) IBOutlet UIImageView *picOwnerPhone;
+@property (strong, nonatomic) IBOutlet UIImageView *imageOwnerStatus;
 
 -(IBAction)showPopoverClientPicker:(id)sender;
 

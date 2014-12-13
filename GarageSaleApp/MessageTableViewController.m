@@ -145,6 +145,9 @@
     
     ProductModel *productMethods = [[ProductModel alloc] init];
     Product *productRelatedToMessage = [[Product alloc] init];
+    
+    ClientModel *clientMethods = [[ClientModel alloc] init];
+    Client *clientRelatedToMessage = [[Client alloc] init];
 
     // Retrieve cell
     NSString *cellIdentifier = @"Cell";
@@ -160,9 +163,22 @@
     UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:4];
     UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:5];
     UIImageView *soldImage = (UIImageView*)[myCell.contentView viewWithTag:6];
+    UIImageView *verifiedImage = (UIImageView*)[myCell.contentView viewWithTag:7];
     
     // Set table cell labels to listing data
-    nameLabel.text = myMessage.fb_from_name;
+    
+    // Client name and status
+    clientRelatedToMessage = [clientMethods getClientFromClientId:myMessage.client_id];
+    if ([clientRelatedToMessage.status isEqualToString:@"V"])
+    {
+        nameLabel.text = [NSString stringWithFormat:@"    %@ %@", clientRelatedToMessage.name, clientRelatedToMessage.last_name];
+        verifiedImage.image = [UIImage imageNamed:@"Verified"];
+    }
+    else
+    {
+        nameLabel.text = [NSString stringWithFormat:@"%@ %@", clientRelatedToMessage.name, clientRelatedToMessage.last_name];
+        verifiedImage.image = [UIImage imageNamed:@"Blank"];
+    }
     
     messageLabel.text = myMessage.message;
     //[messageLabel sizeToFit];
