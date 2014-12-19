@@ -36,7 +36,13 @@
 		C029BA6B1969EF9400125C4F /* Opportunity.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA6A1969EF9400125C4F /* Opportunity.m */; };
 		C042ECCF1A3934DB00AC9A4D /* ClientPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */; };
 		C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */; };
+		C04E745B1A43D2B300F52E33 /* SendMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C04E74591A43D2B300F52E33 /* SendMessageViewController.m */; };
+		C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */; };
+		C05377801A41BA2A00EAAE76 /* TemplateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C053777F1A41BA2A00EAAE76 /* TemplateModel.m */; };
 		C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */; };
+		C06F66F31A4114B40013371F /* Template.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66F21A4114B40013371F /* Template.m */; };
+		C06F66FC1A4116910013371F /* SetupTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66FB1A4116910013371F /* SetupTableViewController.m */; };
+		C06F66FF1A4116A90013371F /* SetupDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66FE1A4116A90013371F /* SetupDetailViewController.m */; };
 		C0815E0E19644C250021A153 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E0D19644C250021A153 /* Client.m */; };
 		C0815E1119644C2D0021A153 /* ClientModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1019644C2D0021A153 /* ClientModel.m */; };
 		C0815E1419644C390021A153 /* OpportunityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1319644C390021A153 /* OpportunityModel.m */; };
@@ -105,8 +111,19 @@
 		C042ECCC1A3934DB00AC9A4D /* ClientPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientPickerViewController.h; sourceTree = "<group>"; };
 		C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientPickerViewController.m; sourceTree = "<group>"; };
 		C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ClientPickerViewController.xib; sourceTree = "<group>"; };
+		C04E74581A43D2B300F52E33 /* SendMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendMessageViewController.h; sourceTree = "<group>"; };
+		C04E74591A43D2B300F52E33 /* SendMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendMessageViewController.m; sourceTree = "<group>"; };
+		C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendMessageViewController.xib; sourceTree = "<group>"; };
+		C053777E1A41BA2A00EAAE76 /* TemplateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateModel.h; sourceTree = "<group>"; };
+		C053777F1A41BA2A00EAAE76 /* TemplateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateModel.m; sourceTree = "<group>"; };
 		C05C6A8319F1D5B800BCF9BD /* NSDate+NVTimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NVTimeAgo.h"; sourceTree = "<group>"; };
 		C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NVTimeAgo.m"; sourceTree = "<group>"; };
+		C06F66F11A4114B40013371F /* Template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Template.h; sourceTree = "<group>"; };
+		C06F66F21A4114B40013371F /* Template.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Template.m; sourceTree = "<group>"; };
+		C06F66FA1A4116910013371F /* SetupTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupTableViewController.h; sourceTree = "<group>"; };
+		C06F66FB1A4116910013371F /* SetupTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupTableViewController.m; sourceTree = "<group>"; };
+		C06F66FD1A4116A90013371F /* SetupDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupDetailViewController.h; sourceTree = "<group>"; };
+		C06F66FE1A4116A90013371F /* SetupDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupDetailViewController.m; sourceTree = "<group>"; };
 		C0815E0C19644C250021A153 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		C0815E0D19644C250021A153 /* Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
 		C0815E0F19644C2D0021A153 /* ClientModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientModel.h; sourceTree = "<group>"; };
@@ -161,6 +178,9 @@
 				C008BA3619C3CB82008616E4 /* MessageTableViewController.m */,
 				C008BA3819C3CBCA008616E4 /* MessageDetailViewController.h */,
 				C008BA3919C3CBCA008616E4 /* MessageDetailViewController.m */,
+				C04E74581A43D2B300F52E33 /* SendMessageViewController.h */,
+				C04E74591A43D2B300F52E33 /* SendMessageViewController.m */,
+				C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */,
 			);
 			name = Message;
 			sourceTree = "<group>";
@@ -199,6 +219,7 @@
 		C00ED0E519644A5A0045A65E /* GarageSaleApp */ = {
 			isa = PBXGroup;
 			children = (
+				C06F66ED1A4111500013371F /* Setup */,
 				C03C0C6E1A34BC5400838338 /* ClientPicker */,
 				C00ED0EE19644A5A0045A65E /* AppDelegate.h */,
 				C00ED0EF19644A5A0045A65E /* AppDelegate.m */,
@@ -349,6 +370,21 @@
 			name = "Date Time Ago";
 			sourceTree = "<group>";
 		};
+		C06F66ED1A4111500013371F /* Setup */ = {
+			isa = PBXGroup;
+			children = (
+				C06F66F11A4114B40013371F /* Template.h */,
+				C06F66F21A4114B40013371F /* Template.m */,
+				C053777E1A41BA2A00EAAE76 /* TemplateModel.h */,
+				C053777F1A41BA2A00EAAE76 /* TemplateModel.m */,
+				C06F66FA1A4116910013371F /* SetupTableViewController.h */,
+				C06F66FB1A4116910013371F /* SetupTableViewController.m */,
+				C06F66FD1A4116A90013371F /* SetupDetailViewController.h */,
+				C06F66FE1A4116A90013371F /* SetupDetailViewController.m */,
+			);
+			name = Setup;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -428,6 +464,7 @@
 				C00ED0F819644A5A0045A65E /* Images.xcassets in Resources */,
 				C00ED0EA19644A5A0045A65E /* InfoPlist.strings in Resources */,
 				C00ED0F319644A5A0045A65E /* Main.storyboard in Resources */,
+				C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */,
 				C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -450,6 +487,8 @@
 				C02486F019646AA5005DCBE6 /* ClientTableViewController.m in Sources */,
 				C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */,
 				C008BA3719C3CB82008616E4 /* MessageTableViewController.m in Sources */,
+				C06F66FC1A4116910013371F /* SetupTableViewController.m in Sources */,
+				C06F66F31A4114B40013371F /* Template.m in Sources */,
 				C02486F319646ADA005DCBE6 /* ClientDetailViewController.m in Sources */,
 				C0815E1119644C2D0021A153 /* ClientModel.m in Sources */,
 				C0815E1719644C460021A153 /* Product.m in Sources */,
@@ -458,6 +497,7 @@
 				C008BA3A19C3CBCA008616E4 /* MessageDetailViewController.m in Sources */,
 				C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */,
 				C019F93F19D88944009528EE /* Message.m in Sources */,
+				C06F66FF1A4116A90013371F /* SetupDetailViewController.m in Sources */,
 				C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */,
 				C019F94019D88944009528EE /* MessageModel.m in Sources */,
 				C00ED12319644B4F0045A65E /* MenuItem.m in Sources */,
@@ -466,7 +506,9 @@
 				C029BA6B1969EF9400125C4F /* Opportunity.m in Sources */,
 				C00ED12419644B4F0045A65E /* MenuModel.m in Sources */,
 				C029BA671969D26000125C4F /* CustomSegue.m in Sources */,
+				C05377801A41BA2A00EAAE76 /* TemplateModel.m in Sources */,
 				C0C2FE381967B67C00D686FA /* ProductImageViewController.m in Sources */,
+				C04E745B1A43D2B300F52E33 /* SendMessageViewController.m in Sources */,
 				C00ED0EC19644A5A0045A65E /* main.m in Sources */,
 				C0815E20196455590021A153 /* ProductTableViewController.m in Sources */,
 				C0815E1419644C390021A153 /* OpportunityModel.m in Sources */,

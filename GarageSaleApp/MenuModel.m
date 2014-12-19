@@ -41,15 +41,15 @@
     [menuItemArray addObject:item3];
     
     MenuItem *item4 = [[MenuItem alloc] init];
-    item4.menuTitle = @"Configuracion";
+    item4.menuTitle = @"Estadisticas";
     item4.menuIcon = @"AboutMenuIcon";
-    item4.screenType = ScreenTypeAbout;
+    item4.screenType = ScreenTypeStatistics;
     [menuItemArray addObject:item4];
     
     MenuItem *item5 = [[MenuItem alloc] init];
-    item5.menuTitle = @"Acerca de";
+    item5.menuTitle = @"Configuracion";
     item5.menuIcon = @"AboutMenuIcon";
-    item5.screenType = ScreenTypeAbout;
+    item5.screenType = ScreenTypeSetup;
     [menuItemArray addObject:item5];
     
 

@@ -25,10 +25,12 @@
     tempOpportunity.opportunity_id = @"0000001";
     tempOpportunity.product_id = @"0000001";
     tempOpportunity.buyer_id = @"00003";
-    tempOpportunity.date = [dateFormat dateFromString:@"20140501"];
     tempOpportunity.initial_price = 290.0;
     tempOpportunity.price_sold = 0;
-    tempOpportunity.date_sold = nil;
+    tempOpportunity.created_time = [dateFormat dateFromString:@"20140501"];
+    tempOpportunity.closedsold_time = nil;
+    tempOpportunity.paid_time = nil;
+    tempOpportunity.status = @"O";
     tempOpportunity.notes = @"Notas";
     tempOpportunity.commision = 0;
     tempOpportunity.agent_id = @"00001";
@@ -41,10 +43,12 @@
     tempOpportunity.opportunity_id = @"0000002";
     tempOpportunity.product_id = @"0000001";
     tempOpportunity.buyer_id = @"00004";
-    tempOpportunity.date = [dateFormat dateFromString:@"20140530"];
     tempOpportunity.initial_price = 290.0;
     tempOpportunity.price_sold = 0;
-    tempOpportunity.date_sold = nil;
+    tempOpportunity.created_time = [dateFormat dateFromString:@"20140530"];
+    tempOpportunity.closedsold_time = nil;
+    tempOpportunity.paid_time = nil;
+    tempOpportunity.status = @"O";
     tempOpportunity.notes = @"Notas";
     tempOpportunity.commision = 0;
     tempOpportunity.agent_id = @"00001";
@@ -55,12 +59,14 @@
     // Create opportunity #3
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000003";
-    tempOpportunity.product_id = @"0000003";
+    tempOpportunity.product_id = @"0000002";
     tempOpportunity.buyer_id = @"00001";
-    tempOpportunity.date = [dateFormat dateFromString:@"20140302"];
     tempOpportunity.initial_price = 1100.0;
     tempOpportunity.price_sold = 0;
-    tempOpportunity.date_sold = nil;
+    tempOpportunity.created_time = [dateFormat dateFromString:@"20140302"];
+    tempOpportunity.closedsold_time = nil;
+    tempOpportunity.paid_time = nil;
+    tempOpportunity.status = @"O";
     tempOpportunity.notes = @"Notas";
     tempOpportunity.commision = 0;
     tempOpportunity.agent_id = @"00001";
@@ -73,10 +79,12 @@
     tempOpportunity.opportunity_id = @"0000004";
     tempOpportunity.product_id = @"0000004";
     tempOpportunity.buyer_id = @"00005";
-    tempOpportunity.date = [dateFormat dateFromString:@"20131201"];
     tempOpportunity.initial_price = 100000;
     tempOpportunity.price_sold = 990000;
-    tempOpportunity.date_sold = [dateFormat dateFromString:@"20131220"];
+    tempOpportunity.created_time = [dateFormat dateFromString:@"20131201"];
+    tempOpportunity.closedsold_time = [dateFormat dateFromString:@"20131220"];
+    tempOpportunity.paid_time = nil;
+    tempOpportunity.status = @"S";
     tempOpportunity.notes = @"Vendido por el dueno";
     tempOpportunity.commision = 10000;
     tempOpportunity.agent_id = @"00001";
@@ -89,11 +97,13 @@
     tempOpportunity.opportunity_id = @"0000005";
     tempOpportunity.product_id = @"0000002";
     tempOpportunity.buyer_id = @"00006";
-    tempOpportunity.date = [dateFormat dateFromString:@"20140601"];
     tempOpportunity.initial_price = 250.0;
     tempOpportunity.price_sold = 0;
-    tempOpportunity.date_sold = nil;
-    tempOpportunity.notes = @"Notas";
+    tempOpportunity.created_time = [dateFormat dateFromString:@"20140601"];
+    tempOpportunity.closedsold_time = [dateFormat dateFromString:@"20140603"];
+    tempOpportunity.paid_time = [dateFormat dateFromString:@"20140610"];
+    tempOpportunity.status = @"P";
+    tempOpportunity.notes = @"Vendido";
     tempOpportunity.commision = 0;
     tempOpportunity.agent_id = @"00001";
     
@@ -120,7 +130,33 @@
     return nextID;
 }
 
-- (Client*)getClient:(Opportunity*)opportunitySelected
+
+- (NSMutableArray*)getOpportunitiesFromProduct:(NSString*)productFromID;
+{
+    NSMutableArray *opportunitiesArray = [[NSMutableArray alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Opportunity *opportunityToReview = [[Opportunity alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayOpportunities.count; i=i+1)
+    {
+        opportunityToReview = [[Opportunity alloc] init];
+        opportunityToReview = (Opportunity *)mainDelegate.sharedArrayOpportunities[i];
+        
+        if ([opportunityToReview.product_id isEqual:productFromID])
+        {
+            [opportunitiesArray addObject:opportunityToReview];
+        }
+    }
+    return opportunitiesArray;
+
+}
+
+
+- (Client*)getClient:(Opportunity*)opportunitySelected;
 {
     Client *clientFound = [[Client alloc] init];
     
@@ -142,7 +178,8 @@
     return clientFound;
 }
 
-- (Client*)getOwner:(Opportunity*)opportunitySelected
+
+- (Client*)getOwner:(Opportunity*)opportunitySelected;
 {
     Client *ownerFound = [[Client alloc] init];
     NSString *clientId = [[NSString alloc] init];

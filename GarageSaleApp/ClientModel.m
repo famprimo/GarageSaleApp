@@ -11,7 +11,6 @@
 
 @implementation ClientModel
 
-//- (NSMutableArray*)getClients:(NSMutableArray*)clientList;
 - (NSMutableArray*)getClients;
 {
     // Array to hold the listing data

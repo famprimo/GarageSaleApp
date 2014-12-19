@@ -128,11 +128,16 @@
             //[self performSegueWithIdentifier:@"GoToOpportunitySegue" sender:self];
             break;
             
-        case ScreenTypeAbout:
-            // Go to about screen
+        case ScreenTypeStatistics:
+            // Go to statistics screen
             //[self performSegueWithIdentifier:@"GoToAboutSegue" sender:self];
             break;
-            
+
+        case ScreenTypeSetup:
+            // Go to setup screen
+            [self performSegueWithIdentifier:@"GoToSetupSegue" sender:self];
+            break;
+
         default:
             break;
     }
@@ -170,7 +175,7 @@
 {
     NSLog(@"You are logged in!");
     
-    // [self requestPermissions];
+    //[self requestPermissions];
 
 }
 

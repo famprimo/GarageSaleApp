@@ -12,21 +12,26 @@
 #import "ProductModel.h"
 #import "Client.h"
 #import "ClientModel.h"
+#import "Opportunity.h"
+#import "OpportunityModel.h"
 #import "NSDate+NVTimeAgo.h"
 
 
 @interface MessageDetailViewController ()
 {
-    // Data for the table
+    // Data for the tables
     NSMutableArray *_myDataOtherMessages;
+    NSMutableArray *_myDataOpportunities;
     
-    // The message that is selected from the other messages table
+    // /For the selections in the tables
     Message *_selectedOtherMessage;
     
+    NSString *_templateTypeForPopover;
 }
 
 // For Popover
 @property (nonatomic, strong) UIPopoverController *clientPickerPopover;
+@property (nonatomic, strong) UIPopoverController *sendMessagePopover;
 
 @end
 
@@ -49,6 +54,9 @@
     // Remember to set ViewControler as the delegate and datasource
     self.tableOtherMessages.delegate = self;
     self.tableOtherMessages.dataSource = self;
+    
+    self.tableOpportunities.delegate = self;
+    self.tableOpportunities.dataSource = self;
     
     // Update the view
     [self configureView];
@@ -91,6 +99,9 @@
         Client *clientRelatedToMessage = [[Client alloc] init];
         Client *ownerRelatedToMessage = [[Client alloc] init];
 
+        OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
+        
+        
         // Setting frames for all pictures
         CGRect imageClientFrame = self.imageClient.frame;
         imageClientFrame.origin.x = 49;
@@ -212,6 +223,7 @@
                 
                 self.LabelProductRelated.text = @"Producto al que hace referencia:";
                 self.labelPublishedAgo.text = @"Publicado hace ... por:";
+                self.labelOpportunitiesForProduct.text = @"Oportunidades de este producto:";
                 self.imageOwner.image = [UIImage imageWithData:ownerRelatedToMessage.picture];
                 self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",ownerRelatedToMessage.zone];
                 self.labelOwnerAddress.text = ownerRelatedToMessage.address;
@@ -231,13 +243,14 @@
                 }
                 self.buttonSeeInFacebook.hidden = NO;
                 self.buttonMessageToOwner.hidden = NO;
+                self.buttonNewOpportunity.hidden = NO;
+                self.tableOpportunities.hidden = NO;
                 self.picOwnerPhone.hidden = NO;
                 self.picOwnerZone.hidden = NO;
             }
             else
             {
                 self.imageOwner.image = [UIImage imageNamed:@"Blank"];
-                self.labelPublishedAgo.text = @"Publicado hace ... por:";
                 self.labelPublishedAgo.text = @"";
                 self.labelOwnerName.text = @"";
                 self.imageOwnerStatus.image = [UIImage imageNamed:@"Blank"];
@@ -247,12 +260,18 @@
                 self.buttonRelateToOwner.hidden = NO;
                 self.buttonSeeInFacebook.hidden = NO;
                 self.buttonMessageToOwner.hidden = YES;
+                self.buttonNewOpportunity.hidden = NO;
+                self.tableOpportunities.hidden = NO;
                 self.picOwnerPhone.hidden = YES;
                 self.picOwnerZone.hidden = YES;
             }
             
             // Hide button to relate to product
             self.buttonRelateToProduct.hidden = YES;
+            
+            // Ge opportunitie related to product
+            _myDataOpportunities = [opportunityMethods getOpportunitiesFromProduct:productRelatedToMessage.product_id];
+            [self.tableOpportunities reloadData];
 
         }
         else
@@ -265,6 +284,7 @@
 
             self.LabelProductRelated.text = @"";
             self.labelPublishedAgo.text = @"";
+            self.labelOpportunitiesForProduct.text = @"";
             self.labelProductDetails.text = @"";
             self.labelOwnerName.text = @"";
             self.labelOwnerZone.text = @"";
@@ -273,6 +293,8 @@
             self.buttonRelateToOwner.hidden = YES;
             self.buttonSeeInFacebook.hidden = YES;
             self.buttonMessageToOwner.hidden = YES;
+            self.buttonNewOpportunity.hidden = YES;
+            self.tableOpportunities.hidden = YES;
             self.picOwnerPhone.hidden = YES;
             self.picOwnerZone.hidden = YES;
             
@@ -341,6 +363,75 @@
     }
 }
 
+-(IBAction)showPopoverSendMessageBuyer:(id)sender;
+{
+    _templateTypeForPopover = @"C";
+    
+    SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
+    sendMessageController.delegate = self;
+    
+    
+    self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(600.0, 400.0);
+    [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                             inView:self.view
+                           permittedArrowDirections:UIPopoverArrowDirectionAny
+                                           animated:YES];
+}
+
+-(IBAction)showPopoverSendMessageOwner:(id)sender;
+{
+    _templateTypeForPopover = @"O";
+    
+    SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
+    sendMessageController.delegate = self;
+    
+    
+    self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(600.0, 400.0);
+    [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                             inView:self.view
+                           permittedArrowDirections:UIPopoverArrowDirectionAny
+                                           animated:YES];
+    
+}
+
+-(NSString*)GetTemplateTypeFromSendMessage;
+{
+    return _templateTypeForPopover;
+}
+
+-(NSString*)GetBuyerIdFromSendMessage;
+{
+    Message *messageSelected = [[Message alloc] init];
+    messageSelected = (Message *)_detailItem;
+    
+    return messageSelected.client_id;
+}
+
+-(NSString*)GetOwnerIdFromSendMessage;
+{
+    Message *messageSelected = [[Message alloc] init];
+    messageSelected = (Message *)_detailItem;
+
+    Product *productRelatedToMessage = [[Product alloc] init];
+    productRelatedToMessage = [[[ProductModel alloc] init] getProductFromProductId:messageSelected.product_id];
+
+    return productRelatedToMessage.client_id;
+}
+
+
+-(void)MessageSent;
+{
+    // Dismiss the popover view
+    [self.sendMessagePopover dismissPopoverAnimated:YES];
+
+}
+
+-(IBAction)newOpportunity:(id)sender;
+{
+    
+}
 
 #pragma mark - Table view data source
 
@@ -353,105 +444,190 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return _myDataOtherMessages.count;
+    if (tableView == self.tableOtherMessages) // Messages Table
+    {
+        return _myDataOtherMessages.count;
+    }
+    else  // Opportunities Table
+    {
+        return _myDataOpportunities.count;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    ProductModel *productMethods = [[ProductModel alloc] init];
-    Product *productRelatedToMessage = [[Product alloc] init];
-    
-    // Retrieve cell
-    NSString *cellIdentifier = @"Cell";
-    UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    // Get the listing to be shown
-    Message *myMessage = _myDataOtherMessages[indexPath.row];
-    
-    // Get references to images and labels of cell
-    UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:1];
-    UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:2];
-    UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:3];
-    UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:4];
-    UIImageView *soldImage = (UIImageView*)[myCell.contentView viewWithTag:5];
-    
-    // Set image frames
-   
-    CGRect markImageFrame = markImage.frame;
-    markImageFrame.origin.x = 8;
-    markImageFrame.origin.y = 21;
-    markImageFrame.size.width = 10;
-    markImageFrame.size.height = 10;
-    markImage.frame = markImageFrame;
-
-    CGRect imageProductFrame = productImage.frame;
-    imageProductFrame.origin.x = 21;
-    imageProductFrame.origin.y = 21;
-    imageProductFrame.size.width = 40;
-    imageProductFrame.size.height = 40;
-    productImage.frame = imageProductFrame;
-
-    CGRect soldImageFrame = soldImage.frame;
-    soldImageFrame.origin.x = 21;
-    soldImageFrame.origin.y = 29;
-    soldImageFrame.size.width = 40;
-    soldImageFrame.size.height = 23;
-    soldImage.frame = soldImageFrame;
-
-    // Set table cell labels to listing data
-    
-    messageLabel.text = myMessage.message;
-    //[messageLabel sizeToFit];
-    
-    datetimeLabel.text = [myMessage.datetime formattedAsTimeAgo];
-    
-    // Set mark depending on message status
-    if ([myMessage.status isEqualToString:@"N"])
+    if (tableView == self.tableOtherMessages) // Messages Table
     {
-        markImage.image = [UIImage imageNamed:@"BlueDot"];
-    }
-    else if ([myMessage.status isEqualToString:@"R"])
-    {
-        markImage.image = [UIImage imageNamed:@"Replied"];
-    }
-    else if ([myMessage.status isEqualToString:@"P"])
-    {
-        markImage.image = [UIImage imageNamed:@"Blank"];
-    }
-    
-    soldImage.image = [UIImage imageNamed:@"Blank"];
-    
-    // Set image for product or message
-    if ([myMessage.type isEqualToString:@"P"])
-    {
-        productRelatedToMessage = [productMethods getProductFromProductId:myMessage.product_id];
-        productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
+        ProductModel *productMethods = [[ProductModel alloc] init];
+        Product *productRelatedToMessage = [[Product alloc] init];
         
-        // Set sold image if product is sold
-        if ([productRelatedToMessage.status isEqualToString:@"S"])
+        // Retrieve cell
+        NSString *cellIdentifier = @"Cell";
+        UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        // Get the listing to be shown
+        Message *myMessage = _myDataOtherMessages[indexPath.row];
+        
+        // Get references to images and labels of cell
+        UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:1];
+        UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:2];
+        UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:3];
+        UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:4];
+        UIImageView *soldImage = (UIImageView*)[myCell.contentView viewWithTag:5];
+        
+        // Set image frames
+        
+        CGRect markImageFrame = markImage.frame;
+        markImageFrame.origin.x = 8;
+        markImageFrame.origin.y = 21;
+        markImageFrame.size.width = 10;
+        markImageFrame.size.height = 10;
+        markImage.frame = markImageFrame;
+        
+        CGRect imageProductFrame = productImage.frame;
+        imageProductFrame.origin.x = 21;
+        imageProductFrame.origin.y = 21;
+        imageProductFrame.size.width = 40;
+        imageProductFrame.size.height = 40;
+        productImage.frame = imageProductFrame;
+        
+        CGRect soldImageFrame = soldImage.frame;
+        soldImageFrame.origin.x = 21;
+        soldImageFrame.origin.y = 29;
+        soldImageFrame.size.width = 40;
+        soldImageFrame.size.height = 23;
+        soldImage.frame = soldImageFrame;
+        
+        // Set table cell labels to listing data
+        
+        messageLabel.text = myMessage.message;
+        //[messageLabel sizeToFit];
+        
+        datetimeLabel.text = [myMessage.datetime formattedAsTimeAgo];
+        
+        // Set mark depending on message status
+        if ([myMessage.status isEqualToString:@"N"])
         {
-            soldImage.image = [UIImage imageNamed:@"Sold"];
+            markImage.image = [UIImage imageNamed:@"BlueDot"];
+        }
+        else if ([myMessage.status isEqualToString:@"R"])
+        {
+            markImage.image = [UIImage imageNamed:@"Replied"];
+        }
+        else if ([myMessage.status isEqualToString:@"P"])
+        {
+            markImage.image = [UIImage imageNamed:@"Blank"];
         }
         
-    }
-    else if ([myMessage.type isEqualToString:@"I"])
-    {
-        productImage.image = [UIImage imageNamed:@"Message"];
-    }
-    else if ([myMessage.type isEqualToString:@"W"])
-    {
-        productImage.image = [UIImage imageNamed:@"Message"];
+        soldImage.image = [UIImage imageNamed:@"Blank"];
+        
+        // Set image for product or message
+        if ([myMessage.type isEqualToString:@"P"])
+        {
+            productRelatedToMessage = [productMethods getProductFromProductId:myMessage.product_id];
+            productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
+            
+            // Set sold image if product is sold
+            if ([productRelatedToMessage.status isEqualToString:@"S"])
+            {
+                soldImage.image = [UIImage imageNamed:@"Sold"];
+            }
+            
+        }
+        else if ([myMessage.type isEqualToString:@"I"])
+        {
+            productImage.image = [UIImage imageNamed:@"Message"];
+        }
+        else if ([myMessage.type isEqualToString:@"W"])
+        {
+            productImage.image = [UIImage imageNamed:@"Message"];
+        }
+        
+        return myCell;
     }
     
-    return myCell;
+    else // Opportunities Table
+    
+    {
+        ClientModel *clientMethods = [[ClientModel alloc] init];
+        
+        // Retrieve cell
+        NSString *cellIdentifier = @"CellOpp";
+        UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        // Get the opportunity to be shown
+        Opportunity *myOpportunity = _myDataOpportunities[indexPath.row];
+        Client *clientRelatedToOpportunity = [clientMethods getClientFromClientId:myOpportunity.buyer_id];
+        
+        // Get references to images and labels of cell
+        UILabel *clientName = (UILabel*)[myCell.contentView viewWithTag:1];
+        UILabel *opportunityStatus = (UILabel*)[myCell.contentView viewWithTag:2];
+        UILabel *opportunityDates = (UILabel*)[myCell.contentView viewWithTag:3];
+        UIImageView *clientImage = (UIImageView*)[myCell.contentView viewWithTag:4];
+        UIImageView *clientStatus = (UIImageView*)[myCell.contentView viewWithTag:5];
+        
+        // Set image frames
+        
+        CGRect clientImageFrame = clientImage.frame;
+        clientImageFrame.origin.x = 8;
+        clientImageFrame.origin.y = 15;
+        clientImageFrame.size.width = 40;
+        clientImageFrame.size.height = 40;
+        clientImage.frame = clientImageFrame;
+        
+        CGRect clientStatusFrame = clientStatus.frame;
+        clientStatusFrame.origin.x = 56;
+        clientStatusFrame.origin.y = 15;
+        clientStatusFrame.size.width = 10;
+        clientStatusFrame.size.height = 10;
+        clientStatus.frame = clientStatusFrame;
+        
+        // Set client data
+        clientImage.image = [UIImage imageWithData:clientRelatedToOpportunity.picture];
+        if ([clientRelatedToOpportunity.status isEqualToString:@"V"])
+        {
+            clientName.text = [NSString stringWithFormat:@"    %@ %@", clientRelatedToOpportunity.name, clientRelatedToOpportunity.last_name];
+            clientStatus.image = [UIImage imageNamed:@"Verified"];
+        }
+        else
+        {
+            clientName.text = [NSString stringWithFormat:@"%@ %@", clientRelatedToOpportunity.name, clientRelatedToOpportunity.last_name];
+            clientStatus.image = [UIImage imageNamed:@"Blank"];
+        }
+        
+        // Set opportunity status and dates
+        if ([myOpportunity.status isEqualToString:@"O"])
+        {
+            opportunityStatus.text = @"Abierta";
+            opportunityDates.text = [NSString stringWithFormat:@"Datos enviados %@",[myOpportunity.created_time formattedAsTimeAgo]];
+        }
+        else if ([myOpportunity.status isEqualToString:@"C"])
+        {
+            opportunityStatus.text = @"Cerrada";
+            opportunityDates.text = [NSString stringWithFormat:@"Datos enviados %@, cerrado %@",[myOpportunity.created_time formattedAsTimeAgo], [myOpportunity.closedsold_time formattedAsTimeAgo]];
+        }
+        else if ([myOpportunity.status isEqualToString:@"S"])
+        {
+            opportunityStatus.text = @"Vendido";
+            opportunityDates.text = [NSString stringWithFormat:@"Datos enviados %@, vendido %@",[myOpportunity.created_time formattedAsTimeAgo], [myOpportunity.closedsold_time formattedAsTimeAgo]];
+        }
+        else if ([myOpportunity.status isEqualToString:@"P"])
+        {
+            opportunityStatus.text = @"Pagado";
+            opportunityDates.text = [NSString stringWithFormat:@"Datos enviados %@, vendido %@, pagado %@",[myOpportunity.created_time formattedAsTimeAgo], [myOpportunity.closedsold_time formattedAsTimeAgo], [myOpportunity.paid_time formattedAsTimeAgo]];
+        }
+
+        return myCell;
+
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Set selected listing to var
-    _selectedOtherMessage = _myDataOtherMessages[indexPath.row];
-    
+    if (tableView == self.tableOtherMessages) // Messages Table
+    {
+        _selectedOtherMessage = _myDataOtherMessages[indexPath.row];
+    }
 
 }
 

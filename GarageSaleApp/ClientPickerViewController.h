@@ -18,7 +18,9 @@
 @interface ClientPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) id<ClientPickerViewControllerDelegate> delegate;
-
 @property (strong, nonatomic) IBOutlet UITableView *myTable;
+@property (strong, nonatomic) IBOutlet UIButton *buttonSelectClient;
+
+-(IBAction)selectClient:(id)sender;
 
 @end

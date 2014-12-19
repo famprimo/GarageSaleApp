@@ -15,6 +15,7 @@
 
 - (NSMutableArray*)getOpportunities:(NSMutableArray*)clientList;
 - (NSString*)getNextOpportunityID;
+- (NSMutableArray*)getOpportunitiesFromProduct:(NSString*)productFromID;
 - (Client*)getClient:(Opportunity*)opportunitySelected;
 - (Client*)getOwner:(Opportunity*)opportunitySelected;
 

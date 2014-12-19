@@ -11,6 +11,7 @@
 #import "ClientModel.h"
 #import "OpportunityModel.h"
 #import "MessageModel.h"
+#import "TemplateModel.h"
 #import <FacebookSDK/FacebookSDK.h>
 
 @implementation AppDelegate
@@ -19,6 +20,7 @@
 @synthesize sharedArrayClients;
 @synthesize sharedArrayOpportunities;
 @synthesize sharedArrayMessages;
+@synthesize sharedArrayTemplates;
 @synthesize lastProductID;
 @synthesize lastCientID;
 @synthesize lastOpportunityID;
@@ -36,6 +38,8 @@
     sharedArrayClients = [[[ClientModel alloc] init] getClients];
     sharedArrayOpportunities = [[[OpportunityModel alloc] init] getOpportunities:sharedArrayOpportunities];
     sharedArrayMessages = [[[MessageModel alloc] init] getMessages:sharedArrayMessages];
+    sharedArrayTemplates = [[[TemplateModel alloc] init] getTemplates];
+    
     return YES;
 }
 

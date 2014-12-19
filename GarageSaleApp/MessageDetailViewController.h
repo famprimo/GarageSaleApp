@@ -10,11 +10,11 @@
 #import "Message.h"
 #import "MessageModel.h"
 #import "ClientPickerViewController.h"
+#import "SendMessageViewController.h"
 
 // Popover help  http://www.appcoda.com/uiactionsheet-uipopovercontroller-tutorial/
 
-//@interface MessageDetailViewController : UIViewController <UIActionSheetDelegate, TestViewControllerDelegate>
-@interface MessageDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface MessageDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, SendMessageViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) id detailItem;
 
@@ -54,9 +54,16 @@
 @property (strong, nonatomic) IBOutlet UIButton *buttonRelateToProduct;
 
 
+@property (strong, nonatomic) IBOutlet UILabel *labelOpportunitiesForProduct;
+@property (strong, nonatomic) IBOutlet UIButton *buttonNewOpportunity;
+@property (strong, nonatomic) IBOutlet UITableView *tableOpportunities;
+
+
 
 -(IBAction)showPopoverClientPicker:(id)sender;
-
+-(IBAction)showPopoverSendMessageBuyer:(id)sender;
+-(IBAction)showPopoverSendMessageOwner:(id)sender;
 -(IBAction)relateProductToMessage:(id)sender;
+-(IBAction)newOpportunity:(id)sender;
 
 @end

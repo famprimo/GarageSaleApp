@@ -55,8 +55,10 @@
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
     
+    /*
     UIBarButtonItem *filterButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"EmptyFilter"] style:UIBarButtonItemStylePlain target:self action:@selector(filterButtonClicked:)];
     self.navigationItem.rightBarButtonItem = filterButton;
+    */
     
     self.detailViewController = (MessageDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
     
