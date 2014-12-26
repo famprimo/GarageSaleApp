@@ -7,21 +7,15 @@
 //
 
 #import "ProductDetailViewController.h"
+#import "ProductTableViewController.h"
 #import "Product.h"
 #import "ProductModel.h"
 #import "Client.h"
-#import "ProductImageViewController.h"
-#import "CustomSegue.h"
-#import "CustomUnwindSegue.h"
 
 
 @interface ProductDetailViewController ()
-{
-    int margin;
-    int marginLeft;
-    int marginRight;
-    int referenceCenter;
-}
+
+
 - (void)configureView;
 
 @end
@@ -42,12 +36,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    margin = 30;
-    marginLeft = margin;
-    marginRight = self.view.frame.size.width - margin - 50;
-    // marginRight = self.view.frame.size.width - margin;
-    referenceCenter = (marginRight + margin) / 2;
     
     // Update the view
     [self configureView];
@@ -71,6 +59,7 @@
     }
 }
 
+
 - (void)configureView
 {
     // Update the user interface for the detail item.
@@ -83,109 +72,90 @@
         
         Client *clientSelected = (Client *)[[[ProductModel alloc] init] getClient:productSelected];
         
-        // NSMutableArray *opportunitiesSelected = [[[ ProductModel alloc] init] getOpportunitiesFromProduct:productSelected];
+        // Setting frames for all pictures
+        CGRect productImageFrame = self.productImage.frame;
+        productImageFrame.origin.x = 90;
+        productImageFrame.origin.y = 80;
+        productImageFrame.size.width = 200;
+        productImageFrame.size.height = 200;
+        self.productImage.frame = productImageFrame;
 
-        // Add tap gesture recognizer to picture
-        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapPicture:)];
-        tapRecognizer.numberOfTapsRequired = 2;
-        [self.imageProduct addGestureRecognizer:tapRecognizer];
+        CGRect soldImageFrame = self.soldImage.frame;
+        soldImageFrame.origin.x = 90;
+        soldImageFrame.origin.y = 124;
+        soldImageFrame.size.width = 200;
+        soldImageFrame.size.height = 111;
+        self.soldImage.frame = soldImageFrame;
 
-        // Position of first item
-        int positionY = 250;
-
-        // Set Product Image
-        self.imageProduct.image = [UIImage imageWithData:productSelected.picture];
-        CGRect imageProductFrame = self.imageProduct.frame;
-        imageProductFrame.origin.x = marginLeft;
-        imageProductFrame.origin.y = positionY;
-        imageProductFrame.size.width = marginRight - marginLeft;
-        imageProductFrame.size.height = 500;
-        self.imageProduct.frame = imageProductFrame;
-       
-        // Set Product Name
-        positionY = positionY + self.imageProduct.frame.size.height + 20;
-        self.labelName.text = productSelected.name;
-        CGRect labelNameFrame = self.labelName.frame;
-        labelNameFrame.origin.x = marginLeft;
-        labelNameFrame.origin.y = positionY;
-        labelNameFrame.size.width = marginRight - marginLeft;
-        labelNameFrame.size.height = 60;
-        self.labelName.frame = labelNameFrame;       
+        // Set data
+        self.productImage.image = [UIImage imageWithData:productSelected.picture];
+        self.productNameLabel.text = productSelected.name;
+        if ([productSelected.type isEqualToString:@"S"])
+        {
+            self.productTypeLabel.text = @"Venta";
+        }
+        else // @"A"
+        {
+            self.productTypeLabel.text = @"Publicidad";
+        }
         
-        // Set label "Offered by"
-        positionY = positionY + self.labelName.frame.size.height + 20;
-        CGRect labelOfferedbyFrame = self.labelOfferedBy.frame;
-        labelOfferedbyFrame.origin.x = marginLeft;
-        labelOfferedbyFrame.origin.y = positionY;
-        self.labelOfferedBy.frame = labelOfferedbyFrame;
+        // Set button and sold image depending on message status
+        if ([productSelected.status isEqualToString:@"N"])
+        {
+            self.buttonStatus.backgroundColor = [UIColor blueColor];
+            self.buttonStatus.titleLabel.textColor = [UIColor whiteColor];
+            //self.buttonStatus.titleLabel.text = @"Nuevo     ";
+            [self.buttonStatus setTitle:@"Nuevo     " forState:UIControlStateNormal];
+            self.soldImage.image = [UIImage imageNamed:@"Blank"];
+        }
+        else if ([productSelected.status isEqualToString:@"S"])
+        {
+            self.buttonStatus.backgroundColor = [UIColor grayColor];
+            self.buttonStatus.titleLabel.textColor = [UIColor blackColor];
+            self.buttonStatus.titleLabel.text = @"Vendido     ";
+            self.soldImage.image = [UIImage imageNamed:@"Sold"];
+        }
+        else if ([productSelected.status isEqualToString:@"D"])
+        {
+            self.buttonStatus.backgroundColor = [UIColor redColor];
+            self.buttonStatus.titleLabel.textColor = [UIColor whiteColor];
+            self.buttonStatus.titleLabel.text = @"Deshabilitado     ";
+            self.soldImage.image = [UIImage imageNamed:@"Blank"];
+        }
+        else // @"U"
+        {
+            self.buttonStatus.backgroundColor = [UIColor grayColor];
+            self.buttonStatus.titleLabel.textColor = [UIColor blackColor];
+            self.buttonStatus.titleLabel.text = @"Actualizado     ";
+            self.soldImage.image = [UIImage imageNamed:@"Blank"];
+        }
 
-        // Set Client Image
-        positionY = positionY + self.labelOfferedBy.frame.size.height + 10;
-        self.imageClient.image = [UIImage imageWithData:clientSelected.picture];
-        CGRect imageClientFrame = self.imageClient.frame;
-        imageClientFrame.origin.x = marginLeft;
-        imageClientFrame.origin.y = positionY;
-        imageClientFrame.size.width = 50;
-        imageClientFrame.size.height = 50;
-        self.imageClient.frame = imageClientFrame;
-
-        // Set Client Name
-        self.labelClientName.text = [NSString stringWithFormat:@"%@ %@", clientSelected.name, clientSelected.last_name];
-        CGRect labelClientNameFrame = self.labelClientName.frame;
-        labelClientNameFrame.origin.x = marginLeft + 60;
-        labelClientNameFrame.origin.y = positionY;
-        labelClientNameFrame.size.width = 200;
-        labelClientNameFrame.size.height = 20;
-        self.labelClientName.frame = labelClientNameFrame;
-
-        // Set image "Zone Icon"
-        CGRect imageZoneIconFrame = self.imageZoneIcon.frame;
-        imageZoneIconFrame.origin.x = marginLeft + 60;
-        imageZoneIconFrame.origin.y = positionY + 30;
-        self.imageZoneIcon.frame = imageZoneIconFrame;
-
-        // Set Client Zone
-        self.labelClientZone.text = clientSelected.zone;
-        CGRect labelClientZoneFrame = self.labelClientZone.frame;
-        labelClientZoneFrame.origin.x = marginLeft + 90;
-        labelClientZoneFrame.origin.y = positionY + 30;
-        labelClientZoneFrame.size.width = 150;
-        labelClientZoneFrame.size.height = 20;
-        self.labelClientZone.frame = labelClientZoneFrame;
-        
-        // Set label "Details"
-        positionY = positionY + self.imageClient.frame.size.height + 20;
-        CGRect labelDetailsFrame = self.labelDetails.frame;
-        labelDetailsFrame.origin.x = marginLeft;
-        labelDetailsFrame.origin.y = positionY;
-        self.labelDetails.frame = labelDetailsFrame;
-        
-        // Set Product Description
-        positionY = positionY + self.labelDetails.frame.size.height + 10;
-        self.labelDescription.text = productSelected.desc;
-        CGRect labelDescriptionFrame = self.labelDescription.frame;
-        labelDescriptionFrame.origin.x = marginLeft;
-        labelDescriptionFrame.origin.y = positionY;
-        labelDescriptionFrame.size.width = marginRight - marginLeft;
-        self.labelDescription.frame = labelDescriptionFrame;
-        [self.labelDescription sizeToFit];
-        self.labelDescription.numberOfLines = 0;
-
-        positionY = positionY + self.labelDescription.frame.size.height + 50;
-
-        // Set content size of scrollview
-        self.scrollViewProduct.contentSize = CGSizeMake(marginRight + margin, positionY);
-        //[self.scrollViewProduct setContentOffset:CGPointMake(0, 0)];
     }
 }
 
-- (void)tapPicture:(UITapGestureRecognizer *)sender
+
+- (IBAction)changeProductStatus:(id)sender
 {
-    NSLog(@"Tap Recognized");
+    ProductModel *productMethods = [[ProductModel alloc] init];
     
+    Product *productSelected = [[Product alloc] init];
+    productSelected = (Product *)_detailItem;
+
+    if ([productSelected.status isEqualToString:@"N"])
+    {
+        productSelected.status = @"U";
+        productSelected.updated_time = [NSDate date];
+    }
+    else if ([productSelected.status isEqualToString:@"U"])
+    {
+        productSelected.status = @"N";
+        productSelected.updated_time = [NSDate date];
+    }
     
-    // Segue to the image
-    [self performSegueWithIdentifier:@"ProductImageSegue" sender:self];
+    // Update products
+    [productMethods updateProduct:productSelected];
+    
+    [self configureView];
     
 }
 
@@ -198,35 +168,8 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     
-    NSLog(@"Image tapped");
-    
-    if([segue isKindOfClass:[CustomSegue class]]) {
-        // Set the start point for the animation to center of the button for the animation
-        ((CustomSegue *)segue).originatingPoint = self.imageProduct.center;
-    }
-
-    Product *productSelected = [[Product alloc] init];
-    productSelected = (Product *)_detailItem;
-
-    ProductImageViewController *imageVC = segue.destinationViewController;
-    imageVC.selectedProduct = productSelected;
-
 }
 
-// This is the IBAction method referenced in the Storyboard Exit for the Unwind segue.
-// It needs to be here to create a link for the unwind segue.
-// But we'll do nothing with it.
-- (IBAction)unwindFromViewController:(UIStoryboardSegue *)sender {
-}
-
-// We need to over-ride this method from UIViewController to provide a custom segue for unwinding
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController fromViewController:(UIViewController *)fromViewController identifier:(NSString *)identifier {
-    // Instantiate a new CustomUnwindSegue
-    CustomUnwindSegue *segue = [[CustomUnwindSegue alloc] initWithIdentifier:identifier source:fromViewController destination:toViewController];
-    // Set the target point for the animation to the center of the button in this VC
-    segue.targetPoint = self.imageProduct.center;
-    return segue;
-}
 
 
 

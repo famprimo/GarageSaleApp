@@ -7,23 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ProductTableViewController.h"
 
-@interface ProductDetailViewController : UIViewController <UISplitViewControllerDelegate>
+@interface ProductDetailViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) id detailItem;
 
-@property (weak, nonatomic) IBOutlet UILabel *labelName;
-@property (weak, nonatomic) IBOutlet UILabel *labelDescription;
-@property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
+@property (strong, nonatomic) IBOutlet UIButton *buttonStatus;
+@property (strong, nonatomic) IBOutlet UIImageView *productImage;
+@property (strong, nonatomic) IBOutlet UIImageView *soldImage;
+@property (strong, nonatomic) IBOutlet UILabel *productNameLabel;
+@property (strong, nonatomic) IBOutlet UILabel *productTypeLabel;
 
-@property (weak, nonatomic) IBOutlet UIImageView *imageClient;
-@property (weak, nonatomic) IBOutlet UILabel *labelClientName;
-@property (weak, nonatomic) IBOutlet UILabel *labelClientZone;
-
-@property (weak, nonatomic) IBOutlet UILabel *labelOfferedBy;
-@property (weak, nonatomic) IBOutlet UILabel *labelDetails;
-@property (weak, nonatomic) IBOutlet UIImageView *imageZoneIcon;
-
-
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollViewProduct;
 @end

@@ -31,13 +31,17 @@
     tempProduct.currency = @"S/.";
     tempProduct.initial_price = 290.0;
     tempProduct.published_price = 290.0;
-    tempProduct.publishing_date = [dateFormat dateFromString:@"20140501"];
+    tempProduct.created_time = [dateFormat dateFromString:@"20140501"];
+    tempProduct.updated_time = [dateFormat dateFromString:@"20140501"];
+    tempProduct.solddisabled_time = nil;
+    tempProduct.fb_updated_time = nil;
     tempProduct.type = @"S";
     tempProduct.picture_link = @"https://fbcdn-sphotos-a-a.akamaihd.net/hphotos-ak-ash3/t1.0-9/10365873_837130456315654_6991006075101245277_n.jpg";
     //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
     tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"S";
+    tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140501"];
     tempProduct.promotion_piority = 2;
     tempProduct.notes = @"";
     tempProduct.agent_id = @"00001";
@@ -57,12 +61,16 @@
     tempProduct.currency = @"S/.";
     tempProduct.initial_price = 300.0;
     tempProduct.published_price = 250.0;
-    tempProduct.publishing_date = [dateFormat dateFromString:@"20140301"];
+    tempProduct.created_time = [dateFormat dateFromString:@"20140301"];
+    tempProduct.updated_time = [dateFormat dateFromString:@"20140301"];
+    tempProduct.solddisabled_time = nil;
+    tempProduct.fb_updated_time = nil;
     tempProduct.picture_link = @"https://fbcdn-sphotos-d-a.akamaihd.net/hphotos-ak-prn1/t1.0-9/10341676_838515596177140_687032528327336304_n.jpg";
     //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
     tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
+    tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140301"];
     tempProduct.promotion_piority = 2;
     tempProduct.notes = @"";
     tempProduct.agent_id = @"00001";
@@ -81,12 +89,16 @@
     tempProduct.currency = @"S/.";
     tempProduct.initial_price = 1200.0;
     tempProduct.published_price = 1100.0;
-    tempProduct.publishing_date = [dateFormat dateFromString:@"20140219"];
+    tempProduct.created_time = [dateFormat dateFromString:@"20140219"];
+    tempProduct.updated_time = [dateFormat dateFromString:@"20140219"];
+    tempProduct.solddisabled_time = nil;
+    tempProduct.fb_updated_time = nil;
     tempProduct.picture_link = @"https://fbcdn-sphotos-b-a.akamaihd.net/hphotos-ak-prn1/t1.0-9/10269440_835477799814253_5669782238393768165_n.jpg";
     //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
     tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
+    tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140219"];
     tempProduct.promotion_piority = 2;
     tempProduct.notes = @"";
     tempProduct.agent_id = @"00001";
@@ -105,12 +117,16 @@
     tempProduct.currency = @"S/.";
     tempProduct.initial_price = 100000.0;
     tempProduct.published_price = 99900.0;
-    tempProduct.publishing_date = [dateFormat dateFromString:@"20140315"];
+    tempProduct.created_time = [dateFormat dateFromString:@"20140315"];
+    tempProduct.updated_time = [dateFormat dateFromString:@"20140315"];
+    tempProduct.solddisabled_time = nil;
+    tempProduct.fb_updated_time = nil;
     tempProduct.picture_link = @"https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-xpf1/t1.0-9/1493150_830659133629453_2983286650637139401_n.jpg";
     //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
     tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
+    tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140315"];
     tempProduct.promotion_piority = 2;
     tempProduct.notes = @"";
     tempProduct.agent_id = @"00001";
@@ -168,6 +184,23 @@
         if ([productToReview.product_id isEqual:productToUpdate.product_id])
         {
             [mainDelegate.sharedArrayProducts replaceObjectAtIndex:i withObject:productToUpdate];
+            break;
+        }
+    }
+}
+
+- (void)updateProduct:(Product*)productToUpdate withArray:(NSMutableArray*)arrayProducts;
+{
+    Product *productToReview = [[Product alloc] init];
+    
+    for (int i=0; i<arrayProducts.count; i=i+1)
+    {
+        productToReview = [[Product alloc] init];
+        productToReview = (Product *)arrayProducts[i];
+        
+        if ([productToReview.product_id isEqual:productToUpdate.product_id])
+        {
+            [arrayProducts replaceObjectAtIndex:i withObject:productToUpdate];
             break;
         }
     }

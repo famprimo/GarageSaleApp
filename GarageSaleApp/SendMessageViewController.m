@@ -11,6 +11,8 @@
 #import "TemplateModel.h"
 #import "Client.h"
 #import "ClientModel.h"
+#import "Product.h"
+#import "ProductModel.h"
 
 @interface SendMessageViewController ()
 {
@@ -23,6 +25,7 @@
     Client *_clientBuyer;
     Client *_clientOwner;
     NSString *_templateType;
+    Product *_relatedProduct;
 }
 
 @end
@@ -37,13 +40,64 @@
     self.tableTemplates.delegate = self;
     self.tableTemplates.dataSource = self;
     
-    _clientBuyer = [[[ClientModel alloc] init] getClientFromClientId:[self.delegate GetBuyerIdFromSendMessage]];
-    _clientOwner = [[[ClientModel alloc] init] getClientFromClientId:[self.delegate GetOwnerIdFromSendMessage]];
-    _templateType = [self.delegate GetTemplateTypeFromSendMessage];
-
+    _clientBuyer = [[[ClientModel alloc] init] getClientFromClientId:[self.delegate GetBuyerIdFromMessage]];
+    _clientOwner = [[[ClientModel alloc] init] getClientFromClientId:[self.delegate GetOwnerIdFromMessage]];
+    _relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:[self.delegate GetProductIdFromMessage]];
+    _templateType = [self.delegate GetTemplateTypeFromMessage];
+    
     _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:_templateType];
     _selectedTemplate = [[Template alloc] init];
     
+    
+    CGRect imageClientFrame = self.imageClient.frame;
+    imageClientFrame.origin.x = 265;
+    imageClientFrame.origin.y = 519;
+    imageClientFrame.size.width = 40;
+    imageClientFrame.size.height = 40;
+    self.imageClient.frame = imageClientFrame;
+
+    
+    CGRect imageClientStatusFrame = self.imageClientStatus.frame;
+    imageClientStatusFrame.origin.x = 313;
+    imageClientStatusFrame.origin.y = 34;
+    imageClientStatusFrame.size.width = 10;
+    imageClientStatusFrame.size.height = 10;
+    self.imageClientStatus.frame = imageClientStatusFrame;
+
+    // Client information
+
+    if ([_templateType isEqualToString:@"C"])
+    {
+        self.imageClient.image = [UIImage imageWithData:_clientBuyer.picture];
+
+        if ([_clientBuyer.status isEqualToString:@"V"])
+        {
+            self.labelClientName.text = [NSString stringWithFormat:@"    %@ %@", _clientBuyer.name, _clientBuyer.last_name];
+            self.imageClientStatus.image = [UIImage imageNamed:@"Verified"];
+        }
+        else
+        {
+            self.labelClientName.text = [NSString stringWithFormat:@"%@ %@", _clientBuyer.name, _clientBuyer.last_name];
+            self.imageClientStatus.image = [UIImage imageNamed:@"Blank"];
+        }
+    }
+    else // "O"
+    {
+        self.imageClient.image = [UIImage imageWithData:_clientOwner.picture];
+        
+        if ([_clientOwner.status isEqualToString:@"V"])
+        {
+            self.labelClientName.text = [NSString stringWithFormat:@"    %@ %@", _clientOwner.name, _clientOwner.last_name];
+            self.imageClientStatus.image = [UIImage imageNamed:@"Verified"];
+        }
+        else
+        {
+            self.labelClientName.text = [NSString stringWithFormat:@"%@ %@", _clientOwner.name, _clientOwner.last_name];
+            self.imageClientStatus.image = [UIImage imageNamed:@"Blank"];
+        }
+    }
+    
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -104,7 +158,7 @@
     // Set selected listing to var
     _selectedTemplate = _myDataTemplates[indexPath.row];
     
-    self.labelTemplateText.text = _selectedTemplate.text;
+    self.labelTemplateText.text = [[[TemplateModel alloc] init] changeKeysForText:_selectedTemplate.text usingBuyer:_clientBuyer andOwner:_clientOwner andProduct:_relatedProduct];
     self.labelTemplateText.editable = YES;
     
 }

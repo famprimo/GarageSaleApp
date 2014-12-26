@@ -119,6 +119,19 @@
     return opportunities;
 }
 
+- (NSMutableArray*)getOpportunitiesArray; // Return an array with data
+{
+    NSMutableArray *opportunityArray = [[NSMutableArray alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    opportunityArray = mainDelegate.sharedArrayOpportunities;
+    
+    return opportunityArray;
+}
+
 - (NSString*)getNextOpportunityID;
 {
     AppDelegate *mainDelegate;
@@ -130,6 +143,39 @@
     return nextID;
 }
 
+- (BOOL)addNewOpportunity:(Opportunity*)newOpportunity;
+{
+    BOOL updateSuccessful = YES;
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    [mainDelegate.sharedArrayOpportunities addObject:newOpportunity];
+    
+    return updateSuccessful;
+}
+
+- (void)updateOpportunity:(Opportunity*)opportunityToUpdate;
+{
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Opportunity *opportunityToReview = [[Opportunity alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayOpportunities.count; i=i+1)
+    {
+        opportunityToReview = [[Opportunity alloc] init];
+        opportunityToReview = (Opportunity *)mainDelegate.sharedArrayOpportunities[i];
+        
+        if ([opportunityToReview.opportunity_id isEqual:opportunityToUpdate.opportunity_id])
+        {
+            [mainDelegate.sharedArrayOpportunities replaceObjectAtIndex:i withObject:opportunityToUpdate];
+            break;
+        }
+    }
+}
 
 - (NSMutableArray*)getOpportunitiesFromProduct:(NSString*)productFromID;
 {
@@ -151,6 +197,15 @@
             [opportunitiesArray addObject:opportunityToReview];
         }
     }
+    
+    // Sort array to be sure new messages are on top
+    [opportunitiesArray sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Opportunity*)a created_time];
+        NSDate *second = [(Opportunity*)b created_time];
+        return [second compare:first];
+        //return [first compare:second];
+    }];
+
     return opportunitiesArray;
 
 }

@@ -8,13 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "Client.h"
+#import "Product.h"
 
 @protocol SendMessageViewControllerDelegate
 
 -(void)MessageSent;
--(NSString*)GetTemplateTypeFromSendMessage;
--(NSString*)GetBuyerIdFromSendMessage;
--(NSString*)GetOwnerIdFromSendMessage;
+-(NSString*)GetTemplateTypeFromMessage;
+-(NSString*)GetBuyerIdFromMessage;
+-(NSString*)GetOwnerIdFromMessage;
+-(NSString*)GetProductIdFromMessage;
 
 @end
 
@@ -25,6 +27,9 @@
 @property (strong, nonatomic) IBOutlet UIButton *buttonSend;
 @property (strong, nonatomic) IBOutlet UITextView *labelTemplateText;
 @property (strong, nonatomic) IBOutlet UITableView *tableTemplates;
+@property (strong, nonatomic) IBOutlet UIImageView *imageClient;
+@property (strong, nonatomic) IBOutlet UIImageView *imageClientStatus;
+@property (strong, nonatomic) IBOutlet UILabel *labelClientName;
 
 -(IBAction)sendMessage:(id)sender;
 

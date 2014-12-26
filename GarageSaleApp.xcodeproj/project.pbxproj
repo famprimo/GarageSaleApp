@@ -34,12 +34,16 @@
 		C029BA671969D26000125C4F /* CustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA641969D26000125C4F /* CustomSegue.m */; };
 		C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA661969D26000125C4F /* CustomUnwindSegue.m */; };
 		C029BA6B1969EF9400125C4F /* Opportunity.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA6A1969EF9400125C4F /* Opportunity.m */; };
+		C03E8E6E1A47407400965BF7 /* OpportunityTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C03E8E6D1A47407400965BF7 /* OpportunityTableViewController.m */; };
+		C03E8E711A4740A800965BF7 /* OpportunityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C03E8E701A4740A800965BF7 /* OpportunityDetailViewController.m */; };
 		C042ECCF1A3934DB00AC9A4D /* ClientPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */; };
 		C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */; };
 		C04E745B1A43D2B300F52E33 /* SendMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C04E74591A43D2B300F52E33 /* SendMessageViewController.m */; };
 		C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */; };
 		C05377801A41BA2A00EAAE76 /* TemplateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C053777F1A41BA2A00EAAE76 /* TemplateModel.m */; };
 		C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */; };
+		C0666E4A1A44B39100B045A0 /* NewOpportunityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0666E481A44B39100B045A0 /* NewOpportunityViewController.m */; };
+		C0666E4B1A44B39100B045A0 /* NewOpportunityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */; };
 		C06F66F31A4114B40013371F /* Template.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66F21A4114B40013371F /* Template.m */; };
 		C06F66FC1A4116910013371F /* SetupTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66FB1A4116910013371F /* SetupTableViewController.m */; };
 		C06F66FF1A4116A90013371F /* SetupDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66FE1A4116A90013371F /* SetupDetailViewController.m */; };
@@ -50,7 +54,6 @@
 		C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1919644C4D0021A153 /* ProductModel.m */; };
 		C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1C196455350021A153 /* ProductDetailViewController.m */; };
 		C0815E20196455590021A153 /* ProductTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1F196455590021A153 /* ProductTableViewController.m */; };
-		C0C2FE381967B67C00D686FA /* ProductImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0C2FE371967B67C00D686FA /* ProductImageViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +111,10 @@
 		C029BA661969D26000125C4F /* CustomUnwindSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUnwindSegue.m; sourceTree = "<group>"; };
 		C029BA691969EF9400125C4F /* Opportunity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Opportunity.h; sourceTree = "<group>"; };
 		C029BA6A1969EF9400125C4F /* Opportunity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Opportunity.m; sourceTree = "<group>"; };
+		C03E8E6C1A47407400965BF7 /* OpportunityTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpportunityTableViewController.h; sourceTree = "<group>"; };
+		C03E8E6D1A47407400965BF7 /* OpportunityTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpportunityTableViewController.m; sourceTree = "<group>"; };
+		C03E8E6F1A4740A800965BF7 /* OpportunityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpportunityDetailViewController.h; sourceTree = "<group>"; };
+		C03E8E701A4740A800965BF7 /* OpportunityDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpportunityDetailViewController.m; sourceTree = "<group>"; };
 		C042ECCC1A3934DB00AC9A4D /* ClientPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientPickerViewController.h; sourceTree = "<group>"; };
 		C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientPickerViewController.m; sourceTree = "<group>"; };
 		C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ClientPickerViewController.xib; sourceTree = "<group>"; };
@@ -118,6 +125,9 @@
 		C053777F1A41BA2A00EAAE76 /* TemplateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateModel.m; sourceTree = "<group>"; };
 		C05C6A8319F1D5B800BCF9BD /* NSDate+NVTimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NVTimeAgo.h"; sourceTree = "<group>"; };
 		C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NVTimeAgo.m"; sourceTree = "<group>"; };
+		C0666E471A44B39100B045A0 /* NewOpportunityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewOpportunityViewController.h; sourceTree = "<group>"; };
+		C0666E481A44B39100B045A0 /* NewOpportunityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewOpportunityViewController.m; sourceTree = "<group>"; };
+		C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewOpportunityViewController.xib; sourceTree = "<group>"; };
 		C06F66F11A4114B40013371F /* Template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Template.h; sourceTree = "<group>"; };
 		C06F66F21A4114B40013371F /* Template.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Template.m; sourceTree = "<group>"; };
 		C06F66FA1A4116910013371F /* SetupTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupTableViewController.h; sourceTree = "<group>"; };
@@ -138,8 +148,6 @@
 		C0815E1C196455350021A153 /* ProductDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductDetailViewController.m; sourceTree = "<group>"; };
 		C0815E1E196455590021A153 /* ProductTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewController.h; sourceTree = "<group>"; };
 		C0815E1F196455590021A153 /* ProductTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductTableViewController.m; sourceTree = "<group>"; };
-		C0C2FE361967B67C00D686FA /* ProductImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductImageViewController.h; sourceTree = "<group>"; };
-		C0C2FE371967B67C00D686FA /* ProductImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductImageViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +189,9 @@
 				C04E74581A43D2B300F52E33 /* SendMessageViewController.h */,
 				C04E74591A43D2B300F52E33 /* SendMessageViewController.m */,
 				C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */,
+				C0666E471A44B39100B045A0 /* NewOpportunityViewController.h */,
+				C0666E481A44B39100B045A0 /* NewOpportunityViewController.m */,
+				C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */,
 			);
 			name = Message;
 			sourceTree = "<group>";
@@ -288,8 +299,6 @@
 				C0815E1F196455590021A153 /* ProductTableViewController.m */,
 				C0815E1B196455350021A153 /* ProductDetailViewController.h */,
 				C0815E1C196455350021A153 /* ProductDetailViewController.m */,
-				C0C2FE361967B67C00D686FA /* ProductImageViewController.h */,
-				C0C2FE371967B67C00D686FA /* ProductImageViewController.m */,
 			);
 			name = Product;
 			sourceTree = "<group>";
@@ -301,6 +310,10 @@
 				C029BA6A1969EF9400125C4F /* Opportunity.m */,
 				C0815E1219644C390021A153 /* OpportunityModel.h */,
 				C0815E1319644C390021A153 /* OpportunityModel.m */,
+				C03E8E6C1A47407400965BF7 /* OpportunityTableViewController.h */,
+				C03E8E6D1A47407400965BF7 /* OpportunityTableViewController.m */,
+				C03E8E6F1A4740A800965BF7 /* OpportunityDetailViewController.h */,
+				C03E8E701A4740A800965BF7 /* OpportunityDetailViewController.m */,
 			);
 			name = Opportunity;
 			sourceTree = "<group>";
@@ -461,6 +474,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0666E4B1A44B39100B045A0 /* NewOpportunityViewController.xib in Resources */,
 				C00ED0F819644A5A0045A65E /* Images.xcassets in Resources */,
 				C00ED0EA19644A5A0045A65E /* InfoPlist.strings in Resources */,
 				C00ED0F319644A5A0045A65E /* Main.storyboard in Resources */,
@@ -495,10 +509,12 @@
 				C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */,
 				C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */,
 				C008BA3A19C3CBCA008616E4 /* MessageDetailViewController.m in Sources */,
+				C03E8E711A4740A800965BF7 /* OpportunityDetailViewController.m in Sources */,
 				C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */,
 				C019F93F19D88944009528EE /* Message.m in Sources */,
 				C06F66FF1A4116A90013371F /* SetupDetailViewController.m in Sources */,
 				C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */,
+				C0666E4A1A44B39100B045A0 /* NewOpportunityViewController.m in Sources */,
 				C019F94019D88944009528EE /* MessageModel.m in Sources */,
 				C00ED12319644B4F0045A65E /* MenuItem.m in Sources */,
 				C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */,
@@ -507,12 +523,12 @@
 				C00ED12419644B4F0045A65E /* MenuModel.m in Sources */,
 				C029BA671969D26000125C4F /* CustomSegue.m in Sources */,
 				C05377801A41BA2A00EAAE76 /* TemplateModel.m in Sources */,
-				C0C2FE381967B67C00D686FA /* ProductImageViewController.m in Sources */,
 				C04E745B1A43D2B300F52E33 /* SendMessageViewController.m in Sources */,
 				C00ED0EC19644A5A0045A65E /* main.m in Sources */,
 				C0815E20196455590021A153 /* ProductTableViewController.m in Sources */,
 				C0815E1419644C390021A153 /* OpportunityModel.m in Sources */,
 				C00ED11619644AA80045A65E /* SWRevealViewController.m in Sources */,
+				C03E8E6E1A47407400965BF7 /* OpportunityTableViewController.m in Sources */,
 				C0815E0E19644C250021A153 /* Client.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

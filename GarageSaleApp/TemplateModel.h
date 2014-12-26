@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "Template.h"
+#import "Client.h"
+#import "Product.h"
 
 @interface TemplateModel : NSObject
 
@@ -17,5 +19,6 @@
 - (BOOL)addNewTemplate:(Template*)newTemplate;
 - (void)updateTemplate:(Template*)templateToUpdate;
 - (void)updateTemplate:(Template*)templateToUpdate withArray:(NSMutableArray*)arrayTemplates;
+- (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProduct:(Product*)relatedProduct;
 
 @end

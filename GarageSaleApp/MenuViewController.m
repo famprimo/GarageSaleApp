@@ -125,7 +125,7 @@
             
         case ScreenTypeOpportunity:
             // Go to opportunity screen
-            //[self performSegueWithIdentifier:@"GoToOpportunitySegue" sender:self];
+            [self performSegueWithIdentifier:@"GoToOpportunitySegue" sender:self];
             break;
             
         case ScreenTypeStatistics:

@@ -32,6 +32,7 @@
 // For Popover
 @property (nonatomic, strong) UIPopoverController *clientPickerPopover;
 @property (nonatomic, strong) UIPopoverController *sendMessagePopover;
+@property (nonatomic, strong) UIPopoverController *createOpportunityPopover;
 
 @end
 
@@ -396,12 +397,12 @@
     
 }
 
--(NSString*)GetTemplateTypeFromSendMessage;
+-(NSString*)GetTemplateTypeFromMessage;
 {
     return _templateTypeForPopover;
 }
 
--(NSString*)GetBuyerIdFromSendMessage;
+-(NSString*)GetBuyerIdFromMessage;
 {
     Message *messageSelected = [[Message alloc] init];
     messageSelected = (Message *)_detailItem;
@@ -409,7 +410,7 @@
     return messageSelected.client_id;
 }
 
--(NSString*)GetOwnerIdFromSendMessage;
+-(NSString*)GetOwnerIdFromMessage;
 {
     Message *messageSelected = [[Message alloc] init];
     messageSelected = (Message *)_detailItem;
@@ -418,6 +419,17 @@
     productRelatedToMessage = [[[ProductModel alloc] init] getProductFromProductId:messageSelected.product_id];
 
     return productRelatedToMessage.client_id;
+}
+
+-(NSString*)GetProductIdFromMessage;
+{
+    Message *messageSelected = [[Message alloc] init];
+    messageSelected = (Message *)_detailItem;
+    
+    Product *productRelatedToMessage = [[Product alloc] init];
+    productRelatedToMessage = [[[ProductModel alloc] init] getProductFromProductId:messageSelected.product_id];
+    
+    return productRelatedToMessage.product_id;
 }
 
 
@@ -430,7 +442,31 @@
 
 -(IBAction)newOpportunity:(id)sender;
 {
+    NewOpportunityViewController *createOpportunityController = [[NewOpportunityViewController alloc] initWithNibName:@"NewOpportunityViewController" bundle:nil];
+    createOpportunityController.delegate = self;
     
+    
+    self.createOpportunityPopover = [[UIPopoverController alloc] initWithContentViewController:createOpportunityController];
+    self.createOpportunityPopover.popoverContentSize = CGSizeMake(500.0, 300.0);
+    [self.createOpportunityPopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                             inView:self.view
+                           permittedArrowDirections:UIPopoverArrowDirectionAny
+                                           animated:YES];
+}
+
+-(void)OpportunityCreated;
+{
+    // Dismiss the popover view
+    [self.createOpportunityPopover dismissPopoverAnimated:YES];
+    
+    Message *messageSelected = [[Message alloc] init];
+    messageSelected = (Message *)_detailItem;
+    
+    OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
+    
+    _myDataOpportunities = [opportunityMethods getOpportunitiesFromProduct:messageSelected.product_id];
+    [self.tableOpportunities reloadData];
+
 }
 
 #pragma mark - Table view data source

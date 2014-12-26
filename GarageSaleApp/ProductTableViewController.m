@@ -219,19 +219,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*
-    // Retrieve cell
-    static NSString *cellIdentifier = @"Cell";
-    UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    // This is added for a Search Bar - otherwise it will crash
-    if (!myCell) {
-        myCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    }
-    */
-    
-    // Get the listing to be shown
-    // Check to see whether the normal table or search results table is being displayed and set the object from the appropriate array
     UITableViewCell *myCell;
     Product *myProduct = [[Product alloc] init];
     if (tableView == self.searchDisplayController.searchResultsTableView) {
@@ -243,18 +230,29 @@
     }
     
     // Get references to images and labels of cell
-    UIImageView *pictureCell = (UIImageView*)[myCell.contentView viewWithTag:1];
-    UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:2];
-    UILabel *codeLabel = (UILabel*)[myCell.contentView viewWithTag:3];
-    UILabel *priceLabel = (UILabel*)[myCell.contentView viewWithTag:4];
-    UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:5];
-    UIImageView *soldImage = (UIImageView*)[myCell.contentView viewWithTag:6];
+    UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:1];
+    UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:2];
+    UIImageView *soldImage = (UIImageView*)[myCell.contentView viewWithTag:3];
+    UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:4];
+    UILabel *priceLabel = (UILabel*)[myCell.contentView viewWithTag:5];
+    UILabel *codeLabel = (UILabel*)[myCell.contentView viewWithTag:6];
+    UILabel *typeLabel = (UILabel*)[myCell.contentView viewWithTag:7];
+    UILabel *dateLabel = (UILabel*)[myCell.contentView viewWithTag:8];
     
     // Set table cell labels to listing data
-    pictureCell.image = [UIImage imageWithData:myProduct.picture];
+    productImage.image = [UIImage imageWithData:myProduct.picture];
     nameLabel.text = myProduct.name;
     codeLabel.text = myProduct.GS_code;
     priceLabel.text = [NSString stringWithFormat:@"%@%.f", myProduct.currency, myProduct.published_price];
+    dateLabel.text = [myProduct.created_time formattedAsTimeAgo];
+    if ([myProduct.type isEqualToString:@"S"])
+    {
+        typeLabel.text = @"Venta";
+    }
+    else // @"A"
+    {
+        typeLabel.text = @"Publicidad";
+    }
     
     // Set mark and sold message depending on message status
     if ([myProduct.status isEqualToString:@"N"])

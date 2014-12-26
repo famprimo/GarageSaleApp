@@ -22,7 +22,7 @@
     Template *tempTemplate = [[Template alloc] init];
     tempTemplate.template_id = @"00001";
     tempTemplate.title = @"Aviso comprador";
-    tempTemplate.text = @"Hola #COMPRADOR. La dueña de es #DUENA y su teléfono es #D-TEL. Coordina con #D-ELELLA cuando puedes ir a verlo, yo ya le avisé que #D-LALO vas a llamar. En caso lo llegues a comprar necesito que por favor me mandes un mensajito avisándome. Gracias. Saludos, Giuliana";
+    tempTemplate.text = @"Hola #COMPRADOR. La dueña de es #DUENO y su teléfono es #D-TELEFONO. Coordina con #D-ELELLA cuando puedes ir a verlo, yo ya le avisé que #D-LALO vas a llamar. En caso lo llegues a comprar necesito que por favor me mandes un mensajito avisándome. Gracias. Saludos, Giuliana";
     tempTemplate.type = @"C";
     tempTemplate.updated_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempTemplate.agent_id = @"00001";
@@ -215,5 +215,116 @@
     }
 }
 
+- (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProduct:(Product*)relatedProduct;
+{
+    NSMutableString *reviewedText = [NSMutableString stringWithString:textToReview];
+    NSRange keyRange;
+
+    if (clientBuyer)
+    {
+        keyRange = [reviewedText rangeOfString:@"#COMPRADOR"];
+        if (keyRange.location != NSNotFound)
+        {
+            [reviewedText replaceCharactersInRange:keyRange withString:clientBuyer.name];
+        }
+        
+        keyRange = [reviewedText rangeOfString:@"#C-TELEFONO"];
+        if (keyRange.location != NSNotFound)
+        {
+            [reviewedText replaceCharactersInRange:keyRange withString:clientBuyer.phone1];
+        }
+        
+        keyRange = [reviewedText rangeOfString:@"#C-LALO"];
+        if (keyRange.location != NSNotFound)
+        {
+            if ([clientBuyer.sex isEqualToString:@"M"])
+            {
+                [reviewedText replaceCharactersInRange:keyRange withString:@"lo"];
+            }
+            else
+            {
+                [reviewedText replaceCharactersInRange:keyRange withString:@"la"];
+            }
+        }
+        
+        keyRange = [reviewedText rangeOfString:@"#C-ELELLA"];
+        if (keyRange.location != NSNotFound)
+        {
+            if ([clientBuyer.sex isEqualToString:@"M"])
+            {
+                [reviewedText replaceCharactersInRange:keyRange withString:@"el"];
+            }
+            else
+            {
+                [reviewedText replaceCharactersInRange:keyRange withString:@"ella"];
+            }
+        }
+    }
+    
+    if (clientOwner)
+    {
+        keyRange = [reviewedText rangeOfString:@"#DUENO"];
+        if (keyRange.location != NSNotFound)
+        {
+            [reviewedText replaceCharactersInRange:keyRange withString:clientOwner.name];
+        }
+        
+        keyRange = [reviewedText rangeOfString:@"#D-TELEFONO"];
+        if (keyRange.location != NSNotFound)
+        {
+            [reviewedText replaceCharactersInRange:keyRange withString:clientOwner.phone1];
+        }
+        
+        keyRange = [reviewedText rangeOfString:@"#D-ZONA"];
+        if (keyRange.location != NSNotFound)
+        {
+            [reviewedText replaceCharactersInRange:keyRange withString:clientOwner.zone];
+        }
+        
+        keyRange = [reviewedText rangeOfString:@"#D-LALO"];
+        if (keyRange.location != NSNotFound)
+        {
+            if ([clientBuyer.sex isEqualToString:@"M"])
+            {
+                [reviewedText replaceCharactersInRange:keyRange withString:@"lo"];
+            }
+            else
+            {
+                [reviewedText replaceCharactersInRange:keyRange withString:@"la"];
+            }
+        }
+ 
+        keyRange = [reviewedText rangeOfString:@"#D-ELELLA"];
+        if (keyRange.location != NSNotFound)
+        {
+            if ([clientBuyer.sex isEqualToString:@"M"])
+            {
+                [reviewedText replaceCharactersInRange:keyRange withString:@"el"];
+            }
+            else
+            {
+                [reviewedText replaceCharactersInRange:keyRange withString:@"ella"];
+            }
+        }
+       
+    }
+    
+    if (relatedProduct)
+    {
+        keyRange = [reviewedText rangeOfString:@"#PRODUCTO"];
+        if (keyRange.location != NSNotFound)
+        {
+            [reviewedText replaceCharactersInRange:keyRange withString:relatedProduct.name];
+        }
+        
+        keyRange = [reviewedText rangeOfString:@"#PRECIO"];
+        if (keyRange.location != NSNotFound)
+        {
+            [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%f", relatedProduct.initial_price]];
+        }
+    }    
+    
+    return [NSString stringWithString:reviewedText];
+}
 
 @end

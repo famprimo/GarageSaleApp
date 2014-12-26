@@ -363,8 +363,9 @@
                                           
                                           NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
                                           [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-                                          newProduct.publishing_date = [formatFBdates dateFromString:result[photosArray[i]][@"created_time"]];
-                                          newProduct.last_update = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
+                                          newProduct.created_time = [formatFBdates dateFromString:result[photosArray[i]][@"created_time"]];
+                                          newProduct.updated_time = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
+                                          newProduct.fb_updated_time = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
                                           
                                           newProduct.picture_link = result[photosArray[i]][@"picture"];
                                           newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];

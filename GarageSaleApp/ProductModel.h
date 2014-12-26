@@ -17,6 +17,7 @@
 - (NSString*)getNextProductID;
 - (BOOL)addNewProduct:(Product*)newProduct;
 - (void)updateProduct:(Product*)productToUpdate;
+- (void)updateProduct:(Product*)productToUpdate withArray:(NSMutableArray*)arrayProducts;
 - (Client*)getClient:(Product*)productFound;
 - (NSMutableArray*)getOpportunitiesFromProduct:(Product*)productSelected;
 - (NSString*)getProductIDfromFbPhotoId:(NSString*)photoFbIdToValidate;
