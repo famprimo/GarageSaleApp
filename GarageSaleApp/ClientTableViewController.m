@@ -122,6 +122,10 @@
     UILabel *zoneLabel = (UILabel*)[myCell.contentView viewWithTag:3];
     UILabel *phoneLabel = (UILabel*)[myCell.contentView viewWithTag:4];
     
+    // Make client picture rounded
+    pictureCell.layer.cornerRadius = pictureCell.frame.size.width / 2;
+    pictureCell.clipsToBounds = YES;
+    
     // Set table cell labels to listing data
     pictureCell.image = [UIImage imageWithData:myClient.picture];
     nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];

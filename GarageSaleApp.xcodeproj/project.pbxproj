@@ -186,12 +186,6 @@
 				C008BA3619C3CB82008616E4 /* MessageTableViewController.m */,
 				C008BA3819C3CBCA008616E4 /* MessageDetailViewController.h */,
 				C008BA3919C3CBCA008616E4 /* MessageDetailViewController.m */,
-				C04E74581A43D2B300F52E33 /* SendMessageViewController.h */,
-				C04E74591A43D2B300F52E33 /* SendMessageViewController.m */,
-				C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */,
-				C0666E471A44B39100B045A0 /* NewOpportunityViewController.h */,
-				C0666E481A44B39100B045A0 /* NewOpportunityViewController.m */,
-				C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */,
 			);
 			name = Message;
 			sourceTree = "<group>";
@@ -230,16 +224,16 @@
 		C00ED0E519644A5A0045A65E /* GarageSaleApp */ = {
 			isa = PBXGroup;
 			children = (
-				C06F66ED1A4111500013371F /* Setup */,
-				C03C0C6E1A34BC5400838338 /* ClientPicker */,
 				C00ED0EE19644A5A0045A65E /* AppDelegate.h */,
 				C00ED0EF19644A5A0045A65E /* AppDelegate.m */,
 				C00ED0F119644A5A0045A65E /* Main.storyboard */,
 				C00ED0F719644A5A0045A65E /* Images.xcassets */,
+				C0292AEA1A5E20EB00283E71 /* Popovers */,
 				C008BA2E19C3CAB3008616E4 /* Message */,
 				C00ED11819644AB70045A65E /* Product */,
 				C00ED11A19644AE00045A65E /* Client */,
 				C00ED11919644AD80045A65E /* Opportunity */,
+				C06F66ED1A4111500013371F /* Setup */,
 				C00ED11B19644AEF0045A65E /* Menu */,
 				C00ED11C19644B000045A65E /* About */,
 				C00ED11719644AAE0045A65E /* Reveal */,
@@ -353,6 +347,22 @@
 			name = About;
 			sourceTree = "<group>";
 		};
+		C0292AEA1A5E20EB00283E71 /* Popovers */ = {
+			isa = PBXGroup;
+			children = (
+				C042ECCC1A3934DB00AC9A4D /* ClientPickerViewController.h */,
+				C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */,
+				C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */,
+				C04E74581A43D2B300F52E33 /* SendMessageViewController.h */,
+				C04E74591A43D2B300F52E33 /* SendMessageViewController.m */,
+				C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */,
+				C0666E471A44B39100B045A0 /* NewOpportunityViewController.h */,
+				C0666E481A44B39100B045A0 /* NewOpportunityViewController.m */,
+				C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */,
+			);
+			name = Popovers;
+			sourceTree = "<group>";
+		};
 		C029BA621969D20400125C4F /* Custom Segues */ = {
 			isa = PBXGroup;
 			children = (
@@ -362,16 +372,6 @@
 				C029BA661969D26000125C4F /* CustomUnwindSegue.m */,
 			);
 			name = "Custom Segues";
-			sourceTree = "<group>";
-		};
-		C03C0C6E1A34BC5400838338 /* ClientPicker */ = {
-			isa = PBXGroup;
-			children = (
-				C042ECCC1A3934DB00AC9A4D /* ClientPickerViewController.h */,
-				C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */,
-				C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */,
-			);
-			name = ClientPicker;
 			sourceTree = "<group>";
 		};
 		C05C6A8219F1D56100BCF9BD /* Date Time Ago */ = {

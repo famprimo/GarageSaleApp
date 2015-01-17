@@ -12,8 +12,8 @@
 @protocol NewOpportunityViewControllerDelegate
 
 -(void)OpportunityCreated;
--(NSString*)GetBuyerIdFromMessage;
--(NSString*)GetProductIdFromMessage;
+-(NSString*)GetBuyerIdForOpportunity;
+-(NSString*)GetProductIdForOpportunity;
 
 @end
 

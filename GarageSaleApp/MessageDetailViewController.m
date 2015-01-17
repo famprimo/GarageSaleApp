@@ -174,6 +174,13 @@
         buttonRelateToOwnerFrame.size.height = 44;
         self.buttonRelateToOwner.frame = buttonRelateToOwnerFrame;
 
+        // Make clients picture rounded
+        self.imageClient.layer.cornerRadius = self.imageClient.frame.size.width / 2;
+        self.imageClient.clipsToBounds = YES;
+
+        self.imageOwner.layer.cornerRadius = self.imageOwner.frame.size.width / 2;
+        self.imageOwner.clipsToBounds = YES;
+
         // Set Message Data
         
         clientRelatedToMessage = [clientMethods getClientFromClientId:messageSelected.client_id];
@@ -432,6 +439,26 @@
     return productRelatedToMessage.product_id;
 }
 
+-(NSString*)GetBuyerIdForOpportunity;
+{
+    Message *messageSelected = [[Message alloc] init];
+    messageSelected = (Message *)_detailItem;
+    
+    return messageSelected.client_id;
+}
+
+
+-(NSString*)GetProductIdForOpportunity;
+{
+    Message *messageSelected = [[Message alloc] init];
+    messageSelected = (Message *)_detailItem;
+    
+    Product *productRelatedToMessage = [[Product alloc] init];
+    productRelatedToMessage = [[[ProductModel alloc] init] getProductFromProductId:messageSelected.product_id];
+    
+    return productRelatedToMessage.product_id;
+}
+
 
 -(void)MessageSent;
 {
@@ -617,6 +644,10 @@
         clientStatusFrame.size.width = 10;
         clientStatusFrame.size.height = 10;
         clientStatus.frame = clientStatusFrame;
+        
+        // Make client picture rounded
+        clientImage.layer.cornerRadius = clientImage.frame.size.width / 2;
+        clientImage.clipsToBounds = YES;
         
         // Set client data
         clientImage.image = [UIImage imageWithData:clientRelatedToOpportunity.picture];

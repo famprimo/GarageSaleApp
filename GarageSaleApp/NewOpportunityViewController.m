@@ -29,8 +29,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    _clientBuyer = [[[ClientModel alloc] init] getClientFromClientId:[self.delegate GetBuyerIdFromMessage]];
-    _relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:[self.delegate GetProductIdFromMessage]];
+    _clientBuyer = [[[ClientModel alloc] init] getClientFromClientId:[self.delegate GetBuyerIdForOpportunity]];
+    _relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:[self.delegate GetProductIdForOpportunity]];
     
     CGRect imageProductFrame = self.imageProduct.frame;
     imageProductFrame.origin.x = 13;

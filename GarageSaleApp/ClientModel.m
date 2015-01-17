@@ -187,6 +187,7 @@
     // Add client #6 to the array
     [clients addObject:tempClient];
 
+    /*
     // Create client #7
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00007";
@@ -214,7 +215,8 @@
     
     // Add client #7 to the array
     [clients addObject:tempClient];
-
+     */
+    
     // Set last product ID
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];

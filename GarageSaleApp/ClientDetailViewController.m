@@ -67,6 +67,11 @@
         self.labelName.text = clientSelected.name;
         self.labelLastName.text = clientSelected.last_name;
         self.labelZone.text = clientSelected.zone;
+        
+        // Make client picture rounded
+        // self.imagePicture.layer.cornerRadius = self.imagePicture.frame.size.width / 2;
+        // self.imagePicture.clipsToBounds = YES;
+
     }
 }
 

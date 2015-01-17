@@ -132,31 +132,35 @@
     
     CGRect productImageFrame = productImage.frame;
     productImageFrame.origin.x = 8;
-    productImageFrame.origin.y = 31;
+    productImageFrame.origin.y = 24;
     productImageFrame.size.width = 40;
     productImageFrame.size.height = 40;
     productImage.frame = productImageFrame;
 
     CGRect productSoldImageFrame = productSoldImage.frame;
     productSoldImageFrame.origin.x = 8;
-    productSoldImageFrame.origin.y = 39;
+    productSoldImageFrame.origin.y = 32;
     productSoldImageFrame.size.width = 40;
     productSoldImageFrame.size.height = 23;
     productSoldImage.frame = productSoldImageFrame;
 
     CGRect clientImageFrame = clientImage.frame;
     clientImageFrame.origin.x = 56;
-    clientImageFrame.origin.y = 31;
+    clientImageFrame.origin.y = 24;
     clientImageFrame.size.width = 40;
     clientImageFrame.size.height = 40;
     clientImage.frame = clientImageFrame;
 
     CGRect clientStatusFrame = clientStatus.frame;
     clientStatusFrame.origin.x = 104;
-    clientStatusFrame.origin.y = 38;
+    clientStatusFrame.origin.y = 27;
     clientStatusFrame.size.width = 10;
     clientStatusFrame.size.height = 10;
     clientStatus.frame = clientStatusFrame;
+
+    // Make client picture rounded
+    clientImage.layer.cornerRadius = clientImage.frame.size.width / 2;
+    clientImage.clipsToBounds = YES;
 
     // Get the information to be shown
     Opportunity *myOpportunity = _myData[indexPath.row];
