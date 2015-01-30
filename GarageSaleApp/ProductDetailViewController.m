@@ -140,6 +140,20 @@
         picOwnerPhoneFrame.size.height = 15;
         self.picOwnerPhone.frame = picOwnerPhoneFrame;
 
+        CGRect labelDescriptionFrame = self.labelDescription.frame;
+        labelDescriptionFrame.origin.x = 32;
+        labelDescriptionFrame.origin.y = 417;
+        labelDescriptionFrame.size.width = 318;
+        labelDescriptionFrame.size.height = 90;
+        self.labelDescription.frame = labelDescriptionFrame;
+
+        CGRect labelNotesFrame = self.labelNotes.frame;
+        labelNotesFrame.origin.x = 32;
+        labelNotesFrame.origin.y = 576;
+        labelNotesFrame.size.width = 318;
+        labelNotesFrame.size.height = 101;
+        self.labelNotes.frame = labelNotesFrame;
+
 
         // Set data
         self.imageProduct.image = [UIImage imageWithData:productSelected.picture];
@@ -152,14 +166,30 @@
         {
             self.labelProductType.text = @"Publicidad";
         }
-         
+        
         self.labelGSCode.text = productSelected.GS_code;
         self.labelPrice.text = [NSString stringWithFormat:@"%@%.f", productSelected.currency, productSelected.published_price];
         self.labelInitialPrice.text = [NSString stringWithFormat:@"Precio inicial %@%.f", productSelected.currency, productSelected.initial_price];
-        self.labelDescription.text = productSelected.desc;
-        self.labelCreationDate.text = [productSelected.created_time formattedAsTimeAgo];
-        self.labelNotes.text = productSelected.notes;
+        self.labelCreationDate.text = [productSelected.created_time formattedAsDateComplete];
         
+        self.labelDescription.text = productSelected.desc;
+        self.labelDescription.numberOfLines = 0;
+        [self.labelDescription sizeToFit];
+
+        labelDescriptionFrame = self.labelDescription.frame;
+        if (labelDescriptionFrame.size.height > 90)
+        {   labelDescriptionFrame.size.height = 90;
+            self.labelDescription.frame = labelDescriptionFrame; }
+
+        self.labelNotes.text = productSelected.notes;
+        self.labelNotes.numberOfLines = 0;
+        [self.labelNotes sizeToFit];
+
+        labelNotesFrame = self.labelNotes.frame;
+        if (labelNotesFrame.size.height > 101)
+        {   labelNotesFrame.size.height = 101;
+            self.labelNotes.frame = labelNotesFrame; }
+
         // Set button and sold image depending on message status
         if ([productSelected.status isEqualToString:@"N"])
         {

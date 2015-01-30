@@ -174,6 +174,20 @@
         buttonRelateToOwnerFrame.size.height = 44;
         self.buttonRelateToOwner.frame = buttonRelateToOwnerFrame;
 
+        CGRect labelMessageFrame = self.labelMessage.frame;
+        labelMessageFrame.origin.x = 16;
+        labelMessageFrame.origin.y = 182;
+        labelMessageFrame.size.width = 330;
+        labelMessageFrame.size.height = 143;
+        self.labelMessage.frame = labelMessageFrame;
+
+        CGRect labelProductDetailsFrame = self.labelProductDetails.frame;
+        labelProductDetailsFrame.origin.x = 99;
+        labelProductDetailsFrame.origin.y = 517;
+        labelProductDetailsFrame.size.width = 258;
+        labelProductDetailsFrame.size.height = 82;
+        self.labelProductDetails.frame = labelProductDetailsFrame;
+
         // Make clients picture rounded
         self.imageClient.layer.cornerRadius = self.imageClient.frame.size.width / 2;
         self.imageClient.clipsToBounds = YES;
@@ -198,11 +212,17 @@
         }
         
         self.labelMessage.text = messageSelected.message;
-        // [self.labelMessage sizeToFit];
+        self.labelMessage.numberOfLines = 0;
+        [self.labelMessage sizeToFit];
         
+        labelMessageFrame = self.labelMessage.frame;
+        if (labelMessageFrame.size.height > 143)
+        {   labelMessageFrame.size.height = 143;
+            self.labelMessage.frame = labelMessageFrame; }
+
         self.labelClientPhone.text = clientRelatedToMessage.phone1;
         self.imageClient.image = [UIImage imageWithData:clientRelatedToMessage.picture];
-        self.labelMessageDate.text = [messageSelected.datetime formattedAsTimeAgo];
+        self.labelMessageDate.text = [messageSelected.datetime formattedAsDateComplete];
         
         self.labelOtherMessages.text = [NSString stringWithFormat:@"Otros mensajes de %@ %@:", clientRelatedToMessage.name, clientRelatedToMessage.last_name];
         
@@ -222,6 +242,13 @@
             }
 
             self.labelProductDetails.text = productRelatedToMessage.desc;
+            self.labelProductDetails.numberOfLines = 0;
+            [self.labelProductDetails sizeToFit];
+            
+            labelProductDetailsFrame = self.labelProductDetails.frame;
+            if (labelProductDetailsFrame.size.height > 82)
+            {   labelProductDetailsFrame.size.height = 82;
+                self.labelProductDetails.frame = labelProductDetailsFrame; }
 
             // Set data for owner if assigned
             
@@ -230,7 +257,7 @@
                 ownerRelatedToMessage = [clientMethods getClientFromClientId:productRelatedToMessage.client_id];
                 
                 self.LabelProductRelated.text = @"Producto al que hace referencia:";
-                self.labelPublishedAgo.text = @"Publicado hace ... por:";
+                self.labelPublishedAgo.text = [NSString stringWithFormat:@"Publicado %@ por:", [productRelatedToMessage.created_time formattedAsTimeAgo]];
                 self.labelOpportunitiesForProduct.text = @"Oportunidades de este producto:";
                 self.imageOwner.image = [UIImage imageWithData:ownerRelatedToMessage.picture];
                 self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",ownerRelatedToMessage.zone];

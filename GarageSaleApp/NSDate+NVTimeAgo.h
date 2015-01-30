@@ -74,4 +74,6 @@
  */
 - (NSString *)formattedAsTimeAgo;
 
+- (NSString *)formattedAsDateComplete;
+
 @end

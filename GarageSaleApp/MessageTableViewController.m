@@ -54,12 +54,7 @@
     
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
-    
-    /*
-    UIBarButtonItem *filterButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"EmptyFilter"] style:UIBarButtonItemStylePlain target:self action:@selector(filterButtonClicked:)];
-    self.navigationItem.rightBarButtonItem = filterButton;
-    */
-    
+        
     self.detailViewController = (MessageDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
     
     // Remember to set ViewControler as the delegate and datasource
@@ -360,6 +355,7 @@
                                           newProduct.currency = @"S/.";
                                           newProduct.initial_price = 0;
                                           newProduct.published_price = 0;
+                                          newProduct.type = @"S";
                                           
                                           NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
                                           [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000

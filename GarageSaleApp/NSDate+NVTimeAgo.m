@@ -92,6 +92,14 @@
 }
 
 
+- (NSString *)formattedAsDateComplete;
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    //[dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+    dateFormatter.dateFormat = @"EE MMM, dd yyyy HH:mm:ss";
+    return [dateFormatter stringFromDate:self];
+}
 
 /*
  ========================== Date Comparison Methods ==========================
@@ -192,7 +200,7 @@
     //Handle Plural
     if(minutesSince == 1)
         //return @"1 minute ago";
-        return @"Hace 1 minuto";
+        return @"hace 1 minuto";
     else
         //return [NSString stringWithFormat:@"%d minutes ago", minutesSince];
         return [NSString stringWithFormat:@"hace %d minutos", minutesSince];
@@ -208,7 +216,7 @@
     //Handle Plural
     if(hoursSince == 1)
         //return @"1 hour ago";
-        return @"Hace 1 hora";
+        return @"hace 1 hora";
     else
         //return [NSString stringWithFormat:@"%d hours ago", hoursSince];
         return [NSString stringWithFormat:@"hace %d horas", hoursSince];
