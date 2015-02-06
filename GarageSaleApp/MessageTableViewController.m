@@ -44,8 +44,6 @@
 {
     [super viewDidLoad];
     
-    MessageModel *messagesMethods = [[MessageModel alloc] init];
-
     // For the reveal menu to work
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     
@@ -61,8 +59,8 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    // Get the listing data
-    _myData = messagesMethods.getMessagesArray;
+    // Get the data
+    _myData = [[[MessageModel alloc] init] getMessagesArrayFromClients];
     
     // Assign detail view with first item
     _selectedMessage = [_myData firstObject];
@@ -87,7 +85,10 @@
 
 - (void)refreshTableGesture:(id)sender
 {
+
     [self makeFBRequestForNewNotifications];
+
+    [self makeFBRequestForNewInbox];
     
 }
 
@@ -345,17 +346,59 @@
                                           
                                           newProduct.product_id = productID;
                                           newProduct.client_id = @"";
-                                          newProduct.name = @"New Product";
                                           newProduct.desc = result[photosArray[i]][@"name"];
                                           newProduct.fb_photo_id = photoID;
+                                         
+                                          // Get name, currency, price, GS code and type from photo description
                                           
-                                          // BUSCAR EN LA DESCRIPCION PARA TOMAR CURRENCY, PUBLISHED PRICE Y GS_CODE
+                                          newProduct.name = [productMethods getProductNameFromFBPhotoDesc:newProduct.desc];
+                                          
+                                          NSString *tmpText;
+                                          
+                                          tmpText = [productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
+                                          if (![tmpText isEqualToString:@"Not Found"])
+                                          {
+                                              newProduct.GS_code = [NSString stringWithFormat:@"GSN%@", tmpText];
+                                              newProduct.type = @"A";
 
-                                          newProduct.GS_code = @"GS";
-                                          newProduct.currency = @"S/.";
-                                          newProduct.initial_price = 0;
-                                          newProduct.published_price = 0;
-                                          newProduct.type = @"S";
+                                          }
+                                          else
+                                          {
+                                              tmpText = [productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
+                                              if (![tmpText isEqualToString:@"Not Found"])
+                                              {
+                                                  newProduct.GS_code = [NSString stringWithFormat:@"GS%@", tmpText];
+                                                  newProduct.type = @"S";
+                                              }
+                                              else
+                                              {
+                                                  newProduct.GS_code = @"None";
+                                                  newProduct.type = @"A";
+                                              }
+                                         }
+                                          
+                                          tmpText = [productMethods getTextThatFollows:@"s/. " fromMessage:newProduct.desc];
+                                          if (![tmpText isEqualToString:@"Not Found"]) {
+                                              tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
+                                              newProduct.currency = @"S/.";
+                                              newProduct.initial_price = [tmpText integerValue];
+                                              newProduct.published_price = newProduct.initial_price;
+                                          }
+                                          else
+                                          {
+                                              tmpText = [productMethods getTextThatFollows:@"USD" fromMessage:newProduct.desc];
+                                              if (![tmpText isEqualToString:@"Not Found"]) {
+                                                  tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
+                                                  newProduct.currency = @"USD";
+                                                  newProduct.initial_price = [tmpText integerValue];
+                                                  newProduct.published_price = newProduct.initial_price;
+                                              }
+                                              else {
+                                                  newProduct.currency = @"S/.";
+                                                  newProduct.initial_price = 0;
+                                                  newProduct.published_price = 0;
+                                              }
+                                          }
                                           
                                           NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
                                           [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
@@ -405,16 +448,23 @@
                                               tempMessage.status = @"N";
                                               tempMessage.type = @"P";
                                               
+                                              if ([tempMessage.fb_from_id isEqualToString:@"797975730285110"]) // HARDCODED!!!! CAMBIAR LUEGO!!!!!!!
+                                              { tempMessage.recipient = @"C";}
+                                              else
+                                              { tempMessage.recipient = @"G";}
+                                              
                                               // Review if client exists
                                               NSString *fromClientID = [clientMethods getClientIDfromFbId:tempMessage.fb_from_id];
                                               
                                               if ([fromClientID  isEqual: @"Not Found"])
                                               {
                                                   // New client!
-                                                  
+
+                                                  tempMessage.client_id = [clientMethods getNextClientID];;
+
                                                   Client *newClient = [[Client alloc] init];
                                                   
-                                                  newClient.client_id = [clientMethods getNextClientID];
+                                                  newClient.client_id = tempMessage.client_id;
                                                   newClient.fb_client_id = tempMessage.fb_from_id;
                                                   newClient.type = @"F";
                                                   newClient.name = tempMessage.fb_from_name; // TEMPORAL
@@ -449,9 +499,9 @@
                                   
                                   // Disable refresh icon and update table title
                                   
-                                  [self.refreshControl endRefreshing];
+                                  //[self.refreshControl endRefreshing];
                                   self.navigationItem.title = [self updateTableTitle];
-                                  
+
                               }
                               else {
                                   // An error occurred, we need to handle the error
@@ -463,6 +513,134 @@
 }
 
 
+- (void) makeFBRequestForNewInbox;
+{
+    MessageModel *messagesMethods = [[MessageModel alloc] init];
+    ClientModel *clientMethods = [[ClientModel alloc] init];
+    
+    [FBRequestConnection startWithGraphPath:@"me/inbox"
+                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                              
+                              if (!error) {  // FB request was a success!
+                                  
+                                  if (result[@"data"]) {   // There is FB data!
+                                      
+                                      NSMutableArray *newClientsArray = [[NSMutableArray alloc] init];
+
+                                      NSArray *jsonArray = result[@"data"];
+                                      
+                                      // Review each "conversation"
+                                      
+                                      for (int i=0; i<jsonArray.count; i=i+1)
+                                      {
+                                          NSString *fbIDfromInbox = jsonArray[i][@"to"][@"data"][1][@"id"];
+                                          NSString *fbNamefromInbox = jsonArray[i][@"to"][@"data"][1][@"name"];
+                                          
+                                          // Review if client exists
+                                          NSString *fromClientID = [clientMethods getClientIDfromFbId:fbIDfromInbox];
+                                          
+                                          if ([fromClientID  isEqual: @"Not Found"])
+                                          {
+                                              // New client!
+                                              
+                                              Client *newClient = [[Client alloc] init];
+                                              
+                                              fromClientID = [clientMethods getNextClientID];
+                                              newClient.client_id = fromClientID;
+                                              newClient.fb_client_id = fbIDfromInbox;
+                                              newClient.type = @"F";
+                                              newClient.name = fbNamefromInbox; // TEMPORAL
+                                              newClient.preference = @"F";
+                                              newClient.status = @"N";
+                                              newClient.created_time = [NSDate date];
+                                              
+                                              NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+                                              [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+                                               newClient.last_interacted_time = [formatFBdates dateFromString:jsonArray[i][@"updated_time"]];;
+                                              
+                                              [clientMethods addNewClient:newClient];
+                                              [newClientsArray addObject:newClient];
+                                              
+                                          }
+                                          
+                                          // Add all messages from this conversation
+                                          
+                                          NSArray *jsonMessagesArray = jsonArray[i][@"comments"][@"data"];
+                                          
+                                          for (int i=0; i<jsonMessagesArray.count; i=i+1)
+                                          {
+                                              NSDictionary *newMessage = jsonMessagesArray[i];
+                                              
+                                              // Validate if the comment/message exists
+                                              if (![messagesMethods existMessage:newMessage[@"id"]])
+                                              {
+                                                  // New message!
+                                                  Message *tempMessage = [[Message alloc] init];
+                                                  
+                                                  tempMessage.fb_msg_id = newMessage[@"id"];
+                                                  tempMessage.fb_from_id = newMessage[@"from"][@"id"];
+                                                  tempMessage.fb_from_name = newMessage[@"from"][@"name"];
+                                                  tempMessage.client_id = fromClientID;
+                                                  tempMessage.message = newMessage[@"message"];
+                                                  
+                                                  tempMessage.fb_created_time = newMessage[@"created_time"];
+                                                  NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+                                                  [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+                                                  tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time];
+                                                  
+                                                  tempMessage.fb_photo_id = nil;
+                                                  tempMessage.product_id = nil;
+                                                  tempMessage.agent_id = @"00001";
+                                                  tempMessage.status = @"N";
+                                                  tempMessage.type = @"I";
+                                                  
+                                                  if ([tempMessage.fb_from_id isEqualToString:@"797975730285110"]) // HARDCODED!!!! CAMBIAR LUEGO!!!!!!!
+                                                  {
+                                                      tempMessage.recipient = @"C";
+                                                      tempMessage.fb_from_id = fbIDfromInbox;
+                                                      tempMessage.fb_from_name = fbNamefromInbox;
+                                                  }
+                                                  else
+                                                  { tempMessage.recipient = @"G";}
+                                                  
+                                                  tempMessage.client_id = fromClientID;
+                                                  
+                                                  // Insert new message to array and add row to table
+                                                  [self addNewMessage:tempMessage];
+                                                  
+                                              }
+                                              
+                                          }
+
+                                      }
+                                      
+                                      // Get details for each new client found
+                                      
+                                      if (newClientsArray.count>0)
+                                      {
+                                          [self makeFBRequestForClientsDetails:newClientsArray];
+                                      }
+                                      
+                                      // Disable refresh icon and update table title
+                                      
+                                      [self.refreshControl endRefreshing];
+                                      self.navigationItem.title = [self updateTableTitle];
+                                      
+                                  }
+ 
+                                  else
+                                  {
+                                      [self.refreshControl endRefreshing];
+                                  }
+                            
+                              } else {
+                                  // An error occurred, we need to handle the error
+                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                                  NSLog(@"error %@", error.description);
+                              }
+                          }];
+    
+}
 
 - (void) makeFBRequestForClientsDetails:(NSMutableArray*)newClientsArray;
 {
@@ -516,19 +694,24 @@
 
 - (void) addNewMessage:(Message*)newMessage;
 {
-    // Insert message to table array
-    [_myData insertObject:newMessage atIndex:0];
+    MessageModel *messageMethods = [[MessageModel alloc] init];
+
+    // Insert message to table array if it has as recipient "GarageSale" only
+    if ([newMessage.recipient isEqualToString:@"G"])
+    {
+        [_myData insertObject:newMessage atIndex:0];
     
-    // Sort array to be sure new messages are on top
-    [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
-        NSDate *first = [(Message*)a datetime];
-        NSDate *second = [(Message*)b datetime];
-        return [second compare:first];
-        //return [first compare:second];
-    }];
+        // Sort array to be sure new messages are on top
+        [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
+            NSDate *first = [(Message*)a datetime];
+            NSDate *second = [(Message*)b datetime];
+            return [second compare:first];
+            //return [first compare:second];
+        }];
+    }
     
     // Update database
-    // [mainDelegate.sharedArrayMessages insertObject:newMessage atIndex:0]; // DEBE SER CON UN METODO DE MESSAGEMODEL!!
+    [messageMethods addNewMessage:newMessage];
     
     // Reload table
     [UIView transitionWithView:self.tableView

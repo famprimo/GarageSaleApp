@@ -54,6 +54,8 @@
 		C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1919644C4D0021A153 /* ProductModel.m */; };
 		C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1C196455350021A153 /* ProductDetailViewController.m */; };
 		C0815E20196455590021A153 /* ProductTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1F196455590021A153 /* ProductTableViewController.m */; };
+		C0B81D721A7D4D5E008B6C1C /* EditProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B81D701A7D4D5E008B6C1C /* EditProductViewController.m */; };
+		C0B81D731A7D4D5E008B6C1C /* EditProductViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B81D711A7D4D5E008B6C1C /* EditProductViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +150,9 @@
 		C0815E1C196455350021A153 /* ProductDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductDetailViewController.m; sourceTree = "<group>"; };
 		C0815E1E196455590021A153 /* ProductTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewController.h; sourceTree = "<group>"; };
 		C0815E1F196455590021A153 /* ProductTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductTableViewController.m; sourceTree = "<group>"; };
+		C0B81D6F1A7D4D5E008B6C1C /* EditProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditProductViewController.h; sourceTree = "<group>"; };
+		C0B81D701A7D4D5E008B6C1C /* EditProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditProductViewController.m; sourceTree = "<group>"; };
+		C0B81D711A7D4D5E008B6C1C /* EditProductViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditProductViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -359,6 +364,9 @@
 				C0666E471A44B39100B045A0 /* NewOpportunityViewController.h */,
 				C0666E481A44B39100B045A0 /* NewOpportunityViewController.m */,
 				C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */,
+				C0B81D6F1A7D4D5E008B6C1C /* EditProductViewController.h */,
+				C0B81D701A7D4D5E008B6C1C /* EditProductViewController.m */,
+				C0B81D711A7D4D5E008B6C1C /* EditProductViewController.xib */,
 			);
 			name = Popovers;
 			sourceTree = "<group>";
@@ -480,6 +488,7 @@
 				C00ED0F319644A5A0045A65E /* Main.storyboard in Resources */,
 				C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */,
 				C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */,
+				C0B81D731A7D4D5E008B6C1C /* EditProductViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -500,6 +509,7 @@
 			files = (
 				C02486F019646AA5005DCBE6 /* ClientTableViewController.m in Sources */,
 				C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */,
+				C0B81D721A7D4D5E008B6C1C /* EditProductViewController.m in Sources */,
 				C008BA3719C3CB82008616E4 /* MessageTableViewController.m in Sources */,
 				C06F66FC1A4116910013371F /* SetupTableViewController.m in Sources */,
 				C06F66F31A4114B40013371F /* Template.m in Sources */,

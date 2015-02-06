@@ -11,9 +11,11 @@
 
 @interface MessageModel : NSObject
 
-- (NSMutableArray*)getMessages:(NSMutableArray*)messageList; // Updates the array with message list with new messages from database
+- (NSMutableArray*)getMessages; // Updates the array with message list with new messages from database
 - (NSMutableArray*)getMessagesArray; // Return an array with all messages
+- (NSMutableArray*)getMessagesArrayFromClients; // Return an array will all messages with recibien "GarageSale"
 - (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID withoutMessage:(NSString*)messageToNotConsider; // Return an array with all messages from a client
+- (BOOL)addNewMessage:(Message*)newMessage;
 - (BOOL)existMessage:(NSString*)messageIDToValidate; // Review an array of Messages to check if a given Message ID exists
 - (NSString*)getPhotoID:(NSString*)facebookLink; // Search for 'fbid=' on a Facebook link to get photo_id
 - (NSString*)getCommentID:(NSString*)facebookLink; // Search for 'comment_id=' on a Facebook link to get _id

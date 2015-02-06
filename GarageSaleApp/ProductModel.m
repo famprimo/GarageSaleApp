@@ -12,7 +12,7 @@
 
 @implementation ProductModel
 
-- (NSMutableArray*)getProducts:(NSMutableArray*)productList;
+- (NSMutableArray*)getProducts;
 {
     // Array to hold the listing data
     NSMutableArray *products = [[NSMutableArray alloc] init];
@@ -143,6 +143,26 @@
 
     // Return the producct array as the return value
     return products;
+}
+
+- (NSMutableArray*)getProductArray; // Return an array with all products
+{
+    NSMutableArray *productsArray = [[NSMutableArray alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    productsArray = mainDelegate.sharedArrayProducts;
+    
+    // Sort array to be sure new products are on top
+    [productsArray sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Product*)a updated_time];
+        NSDate *second = [(Product*)b updated_time];
+        return [second compare:first];
+    }];
+    
+    return productsArray;
 }
 
 - (NSString*)getNextProductID;
@@ -328,5 +348,65 @@
     }
     return productToReview;
 }
+
+- (NSString*)getTextThatFollows:(NSString*)textToSearch fromMessage:(NSString*)messageText; // Search a text and returns the numbers that follows the text
+{
+    NSString *textThatFollows;
+    NSString *characterToEvaluate;
+    
+    NSRange match = [messageText rangeOfString:textToSearch];
+    
+    if (match.location == NSNotFound)
+    {
+        textThatFollows = @"Not Found";
+    }
+    else
+    {
+        BOOL found = NO;
+        int initialPosition = match.location + match.length;
+        int finalPosition = initialPosition;
+        
+        while ((found == NO) && (finalPosition < messageText.length))
+        {
+            
+            characterToEvaluate = [messageText substringWithRange:NSMakeRange(finalPosition, 1)];
+            if ([characterToEvaluate isEqualToString:@" "] || [characterToEvaluate isEqualToString:@"\n"] ) {
+                found = YES;
+            }
+            finalPosition = finalPosition + 1;
+        }
+        
+        textThatFollows = [messageText substringWithRange:NSMakeRange(initialPosition, finalPosition - initialPosition)];
+    }
+    
+    return textThatFollows;
+}
+
+- (NSString*)getProductNameFromFBPhotoDesc:(NSString*)messageText;
+{
+    NSString *productName;
+    
+    // Divide the string into an array
+    NSArray *paragraphs = [messageText componentsSeparatedByString:@"\n"];
+    
+    for (int i=0; i<paragraphs.count; i=i+1)
+    {
+        // Review if it is from a line with GS code or product price
+        if ( [paragraphs[i] rangeOfString:@"GS"].location == NSNotFound )
+        {
+            if ( [paragraphs[i] rangeOfString:@"s/."].location == NSNotFound )
+            {
+                if ( [paragraphs[i] rangeOfString:@"USD"].location == NSNotFound )
+                {
+                    productName = [NSString stringWithString:paragraphs[i]];
+                    break;
+                }
+            }
+        }
+    }
+    
+    return [productName stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
 
 @end

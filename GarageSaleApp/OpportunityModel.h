@@ -13,7 +13,7 @@
 
 @interface OpportunityModel : NSObject
 
-- (NSMutableArray*)getOpportunities:(NSMutableArray*)clientList;
+- (NSMutableArray*)getOpportunities;
 - (NSMutableArray*)getOpportunitiesArray;
 - (NSString*)getNextOpportunityID;
 - (BOOL)addNewOpportunity:(Opportunity*)newOpportunity;

@@ -175,7 +175,8 @@
 {
     NSLog(@"You are logged in!");
     
-    //[self requestPermissions];
+    // DESCOMENTAR PARA TENER PERMISOS
+    // [self requestPermissions];
 
 }
 
@@ -231,7 +232,7 @@
 - (void)requestPermissions;
 {
     // These are the permissions we need:
-    NSArray *permissionsNeeded = @[@"public_profile", @"manage_notifications", @"read_stream", @"user_photos", @"user_friends"];
+    NSArray *permissionsNeeded = @[@"public_profile", @"manage_notifications", @"read_stream", @"user_photos", @"user_friends", @"read_mailbox"];
     
     // Request the permissions the user currently has
     [FBRequestConnection startWithGraphPath:@"/me/permissions"

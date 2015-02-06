@@ -11,7 +11,6 @@
 #import "SWRevealViewController.h"
 #import "Product.h"
 #import "ProductModel.h"
-#import "AppDelegate.h"
 #import <FacebookSDK/FacebookSDK.h>
 #import "NSDate+NVTimeAgo.h"
 
@@ -24,9 +23,7 @@
     // Data for the search
     NSMutableArray *_mySearchData;
     
-    AppDelegate *mainDelegate;
-    
-    // The product that is selected from the table
+   // The product that is selected from the table
     Product *_selectedProduct;
 
 }
@@ -59,16 +56,13 @@
     self.navigationItem.leftBarButtonItem = menuButton;
     
     self.detailViewController = (ProductDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
-
-    // To have access to shared arrays from AppDelegate
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
-    // Get the listing data
-    _myData = mainDelegate.sharedArrayProducts;
+
+    // Get the data
+    _myData = [[[ProductModel alloc] init] getProductArray];
     
     // Sort array to be sure new products are on top
     [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
@@ -304,7 +298,8 @@
     ProductModel *productMethods = [[ProductModel alloc] init];
     
     // Create string for FB request
-    NSString *requestPhotosList = @"me/photos/uploaded?fields=created_time,id,link,updated_time,picture,name";
+    // NSString *requestPhotosList = @"me/photos/uploaded?fields=created_time,id,link,updated_time,picture,name";
+    NSString *requestPhotosList = @"me/photos/tagged?fields=created_time,id,link,updated_time,picture,name";
     
     // Make FB request
     [FBRequestConnection startWithGraphPath:requestPhotosList
@@ -335,17 +330,60 @@
                                               
                                               newProduct.product_id = productID;
                                               newProduct.client_id = @"";
-                                              newProduct.name = @"New Product";
                                               newProduct.desc = photosArray[i][@"name"];
                                               newProduct.fb_photo_id = photoID;
                                               
-                                              // BUSCAR EN LA DESCRIPCION PARA TOMAR CURRENCY, PUBLISHED PRICE Y GS_CODE
+                                              // Get name, currency, price, GS code and type from photo description
                                               
-                                              newProduct.GS_code = @"GS";
-                                              newProduct.currency = @"S/.";
-                                              newProduct.initial_price = 0;
-                                              newProduct.published_price = 0;
-                                              newProduct.type = @"S";
+                                              newProduct.name = [productMethods getProductNameFromFBPhotoDesc:newProduct.desc];
+                                              
+                                              NSString *tmpText;
+                                              
+                                              tmpText = [productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
+                                              if (![tmpText isEqualToString:@"Not Found"])
+                                              {
+                                                  newProduct.GS_code = [NSString stringWithFormat:@"GSN%@", tmpText];
+                                                  newProduct.type = @"A";
+                                                  
+                                              }
+                                              else
+                                              {
+                                                  tmpText = [productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
+                                                  if (![tmpText isEqualToString:@"Not Found"])
+                                                  {
+                                                      newProduct.GS_code = [NSString stringWithFormat:@"GS%@", tmpText];
+                                                      newProduct.type = @"S";
+                                                  }
+                                                  else
+                                                  {
+                                                      newProduct.GS_code = @"None";
+                                                      newProduct.type = @"A";
+                                                  }
+                                              }
+                                              
+                                              tmpText = [productMethods getTextThatFollows:@"s/. " fromMessage:newProduct.desc];
+                                              if (![tmpText isEqualToString:@"Not Found"]) {
+                                                  tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
+                                                  newProduct.currency = @"S/.";
+                                                  newProduct.initial_price = [tmpText integerValue];
+                                                  newProduct.published_price = newProduct.initial_price;
+                                              }
+                                              else
+                                              {
+                                                  tmpText = [productMethods getTextThatFollows:@"USD" fromMessage:newProduct.desc];
+                                                  if (![tmpText isEqualToString:@"Not Found"]) {
+                                                      tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
+                                                      newProduct.currency = @"USD";
+                                                      newProduct.initial_price = [tmpText integerValue];
+                                                      newProduct.published_price = newProduct.initial_price;
+                                                  }
+                                                  else {
+                                                      newProduct.currency = @"S/.";
+                                                      newProduct.initial_price = 0;
+                                                      newProduct.published_price = 0;
+                                                  }
+                                              }
+                                              
                                               
                                               NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
                                               [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
@@ -404,7 +442,7 @@
     }];
     
     // Update database
-    //[productMethods addNewProduct:newProduct];
+    [productMethods addNewProduct:newProduct];
     
     // Reload table
     [UIView transitionWithView:self.tableView

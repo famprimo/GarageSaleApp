@@ -97,7 +97,7 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     //[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
     //[dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-    dateFormatter.dateFormat = @"EE MMM, dd yyyy HH:mm:ss";
+    dateFormatter.dateFormat = @"EE MMM, dd yyyy HH:mm";
     return [dateFormatter stringFromDate:self];
 }
 

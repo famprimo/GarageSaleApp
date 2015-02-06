@@ -13,6 +13,7 @@
 
 //- (NSMutableArray*)getClients:(NSMutableArray*)clientList;
 - (NSMutableArray*)getClients;
+- (NSMutableArray*)getClientArray; // Return an array with all clients
 - (NSString*)getNextClientID;
 - (BOOL)addNewClient:(Client*)newClient;
 - (void)updateClient:(Client*)clientToUpdate;

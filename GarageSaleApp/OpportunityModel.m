@@ -12,7 +12,7 @@
 
 @implementation OpportunityModel
 
-- (NSMutableArray*)getOpportunities:(NSMutableArray *)clientList
+- (NSMutableArray*)getOpportunities;
 {
     // Array to hold the listing data
     NSMutableArray *opportunities = [[NSMutableArray alloc] init];

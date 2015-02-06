@@ -11,7 +11,7 @@
 
 @implementation MessageModel
 
-- (NSMutableArray*)getMessages:(NSMutableArray*)messageList; // Updates the array with message list with new messages from database
+- (NSMutableArray*)getMessages; // Updates the array with message list with new messages from database
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
     NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
@@ -31,6 +31,7 @@
     tempMessage.status = @"P";
     tempMessage.type = @"P";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-06-20T16:41:15+0000"];
+    tempMessage.recipient = @"G";
    
     // Add message #1 to the array
     [messages addObject:tempMessage];
@@ -49,6 +50,7 @@
     tempMessage.status = @"R";
     tempMessage.type = @"I";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-05-10T16:41:15+0000"];
+    tempMessage.recipient = @"G";
     
     // Add message #2 to the array
     [messages addObject:tempMessage];
@@ -67,6 +69,7 @@
     tempMessage.status = @"P";
     tempMessage.type = @"P";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-06-10T09:41:15+0000"];
+    tempMessage.recipient = @"G";
     
     // Add message #3 to the array
     [messages addObject:tempMessage];
@@ -85,6 +88,30 @@
 
     messagesArray = mainDelegate.sharedArrayMessages;
     
+    return messagesArray;
+}
+
+- (NSMutableArray*)getMessagesArrayFromClients; // Return an array will all messages with recibien "GarageSale"
+{
+    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Message *messageToReview = [[Message alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    {
+        messageToReview = [[Message alloc] init];
+        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
+        
+        // Add only the messages that have as recipient "GarageSale"
+        if ([messageToReview.recipient isEqual:@"G"])
+        {
+            [messagesArray addObject:messageToReview];
+        }
+    }
     return messagesArray;
 }
 
@@ -109,6 +136,19 @@
         }
     }    
     return messagesArray;
+}
+
+- (BOOL)addNewMessage:(Message*)newMessage;
+{
+    BOOL updateSuccessful = YES;
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    [mainDelegate.sharedArrayMessages addObject:newMessage];
+    
+    return updateSuccessful;
 }
 
 - (BOOL)existMessage:(NSString*)messageIDToValidate; // Review an array of Messages to check if a given Message ID exists
@@ -140,13 +180,33 @@
 {
     NSString *photoID;
     
+    // Define FB structure used
+    
     NSRange searchForPhotoId = [facebookLink rangeOfString:@"fbid="];
-    NSRange searchForDelimiter = [facebookLink rangeOfString:@"&"];
     
-    int locationPhotoID = (int) searchForPhotoId.location + 5;
-    int lengthPhotoID =  (int) searchForDelimiter.location - locationPhotoID;
-    
-    photoID = [facebookLink substringWithRange: NSMakeRange(locationPhotoID, lengthPhotoID)];
+    if (searchForPhotoId.location != NSNotFound)
+    {
+        // /photo.php? fbid = PHOTO-ID & set=a.A1.A2.A3 & type=1 & comment_id = COMMENT-ID
+        // http://www.facebook.com/photo.php?fbid=313343305510194&set=a.313343328843525.1073741826.100005035818112&type=1&comment_id=389975127847011
+        
+        NSRange searchForDelimiter = [facebookLink rangeOfString:@"&"];
+        
+        int locationPhotoID = (int) searchForPhotoId.location + 5;
+        int lengthPhotoID =  (int) searchForDelimiter.location - locationPhotoID;
+        
+        photoID = [facebookLink substringWithRange: NSMakeRange(locationPhotoID, lengthPhotoID)];
+    }
+    else
+    {
+        // /USER-ID/ photos/a.A1.A2.A3 / PHOTO-ID / ? type=1 & comment_id = COMMENT-ID
+        // http://www.facebook.com/186087991419907/photos/a.217254244969948.71908.186087991419907/965486550146710/?type=1&comment_id=996070043755027"
+        
+        // Using "/" as a delimeter to create an array
+        NSArray *sections = [facebookLink componentsSeparatedByString:@"/"];
+        
+        photoID = [sections[6] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+    }
     
     return photoID;
 }

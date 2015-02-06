@@ -13,7 +13,8 @@
 
 @interface ProductModel : NSObject
 
-- (NSMutableArray*)getProducts:(NSMutableArray*)productList;
+- (NSMutableArray*)getProducts;
+- (NSMutableArray*)getProductArray; // Return an array with all products
 - (NSString*)getNextProductID;
 - (BOOL)addNewProduct:(Product*)newProduct;
 - (void)updateProduct:(Product*)productToUpdate;
@@ -23,5 +24,7 @@
 - (NSString*)getProductIDfromFbPhotoId:(NSString*)photoFbIdToValidate;
 - (UIImage*)getImageFromProductId:(NSString*)productIDtoSearch;
 - (Product*)getProductFromProductId:(NSString*)productIDtoSearch;
+- (NSString*)getTextThatFollows:(NSString*)textToSearch fromMessage:(NSString*)messageText; // Search a text and returns the numbers that follows the text
+- (NSString*)getProductNameFromFBPhotoDesc:(NSString*)messageText;
 
 @end

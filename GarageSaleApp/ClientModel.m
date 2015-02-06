@@ -226,6 +226,19 @@
     return clients;
 }
 
+- (NSMutableArray*)getClientArray; // Return an array with all clients
+{
+    NSMutableArray *clientsArray = [[NSMutableArray alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    clientsArray = mainDelegate.sharedArrayClients;
+    
+    return clientsArray;
+}
+
 - (NSString*)getNextClientID;
 {
     AppDelegate *mainDelegate;

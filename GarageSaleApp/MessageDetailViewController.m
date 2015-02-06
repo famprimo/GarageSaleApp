@@ -223,6 +223,7 @@
         self.labelClientPhone.text = clientRelatedToMessage.phone1;
         self.imageClient.image = [UIImage imageWithData:clientRelatedToMessage.picture];
         self.labelMessageDate.text = [messageSelected.datetime formattedAsDateComplete];
+        self.labelPublishedDateReference.text = [NSString stringWithFormat:@"Enviado %@:", [messageSelected.datetime formattedAsTimeAgo]];
         
         self.labelOtherMessages.text = [NSString stringWithFormat:@"Otros mensajes de %@ %@:", clientRelatedToMessage.name, clientRelatedToMessage.last_name];
         

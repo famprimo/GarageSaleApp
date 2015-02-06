@@ -33,11 +33,10 @@
     [FBProfilePictureView class];
 
     // Load Shared Arrays with Data
-    sharedArrayProducts = [[[ProductModel alloc] init] getProducts:sharedArrayProducts];
-    // sharedArrayClients = [[[ClientModel alloc] init] getClients:sharedArrayClients];
+    sharedArrayProducts = [[[ProductModel alloc] init] getProducts];
     sharedArrayClients = [[[ClientModel alloc] init] getClients];
-    sharedArrayOpportunities = [[[OpportunityModel alloc] init] getOpportunities:sharedArrayOpportunities];
-    sharedArrayMessages = [[[MessageModel alloc] init] getMessages:sharedArrayMessages];
+    sharedArrayOpportunities = [[[OpportunityModel alloc] init] getOpportunities];
+    sharedArrayMessages = [[[MessageModel alloc] init] getMessages];
     sharedArrayTemplates = [[[TemplateModel alloc] init] getTemplates];
     
     return YES;
