@@ -13,8 +13,10 @@
 
 - (NSMutableArray*)getMessages; // Updates the array with message list with new messages from database
 - (NSMutableArray*)getMessagesArray; // Return an array with all messages
-- (NSMutableArray*)getMessagesArrayFromClients; // Return an array will all messages with recibien "GarageSale"
-- (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID withoutMessage:(NSString*)messageToNotConsider; // Return an array with all messages from a client
+- (NSMutableArray*)getMessagesArrayFromClients; // Return an array will all messages with recipient "GarageSale"
+- (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID; // Return an array with all messages from a client
+//- (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID withoutMessage:(NSString*)messageToNotConsider; // Return an array with all messages from a client
+- (Message*)getLastMessageFromClient:(NSString*)clientFromID; // Return the last message for a specific client
 - (BOOL)addNewMessage:(Message*)newMessage;
 - (BOOL)existMessage:(NSString*)messageIDToValidate; // Review an array of Messages to check if a given Message ID exists
 - (NSString*)getPhotoID:(NSString*)facebookLink; // Search for 'fbid=' on a Facebook link to get photo_id

@@ -340,7 +340,9 @@
         }
         
         // Other messsages from the same client
-        _myDataOtherMessages = [messageMethods getMessagesArrayFromClient:clientRelatedToMessage.client_id withoutMessage:messageSelected.fb_msg_id];
+        //_myDataOtherMessages = [messageMethods getMessagesArrayFromClient:clientRelatedToMessage.client_id withoutMessage:messageSelected.fb_msg_id];
+
+        _myDataOtherMessages = [messageMethods getMessagesArrayFromClient:clientRelatedToMessage.client_id];
         [self.tableOtherMessages reloadData];
         
         _selectedOtherMessage = [[Message alloc] init];

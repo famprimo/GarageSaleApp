@@ -22,6 +22,12 @@
     item0.screenType = ScreenTypeMessages;
     [menuItemArray addObject:item0];
 
+    MenuItem *item02 = [[MenuItem alloc] init];
+    item02.menuTitle = @"Mensajes (NEW)";
+    item02.menuIcon = @"ProductMenuIcon";
+    item02.screenType = 30;
+    [menuItemArray addObject:item02];
+
     MenuItem *item1 = [[MenuItem alloc] init];
     item1.menuTitle = @"Productos";
     item1.menuIcon = @"ProductMenuIcon";

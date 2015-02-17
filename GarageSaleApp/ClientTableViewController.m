@@ -113,7 +113,7 @@
     NSString *cellIdentifier = @"Cell";
     UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
-    // Get the listing to be shown
+    // Get the client to be shown
     Client *myClient = _myData[indexPath.row];
     
     // Get references to images and labels of cell

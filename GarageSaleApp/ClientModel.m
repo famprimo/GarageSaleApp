@@ -118,7 +118,7 @@
     tempClient.phone3 = @"";
     tempClient.email = @"agonzalez@hotmail.com";
     tempClient.preference = @"F";
-    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c7.0.160.160/p160x160/65036_10151780886293183_681281220_n.jpg?oh=d767b44f62d1770f6e658f883621d0c9&oe=5508CB6C&__gda__=1423050886_d0126388bf46bda903090bdb61f9b782";
+    tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c7.0.160.160/p160x160/65036_10151780886293183_681281220_n.jpg?oh=fc125deb814768604a31f045dcf72883&oe=5557E56C&__gda__=1430826886_e893e670def3748195212ef3c7ee3b2d";
     tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
     //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
     tempClient.status = @"U";

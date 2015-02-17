@@ -1,13 +1,13 @@
 //
-//  MessageTableViewController.m
+//  MessagesTableViewController.m
 //  GarageSaleApp
 //
-//  Created by Federico Amprimo on 12/09/14.
-//  Copyright (c) 2014 Federico Amprimo. All rights reserved.
+//  Created by Federico Amprimo on 06/02/15.
+//  Copyright (c) 2015 Federico Amprimo. All rights reserved.
 //
 
-#import "MessageTableViewController.h"
-#import "MessageDetailViewController.h"
+#import "MessagesTableViewController.h"
+#import "MessagesDetailViewController.h"
 #import "SWRevealViewController.h"
 #import "Message.h"
 #import "MessageModel.h"
@@ -18,18 +18,19 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import "NSDate+NVTimeAgo.h"
 
-@interface MessageTableViewController ()
+@interface MessagesTableViewController ()
 {
     // Data for the table
     NSMutableArray *_myData;
     
     // The message that is selected from the table
-    Message *_selectedMessage;
+    Message *_selectedClientBox;
     
 }
 @end
 
-@implementation MessageTableViewController
+
+@implementation MessagesTableViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -52,19 +53,26 @@
     
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
-        
-    self.detailViewController = (MessageDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
+    
+    self.detailViewController = (MessagesDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
     
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
     // Get the data
-    _myData = [[[MessageModel alloc] init] getMessagesArrayFromClients];
+    _myData = [[[ClientModel alloc] init] getClientArray];
+    
+    // Sort array to be sure new messages are on top
+    [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Client*)a last_interacted_time];
+        NSDate *second = [(Client*)b last_interacted_time];
+        return [second compare:first];
+    }];
     
     // Assign detail view with first item
-    _selectedMessage = [_myData firstObject];
-    [self.detailViewController setDetailItem:_selectedMessage];
+    _selectedClientBox = [_myData firstObject];
+    [self.detailViewController setDetailItem:_selectedClientBox];
     
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
@@ -74,10 +82,10 @@
     self.refreshControl.backgroundColor = [UIColor whiteColor];
     self.refreshControl.tintColor = [UIColor grayColor];
     [self.refreshControl addTarget:self action:@selector(refreshTableGesture:) forControlEvents:UIControlEventValueChanged];
-
-
+    
 }
 
+     
 - (void)menuButtonClicked:(id)sender
 {
     [self.revealViewController revealToggleAnimated:YES];
@@ -85,17 +93,17 @@
 
 - (void)refreshTableGesture:(id)sender
 {
-
-    [self makeFBRequestForNewNotifications];
-
-    [self makeFBRequestForNewInbox];
+    
+    // [self makeFBRequestForNewNotifications];
+    
+    // [self makeFBRequestForNewInbox];
     
 }
 
 - (NSString*)updateTableTitle
 {
     NSString *tableTitle = [[NSString alloc] init];
-
+    
     MessageModel *messageMethods = [[MessageModel alloc] init];
     
     int numberOfMessagesToDisplay = [messageMethods numberOfMessagesNotReplied];
@@ -133,99 +141,121 @@
     return _myData.count;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 81.0;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+
     ProductModel *productMethods = [[ProductModel alloc] init];
     Product *productRelatedToMessage = [[Product alloc] init];
     
-    ClientModel *clientMethods = [[ClientModel alloc] init];
-    Client *clientRelatedToMessage = [[Client alloc] init];
-
+    MessageModel *messageMethods = [[MessageModel alloc] init];
+    Message *lastMessageFromClient = [[Message alloc] init];
+    
     // Retrieve cell
     NSString *cellIdentifier = @"Cell";
     UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     // Get the listing to be shown
-    Message *myMessage = _myData[indexPath.row];
+    Client *myClient = _myData[indexPath.row];
     
     // Get references to images and labels of cell
-    UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:1];
-    UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:2];
-    UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:3];
-    UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:4];
+    UIImageView *clientImage = (UIImageView*)[myCell.contentView viewWithTag:1];
+    UIImageView *verifiedImage = (UIImageView*)[myCell.contentView viewWithTag:2];
+    UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:3];
+    UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:4];
     UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:5];
-    UIImageView *soldImage = (UIImageView*)[myCell.contentView viewWithTag:6];
-    UIImageView *verifiedImage = (UIImageView*)[myCell.contentView viewWithTag:7];
+    UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:6];
     
-    // Set table cell labels to listing data
+    // Position all images and message frames
+    CGRect clientImageFrame = clientImage.frame;
+    clientImageFrame.origin.x = 5;
+    clientImageFrame.origin.y = 8;
+    clientImageFrame.size.width = 50;
+    clientImageFrame.size.height = 50;
+    clientImage.frame = clientImageFrame;
     
-    // Client name and status
-    clientRelatedToMessage = [clientMethods getClientFromClientId:myMessage.client_id];
-    if ([clientRelatedToMessage.status isEqualToString:@"V"])
+    CGRect verifiedImageFrame = verifiedImage.frame;
+    verifiedImageFrame.origin.x = 63;
+    verifiedImageFrame.origin.y = 14;
+    verifiedImageFrame.size.width = 10;
+    verifiedImageFrame.size.height = 10;
+    verifiedImage.frame = verifiedImageFrame;
+
+    CGRect productImageFrame = productImage.frame;
+    productImageFrame.origin.x = 63;
+    productImageFrame.origin.y = 36;
+    productImageFrame.size.width = 30;
+    productImageFrame.size.height = 30;
+    productImage.frame = productImageFrame;
+
+    CGRect messageLabelFrame = messageLabel.frame;
+    messageLabelFrame.origin.x = 63;
+    messageLabelFrame.size.width = 245;
+    messageLabel.frame = messageLabelFrame;
+
+    
+    // Client image, name and status
+    clientImage.image = [UIImage imageWithData:myClient.picture];
+    clientImage.layer.cornerRadius = clientImage.frame.size.width / 2;
+    clientImage.clipsToBounds = YES;
+
+    if ([myClient.status isEqualToString:@"V"])
     {
-        nameLabel.text = [NSString stringWithFormat:@"    %@ %@", clientRelatedToMessage.name, clientRelatedToMessage.last_name];
+        nameLabel.text = [NSString stringWithFormat:@"    %@ %@", myClient.name, myClient.last_name];
         verifiedImage.image = [UIImage imageNamed:@"Verified"];
     }
     else
     {
-        nameLabel.text = [NSString stringWithFormat:@"%@ %@", clientRelatedToMessage.name, clientRelatedToMessage.last_name];
+        nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
         verifiedImage.image = [UIImage imageNamed:@"Blank"];
     }
     
-    messageLabel.text = myMessage.message;
-    //[messageLabel sizeToFit];
+    // Message info
+    lastMessageFromClient = [messageMethods getLastMessageFromClient:myClient.client_id];
     
-    datetimeLabel.text = [myMessage.datetime formattedAsTimeAgo];
-
-    // Set mark depending on message status
-    if ([myMessage.status isEqualToString:@"N"])
+    if (lastMessageFromClient == nil)
     {
-        markImage.image = [UIImage imageNamed:@"BlueDot"];
+        productImage.hidden = YES;
+        messageLabel.frame = messageLabelFrame;
+        messageLabel.text = @"No hay mensajes";
+        datetimeLabel.text = [myClient.last_interacted_time formattedAsTimeAgo];
     }
-    else if ([myMessage.status isEqualToString:@"R"])
+    else
     {
-        markImage.image = [UIImage imageNamed:@"Replied"];
-    }
-    else if ([myMessage.status isEqualToString:@"P"])
-    {
-        markImage.image = [UIImage imageNamed:@"Blank"];
-    }
-
-    soldImage.image = [UIImage imageNamed:@"Blank"];
-
-    // Set image for product or message
-    if ([myMessage.type isEqualToString:@"P"])
-    {
-        productRelatedToMessage = [productMethods getProductFromProductId:myMessage.product_id];
-        productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
-        
-        // Set sold image if product is sold
-        if ([productRelatedToMessage.status isEqualToString:@"S"])
+        CGRect messageLabelFrame = messageLabel.frame;
+        if ([lastMessageFromClient.type isEqualToString:@"P"])
         {
-            soldImage.image = [UIImage imageNamed:@"Sold"];
+            productImage.hidden = NO;
+            productRelatedToMessage = [productMethods getProductFromProductId:lastMessageFromClient.product_id];
+            productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
+            messageLabelFrame.origin.x = 96;
+            messageLabelFrame.size.width = 212;
+            messageLabel.frame = messageLabelFrame;
         }
+        else  // @"I"
+        {
+            productImage.hidden = YES;
+        }
+        
+        messageLabel.text = lastMessageFromClient.message;
+        datetimeLabel.text = [lastMessageFromClient.datetime formattedAsTimeAgo];
 
     }
-    else if ([myMessage.type isEqualToString:@"I"])
-    {
-        productImage.image = [UIImage imageNamed:@"Message"];
-    }
-    else if ([myMessage.type isEqualToString:@"W"])
-    {
-        productImage.image = [UIImage imageNamed:@"Message"];
-    }
-
+    
     return myCell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selected listing to var
-    _selectedMessage = _myData[indexPath.row];
+    _selectedClientBox = _myData[indexPath.row];
     
     // Refresh detail view with selected item
-    [self.detailViewController setDetailItem:_selectedMessage];
+    [self.detailViewController setDetailItem:_selectedClientBox];
 }
 
 
@@ -251,13 +281,13 @@
                                           // Get message details for those notifications
                                           [self makeFBRequestForPhotosDetails:photosArray];
                                       }
-                                    
+                                      
                                   }
                                   else
                                   {
                                       [self.refreshControl endRefreshing];
                                   }
-                                
+                                  
                                   
                               } else {
                                   // An error occurred, we need to handle the error
@@ -289,8 +319,8 @@
             
             // Add photo ID to array
             [photosArray addObject:photoIDfromLink];
-                
-            }
+            
+        }
     }
     
     return photosArray;
@@ -343,7 +373,7 @@
                                           newProduct.client_id = @"";
                                           newProduct.desc = result[photosArray[i]][@"name"];
                                           newProduct.fb_photo_id = photoID;
-                                         
+                                          
                                           // Get name, currency, price, GS code and type from photo description
                                           
                                           newProduct.name = [productMethods getProductNameFromFBPhotoDesc:newProduct.desc];
@@ -355,7 +385,7 @@
                                           {
                                               newProduct.GS_code = [NSString stringWithFormat:@"GSN%@", tmpText];
                                               newProduct.type = @"A";
-
+                                              
                                           }
                                           else
                                           {
@@ -370,7 +400,7 @@
                                                   newProduct.GS_code = @"None";
                                                   newProduct.type = @"A";
                                               }
-                                         }
+                                          }
                                           
                                           tmpText = [productMethods getTextThatFollows:@"s/. " fromMessage:newProduct.desc];
                                           if (![tmpText isEqualToString:@"Not Found"]) {
@@ -411,12 +441,12 @@
                                           
                                           
                                           [productMethods addNewProduct:newProduct];
-
+                                          
                                       }
-
+                                      
                                       // Review each comment
                                       NSArray *jsonArray = result[photosArray[i]][@"comments"][@"data"];
-
+                                      
                                       for (int i=0; i<jsonArray.count; i=i+1)
                                       {
                                           NSDictionary *newMessage = jsonArray[i];
@@ -454,9 +484,9 @@
                                               if ([fromClientID  isEqual: @"Not Found"])
                                               {
                                                   // New client!
-
+                                                  
                                                   tempMessage.client_id = [clientMethods getNextClientID];;
-
+                                                  
                                                   Client *newClient = [[Client alloc] init];
                                                   
                                                   newClient.client_id = tempMessage.client_id;
@@ -470,13 +500,13 @@
                                                   
                                                   [clientMethods addNewClient:newClient];
                                                   [newClientsArray addObject:newClient];
-
+                                                  
                                               }
                                               else
                                               {
                                                   tempMessage.client_id = fromClientID;
                                               }
-
+                                              
                                               // Insert new message to array and add row to table
                                               [self addNewMessage:tempMessage];
                                               
@@ -496,7 +526,7 @@
                                   
                                   //[self.refreshControl endRefreshing];
                                   self.navigationItem.title = [self updateTableTitle];
-
+                                  
                               }
                               else {
                                   // An error occurred, we need to handle the error
@@ -521,7 +551,7 @@
                                   if (result[@"data"]) {   // There is FB data!
                                       
                                       NSMutableArray *newClientsArray = [[NSMutableArray alloc] init];
-
+                                      
                                       NSArray *jsonArray = result[@"data"];
                                       
                                       // Review each "conversation"
@@ -551,7 +581,7 @@
                                               
                                               NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
                                               [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-                                               newClient.last_interacted_time = [formatFBdates dateFromString:jsonArray[i][@"updated_time"]];;
+                                              newClient.last_interacted_time = [formatFBdates dateFromString:jsonArray[i][@"updated_time"]];;
                                               
                                               [clientMethods addNewClient:newClient];
                                               [newClientsArray addObject:newClient];
@@ -606,7 +636,7 @@
                                               }
                                               
                                           }
-
+                                          
                                       }
                                       
                                       // Get details for each new client found
@@ -622,12 +652,12 @@
                                       self.navigationItem.title = [self updateTableTitle];
                                       
                                   }
- 
+                                  
                                   else
                                   {
                                       [self.refreshControl endRefreshing];
                                   }
-                            
+                                  
                               } else {
                                   // An error occurred, we need to handle the error
                                   // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
@@ -639,50 +669,50 @@
 
 - (void) makeFBRequestForClientsDetails:(NSMutableArray*)newClientsArray;
 {
-
+    
     ClientModel *clientMethods = [[ClientModel alloc] init];
     
     // Create string for FB request
     NSMutableString *requestClientDetails = [[NSMutableString alloc] init];
     Client *newClient = [[Client alloc] init];
-
+    
     for (int i=0; i<newClientsArray.count; i=i+1)
     {
         newClient = [[Client alloc] init];
         newClient = (Client *)newClientsArray[i];
-
+        
         requestClientDetails = [[NSMutableString alloc] init];
         [requestClientDetails appendString:newClient.fb_client_id];
         [requestClientDetails appendString:@"?fields=first_name,last_name,gender,picture"];
-
+        
         // Make FB request
         [FBRequestConnection startWithGraphPath:requestClientDetails
-                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                              
-                              if (!error) { // FB request was a success!
+                              completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                                   
-                                  newClient.name = result[@"first_name"];
-                                  newClient.last_name = result[@"last_name"];
-                                  if ([result[@"gender"] isEqualToString:@"male"])
-                                  {
-                                      newClient.sex = @"M";
+                                  if (!error) { // FB request was a success!
+                                      
+                                      newClient.name = result[@"first_name"];
+                                      newClient.last_name = result[@"last_name"];
+                                      if ([result[@"gender"] isEqualToString:@"male"])
+                                      {
+                                          newClient.sex = @"M";
+                                      }
+                                      else
+                                      {
+                                          newClient.sex = @"F";
+                                      }
+                                      newClient.picture_link = result[@"picture"][@"data"][@"url"];
+                                      newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
+                                      
+                                      [clientMethods updateClient:newClient];
+                                      
                                   }
-                                  else
-                                  {
-                                      newClient.sex = @"F";
+                                  else {
+                                      // An error occurred, we need to handle the error
+                                      // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                                      NSLog(@"error %@", error.description);
                                   }
-                                  newClient.picture_link = result[@"picture"][@"data"][@"url"];
-                                  newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
-                                  
-                                  [clientMethods updateClient:newClient];
-                                
-                              }
-                              else {
-                                  // An error occurred, we need to handle the error
-                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                  NSLog(@"error %@", error.description);
-                              }
-                          } ];
+                              } ];
     }
 }
 
@@ -690,12 +720,12 @@
 - (void) addNewMessage:(Message*)newMessage;
 {
     MessageModel *messageMethods = [[MessageModel alloc] init];
-
+    
     // Insert message to table array if it has as recipient "GarageSale" only
     if ([newMessage.recipient isEqualToString:@"G"])
     {
         [_myData insertObject:newMessage atIndex:0];
-    
+        
         // Sort array to be sure new messages are on top
         [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
             NSDate *first = [(Message*)a datetime];

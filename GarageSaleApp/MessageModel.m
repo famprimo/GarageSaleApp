@@ -115,6 +115,30 @@
     return messagesArray;
 }
 
+- (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID; // Return an array with all messages from a client
+{
+    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Message *messageToReview = [[Message alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    {
+        messageToReview = [[Message alloc] init];
+        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
+        
+        if ([messageToReview.client_id isEqual:clientFromID])
+        {
+            [messagesArray addObject:messageToReview];
+        }
+    }
+    return messagesArray;
+}
+
+/*
 - (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID withoutMessage:(NSString*)messageToNotConsider; // Return an array with all messages from a client
 {
     NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
@@ -136,6 +160,47 @@
         }
     }    
     return messagesArray;
+}
+*/
+
+- (Message*)getLastMessageFromClient:(NSString*)clientFromID; // Return the last message for a specific client
+{
+    Message *lastMessage;
+
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Message *messageToReview = [[Message alloc] init];
+    int indexLastMessage = 0;
+    
+    NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+    [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+    NSDate *lastMessageDate = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
+    
+    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    {
+        messageToReview = [[Message alloc] init];
+        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
+        
+        if ([messageToReview.client_id isEqual:clientFromID])
+        {
+            if (lastMessageDate < messageToReview.datetime) {
+                lastMessageDate = messageToReview.datetime;
+                indexLastMessage = i;
+            }
+        }
+    }
+
+    if (indexLastMessage == 0) {
+        lastMessage = nil;
+    }
+    else
+    {
+        lastMessage = (Message *)mainDelegate.sharedArrayMessages[indexLastMessage];
+    }
+    
+    return lastMessage;
 }
 
 - (BOOL)addNewMessage:(Message*)newMessage;

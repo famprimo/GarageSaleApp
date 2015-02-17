@@ -44,6 +44,8 @@
 		C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */; };
 		C0666E4A1A44B39100B045A0 /* NewOpportunityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0666E481A44B39100B045A0 /* NewOpportunityViewController.m */; };
 		C0666E4B1A44B39100B045A0 /* NewOpportunityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */; };
+		C069A40D1A84BD1F0059575E /* MessagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C069A40C1A84BD1F0059575E /* MessagesTableViewController.m */; };
+		C069A4131A84BD530059575E /* MessagesDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C069A4121A84BD530059575E /* MessagesDetailViewController.m */; };
 		C06F66F31A4114B40013371F /* Template.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66F21A4114B40013371F /* Template.m */; };
 		C06F66FC1A4116910013371F /* SetupTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66FB1A4116910013371F /* SetupTableViewController.m */; };
 		C06F66FF1A4116A90013371F /* SetupDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66FE1A4116A90013371F /* SetupDetailViewController.m */; };
@@ -130,6 +132,10 @@
 		C0666E471A44B39100B045A0 /* NewOpportunityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewOpportunityViewController.h; sourceTree = "<group>"; };
 		C0666E481A44B39100B045A0 /* NewOpportunityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewOpportunityViewController.m; sourceTree = "<group>"; };
 		C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewOpportunityViewController.xib; sourceTree = "<group>"; };
+		C069A40B1A84BD1F0059575E /* MessagesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesTableViewController.h; sourceTree = "<group>"; };
+		C069A40C1A84BD1F0059575E /* MessagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesTableViewController.m; sourceTree = "<group>"; };
+		C069A4111A84BD530059575E /* MessagesDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesDetailViewController.h; sourceTree = "<group>"; };
+		C069A4121A84BD530059575E /* MessagesDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesDetailViewController.m; sourceTree = "<group>"; };
 		C06F66F11A4114B40013371F /* Template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Template.h; sourceTree = "<group>"; };
 		C06F66F21A4114B40013371F /* Template.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Template.m; sourceTree = "<group>"; };
 		C06F66FA1A4116910013371F /* SetupTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupTableViewController.h; sourceTree = "<group>"; };
@@ -191,6 +197,10 @@
 				C008BA3619C3CB82008616E4 /* MessageTableViewController.m */,
 				C008BA3819C3CBCA008616E4 /* MessageDetailViewController.h */,
 				C008BA3919C3CBCA008616E4 /* MessageDetailViewController.m */,
+				C069A40B1A84BD1F0059575E /* MessagesTableViewController.h */,
+				C069A40C1A84BD1F0059575E /* MessagesTableViewController.m */,
+				C069A4111A84BD530059575E /* MessagesDetailViewController.h */,
+				C069A4121A84BD530059575E /* MessagesDetailViewController.m */,
 			);
 			name = Message;
 			sourceTree = "<group>";
@@ -514,6 +524,7 @@
 				C06F66FC1A4116910013371F /* SetupTableViewController.m in Sources */,
 				C06F66F31A4114B40013371F /* Template.m in Sources */,
 				C02486F319646ADA005DCBE6 /* ClientDetailViewController.m in Sources */,
+				C069A40D1A84BD1F0059575E /* MessagesTableViewController.m in Sources */,
 				C0815E1119644C2D0021A153 /* ClientModel.m in Sources */,
 				C0815E1719644C460021A153 /* Product.m in Sources */,
 				C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */,
@@ -523,6 +534,7 @@
 				C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */,
 				C019F93F19D88944009528EE /* Message.m in Sources */,
 				C06F66FF1A4116A90013371F /* SetupDetailViewController.m in Sources */,
+				C069A4131A84BD530059575E /* MessagesDetailViewController.m in Sources */,
 				C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */,
 				C0666E4A1A44B39100B045A0 /* NewOpportunityViewController.m in Sources */,
 				C019F94019D88944009528EE /* MessageModel.m in Sources */,
