@@ -126,7 +126,7 @@
     tempClient.agent_id = @"00001";
     tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
-    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2015-01-20T18:45:38+0000"];
     
     // Add client #4 to the array
     [clients addObject:tempClient];
@@ -182,7 +182,7 @@
     tempClient.agent_id = @"00001";
     tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
-    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
+    tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-09-20T18:45:38+0000"];
     
     // Add client #6 to the array
     [clients addObject:tempClient];

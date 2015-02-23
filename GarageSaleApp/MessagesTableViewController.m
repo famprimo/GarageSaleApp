@@ -94,9 +94,9 @@
 - (void)refreshTableGesture:(id)sender
 {
     
-    // [self makeFBRequestForNewNotifications];
+    [self makeFBRequestForNewNotifications];
     
-    // [self makeFBRequestForNewInbox];
+    [self makeFBRequestForNewInbox];
     
 }
 
@@ -160,7 +160,8 @@
     UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     // Get the listing to be shown
-    Client *myClient = _myData[indexPath.row];
+    int index=indexPath.row;
+    Client *myClient = _myData[index];
     
     // Get references to images and labels of cell
     UIImageView *clientImage = (UIImageView*)[myCell.contentView viewWithTag:1];
@@ -447,9 +448,9 @@
                                       // Review each comment
                                       NSArray *jsonArray = result[photosArray[i]][@"comments"][@"data"];
                                       
-                                      for (int i=0; i<jsonArray.count; i=i+1)
+                                      for (int j=0; j<jsonArray.count; j=j+1)
                                       {
-                                          NSDictionary *newMessage = jsonArray[i];
+                                          NSDictionary *newMessage = jsonArray[j];
                                           
                                           // Validate if the comment/message exists
                                           if (![messagesMethods existMessage:newMessage[@"id"]])
@@ -720,24 +721,49 @@
 - (void) addNewMessage:(Message*)newMessage;
 {
     MessageModel *messageMethods = [[MessageModel alloc] init];
+    ClientModel *clientMethods = [[ClientModel alloc] init];
+    Client *tempClient = [[Client alloc] init];
     
-    // Insert message to table array if it has as recipient "GarageSale" only
-    if ([newMessage.recipient isEqualToString:@"G"])
+    // Review if client has already added to table (as a chat)
+
+    BOOL clientFound = NO;
+    
+    for (int i=0; i<_myData.count; i=i+1)
     {
-        [_myData insertObject:newMessage atIndex:0];
+        tempClient = _myData[i];
         
-        // Sort array to be sure new messages are on top
-        [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
-            NSDate *first = [(Message*)a datetime];
-            NSDate *second = [(Message*)b datetime];
-            return [second compare:first];
-            //return [first compare:second];
-        }];
+        if ([tempClient.client_id isEqualToString:newMessage.client_id] )
+        {
+            clientFound = YES;
+            // Update last interaction time if so
+            if (tempClient.last_interacted_time < newMessage.datetime)
+            {
+                tempClient.last_interacted_time = newMessage.datetime;
+                [clientMethods updateClient:tempClient];
+            }
+            
+            break;
+        }
+    }
+    
+    // Insert message to table array if the recipient is not already on the table
+    if (!clientFound)
+    {
+        tempClient = [clientMethods getClientFromClientId:newMessage.client_id];
+        [_myData insertObject:tempClient atIndex:0];
+    
     }
     
     // Update database
     [messageMethods addNewMessage:newMessage];
     
+    // Sort array to be sure new messages are on top
+    [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Client*)a last_interacted_time];
+        NSDate *second = [(Client*)b last_interacted_time];
+        return [second compare:first];
+    }];
+
     // Reload table
     [UIView transitionWithView:self.tableView
                       duration:0.5f

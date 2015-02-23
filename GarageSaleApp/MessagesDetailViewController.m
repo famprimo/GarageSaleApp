@@ -98,17 +98,20 @@
         _myDataMessages = [messageMethods getMessagesArrayFromClient:_clientRelatedToMessage.client_id];
         [self.tableMessages reloadData];
         
-        // Sort array to be sure new messages are on top
-        [_myDataMessages sortUsingComparator:^NSComparisonResult(id a, id b) {
-            NSDate *first = [(Message*)a datetime];
-            NSDate *second = [(Message*)b datetime];
-            return [first compare:second];
+        if (_myDataMessages.count > 0)
+        {
+            // Sort array to be sure new messages are on top
+            [_myDataMessages sortUsingComparator:^NSComparisonResult(id a, id b) {
+                NSDate *first = [(Message*)a datetime];
+                NSDate *second = [(Message*)b datetime];
+                return [first compare:second];
             }];
-
-        int lastRowNumber = [self.tableMessages numberOfRowsInSection:0] - 1;
-        NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRowNumber inSection:0];
-        [self.tableMessages scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionTop animated:NO];
-
+            
+            int lastRowNumber = [self.tableMessages numberOfRowsInSection:0] - 1;
+            NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRowNumber inSection:0];
+            [self.tableMessages scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
+        
         _selectedMessage = [[Message alloc] init];
         
     }
@@ -240,8 +243,14 @@
             productImage.frame = imageProductFrame;
 
             CGRect datetimeLabelFrame = datetimeLabel.frame;
-            datetimeLabelFrame.origin.x = 270 - datetimeLabelFrame.size.width;
+            int datetimepositionX = messageLabelFrame.origin.x + messageLabelFrame.size.width - datetimeLabelFrame.size.width;
+            if (datetimepositionX < 85) {
+                datetimepositionX = 85;
+            }
+            datetimeLabelFrame.origin.x = datetimepositionX;
             datetimeLabelFrame.origin.y = messageLabelFrame.origin.y + messageLabelFrame.size.height + 5;
+            
+            
             datetimeLabel.frame = datetimeLabelFrame;
 
         }
@@ -255,14 +264,6 @@
             clientImage.frame = clientImageFrame;
             
             messageLabelFrame = messageLabel.frame;
-            /*if ([myMessage.type isEqualToString:@"P"])
-            {
-                messageLabelFrame.origin.x = 155;
-            }
-            else
-            {
-                messageLabelFrame.origin.x = 110;
-            }*/
             messageLabelFrame.origin.x = 340 - messageLabelFrame.size.width;
             messageLabelFrame.origin.y = 5;
             messageLabel.frame = messageLabelFrame;

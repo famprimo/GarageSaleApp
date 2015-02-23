@@ -42,7 +42,7 @@
     tempMessage.fb_from_id = @"10152156045491377";
     tempMessage.fb_from_name = @"Amparo Gonzalez";
     tempMessage.message = @"Cuales son las medidas?";
-    tempMessage.fb_created_time = @"2014-09-20T18:45:38+0000";
+    tempMessage.fb_created_time = @"2015-01-20T18:45:38+0000";
     tempMessage.fb_photo_id = @"XXXXX";
     tempMessage.product_id = @"";
     tempMessage.client_id = @"00004";
