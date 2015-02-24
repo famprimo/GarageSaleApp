@@ -185,7 +185,7 @@
         
         if ([messageToReview.client_id isEqual:clientFromID])
         {
-            if (lastMessageDate < messageToReview.datetime) {
+            if ([lastMessageDate compare:messageToReview.datetime] == NSOrderedAscending) {
                 lastMessageDate = messageToReview.datetime;
                 indexLastMessage = i;
             }
