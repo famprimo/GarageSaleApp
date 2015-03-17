@@ -170,6 +170,7 @@
     UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:4];
     UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:5];
     UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:6];
+    UIImageView *repliedImage = (UIImageView*)[myCell.contentView viewWithTag:7];
     
     // Position all images and message frames
     CGRect clientImageFrame = clientImage.frame;
@@ -193,6 +194,13 @@
     productImageFrame.size.height = 30;
     productImage.frame = productImageFrame;
 
+    CGRect repliedImageFrame = repliedImage.frame;
+    repliedImageFrame.origin.x = 40;
+    repliedImageFrame.origin.y = 60;
+    repliedImageFrame.size.width = 15;
+    repliedImageFrame.size.height = 15;
+    repliedImage.frame = repliedImageFrame;
+    
     CGRect messageLabelFrame = messageLabel.frame;
     messageLabelFrame.origin.x = 63;
     messageLabelFrame.size.width = 245;
@@ -224,10 +232,31 @@
         messageLabel.frame = messageLabelFrame;
         messageLabel.text = @"No hay mensajes";
         datetimeLabel.text = [myClient.last_interacted_time formattedAsTimeAgo];
+        repliedImage.image = [UIImage imageNamed:@"Blank"];
+        nameLabel.textColor = [UIColor blackColor];
+        nameLabel.font = [UIFont systemFontOfSize:12];
     }
     else
     {
         CGRect messageLabelFrame = messageLabel.frame;
+        if ([lastMessageFromClient.status isEqualToString:@"D"]) {
+            repliedImage.image = [UIImage imageNamed:@"Replied"];
+            nameLabel.textColor = [UIColor blackColor];
+            nameLabel.font = [UIFont systemFontOfSize:12];
+        }
+        else if ([lastMessageFromClient.status isEqualToString:@"N"])
+        {
+            repliedImage.image = [UIImage imageNamed:@"Blank"];
+            nameLabel.textColor = [UIColor blueColor];
+            nameLabel.font = [UIFont boldSystemFontOfSize:12];
+        }
+        else
+        {
+            repliedImage.image = [UIImage imageNamed:@"Blank"];
+            nameLabel.textColor = [UIColor blackColor];
+            nameLabel.font = [UIFont systemFontOfSize:12];
+        }
+        
         if ([lastMessageFromClient.type isEqualToString:@"P"])
         {
             productImage.hidden = NO;
@@ -482,13 +511,18 @@
                                               tempMessage.fb_photo_id = photoID;
                                               tempMessage.product_id = productID;
                                               tempMessage.agent_id = @"00001";
-                                              tempMessage.status = @"N";
                                               tempMessage.type = @"P";
                                               
-                                              if ([tempMessage.fb_from_name isEqualToString:@"Garage Sale Online"]) // HARDCODED!!!! CAMBIAR LUEGO!!!!!!!
-                                              { tempMessage.recipient = @"C";}
+                                              if ([tempMessage.fb_from_name isEqualToString:@"Garage Sale Online"])
+                                              {
+                                                  tempMessage.recipient = @"C";
+                                                  tempMessage.status = @"D";
+                                              }
                                               else
-                                              { tempMessage.recipient = @"G";}
+                                              {
+                                                  tempMessage.recipient = @"G";
+                                                  tempMessage.status = @"N";
+                                              }
                                               
                                               // Review if client exists
                                               NSString *fromClientID = [clientMethods getClientIDfromFbId:tempMessage.fb_from_id];
@@ -840,17 +874,18 @@
                                               tempMessage.fb_photo_id = photoID;
                                               tempMessage.product_id = productID;
                                               tempMessage.agent_id = @"00001";
-                                              tempMessage.status = @"N";
                                               tempMessage.type = @"P";
                                               
-                                              if ([tempMessage.fb_from_name isEqualToString:@"Garage Sale Online"]) // HARDCODED!!!! CAMBIAR LUEGO!!!!!!!
+                                              if ([tempMessage.fb_from_name isEqualToString:@"Garage Sale Online"])
                                               {
                                                   tempMessage.recipient = @"C";
                                                   tempMessage.client_id = fromClientID;
+                                                  tempMessage.status = @"D";
                                               }
                                               else
                                               {
                                                   tempMessage.recipient = @"G";
+                                                  tempMessage.status = @"N";
                                                   
                                                   // Review if client exists
                                                   fromClientID = [clientMethods getClientIDfromFbId:tempMessage.fb_from_id];

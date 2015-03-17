@@ -28,7 +28,7 @@
     tempMessage.product_id = @"0000001";
     tempMessage.client_id = @"00006";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"P";
+    tempMessage.status = @"N";
     tempMessage.type = @"P";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-06-20T16:41:15+0000"];
     tempMessage.recipient = @"G";
@@ -47,7 +47,7 @@
     tempMessage.product_id = @"";
     tempMessage.client_id = @"00004";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"R";
+    tempMessage.status = @"D";
     tempMessage.type = @"I";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-05-10T16:41:15+0000"];
     tempMessage.recipient = @"G";
@@ -66,7 +66,7 @@
     tempMessage.product_id = @"0000002";
     tempMessage.client_id = @"00004";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"P";
+    tempMessage.status = @"D";
     tempMessage.type = @"P";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-06-10T09:41:15+0000"];
     tempMessage.recipient = @"G";
@@ -74,6 +74,123 @@
     // Add message #3 to the array
     [messages addObject:tempMessage];
 
+    // Create message #4
+    tempMessage = [[Message alloc] init];
+    tempMessage.fb_msg_id = @"1469889866608936_143534523426";
+    tempMessage.fb_from_id = @"10152156045491377";
+    tempMessage.fb_from_name = @"Amparo Gonzalez";
+    tempMessage.message = @"Amparo te envio los datos al inbox";
+    tempMessage.fb_created_time = @"2014-07-10T09:41:15+0000";
+    tempMessage.fb_photo_id = @"XXXXX";
+    tempMessage.product_id = @"0000002";
+    tempMessage.client_id = @"00004";
+    tempMessage.agent_id = @"00001";
+    tempMessage.status = @"D";
+    tempMessage.type = @"P";
+    tempMessage.datetime = [formatFBdates dateFromString:@"2014-07-10T09:41:15+0000"];
+    tempMessage.recipient = @"C";
+    
+    // Add message #4 to the array
+    [messages addObject:tempMessage];
+
+    // Create message #5
+    tempMessage = [[Message alloc] init];
+    tempMessage.fb_msg_id = @"1469889866608936_143534523426";
+    tempMessage.fb_from_id = @"10152779700000003";
+    tempMessage.fb_from_name = @"Melisa Celi";
+    tempMessage.message = @"Melisa fuiste a ver el coche?";
+    tempMessage.fb_created_time = @"2015-02-23T09:41:15+0000";
+    tempMessage.fb_photo_id = @"XXXXX";
+    tempMessage.product_id = @"";
+    tempMessage.client_id = @"00003";
+    tempMessage.agent_id = @"00001";
+    tempMessage.status = @"D";
+    tempMessage.type = @"I";
+    tempMessage.datetime = [formatFBdates dateFromString:@"2015-02-23T09:41:15+0000"];
+    tempMessage.recipient = @"C";
+    
+    // Add message #5 to the array
+    [messages addObject:tempMessage];
+
+    // Create message #6
+    tempMessage = [[Message alloc] init];
+    tempMessage.fb_msg_id = @"1469889866608936_143534523426";
+    tempMessage.fb_from_id = @"10152779700000003";
+    tempMessage.fb_from_name = @"Melisa Celi";
+    tempMessage.message = @"Si fui pero no lo compre";
+    tempMessage.fb_created_time = @"2015-02-24T09:41:15+0000";
+    tempMessage.fb_photo_id = @"XXXXX";
+    tempMessage.product_id = @"";
+    tempMessage.client_id = @"00003";
+    tempMessage.agent_id = @"00001";
+    tempMessage.status = @"N";
+    tempMessage.type = @"I";
+    tempMessage.datetime = [formatFBdates dateFromString:@"2015-02-24T09:41:15+0000"];
+    tempMessage.recipient = @"G";
+    
+    // Add message #6 to the array
+    [messages addObject:tempMessage];
+
+    // Create message #7
+    tempMessage = [[Message alloc] init];
+    tempMessage.fb_msg_id = @"1469889866608936_143534523426";
+    tempMessage.fb_from_id = @"10152779700000005";
+    tempMessage.fb_from_name = @"Ivan Rosado";
+    tempMessage.message = @"Ok";
+    tempMessage.fb_created_time = @"2015-02-20T10:45:15+0000";
+    tempMessage.fb_photo_id = @"XXXXX";
+    tempMessage.product_id = @"";
+    tempMessage.client_id = @"00005";
+    tempMessage.agent_id = @"00001";
+    tempMessage.status = @"N";
+    tempMessage.type = @"I";
+    tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time ];
+    tempMessage.recipient = @"C";
+    
+    // Add message #7 to the array
+    [messages addObject:tempMessage];
+
+    // Create message #8
+    tempMessage = [[Message alloc] init];
+    tempMessage.fb_msg_id = @"1469889866608936_143534523426";
+    tempMessage.fb_from_id = @"10152779700000005";
+    tempMessage.fb_from_name = @"Ivan Rosado";
+    tempMessage.message = @"Ivan te explico el sistema de GarageSale en el inbox";
+    tempMessage.fb_created_time = @"2015-02-20T10:50:15+0000";
+    tempMessage.fb_photo_id = @"XXXXX";
+    tempMessage.product_id = @"";
+    tempMessage.client_id = @"00005";
+    tempMessage.agent_id = @"00001";
+    tempMessage.status = @"N";
+    tempMessage.type = @"I";
+    tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time ];
+    tempMessage.recipient = @"C";
+    
+    // Add message #8 to the array
+    [messages addObject:tempMessage];
+
+    for (int i=0; i<20; i=i+1) {
+        
+        // Create message #?
+        tempMessage = [[Message alloc] init];
+        tempMessage.fb_msg_id = @"1469889866608936_143534523426";
+        tempMessage.fb_from_id = @"10152779700000005";
+        tempMessage.fb_from_name = @"Ivan Rosado";
+        tempMessage.message = [NSString stringWithFormat:@"Mensaje de prueba #%i", i];
+        tempMessage.fb_created_time = @"2015-02-19T09:41:15+0000";
+        tempMessage.fb_photo_id = @"XXXXX";
+        tempMessage.product_id = @"";
+        tempMessage.client_id = @"00005";
+        tempMessage.agent_id = @"00001";
+        tempMessage.status = @"N";
+        tempMessage.type = @"I";
+        tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time ];
+        tempMessage.recipient = @"G";
+        
+        // Add message #? to the array
+        [messages addObject:tempMessage];
+
+    }
     // Return the producct array as the return value
     return messages;
 }
@@ -173,6 +290,7 @@
     
     Message *messageToReview = [[Message alloc] init];
     int indexLastMessage = 0;
+    BOOL lastMessageExists = NO;
     
     NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
     [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
@@ -188,16 +306,19 @@
             if ([lastMessageDate compare:messageToReview.datetime] == NSOrderedAscending) {
                 lastMessageDate = messageToReview.datetime;
                 indexLastMessage = i;
+                lastMessageExists = YES;
+                
             }
         }
     }
 
-    if (indexLastMessage == 0) {
-        lastMessage = nil;
+    if (lastMessageExists)
+    {
+        lastMessage = (Message *)mainDelegate.sharedArrayMessages[indexLastMessage];
     }
     else
     {
-        lastMessage = (Message *)mainDelegate.sharedArrayMessages[indexLastMessage];
+        lastMessage = nil;
     }
     
     return lastMessage;

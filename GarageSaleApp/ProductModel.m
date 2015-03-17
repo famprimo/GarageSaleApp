@@ -38,6 +38,8 @@
     tempProduct.type = @"S";
     tempProduct.picture_link = @"https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-xap1/v/t1.0-9/1376503_708105319218169_2045785718_n.jpg?oh=9253637c8d6b70101c67951b37c9311f&oe=5521BD25&__gda__=1429145356_7b2f69769a6ae3da56923e8260bab2c4";
     tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    //
+    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-paper-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"S";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140501"];
@@ -67,7 +69,8 @@
     tempProduct.type = @"S";
     tempProduct.picture_link = @"https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-ash2/v/t1.0-9/529445_473861852642518_1828250631_n.jpg?oh=23fe791f1a77d614d50285707b93ee38&oe=553A9F8F&__gda__=1429866536_5dc8e85fe0171ac093af304277b9fe0c";
     tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
+    //
+    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-rock-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140301"];
@@ -96,7 +99,8 @@
     tempProduct.type = @"S";
     tempProduct.picture_link = @"https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-prn2/v/t1.0-9/533606_660543743974327_2061893536_n.jpg?oh=91032b496fe2c9e3ee985b3cf6417a37&oe=5521F20D&__gda__=1433366363_1618f174046b4e67b5dc406189e59fa1";
     tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
+    //
+    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-scissors-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140219"];
@@ -125,7 +129,8 @@
     tempProduct.type = @"S";
     tempProduct.picture_link = @"https://scontent-a.xx.fbcdn.net/hphotos-prn2/v/t1.0-9/s720x720/540629_572941262734576_1798615268_n.jpg?oh=ead54861abe199b5c8e064ffd4492ef7&oe=5540E1FC";
     tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Perfume.png"];
+    //
+    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/left-paper-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140315"];

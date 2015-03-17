@@ -10,58 +10,51 @@
 #import "Message.h"
 #import "MessageModel.h"
 #import "ClientPickerViewController.h"
+#import "ProductPickerViewController.h"
 #import "SendMessageViewController.h"
 #import "NewOpportunityViewController.h"
 
 // Popover help  http://www.appcoda.com/uiactionsheet-uipopovercontroller-tutorial/
 
-@interface MessagesDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface MessagesDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, ProductPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) id detailItem;
 
+@property (weak, nonatomic) IBOutlet UIButton *buttonReply;
+@property (weak, nonatomic) IBOutlet UIButton *buttonAlreadyReplied;
+@property (weak, nonatomic) IBOutlet UIButton *buttonMessageToOwner;
+@property (weak, nonatomic) IBOutlet UIButton *buttonRelateToProduct;
+@property (weak, nonatomic) IBOutlet UIButton *buttonRelateToOwner;
+@property (weak, nonatomic) IBOutlet UIButton *buttonSeeInFacebook;
+
+@property (weak, nonatomic) IBOutlet UIImageView *imageClient;
+@property (weak, nonatomic) IBOutlet UIImageView *imageClientStatus;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientName;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientDetails;
+@property (weak, nonatomic) IBOutlet UIImageView *picClientPhone;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientPhone;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableMessages;
 
+@property (weak, nonatomic) IBOutlet UILabel *LabelProductRelated;
+@property (weak, nonatomic) IBOutlet UILabel *labelProductName;
+@property (weak, nonatomic) IBOutlet UILabel *labelProductPrice;
+@property (weak, nonatomic) IBOutlet UILabel *labelProductGSCode;
+@property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
+@property (weak, nonatomic) IBOutlet UIImageView *imageProductSold;
+@property (weak, nonatomic) IBOutlet UILabel *labelProductDetails;
 
+@property (weak, nonatomic) IBOutlet UILabel *labelPublishedAgo;
+@property (weak, nonatomic) IBOutlet UIImageView *imageOwner;
+@property (weak, nonatomic) IBOutlet UIImageView *imageOwnerStatus;
+@property (weak, nonatomic) IBOutlet UILabel *labelOwnerName;
+@property (weak, nonatomic) IBOutlet UILabel *labelOwnerAddress;
+@property (weak, nonatomic) IBOutlet UILabel *labelOwnerZone;
+@property (weak, nonatomic) IBOutlet UILabel *labelOwnerPhones;
+@property (weak, nonatomic) IBOutlet UIImageView *picOwnerZone;
+@property (weak, nonatomic) IBOutlet UIImageView *picOwnerPhone;
 
-@property (strong, nonatomic) IBOutlet UIButton *buttonReply;
-@property (strong, nonatomic) IBOutlet UIButton *buttonAlreadyReplied;
-@property (strong, nonatomic) IBOutlet UIButton *buttonRelateToOwner;
-@property (strong, nonatomic) IBOutlet UIButton *buttonSeeInFacebook;
-@property (strong, nonatomic) IBOutlet UIButton *buttonMessageToOwner;
+@property (weak, nonatomic) IBOutlet UIButton *buttonNewOpportunity;
 
-@property (strong, nonatomic) IBOutlet UILabel *labelPublishedDateReference;
-@property (strong, nonatomic) IBOutlet UILabel *labelMessageDate;
-@property (strong, nonatomic) IBOutlet UILabel *labelClientPhone;
-@property (strong, nonatomic) IBOutlet UILabel *labelClientDetails;
-@property (strong, nonatomic) IBOutlet UILabel *labelClientName;
-@property (strong, nonatomic) IBOutlet UILabel *labelMessage;
-@property (strong, nonatomic) IBOutlet UILabel *labelProductDetails;
-@property (strong, nonatomic) IBOutlet UIImageView *imageClient;
-@property (strong, nonatomic) IBOutlet UIImageView *imageClientStatus;
-@property (strong, nonatomic) IBOutlet UIImageView *picClientPhone;
-
-
-@property (strong, nonatomic) IBOutlet UILabel *LabelProductRelated;
-@property (strong, nonatomic) IBOutlet UILabel *labelPublishedAgo;
-@property (strong, nonatomic) IBOutlet UIImageView *imageProduct;
-@property (strong, nonatomic) IBOutlet UIImageView *imageProductSold;
-@property (strong, nonatomic) IBOutlet UILabel *labelOwnerName;
-@property (strong, nonatomic) IBOutlet UILabel *labelOwnerZone;
-@property (strong, nonatomic) IBOutlet UILabel *labelOwnerAddress;
-@property (strong, nonatomic) IBOutlet UILabel *labelOwnerPhones;
-@property (strong, nonatomic) IBOutlet UIImageView *imageOwner;
-@property (strong, nonatomic) IBOutlet UIImageView *picOwnerZone;
-@property (strong, nonatomic) IBOutlet UIImageView *picOwnerPhone;
-@property (strong, nonatomic) IBOutlet UIImageView *imageOwnerStatus;
-
-@property (strong, nonatomic) IBOutlet UILabel *labelOtherMessages;
-@property (strong, nonatomic) IBOutlet UITableView *tableOtherMessages;
-@property (strong, nonatomic) IBOutlet UIButton *buttonRelateToProduct;
-
-
-@property (strong, nonatomic) IBOutlet UILabel *labelOpportunitiesForProduct;
-@property (strong, nonatomic) IBOutlet UIButton *buttonNewOpportunity;
-@property (strong, nonatomic) IBOutlet UITableView *tableOpportunities;
 
 @end

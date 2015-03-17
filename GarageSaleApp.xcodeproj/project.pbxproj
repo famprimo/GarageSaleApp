@@ -34,6 +34,8 @@
 		C029BA671969D26000125C4F /* CustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA641969D26000125C4F /* CustomSegue.m */; };
 		C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA661969D26000125C4F /* CustomUnwindSegue.m */; };
 		C029BA6B1969EF9400125C4F /* Opportunity.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA6A1969EF9400125C4F /* Opportunity.m */; };
+		C038FCAA1AB269D000A6D287 /* ProductPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C038FCA81AB269D000A6D287 /* ProductPickerViewController.m */; };
+		C038FCAB1AB269D000A6D287 /* ProductPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C038FCA91AB269D000A6D287 /* ProductPickerViewController.xib */; };
 		C03E8E6E1A47407400965BF7 /* OpportunityTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C03E8E6D1A47407400965BF7 /* OpportunityTableViewController.m */; };
 		C03E8E711A4740A800965BF7 /* OpportunityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C03E8E701A4740A800965BF7 /* OpportunityDetailViewController.m */; };
 		C042ECCF1A3934DB00AC9A4D /* ClientPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */; };
@@ -56,6 +58,7 @@
 		C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1919644C4D0021A153 /* ProductModel.m */; };
 		C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1C196455350021A153 /* ProductDetailViewController.m */; };
 		C0815E20196455590021A153 /* ProductTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1F196455590021A153 /* ProductTableViewController.m */; };
+		C08C479A1AB3295400B29FCA /* NS-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = C08C47991AB3295400B29FCA /* NS-Extensions.m */; };
 		C0B81D721A7D4D5E008B6C1C /* EditProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B81D701A7D4D5E008B6C1C /* EditProductViewController.m */; };
 		C0B81D731A7D4D5E008B6C1C /* EditProductViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B81D711A7D4D5E008B6C1C /* EditProductViewController.xib */; };
 /* End PBXBuildFile section */
@@ -115,6 +118,9 @@
 		C029BA661969D26000125C4F /* CustomUnwindSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUnwindSegue.m; sourceTree = "<group>"; };
 		C029BA691969EF9400125C4F /* Opportunity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Opportunity.h; sourceTree = "<group>"; };
 		C029BA6A1969EF9400125C4F /* Opportunity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Opportunity.m; sourceTree = "<group>"; };
+		C038FCA71AB269D000A6D287 /* ProductPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductPickerViewController.h; sourceTree = "<group>"; };
+		C038FCA81AB269D000A6D287 /* ProductPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductPickerViewController.m; sourceTree = "<group>"; };
+		C038FCA91AB269D000A6D287 /* ProductPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductPickerViewController.xib; sourceTree = "<group>"; };
 		C03E8E6C1A47407400965BF7 /* OpportunityTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpportunityTableViewController.h; sourceTree = "<group>"; };
 		C03E8E6D1A47407400965BF7 /* OpportunityTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpportunityTableViewController.m; sourceTree = "<group>"; };
 		C03E8E6F1A4740A800965BF7 /* OpportunityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpportunityDetailViewController.h; sourceTree = "<group>"; };
@@ -156,6 +162,8 @@
 		C0815E1C196455350021A153 /* ProductDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductDetailViewController.m; sourceTree = "<group>"; };
 		C0815E1E196455590021A153 /* ProductTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewController.h; sourceTree = "<group>"; };
 		C0815E1F196455590021A153 /* ProductTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductTableViewController.m; sourceTree = "<group>"; };
+		C08C47981AB3295400B29FCA /* NS-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NS-Extensions.h"; sourceTree = "<group>"; };
+		C08C47991AB3295400B29FCA /* NS-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NS-Extensions.m"; sourceTree = "<group>"; };
 		C0B81D6F1A7D4D5E008B6C1C /* EditProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditProductViewController.h; sourceTree = "<group>"; };
 		C0B81D701A7D4D5E008B6C1C /* EditProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditProductViewController.m; sourceTree = "<group>"; };
 		C0B81D711A7D4D5E008B6C1C /* EditProductViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditProductViewController.xib; sourceTree = "<group>"; };
@@ -368,6 +376,9 @@
 				C042ECCC1A3934DB00AC9A4D /* ClientPickerViewController.h */,
 				C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */,
 				C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */,
+				C038FCA71AB269D000A6D287 /* ProductPickerViewController.h */,
+				C038FCA81AB269D000A6D287 /* ProductPickerViewController.m */,
+				C038FCA91AB269D000A6D287 /* ProductPickerViewController.xib */,
 				C04E74581A43D2B300F52E33 /* SendMessageViewController.h */,
 				C04E74591A43D2B300F52E33 /* SendMessageViewController.m */,
 				C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */,
@@ -397,6 +408,8 @@
 			children = (
 				C05C6A8319F1D5B800BCF9BD /* NSDate+NVTimeAgo.h */,
 				C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */,
+				C08C47981AB3295400B29FCA /* NS-Extensions.h */,
+				C08C47991AB3295400B29FCA /* NS-Extensions.m */,
 			);
 			name = "Date Time Ago";
 			sourceTree = "<group>";
@@ -498,6 +511,7 @@
 				C00ED0F319644A5A0045A65E /* Main.storyboard in Resources */,
 				C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */,
 				C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */,
+				C038FCAB1AB269D000A6D287 /* ProductPickerViewController.xib in Resources */,
 				C0B81D731A7D4D5E008B6C1C /* EditProductViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -527,10 +541,12 @@
 				C069A40D1A84BD1F0059575E /* MessagesTableViewController.m in Sources */,
 				C0815E1119644C2D0021A153 /* ClientModel.m in Sources */,
 				C0815E1719644C460021A153 /* Product.m in Sources */,
+				C038FCAA1AB269D000A6D287 /* ProductPickerViewController.m in Sources */,
 				C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */,
 				C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */,
 				C008BA3A19C3CBCA008616E4 /* MessageDetailViewController.m in Sources */,
 				C03E8E711A4740A800965BF7 /* OpportunityDetailViewController.m in Sources */,
+				C08C479A1AB3295400B29FCA /* NS-Extensions.m in Sources */,
 				C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */,
 				C019F93F19D88944009528EE /* Message.m in Sources */,
 				C06F66FF1A4116A90013371F /* SetupDetailViewController.m in Sources */,

@@ -35,7 +35,8 @@
     tempClient.preference = @"F";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/p160x160/13227_10154822754980034_3516905964764442388_n.jpg?oh=ec5c9467d94a78fd8c33a85bd0eb0a82&oe=55087E5B&__gda__=1426066228_4f50ac543640da7bea4a89f6bfd7353e";
     tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    //
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"U";
     tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
@@ -64,7 +65,8 @@
     tempClient.preference = @"F";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/p160x160/10177352_10152306607879355_3463040953093391515_n.jpg?oh=4ba670df935912f9dce6e0a5a151a1d3&oe=551CEBAA&__gda__=1423084861_dc45ddcedfa5fa77850e4e241840ab7b";
     tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    //
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"V";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
@@ -92,7 +94,8 @@
     tempClient.preference = @"F";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpa1/v/t1.0-1/p160x160/10343013_10152545434713487_289713323910298441_n.jpg?oh=5e643c07a9d10ef1d61d17e7d8c312fa&oe=550CA916&__gda__=1427863572_60212911c0480e4b78f345ba994f6431";
     tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    //
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"U";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
@@ -120,7 +123,8 @@
     tempClient.preference = @"F";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c7.0.160.160/p160x160/65036_10151780886293183_681281220_n.jpg?oh=fc125deb814768604a31f045dcf72883&oe=5557E56C&__gda__=1430826886_e893e670def3748195212ef3c7ee3b2d";
     tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    //
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"U";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
@@ -148,7 +152,8 @@
     tempClient.preference = @"F";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/p100x100/10511237_10152645380304306_8224228609259690732_n.jpg?oh=9f8678b442f63fa897d72cb59515805b&oe=5515A7CD&__gda__=1427114842_e102a1ee5b6fa91558a3860061290846";
     tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    //
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"B";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
@@ -176,7 +181,8 @@
     tempClient.preference = @"F";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c170.50.621.621/s100x100/534197_483266975032862_774796863_n.jpg?oh=210d0b95aea49f4295413e99db77324e&oe=55128B4D&__gda__=1426615286_87328eba86c85ceac37239096b249a00";
     tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    //
+    tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"V";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
@@ -205,7 +211,7 @@
     tempClient.preference = @"F";
     tempClient.picture_link = @"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpa1/v/t1.0-1/c0.9.50.50/p50x50/1926687_10152319376343825_154047482_n.jpg?oh=883e2eda27e2c25c4c025e7b89560b18&oe=54EB9661&__gda__=1420518876_85f7c4249b20122d1a3bb986fe3fecc9";
     tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Balin.png"];
+    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"V";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
