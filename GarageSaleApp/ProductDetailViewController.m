@@ -107,9 +107,9 @@
 
         CGRect soldImageFrame = self.imageProductSold.frame;
         soldImageFrame.origin.x = 90;
-        soldImageFrame.origin.y = 124;
+        soldImageFrame.origin.y = 80; //124
         soldImageFrame.size.width = 200;
-        soldImageFrame.size.height = 111;
+        soldImageFrame.size.height = 200; // 111
         self.imageProductSold.frame = soldImageFrame;
         
         CGRect imageOwnerFrame = self.imageOwner.frame;

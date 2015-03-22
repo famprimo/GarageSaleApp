@@ -105,6 +105,7 @@
     tempOpportunity.opportunity_id = [opportunityMethods getNextOpportunityID];
     tempOpportunity.product_id = _relatedProduct.product_id;
     tempOpportunity.buyer_id = _clientBuyer.client_id;
+    tempOpportunity.owner_id = _relatedProduct.client_id;
     tempOpportunity.initial_price = self.labelProductPrice.text.intValue;
     tempOpportunity.price_sold = 0;
     tempOpportunity.created_time = [NSDate date];

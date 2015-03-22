@@ -24,7 +24,7 @@
     NSMutableArray *_myData;
     
     // The message that is selected from the table
-    Message *_selectedClientBox;
+    Client *_selectedClientBox;
     
 }
 @end

@@ -34,8 +34,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *picClientPhone;
 @property (weak, nonatomic) IBOutlet UILabel *labelClientPhone;
 
+
 @property (weak, nonatomic) IBOutlet UITableView *tableMessages;
 
+@property (weak, nonatomic) IBOutlet UIImageView *picProductBackground;
 @property (weak, nonatomic) IBOutlet UILabel *LabelProductRelated;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductName;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductPrice;
@@ -44,17 +46,23 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageProductSold;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductDetails;
 
-@property (weak, nonatomic) IBOutlet UILabel *labelPublishedAgo;
-@property (weak, nonatomic) IBOutlet UIImageView *imageOwner;
-@property (weak, nonatomic) IBOutlet UIImageView *imageOwnerStatus;
-@property (weak, nonatomic) IBOutlet UILabel *labelOwnerName;
-@property (weak, nonatomic) IBOutlet UILabel *labelOwnerAddress;
-@property (weak, nonatomic) IBOutlet UILabel *labelOwnerZone;
-@property (weak, nonatomic) IBOutlet UILabel *labelOwnerPhones;
-@property (weak, nonatomic) IBOutlet UIImageView *picOwnerZone;
-@property (weak, nonatomic) IBOutlet UIImageView *picOwnerPhone;
+@property (weak, nonatomic) IBOutlet UILabel *labelProductReference;
+@property (weak, nonatomic) IBOutlet UILabel *labelClient2Title;
+@property (weak, nonatomic) IBOutlet UIImageView *imageClient2;
+@property (weak, nonatomic) IBOutlet UIImageView *imageClient2Status;
+@property (weak, nonatomic) IBOutlet UILabel *labelClient2Name;
 
+@property (weak, nonatomic) IBOutlet UILabel *labelClient2Address;
+@property (weak, nonatomic) IBOutlet UILabel *labelClient2Zone;
+@property (weak, nonatomic) IBOutlet UILabel *labelClient2Phones;
+@property (weak, nonatomic) IBOutlet UIImageView *picClient2Zone;
+@property (weak, nonatomic) IBOutlet UIImageView *picClient2Phone;
+
+
+@property (weak, nonatomic) IBOutlet UILabel *labelOpportunitiesRelated;
 @property (weak, nonatomic) IBOutlet UIButton *buttonNewOpportunity;
+@property (weak, nonatomic) IBOutlet UITableView *tableOpportunities;
+
 
 
 @end

@@ -13,6 +13,7 @@
 @property (strong, nonatomic) NSString *opportunity_id;
 @property (strong, nonatomic) NSString *product_id;
 @property (strong, nonatomic) NSString *buyer_id;
+@property (strong, nonatomic) NSString *owner_id;
 @property (nonatomic) float initial_price;
 @property (nonatomic) float price_sold;
 @property (strong, nonatomic) NSDate *created_time;

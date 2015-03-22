@@ -22,9 +22,11 @@
     NSMutableArray *_myDataMessages;
     NSMutableArray *_myDataOpportunities;
     
-    Client *_clientRelatedToMessage;
+    Client *_selectedClient;
     Message *_selectedMessage;
     Product *_selectedProduct;
+    Client *_relatedClient;
+    Opportunity *_selectedOpportunity;
     
     NSInteger _messageRowHeight;
     
@@ -50,8 +52,8 @@
     self.tableMessages.delegate = self;
     self.tableMessages.dataSource = self;
     
-    // self.tableOpportunities.delegate = self;
-    // self.tableOpportunities.dataSource = self;
+    self.tableOpportunities.delegate = self;
+    self.tableOpportunities.dataSource = self;
     
     // Update the view
     [self configureView];
@@ -84,13 +86,11 @@
     if (self.detailItem) {
         // Asign values to objects in View
         
+        OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
+        
         MessageModel *messageMethods = [[MessageModel alloc] init];
-        Message *messageSelected = [[Message alloc] init];
-        messageSelected = (Message *)_detailItem;
         
-        ClientModel *clientMethods = [[ClientModel alloc] init];
-        
-        _clientRelatedToMessage = [clientMethods getClientFromClientId:messageSelected.client_id];
+        _selectedClient = (Client *)_detailItem;
         
         
         // Setting frames for all pictures
@@ -115,33 +115,43 @@
         picClientPhoneFrame.size.height = 15;
         self.picClientPhone.frame = picClientPhoneFrame;
         
+        CGRect picProductBackgroundFrame = self.picProductBackground.frame;
+        picProductBackgroundFrame.origin.x = 390;
+        picProductBackgroundFrame.origin.y = 0;
+        picProductBackgroundFrame.size.width = 315;
+        picProductBackgroundFrame.size.height = 765;
+        self.picProductBackground.frame = picProductBackgroundFrame;
+
+        self.picProductBackground.image = [UIImage imageNamed:@"Blank"];
+
+        
         // Make clients picture rounded
         self.imageClient.layer.cornerRadius = self.imageClient.frame.size.width / 2;
         self.imageClient.clipsToBounds = YES;
         
         // Client name and status
-        if ([_clientRelatedToMessage.status isEqualToString:@"V"])
+        if ([_selectedClient.status isEqualToString:@"V"])
         {
-            self.labelClientName.text = [NSString stringWithFormat:@"    %@ %@", _clientRelatedToMessage.name, _clientRelatedToMessage.last_name];
+            self.labelClientName.text = [NSString stringWithFormat:@"    %@ %@", _selectedClient.name, _selectedClient.last_name];
             self.imageClientStatus.image = [UIImage imageNamed:@"Verified"];
         }
         else
         {
-            self.labelClientName.text = [NSString stringWithFormat:@"%@ %@", _clientRelatedToMessage.name, _clientRelatedToMessage.last_name];
+            self.labelClientName.text = [NSString stringWithFormat:@"%@ %@", _selectedClient.name, _selectedClient.last_name];
             self.imageClientStatus.image = [UIImage imageNamed:@"Blank"];
         }
         
-        self.labelClientPhone.text = _clientRelatedToMessage.phone1;
-        self.imageClient.image = [UIImage imageWithData:_clientRelatedToMessage.picture];
+        self.labelClientPhone.text = _selectedClient.phone1;
+        self.imageClient.image = [UIImage imageWithData:_selectedClient.picture];
+        self.labelOpportunitiesRelated.text = [NSString stringWithFormat:@"Oportunidades relacionadas a %@ %@:", _selectedClient.name, _selectedClient.last_name];
 
         
         // Load messsages from the same client
-        _myDataMessages = [messageMethods getMessagesArrayFromClient:_clientRelatedToMessage.client_id];
+        _myDataMessages = [messageMethods getMessagesArrayFromClient:_selectedClient.client_id];
         [self.tableMessages reloadData];
 
         
         _selectedMessage = [[Message alloc] init];
-        _selectedProduct = [[Product alloc] init];
         
         if (_myDataMessages.count > 0)
         {
@@ -159,8 +169,34 @@
             _selectedMessage = [_myDataMessages lastObject];
         }
         
+        
+        // Get opportunities related to client
+        _myDataOpportunities = [opportunityMethods getOpportunitiesRelatedToClient:_selectedClient.client_id];
+        
+        // Sort array to be sure new opportunities are on top
+        [_myDataOpportunities sortUsingComparator:^NSComparisonResult(id a, id b) {
+            NSDate *first = [(Opportunity*)a created_time];
+            NSDate *second = [(Opportunity*)b created_time];
+            return [second compare:first];
+            //return [first compare:second];
+        }];
+        
+        _selectedOpportunity = [[Opportunity alloc] init];
+        
+        // Related product to last message
+        if ([_selectedMessage.product_id length] >0)
+        {
+            ProductModel *productMethods = [[ProductModel alloc] init];
+            _selectedProduct = [productMethods getProductFromProductId:_selectedMessage.product_id];
+        }
+        else
+        {
+            _selectedProduct = [[Product alloc] init];
+        }
+        
         [self UpdateProductRelated];
-
+        [self.tableOpportunities reloadData];
+        
     }
 }
 
@@ -168,114 +204,114 @@
 - (void)UpdateProductRelated
 {
 
-    ProductModel *productMethods = [[ProductModel alloc] init];
     ClientModel *clientMethods = [[ClientModel alloc] init];
-    OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
 
-    Client *ownerRelatedToMessage = [[Client alloc] init];
+    _relatedClient = [[Client alloc] init];
 
     CGRect imageProductFrame = self.imageProduct.frame;
     imageProductFrame.origin.x = 400;
-    imageProductFrame.origin.y = 163;
+    imageProductFrame.origin.y = 400;
     imageProductFrame.size.width = 140;
     imageProductFrame.size.height = 140;
     self.imageProduct.frame = imageProductFrame;
     
     CGRect imageProductSoldFrame = self.imageProductSold.frame;
     imageProductSoldFrame.origin.x = 400;
-    imageProductSoldFrame.origin.y = 193;
+    imageProductSoldFrame.origin.y = 400;
     imageProductSoldFrame.size.width = 140;
-    imageProductSoldFrame.size.height = 80;
+    imageProductSoldFrame.size.height = 140; //80
     self.imageProductSold.frame = imageProductSoldFrame;
     
-    CGRect imageOwnerFrame = self.imageOwner.frame;
-    imageOwnerFrame.origin.x = 400;
-    imageOwnerFrame.origin.y = 363;
-    imageOwnerFrame.size.width = 70;
-    imageOwnerFrame.size.height = 70;
-    self.imageOwner.frame = imageOwnerFrame;
+    CGRect imageClient2Frame = self.imageClient2.frame;
+    imageClient2Frame.origin.x = 400;
+    imageClient2Frame.origin.y = 600;
+    imageClient2Frame.size.width = 70;
+    imageClient2Frame.size.height = 70;
+    self.imageClient2.frame = imageClient2Frame;
     
-    CGRect imageOwnerStatusFrame = self.imageOwnerStatus.frame;
-    imageOwnerStatusFrame.origin.x = 478;
-    imageOwnerStatusFrame.origin.y = 369;
-    imageOwnerStatusFrame.size.width = 10;
-    imageOwnerStatusFrame.size.height = 10;
-    self.imageOwnerStatus.frame = imageOwnerStatusFrame;
+    CGRect imageClient2StatusFrame = self.imageClient2Status.frame;
+    imageClient2StatusFrame.origin.x = 478;
+    imageClient2StatusFrame.origin.y = 606;
+    imageClient2StatusFrame.size.width = 10;
+    imageClient2StatusFrame.size.height = 10;
+    self.imageClient2Status.frame = imageClient2StatusFrame;
     
-    CGRect picOwnerZoneFrame = self.picOwnerZone.frame;
-    picOwnerZoneFrame.origin.x = 476;
-    picOwnerZoneFrame.origin.y = 413;
-    picOwnerZoneFrame.size.width = 15;
-    picOwnerZoneFrame.size.height = 15;
-    self.picOwnerZone.frame = picOwnerZoneFrame;
+    CGRect picClient2ZoneFrame = self.picClient2Zone.frame;
+    picClient2ZoneFrame.origin.x = 476;
+    picClient2ZoneFrame.origin.y = 650;
+    picClient2ZoneFrame.size.width = 15;
+    picClient2ZoneFrame.size.height = 15;
+    self.picClient2Zone.frame = picClient2ZoneFrame;
     
-    CGRect picOwnerPhoneFrame = self.picOwnerPhone.frame;
-    picOwnerPhoneFrame.origin.x = 476;
-    picOwnerPhoneFrame.origin.y = 436;
-    picOwnerPhoneFrame.size.width = 15;
-    picOwnerPhoneFrame.size.height = 15;
-    self.picOwnerPhone.frame = picOwnerPhoneFrame;
+    CGRect picClient2PhoneFrame = self.picClient2Phone.frame;
+    picClient2PhoneFrame.origin.x = 476;
+    picClient2PhoneFrame.origin.y = 673;
+    picClient2PhoneFrame.size.width = 15;
+    picClient2PhoneFrame.size.height = 15;
+    self.picClient2Phone.frame = picClient2PhoneFrame;
 
     CGRect buttonRelateToProductFrame = self.buttonRelateToProduct.frame;
-    buttonRelateToProductFrame.origin.x = 458;
-    buttonRelateToProductFrame.origin.y = 211;
+    buttonRelateToProductFrame.origin.x = 455;
+    buttonRelateToProductFrame.origin.y = 450;
     buttonRelateToProductFrame.size.width = 180;
     buttonRelateToProductFrame.size.height = 44;
     self.buttonRelateToProduct.frame = buttonRelateToProductFrame;
     
     CGRect buttonRelateToOwnerFrame = self.buttonRelateToOwner.frame;
-    buttonRelateToOwnerFrame.origin.x = 468;
-    buttonRelateToOwnerFrame.origin.y = 377;
+    buttonRelateToOwnerFrame.origin.x = 458;
+    buttonRelateToOwnerFrame.origin.y = 600;
     buttonRelateToOwnerFrame.size.width = 180;
     buttonRelateToOwnerFrame.size.height = 44;
     self.buttonRelateToOwner.frame = buttonRelateToOwnerFrame;
     
     CGRect labelProductDetailsFrame = self.labelProductDetails.frame;
     labelProductDetailsFrame.origin.x = 554;
-    labelProductDetailsFrame.origin.y = 163;
+    labelProductDetailsFrame.origin.y = 400;
     labelProductDetailsFrame.size.width = 136;
     labelProductDetailsFrame.size.height = 88;
     self.labelProductDetails.frame = labelProductDetailsFrame;
     
+    // Make clients picture rounded
+    self.imageClient2.layer.cornerRadius = self.imageClient2.frame.size.width / 2;
+    self.imageClient2.clipsToBounds = YES;
+
     
-    if ((_selectedMessage == nil) || !([_selectedMessage.product_id length] > 0))
+    // if ((_selectedMessage == nil) || !([_selectedMessage.product_id length] > 0))
+    
+    if (!([_selectedProduct.product_id length] > 0))
     {
         
         // Hide information related to product
         self.imageProduct.image = [UIImage imageNamed:@"Blank"];
         self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
-        self.imageOwner.image = [UIImage imageNamed:@"Blank"];
-        self.imageOwnerStatus.image = [UIImage imageNamed:@"Blank"];
+        self.imageClient2.image = [UIImage imageNamed:@"Blank"];
+        self.imageClient2Status.image = [UIImage imageNamed:@"Blank"];
         
         self.labelProductName.text = @"";
         self.labelProductGSCode.text = @"";
         self.labelProductPrice.text = @"";
         self.LabelProductRelated.text = @"";
-        self.labelPublishedAgo.text = @"";
+        self.labelProductReference.text = @"";
         self.labelProductDetails.text = @"";
-        self.labelOwnerName.text = @"";
-        self.labelOwnerZone.text = @"";
-        self.labelOwnerAddress.text = @"";
-        self.labelOwnerPhones.text = @"";
+        self.labelClient2Title.text = @"";
+        self.labelClient2Name.text = @"";
+        self.labelClient2Zone.text = @"";
+        self.labelClient2Address.text = @"";
+        self.labelClient2Phones.text = @"";
         self.buttonRelateToOwner.hidden = YES;
         self.buttonSeeInFacebook.hidden = YES;
         self.buttonMessageToOwner.hidden = YES;
         self.buttonNewOpportunity.hidden = YES;
-        self.picOwnerPhone.hidden = YES;
-        self.picOwnerZone.hidden = YES;
+        self.picClient2Phone.hidden = YES;
+        self.picClient2Zone.hidden = YES;
 
         // show button to relate to product
         self.buttonRelateToProduct.hidden = NO;
-
-        // self.labelOpportunitiesForProduct.text = @"";
-        // self.tableOpportunities.hidden = YES;
 
     }
     else
     {
         self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
-        
-        _selectedProduct = [productMethods getProductFromProductId:_selectedMessage.product_id];
         self.imageProduct.image = [UIImage imageWithData:_selectedProduct.picture];
         
         // Set sold image if product is sold
@@ -300,60 +336,75 @@
         
         if ([_selectedProduct.client_id length] > 0)
         {
-            ownerRelatedToMessage = [clientMethods getClientFromClientId:_selectedProduct.client_id];
             
-            self.LabelProductRelated.text = @"Producto al que hace referencia:";
-            self.labelPublishedAgo.text = [NSString stringWithFormat:@"Publicado %@ por:", [_selectedProduct.created_time formattedAsTimeAgo]];
-            // self.labelOpportunitiesForProduct.text = @"Oportunidades de este producto:";
-            self.imageOwner.image = [UIImage imageWithData:ownerRelatedToMessage.picture];
-            self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",ownerRelatedToMessage.zone];
-            self.labelOwnerAddress.text = ownerRelatedToMessage.address;
-            self.labelOwnerPhones.text = ownerRelatedToMessage.phone1;
-            self.buttonRelateToOwner.hidden = YES;
+            // Define if related client would be the owner or the interested (buyer)
             
-            // Owner name and status
-            if ([ownerRelatedToMessage.status isEqualToString:@"V"])
+            if (([_selectedProduct.client_id isEqualToString:_selectedClient.client_id]) && ([_selectedOpportunity.buyer_id length] > 0))
             {
-                self.labelOwnerName.text = [NSString stringWithFormat:@"    %@ %@", ownerRelatedToMessage.name, ownerRelatedToMessage.last_name];
-                self.imageOwnerStatus.image = [UIImage imageNamed:@"Verified"];
+                // show the client interested (buyer)
+                if ([_selectedClient.sex isEqualToString:@"M"])
+                {
+                    self.labelProductReference.text = [NSString stringWithFormat:@"El dueño de este producto es %@ %@", _selectedClient.name, _selectedClient.last_name];
+                }
+                else
+                {
+                    self.labelProductReference.text = [NSString stringWithFormat:@"La dueña de este producto es %@ %@", _selectedClient.name, _selectedClient.last_name];
+                }
+                self.labelClient2Title.text = @"Interesado:";
+                _relatedClient = [clientMethods getClientFromClientId:_selectedOpportunity.buyer_id];
             }
             else
             {
-                self.labelOwnerName.text = [NSString stringWithFormat:@"%@ %@", ownerRelatedToMessage.name, ownerRelatedToMessage.last_name];
-                self.imageOwnerStatus.image = [UIImage imageNamed:@"Blank"];
+                // Show the owner
+                self.labelProductReference.text = [NSString stringWithFormat:@"Publicado %@ por:", [_selectedProduct.created_time formattedAsTimeAgo]];
+                self.labelClient2Title.text = @"Dueño:";
+                _relatedClient = [clientMethods getClientFromClientId:_selectedProduct.client_id];
+            }
+            
+            self.LabelProductRelated.text = @"Producto relacionado:";
+            self.imageClient2.image = [UIImage imageWithData:_relatedClient.picture];
+            self.labelClient2Zone.text = [NSString stringWithFormat:@"Vive en %@",_relatedClient.zone];
+            self.labelClient2Address.text = _relatedClient.address;
+            self.labelClient2Phones.text = _relatedClient.phone1;
+            self.buttonRelateToOwner.hidden = YES;
+            
+            // Owner name and status
+            if ([_relatedClient.status isEqualToString:@"V"])
+            {
+                self.labelClient2Name.text = [NSString stringWithFormat:@"    %@ %@", _relatedClient.name, _relatedClient.last_name];
+                self.imageClient2Status.image = [UIImage imageNamed:@"Verified"];
+            }
+            else
+            {
+                self.labelClient2Name.text = [NSString stringWithFormat:@"%@ %@", _relatedClient.name, _relatedClient.last_name];
+                self.imageClient2Status.image = [UIImage imageNamed:@"Blank"];
             }
             self.buttonSeeInFacebook.hidden = NO;
             self.buttonMessageToOwner.hidden = NO;
             self.buttonNewOpportunity.hidden = NO;
-            // self.tableOpportunities.hidden = NO;
-            self.picOwnerPhone.hidden = NO;
-            self.picOwnerZone.hidden = NO;
+            self.picClient2Phone.hidden = NO;
+            self.picClient2Zone.hidden = NO;
         }
         else
         {
-            self.imageOwner.image = [UIImage imageNamed:@"Blank"];
-            self.labelPublishedAgo.text = @"";
-            self.labelOwnerName.text = @"";
-            self.imageOwnerStatus.image = [UIImage imageNamed:@"Blank"];
-            self.labelOwnerZone.text = @"";
-            self.labelOwnerAddress.text = @"";
-            self.labelOwnerPhones.text = @"";
+            self.imageClient2.image = [UIImage imageNamed:@"Blank"];
+            self.labelProductReference.text = @"";
+            self.labelClient2Name.text = @"";
+            self.imageClient2Status.image = [UIImage imageNamed:@"Blank"];
+            self.labelClient2Zone.text = @"";
+            self.labelClient2Address.text = @"";
+            self.labelClient2Phones.text = @"";
             self.buttonRelateToOwner.hidden = NO;
             self.buttonSeeInFacebook.hidden = NO;
             self.buttonMessageToOwner.hidden = YES;
             self.buttonNewOpportunity.hidden = NO;
-            // self.tableOpportunities.hidden = NO;
-            self.picOwnerPhone.hidden = YES;
-            self.picOwnerZone.hidden = YES;
+            self.picClient2Phone.hidden = YES;
+            self.picClient2Zone.hidden = YES;
         }
         
         // Hide button to relate to product
         self.buttonRelateToProduct.hidden = YES;
         
-        // Ge opportunitie related to product
-        // _myDataOpportunities = [opportunityMethods getOpportunitiesFromProduct:productRelatedToMessage.product_id];
-        // [self.tableOpportunities reloadData];
-
     }
 
 }
@@ -362,11 +413,78 @@
 
 - (IBAction)replyMessage:(id)sender
 {
+    _templateTypeForPopover = @"C";
+    
+    SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
+    sendMessageController.delegate = self;
+    
+    
+    self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(800.0, 500.0);
+    [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                             inView:self.view
+                           permittedArrowDirections:UIPopoverArrowDirectionAny
+                                           animated:YES];
 }
 
 - (IBAction)messageToOwner:(id)sender
 {
+    _templateTypeForPopover = @"O";
+    
+    SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
+    sendMessageController.delegate = self;
+    
+    
+    self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(800.0, 500.0);
+    [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                             inView:self.view
+                           permittedArrowDirections:UIPopoverArrowDirectionAny
+                                           animated:YES];
 }
+
+
+-(NSString*)GetTemplateTypeFromMessage;
+{
+    return _templateTypeForPopover;
+}
+
+-(NSString*)GetBuyerIdFromMessage;
+{
+    return _selectedClient.client_id;
+}
+
+-(NSString*)GetOwnerIdFromMessage;
+{
+    if (_relatedClient.client_id == nil)
+    {
+        return @"";
+    }
+    else
+    {
+        return _relatedClient.client_id;
+    }
+}
+
+-(NSString*)GetProductIdFromMessage;
+{
+    if (_selectedProduct.product_id == nil)
+    {
+        return @"";
+    }
+    else
+    {
+        return _selectedProduct.product_id;
+    }
+}
+
+-(void)MessageSent;
+{
+    // Dismiss the popover view
+    [self.sendMessagePopover dismissPopoverAnimated:YES];
+    
+}
+
 
 - (IBAction)markAsDone:(id)sender
 {
@@ -374,7 +492,42 @@
 
 - (IBAction)newOpportunity:(id)sender
 {
+    NewOpportunityViewController *createOpportunityController = [[NewOpportunityViewController alloc] initWithNibName:@"NewOpportunityViewController" bundle:nil];
+    createOpportunityController.delegate = self;
+    
+    
+    self.createOpportunityPopover = [[UIPopoverController alloc] initWithContentViewController:createOpportunityController];
+    self.createOpportunityPopover.popoverContentSize = CGSizeMake(500.0, 300.0);
+    [self.createOpportunityPopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                                   inView:self.view
+                                 permittedArrowDirections:UIPopoverArrowDirectionAny
+                                                 animated:YES];
 }
+
+-(void)OpportunityCreated;
+{
+    // Dismiss the popover view
+    [self.createOpportunityPopover dismissPopoverAnimated:YES];
+    
+    OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
+    
+    _myDataOpportunities = [opportunityMethods getOpportunitiesRelatedToClient:_selectedClient.client_id];
+    [self.tableOpportunities reloadData];
+    
+}
+
+
+-(NSString*)GetBuyerIdForOpportunity;
+{
+    return _selectedClient.client_id;
+}
+
+
+-(NSString*)GetProductIdForOpportunity;
+{
+    return _selectedProduct.product_id;
+}
+
 
 - (IBAction)relateToClient:(id)sender
 {
@@ -396,16 +549,10 @@
     [self.clientPickerPopover dismissPopoverAnimated:YES];
     
     // Update the product with the client selected (owner)
-    Message *messageSelected = [[Message alloc] init];
-    messageSelected = (Message *)_detailItem;
-    
     ProductModel *productMethods = [[ProductModel alloc] init];
-    Product *productRelatedToMessage = [[Product alloc] init];
     
-    productRelatedToMessage = [productMethods getProductFromProductId:messageSelected.product_id];
-    
-    productRelatedToMessage.client_id = clientIDSelected;
-    [productMethods updateProduct:productRelatedToMessage];
+    _selectedProduct.client_id = clientIDSelected;
+    [productMethods updateProduct:_selectedProduct];
     
     [self configureView];
 }
@@ -461,7 +608,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return _messageRowHeight;
+    if (tableView == self.tableMessages) // Messages Table
+    {
+        return _messageRowHeight;
+    }
+    else  // Opportunities Table
+    {
+        return 80;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -501,7 +655,7 @@
         // Set client picture
         if ([myMessage.recipient isEqualToString:@"G"])
         {
-            clientImage.image = [UIImage imageWithData:_clientRelatedToMessage.picture];
+            clientImage.image = [UIImage imageWithData:_selectedClient.picture];
         }
         else
         {
@@ -603,17 +757,22 @@
             messageLabelFrame.origin.y = 5;
             messageLabel.frame = messageLabelFrame;
             
+            CGRect datetimeLabelFrame = datetimeLabel.frame;
+            datetimeLabelFrame.origin.x = 340 - datetimeLabelFrame.size.width;
+            datetimeLabelFrame.origin.y = messageLabelFrame.origin.y + messageLabelFrame.size.height + 5;
+            datetimeLabel.frame = datetimeLabelFrame;
+
             CGRect imageProductFrame = productImage.frame;
             imageProductFrame.origin.x = messageLabelFrame.origin.x - 45;
+            if ((imageProductFrame.origin.x + imageProductFrame.size.width) > datetimeLabelFrame.origin.x)
+            {
+                imageProductFrame.origin.x = datetimeLabelFrame.origin.x - 45;
+            }
             imageProductFrame.origin.y = 5;
             imageProductFrame.size.width = 40;
             imageProductFrame.size.height = 40;
             productImage.frame = imageProductFrame;
             
-            CGRect datetimeLabelFrame = datetimeLabel.frame;
-            datetimeLabelFrame.origin.x = 340 - datetimeLabelFrame.size.width;
-            datetimeLabelFrame.origin.y = messageLabelFrame.origin.y + messageLabelFrame.size.height + 5;
-            datetimeLabel.frame = datetimeLabelFrame;
         }
         
         _messageRowHeight = messageLabelFrame.size.height + 30;
@@ -667,12 +826,104 @@
     else // Opportunities Table
         
     {
-        ClientModel *clientMethods = [[ClientModel alloc] init];
-        
         // Retrieve cell
-        NSString *cellIdentifier = @"CellOpp";
-        UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-                
+        UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:@"CellOpp" forIndexPath:indexPath];
+        
+        // Get references to images and labels of cell
+        UILabel *productLabel = (UILabel*)[myCell.contentView viewWithTag:1];
+        UILabel *opportunityDate = (UILabel*)[myCell.contentView viewWithTag:2];
+        UILabel *clientName = (UILabel*)[myCell.contentView viewWithTag:3];
+        UILabel *opportunityStatus = (UILabel*)[myCell.contentView viewWithTag:4];
+        UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:5];
+        UIImageView *productSoldImage = (UIImageView*)[myCell.contentView viewWithTag:6];
+        UIImageView *clientImage = (UIImageView*)[myCell.contentView viewWithTag:7];
+        UIImageView *clientStatus = (UIImageView*)[myCell.contentView viewWithTag:8];
+        
+        CGRect productImageFrame = productImage.frame;
+        productImageFrame.origin.x = 8;
+        productImageFrame.origin.y = 24;
+        productImageFrame.size.width = 40;
+        productImageFrame.size.height = 40;
+        productImage.frame = productImageFrame;
+        
+        CGRect productSoldImageFrame = productSoldImage.frame;
+        productSoldImageFrame.origin.x = 8;
+        productSoldImageFrame.origin.y = 24; //32
+        productSoldImageFrame.size.width = 40;
+        productSoldImageFrame.size.height = 40; //23
+        productSoldImage.frame = productSoldImageFrame;
+        
+        CGRect clientImageFrame = clientImage.frame;
+        clientImageFrame.origin.x = 56;
+        clientImageFrame.origin.y = 24;
+        clientImageFrame.size.width = 40;
+        clientImageFrame.size.height = 40;
+        clientImage.frame = clientImageFrame;
+        
+        CGRect clientStatusFrame = clientStatus.frame;
+        clientStatusFrame.origin.x = 104;
+        clientStatusFrame.origin.y = 27;
+        clientStatusFrame.size.width = 10;
+        clientStatusFrame.size.height = 10;
+        clientStatus.frame = clientStatusFrame;
+        
+        // Make client picture rounded
+        clientImage.layer.cornerRadius = clientImage.frame.size.width / 2;
+        clientImage.clipsToBounds = YES;
+        
+        // Get the information to be shown
+        Opportunity *myOpportunity = _myDataOpportunities[indexPath.row];
+        
+        Product *relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:myOpportunity.product_id];
+        Client *clientRelatedToOpportunity = [[[ClientModel alloc] init] getClientFromClientId:myOpportunity.buyer_id];
+        
+        // Set product data
+        
+        productLabel.text = relatedProduct.name;
+        productImage.image = [UIImage imageWithData:relatedProduct.picture];
+        if ([relatedProduct.status isEqualToString:@"S"])
+        {
+            productSoldImage.image = [UIImage imageNamed:@"Sold"];
+        }
+        else
+        {
+            productSoldImage.image = [UIImage imageNamed:@"Blank"];
+        }
+        
+        // Set client data
+        clientImage.image = [UIImage imageWithData:clientRelatedToOpportunity.picture];
+        if ([clientRelatedToOpportunity.status isEqualToString:@"V"])
+        {
+            clientName.text = [NSString stringWithFormat:@"    %@ %@", clientRelatedToOpportunity.name, clientRelatedToOpportunity.last_name];
+            clientStatus.image = [UIImage imageNamed:@"Verified"];
+        }
+        else
+        {
+            clientName.text = [NSString stringWithFormat:@"%@ %@", clientRelatedToOpportunity.name, clientRelatedToOpportunity.last_name];
+            clientStatus.image = [UIImage imageNamed:@"Blank"];
+        }
+        
+        // Set opportunity status and dates
+        
+        opportunityDate.text = [myOpportunity.created_time formattedAsTimeAgo];
+        
+        if ([myOpportunity.status isEqualToString:@"O"])
+        {
+            opportunityStatus.text = @"Oportunidad abierta";
+        }
+        else if ([myOpportunity.status isEqualToString:@"C"])
+        {
+            opportunityStatus.text = [NSString stringWithFormat:@"Oportunidad cerrada %@", [myOpportunity.closedsold_time formattedAsTimeAgo]];
+        }
+        else if ([myOpportunity.status isEqualToString:@"S"])
+        {
+            opportunityStatus.text = [NSString stringWithFormat:@"Producto vendido %@, pero pendiente de pago", [myOpportunity.closedsold_time formattedAsTimeAgo]];
+        }
+        else if ([myOpportunity.status isEqualToString:@"P"])
+        {
+            opportunityStatus.text = [NSString stringWithFormat:@"Producto vendido %@, y pagado %@", [myOpportunity.closedsold_time formattedAsTimeAgo], [myOpportunity.paid_time formattedAsTimeAgo]];
+        }
+        
         return myCell;
         
     }
@@ -680,14 +931,34 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    ProductModel *productMethods = [[ProductModel alloc] init];
+    
     if (tableView == self.tableMessages) // Messages Table
     {
         _selectedMessage = _myDataMessages[indexPath.row];
         
-        [self UpdateProductRelated];
-
+        if ([_selectedMessage.product_id length] >0)
+        {
+            _selectedProduct = [productMethods getProductFromProductId:_selectedMessage.product_id];
+        }
+        else
+        {
+            _selectedProduct = [[Product alloc] init];
+        }
+        
+        [self.tableOpportunities deselectRowAtIndexPath:[self.tableOpportunities indexPathForSelectedRow] animated:NO];
     }
-    
+    else  // Opportunities Table
+    {
+        _selectedOpportunity = _myDataOpportunities[indexPath.row];
+        _selectedProduct = [productMethods getProductFromProductId:_selectedOpportunity.product_id];
+        
+        [self.tableMessages deselectRowAtIndexPath:[self.tableMessages indexPathForSelectedRow] animated:NO];
+        
+    }
+
+    [self UpdateProductRelated];
+
 }
 
 @end

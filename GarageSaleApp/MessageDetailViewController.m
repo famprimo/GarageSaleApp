@@ -134,9 +134,9 @@
 
         CGRect imageProductSoldFrame = self.imageProductSold.frame;
         imageProductSoldFrame.origin.x = 16;
-        imageProductSoldFrame.origin.y = 531;
+        imageProductSoldFrame.origin.y = 517; //531
         imageProductSoldFrame.size.width = 70;
-        imageProductSoldFrame.size.height = 40;
+        imageProductSoldFrame.size.height = 70; //40
         self.imageProductSold.frame = imageProductSoldFrame;
 
         CGRect imageOwnerFrame = self.imageOwner.frame;
@@ -410,7 +410,7 @@
     
     
     self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
-    self.sendMessagePopover.popoverContentSize = CGSizeMake(600.0, 400.0);
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(800.0, 500.0);
     [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
                                              inView:self.view
                            permittedArrowDirections:UIPopoverArrowDirectionAny
@@ -426,7 +426,7 @@
     
     
     self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
-    self.sendMessagePopover.popoverContentSize = CGSizeMake(600.0, 400.0);
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(800.0, 500.0);
     [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
                                              inView:self.view
                            permittedArrowDirections:UIPopoverArrowDirectionAny
@@ -586,9 +586,9 @@
         
         CGRect soldImageFrame = soldImage.frame;
         soldImageFrame.origin.x = 21;
-        soldImageFrame.origin.y = 29;
+        soldImageFrame.origin.y = 21; //29
         soldImageFrame.size.width = 40;
-        soldImageFrame.size.height = 23;
+        soldImageFrame.size.height = 40; //23
         soldImage.frame = soldImageFrame;
         
         // Set table cell labels to listing data

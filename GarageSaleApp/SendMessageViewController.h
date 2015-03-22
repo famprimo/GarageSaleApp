@@ -24,8 +24,23 @@
 
 @property (nonatomic, strong) id<SendMessageViewControllerDelegate> delegate;
 
+
+@property (weak, nonatomic) IBOutlet UIImageView *imageBuyer;
+@property (weak, nonatomic) IBOutlet UIImageView *imageBuyerStatus;
+@property (weak, nonatomic) IBOutlet UILabel *labelBuyerName;
+@property (weak, nonatomic) IBOutlet UIImageView *imageOwner;
+@property (weak, nonatomic) IBOutlet UIImageView *imageOwnerStatus;
+@property (weak, nonatomic) IBOutlet UILabel *labelOwnerName;
+@property (weak, nonatomic) IBOutlet UILabel *labelProductName;
+@property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
+@property (weak, nonatomic) IBOutlet UIImageView *imageProductSold;
+@property (weak, nonatomic) IBOutlet UILabel *labelProductDesc;
+
 @property (strong, nonatomic) IBOutlet UIButton *buttonSend;
 @property (strong, nonatomic) IBOutlet UITextView *labelTemplateText;
+
+
+@property (weak, nonatomic) IBOutlet UISegmentedControl *filterTabs;
 @property (strong, nonatomic) IBOutlet UITableView *tableTemplates;
 @property (strong, nonatomic) IBOutlet UIImageView *imageClient;
 @property (strong, nonatomic) IBOutlet UIImageView *imageClientStatus;

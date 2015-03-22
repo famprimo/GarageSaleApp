@@ -25,6 +25,7 @@
     tempOpportunity.opportunity_id = @"0000001";
     tempOpportunity.product_id = @"0000001";
     tempOpportunity.buyer_id = @"00003";
+    tempOpportunity.owner_id = @"00001";
     tempOpportunity.initial_price = 290.0;
     tempOpportunity.price_sold = 0;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140501"];
@@ -43,6 +44,7 @@
     tempOpportunity.opportunity_id = @"0000002";
     tempOpportunity.product_id = @"0000001";
     tempOpportunity.buyer_id = @"00004";
+    tempOpportunity.owner_id = @"00001";
     tempOpportunity.initial_price = 290.0;
     tempOpportunity.price_sold = 0;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140530"];
@@ -60,7 +62,8 @@
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000003";
     tempOpportunity.product_id = @"0000002";
-    tempOpportunity.buyer_id = @"00001";
+    tempOpportunity.buyer_id = @"00002";
+    tempOpportunity.owner_id = @"00001";
     tempOpportunity.initial_price = 1100.0;
     tempOpportunity.price_sold = 0;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140302"];
@@ -79,6 +82,7 @@
     tempOpportunity.opportunity_id = @"0000004";
     tempOpportunity.product_id = @"0000004";
     tempOpportunity.buyer_id = @"00005";
+    tempOpportunity.owner_id = @"00002";
     tempOpportunity.initial_price = 100000;
     tempOpportunity.price_sold = 990000;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20131201"];
@@ -97,6 +101,7 @@
     tempOpportunity.opportunity_id = @"0000005";
     tempOpportunity.product_id = @"0000002";
     tempOpportunity.buyer_id = @"00006";
+    tempOpportunity.owner_id = @"00001";
     tempOpportunity.initial_price = 250.0;
     tempOpportunity.price_sold = 0;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140601"];
@@ -198,18 +203,33 @@
         }
     }
     
-    // Sort array to be sure new messages are on top
-    [opportunitiesArray sortUsingComparator:^NSComparisonResult(id a, id b) {
-        NSDate *first = [(Opportunity*)a created_time];
-        NSDate *second = [(Opportunity*)b created_time];
-        return [second compare:first];
-        //return [first compare:second];
-    }];
-
     return opportunitiesArray;
 
 }
 
+- (NSMutableArray*)getOpportunitiesRelatedToClient:(NSString*)clientID;
+{
+    NSMutableArray *opportunitiesArray = [[NSMutableArray alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Opportunity *opportunityToReview = [[Opportunity alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayOpportunities.count; i=i+1)
+    {
+        opportunityToReview = [[Opportunity alloc] init];
+        opportunityToReview = (Opportunity *)mainDelegate.sharedArrayOpportunities[i];
+        
+        if ([opportunityToReview.buyer_id isEqualToString:clientID] || [opportunityToReview.owner_id isEqualToString:clientID])
+        {
+            [opportunitiesArray addObject:opportunityToReview];
+        }
+    }
+        
+    return opportunitiesArray;
+}
 
 - (Client*)getClient:(Opportunity*)opportunitySelected;
 {

@@ -65,6 +65,14 @@
     // Get the listing data
     _myData = [[[OpportunityModel alloc] init] getOpportunitiesArray];
     
+    // Sort array to be sure new opportunities are on top
+    [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Opportunity*)a created_time];
+        NSDate *second = [(Opportunity*)b created_time];
+        return [second compare:first];
+        //return [first compare:second];
+    }];
+
     // Assign detail view with first item
     _selectedOpportunity = [_myData firstObject];
     [self.detailViewController setDetailItem:_selectedOpportunity];
@@ -114,16 +122,13 @@
 {
     
     // Retrieve cell
-    // NSString *cellIdentifier = @"CellOpp";
-    // UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
     UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:@"CellOpp" forIndexPath:indexPath];
 
     // Get references to images and labels of cell
     UILabel *productLabel = (UILabel*)[myCell.contentView viewWithTag:1];
-    UILabel *opportunityStatus = (UILabel*)[myCell.contentView viewWithTag:2];
+    UILabel *opportunityDate = (UILabel*)[myCell.contentView viewWithTag:2];
     UILabel *clientName = (UILabel*)[myCell.contentView viewWithTag:3];
-    UILabel *opportunityDates = (UILabel*)[myCell.contentView viewWithTag:4];
+    UILabel *opportunityStatus = (UILabel*)[myCell.contentView viewWithTag:4];
     UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:5];
     UIImageView *productSoldImage = (UIImageView*)[myCell.contentView viewWithTag:6];
     UIImageView *clientImage = (UIImageView*)[myCell.contentView viewWithTag:7];
@@ -139,9 +144,9 @@
 
     CGRect productSoldImageFrame = productSoldImage.frame;
     productSoldImageFrame.origin.x = 8;
-    productSoldImageFrame.origin.y = 32;
+    productSoldImageFrame.origin.y = 24; //32
     productSoldImageFrame.size.width = 40;
-    productSoldImageFrame.size.height = 23;
+    productSoldImageFrame.size.height = 40; //23
     productSoldImage.frame = productSoldImageFrame;
 
     CGRect clientImageFrame = clientImage.frame;
@@ -195,25 +200,24 @@
     }
     
     // Set opportunity status and dates
+    
+    opportunityDate.text = [myOpportunity.created_time formattedAsTimeAgo];
+    
     if ([myOpportunity.status isEqualToString:@"O"])
     {
-        opportunityStatus.text = @"Abierta";
-        opportunityDates.text = [NSString stringWithFormat:@"Datos enviados %@",[myOpportunity.created_time formattedAsTimeAgo]];
+        opportunityStatus.text = @"Oportunidad abierta";
     }
     else if ([myOpportunity.status isEqualToString:@"C"])
     {
-        opportunityStatus.text = @"Cerrada";
-        opportunityDates.text = [NSString stringWithFormat:@"Datos enviados %@, cerrado %@",[myOpportunity.created_time formattedAsTimeAgo], [myOpportunity.closedsold_time formattedAsTimeAgo]];
+        opportunityStatus.text = [NSString stringWithFormat:@"Oportunidad cerrada %@", [myOpportunity.closedsold_time formattedAsTimeAgo]];
     }
     else if ([myOpportunity.status isEqualToString:@"S"])
     {
-        opportunityStatus.text = @"Vendido";
-        opportunityDates.text = [NSString stringWithFormat:@"Datos enviados %@, vendido %@",[myOpportunity.created_time formattedAsTimeAgo], [myOpportunity.closedsold_time formattedAsTimeAgo]];
+        opportunityStatus.text = [NSString stringWithFormat:@"Producto vendido %@, pero pendiente de pago", [myOpportunity.closedsold_time formattedAsTimeAgo]];
     }
     else if ([myOpportunity.status isEqualToString:@"P"])
     {
-        opportunityStatus.text = @"Pagado";
-        opportunityDates.text = [NSString stringWithFormat:@"Datos enviados %@, vendido %@, pagado %@",[myOpportunity.created_time formattedAsTimeAgo], [myOpportunity.closedsold_time formattedAsTimeAgo], [myOpportunity.paid_time formattedAsTimeAgo]];
+        opportunityStatus.text = [NSString stringWithFormat:@"Producto vendido %@, y pagado %@", [myOpportunity.closedsold_time formattedAsTimeAgo], [myOpportunity.paid_time formattedAsTimeAgo]];
     }
 
     
