@@ -30,6 +30,7 @@
     
     NSInteger _messageRowHeight;
     
+    NSString *_client2Type;
     NSString *_templateTypeForPopover;
 }
 
@@ -91,7 +92,7 @@
         MessageModel *messageMethods = [[MessageModel alloc] init];
         
         _selectedClient = (Client *)_detailItem;
-        
+        _client2Type = [[NSString alloc] init];
         
         // Setting frames for all pictures
         CGRect imageClientFrame = self.imageClient.frame;
@@ -207,6 +208,7 @@
     ClientModel *clientMethods = [[ClientModel alloc] init];
 
     _relatedClient = [[Client alloc] init];
+    _client2Type = [[NSString alloc] init];
 
     CGRect imageProductFrame = self.imageProduct.frame;
     imageProductFrame.origin.x = 400;
@@ -300,7 +302,7 @@
         self.labelClient2Phones.text = @"";
         self.buttonRelateToOwner.hidden = YES;
         self.buttonSeeInFacebook.hidden = YES;
-        self.buttonMessageToOwner.hidden = YES;
+        self.buttonMessageToRelatedClient.hidden = YES;
         self.buttonNewOpportunity.hidden = YES;
         self.picClient2Phone.hidden = YES;
         self.picClient2Zone.hidden = YES;
@@ -351,14 +353,31 @@
                     self.labelProductReference.text = [NSString stringWithFormat:@"La dueña de este producto es %@ %@", _selectedClient.name, _selectedClient.last_name];
                 }
                 self.labelClient2Title.text = @"Interesado:";
+                _client2Type = @"I";
                 _relatedClient = [clientMethods getClientFromClientId:_selectedOpportunity.buyer_id];
+                if ([_relatedClient.sex isEqualToString:@"M"])
+                {
+                    self.labelClient2Title.text = @"Interesado:";
+                }
+                else
+                {
+                    self.labelClient2Title.text = @"Interesada:";
+                }
             }
             else
             {
                 // Show the owner
                 self.labelProductReference.text = [NSString stringWithFormat:@"Publicado %@ por:", [_selectedProduct.created_time formattedAsTimeAgo]];
-                self.labelClient2Title.text = @"Dueño:";
+                _client2Type = @"O";
                 _relatedClient = [clientMethods getClientFromClientId:_selectedProduct.client_id];
+                if ([_relatedClient.sex isEqualToString:@"M"])
+                {
+                    self.labelClient2Title.text = @"Dueño:";
+                }
+                else
+                {
+                    self.labelClient2Title.text = @"Dueña:";
+                }
             }
             
             self.LabelProductRelated.text = @"Producto relacionado:";
@@ -380,7 +399,7 @@
                 self.imageClient2Status.image = [UIImage imageNamed:@"Blank"];
             }
             self.buttonSeeInFacebook.hidden = NO;
-            self.buttonMessageToOwner.hidden = NO;
+            self.buttonMessageToRelatedClient.hidden = NO;
             self.buttonNewOpportunity.hidden = NO;
             self.picClient2Phone.hidden = NO;
             self.picClient2Zone.hidden = NO;
@@ -396,7 +415,7 @@
             self.labelClient2Phones.text = @"";
             self.buttonRelateToOwner.hidden = NO;
             self.buttonSeeInFacebook.hidden = NO;
-            self.buttonMessageToOwner.hidden = YES;
+            self.buttonMessageToRelatedClient.hidden = YES;
             self.buttonNewOpportunity.hidden = NO;
             self.picClient2Phone.hidden = YES;
             self.picClient2Zone.hidden = YES;
@@ -413,7 +432,14 @@
 
 - (IBAction)replyMessage:(id)sender
 {
-    _templateTypeForPopover = @"C";
+    if ((_relatedClient.client_id == nil) || ([_client2Type isEqualToString:@"O"]))
+    {
+        _templateTypeForPopover = @"C";
+    }
+    else
+    {
+        _templateTypeForPopover = @"O";
+    }
     
     SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
     sendMessageController.delegate = self;
@@ -427,9 +453,16 @@
                                            animated:YES];
 }
 
-- (IBAction)messageToOwner:(id)sender
+- (IBAction)messageToRelatedClient:(id)sender
 {
-    _templateTypeForPopover = @"O";
+    if ([_client2Type isEqualToString:@"O"])
+    {
+        _templateTypeForPopover = @"O";
+    }
+    else
+    {
+        _templateTypeForPopover = @"C";
+    }
     
     SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
     sendMessageController.delegate = self;
@@ -451,7 +484,14 @@
 
 -(NSString*)GetBuyerIdFromMessage;
 {
-    return _selectedClient.client_id;
+    if ([_client2Type isEqualToString:@"I"])
+    {
+        return _relatedClient.client_id;
+    }
+    else
+    {
+        return _selectedClient.client_id;
+    }
 }
 
 -(NSString*)GetOwnerIdFromMessage;
@@ -459,6 +499,10 @@
     if (_relatedClient.client_id == nil)
     {
         return @"";
+    }
+    else if ([_client2Type isEqualToString:@"I"])
+    {
+        return _selectedClient.client_id;
     }
     else
     {

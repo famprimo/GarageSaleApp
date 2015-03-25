@@ -1016,7 +1016,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="messageToOwner:" destination="8fd-q3-GU3" eventType="touchUpInside" id="Afy-R0-ZmB"/>
+                                    <action selector="messageToRelatedClient:" destination="8fd-q3-GU3" eventType="touchUpInside" id="IYX-m9-tOC"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="EDn-MZ-cYu">
@@ -1178,7 +1178,7 @@
                     <connections>
                         <outlet property="LabelProductRelated" destination="roI-iy-X0H" id="D1s-Ku-z0I"/>
                         <outlet property="buttonAlreadyReplied" destination="w25-iF-KPz" id="7cV-4w-nTF"/>
-                        <outlet property="buttonMessageToOwner" destination="9Zd-Sd-XC6" id="j6v-IA-Pvs"/>
+                        <outlet property="buttonMessageToRelatedClient" destination="9Zd-Sd-XC6" id="lLv-Fu-tbS"/>
                         <outlet property="buttonNewOpportunity" destination="3sU-xI-h1X" id="mPJ-qB-JXa"/>
                         <outlet property="buttonRelateToOwner" destination="MYZ-Fy-6XO" id="onG-31-FN7"/>
                         <outlet property="buttonRelateToProduct" destination="IER-jm-S7x" id="Kez-ld-fKW"/>

@@ -22,7 +22,7 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *buttonReply;
 @property (weak, nonatomic) IBOutlet UIButton *buttonAlreadyReplied;
-@property (weak, nonatomic) IBOutlet UIButton *buttonMessageToOwner;
+@property (weak, nonatomic) IBOutlet UIButton *buttonMessageToRelatedClient;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRelateToProduct;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRelateToOwner;
 @property (weak, nonatomic) IBOutlet UIButton *buttonSeeInFacebook;
