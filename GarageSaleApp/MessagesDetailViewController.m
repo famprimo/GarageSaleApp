@@ -39,6 +39,8 @@
 @property (nonatomic, strong) UIPopoverController *productPickerPopover;
 @property (nonatomic, strong) UIPopoverController *sendMessagePopover;
 @property (nonatomic, strong) UIPopoverController *createOpportunityPopover;
+@property (nonatomic, strong) UIPopoverController *editClientPopover;
+
 
 @end
 
@@ -142,7 +144,7 @@
             self.imageClientStatus.image = [UIImage imageNamed:@"Blank"];
         }
         
-        self.labelClientPhone.text = _selectedClient.phone1;
+        self.labelClientPhone.text = [NSString stringWithFormat:@"%@ %@ %@", _selectedClient.phone1, _selectedClient.phone2, _selectedClient.phone3];
         self.imageClient.image = [UIImage imageWithData:_selectedClient.picture];
         self.labelOpportunitiesRelated.text = [NSString stringWithFormat:@"Oportunidades relacionadas a %@ %@:", _selectedClient.name, _selectedClient.last_name];
 
@@ -384,7 +386,7 @@
             self.imageClient2.image = [UIImage imageWithData:_relatedClient.picture];
             self.labelClient2Zone.text = [NSString stringWithFormat:@"Vive en %@",_relatedClient.zone];
             self.labelClient2Address.text = _relatedClient.address;
-            self.labelClient2Phones.text = _relatedClient.phone1;
+            self.labelClient2Phones.text = [NSString stringWithFormat:@"%@ %@ %@", _relatedClient.phone1, _relatedClient.phone2, _relatedClient.phone3];
             self.buttonRelateToOwner.hidden = YES;
             
             // Owner name and status
@@ -610,32 +612,63 @@
     
     
     self.productPickerPopover = [[UIPopoverController alloc] initWithContentViewController:productPickerController];
-    self.productPickerPopover.popoverContentSize = CGSizeMake(400.0, 500.0);
+    self.productPickerPopover.popoverContentSize = CGSizeMake(500.0, 500.0);
     [self.productPickerPopover presentPopoverFromRect:[(UIButton *)sender frame]
                                               inView:self.view
                             permittedArrowDirections:UIPopoverArrowDirectionAny
                                             animated:YES];
 }
 
--(void)productSelectedfromProductPicker:(NSString *)productIDSelected;
+-(void)productSelectedfromProductPicker:(NSMutableArray *)selectedProductsArray;
 {
     // Dismiss the popover view
     [self.productPickerPopover dismissPopoverAnimated:YES];
     
-    ProductModel *productMethods = [[ProductModel alloc] init];
     MessageModel *messageMethods = [[MessageModel alloc] init];
     
-    _selectedProduct = [productMethods getProductFromProductId:productIDSelected];
-    _selectedMessage.product_id = productIDSelected;
+    _selectedProduct = selectedProductsArray[0];
+    _selectedMessage.product_id = _selectedProduct.product_id;
     [messageMethods updateMessage:_selectedMessage];
     
     [self configureView];
 }
 
+-(BOOL)allowMultipleSelectionfromProductPicker
+{
+    return NO;
+}
+
+-(NSString*)getRelatedOwnerfromProductPicker
+{
+    return _selectedClient.client_id;
+}
 
 
 - (IBAction)editClientDetails:(id)sender
 {
+    EditClientViewController *editClientController = [[EditClientViewController alloc] initWithNibName:@"EditClientViewController" bundle:nil];
+    editClientController.delegate = self;
+    
+    self.editClientPopover = [[UIPopoverController alloc] initWithContentViewController:editClientController];
+    self.editClientPopover.popoverContentSize = CGSizeMake(800, 400);
+    [self.editClientPopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                            inView:self.view
+                          permittedArrowDirections:UIPopoverArrowDirectionAny
+                                          animated:YES];
+    
+}
+
+-(Client *)getClientforEdit;
+{
+    return _selectedClient;
+}
+
+-(void)clientEdited:(Client *)editedClient;
+{
+    // Dismiss the popover view
+    [self.editClientPopover dismissPopoverAnimated:YES];
+    
+    [self configureView];
 }
 
 - (IBAction)seeProductInFacebook:(id)sender

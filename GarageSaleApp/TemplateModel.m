@@ -220,7 +220,7 @@
     NSMutableString *reviewedText = [NSMutableString stringWithString:textToReview];
     NSRange keyRange;
 
-    if (clientBuyer)
+    if ([clientBuyer.client_id length] > 0)
     {
         keyRange = [reviewedText rangeOfString:@"#COMPRADOR"];
         if (keyRange.location != NSNotFound)
@@ -261,7 +261,7 @@
         }
     }
     
-    if (clientOwner)
+    if ([clientOwner.client_id length] > 0)
     {
         keyRange = [reviewedText rangeOfString:@"#DUENO"];
         if (keyRange.location != NSNotFound)
@@ -309,7 +309,7 @@
        
     }
     
-    if (relatedProduct)
+    if ([relatedProduct.product_id length] > 0)
     {
         keyRange = [reviewedText rangeOfString:@"#PRODUCTO"];
         if (keyRange.location != NSNotFound)

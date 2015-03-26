@@ -21,6 +21,7 @@
 - (void)updateProduct:(Product*)productToUpdate withArray:(NSMutableArray*)arrayProducts;
 - (Client*)getClient:(Product*)productFound;
 - (NSMutableArray*)getOpportunitiesFromProduct:(Product*)productSelected;
+- (NSMutableArray*)getProductsFromClientId:(NSString*)clientIDtoSearch;
 - (NSString*)getProductIDfromFbPhotoId:(NSString*)photoFbIdToValidate;
 - (UIImage*)getImageFromProductId:(NSString*)productIDtoSearch;
 - (Product*)getProductFromProductId:(NSString*)productIDtoSearch;

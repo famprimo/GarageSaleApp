@@ -113,11 +113,6 @@
             [self performSegueWithIdentifier:@"GoToMessageSegue" sender:self];
             break;
 
-        case 30:
-            // Go to product screen
-            [self performSegueWithIdentifier:@"GoToMessagesSegue" sender:self];
-            break;
-
         case ScreenTypeClient:
             // Go to client screen
             [self performSegueWithIdentifier:@"GoToClientSegue" sender:self];

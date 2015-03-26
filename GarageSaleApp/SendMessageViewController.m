@@ -133,7 +133,14 @@
     imageClientStatusFrame.size.height = 10;
     self.imageClientStatus.frame = imageClientStatusFrame;
 
-    
+    // Make client pictures rounded
+    self.imageClient.layer.cornerRadius = self.imageClient.frame.size.width / 2;
+    self.imageClient.clipsToBounds = YES;
+    self.imageOwner.layer.cornerRadius = self.imageOwner.frame.size.width / 2;
+    self.imageOwner.clipsToBounds = YES;
+    self.imageBuyer.layer.cornerRadius = self.imageBuyer.frame.size.width / 2;
+    self.imageBuyer.clipsToBounds = YES;
+
     // Basic information
     
     if (_clientBuyer)

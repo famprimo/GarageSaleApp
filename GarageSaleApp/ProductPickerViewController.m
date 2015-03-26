@@ -9,6 +9,8 @@
 #import "ProductPickerViewController.h"
 #import "Product.h"
 #import "ProductModel.h"
+#import "Client.h"
+#import "ClientModel.h"
 #import "NS-Extensions.h"
 
 
@@ -18,10 +20,12 @@
     // Data for the table
     NSMutableArray *_productsArray;
     NSMutableArray *_myData;
+    NSMutableArray *_selectedProductsArray;
     
     // The client that is selected from the table
     Product *_selectedProduct;
-    
+    Client *_relatedClient;
+    BOOL _multipleSelection;
 }
 @end
 
@@ -38,8 +42,39 @@
     self.myTable.delegate = self;
     self.myTable.dataSource = self;
     
+    // Get and show client data
+
+    CGRect imageClientFrame = self.imageClient.frame;
+    imageClientFrame.origin.x = 5;
+    imageClientFrame.origin.y = 8;
+    imageClientFrame.size.width = 50;
+    imageClientFrame.size.height = 50;
+    self.imageClient.frame = imageClientFrame;
+    
+    self.imageClient.layer.cornerRadius = self.imageClient.frame.size.width / 2;
+    self.imageClient.clipsToBounds = YES;
+
+    NSString *clientID = [self.delegate getRelatedOwnerfromProductPicker];
+    if ([clientID length] >0)
+    {
+        _relatedClient = [[[ClientModel alloc] init] getClientFromClientId:clientID];
+        self.imageClient.image = [UIImage imageWithData:_relatedClient.picture];
+        self.labelClientName.text = [NSString stringWithFormat:@"%@ %@", _relatedClient.name, _relatedClient.last_name];
+    }
+    else
+    {
+        self.imageClient.image = [UIImage imageNamed:@"Blank"];
+        self.labelClientName.text = @"";
+    }
+
+    // Multiple selection?
+    _multipleSelection = [self.delegate allowMultipleSelectionfromProductPicker];
+    self.myTable.allowsMultipleSelection = YES;
+    
+    
     // Get the listing data
     _productsArray = productMethods.getProductArray;
+    _selectedProductsArray = [[NSMutableArray alloc] init];
     
     // Sort array in alphabetic order
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
@@ -64,16 +99,38 @@
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(status == %@) OR (status ==%@)", @"N", @"U"];
         _myData = [NSMutableArray arrayWithArray:[_productsArray filteredArrayUsingPredicate:predicate]];
     }
+    else if (self.filterTabs.selectedSegmentIndex == 2) // No owner
+    {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"client_id = %@", @""];
+        _myData = [NSMutableArray arrayWithArray:[_productsArray filteredArrayUsingPredicate:predicate]];
+    }
+    else if (self.filterTabs.selectedSegmentIndex == 3) // From client
+    {
+        if ([_relatedClient.client_id length] > 0)
+        {
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"client_id = %@", _relatedClient.client_id];
+            _myData = [NSMutableArray arrayWithArray:[_productsArray filteredArrayUsingPredicate:predicate]];
+        }
+        else
+        {
+            _myData = [[NSMutableArray alloc] init];
+        }
+    }
+    /*
     else if (self.filterTabs.selectedSegmentIndex == 2) // Recent
     {
         NSDate *referenceDate = [NSDate dateWithTimeIntervalSinceNow:60*60*24*21];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"updated_time > %@", referenceDate];
         _myData = [NSMutableArray arrayWithArray:[_productsArray filteredArrayUsingPredicate:predicate]];
     }
+     */
     else // All
     {
         _myData = [NSMutableArray arrayWithArray:_productsArray];
     }
+    
+    _selectedProduct = [[Product alloc] init];
+    _selectedProductsArray = [[NSMutableArray alloc] init];
     
     [self.myTable reloadData];
 }
@@ -81,11 +138,10 @@
 
 - (IBAction)selectProduct:(id)sender
 {
-    if (_selectedProduct)
+    if (_selectedProductsArray.count > 0)
     {
-        [self.delegate productSelectedfromProductPicker:_selectedProduct.product_id];
+        [self.delegate productSelectedfromProductPicker:_selectedProductsArray];
     }
-
 }
 
 #pragma mark - Table view data source
@@ -126,11 +182,30 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Set selected listing to var
     _selectedProduct = _myData[indexPath.row];
+    
+    [_selectedProductsArray insertObject:_selectedProduct atIndex:0];
     
 }
 
+-(void) tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+    _selectedProduct = _myData[indexPath.row];
+    Product *tmpProduct = [[Product alloc] init];
+    
+    // Review if selected item is already on the array
+    for (int i=0; i<_selectedProductsArray.count; i=i+1)
+    {
+        tmpProduct = _selectedProductsArray[i];
+        if ([tmpProduct.product_id isEqualToString:_selectedProduct.product_id])
+        {
+            [_selectedProductsArray removeObjectAtIndex:i];
+            break;
+        }
+    }
+    
+}
 
 
 @end

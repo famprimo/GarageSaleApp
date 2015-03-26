@@ -16,7 +16,7 @@
 @interface ClientTableViewController ()
 {
     // Data for the table
-    NSMutableArray *_myData;
+    NSMutableArray *_myDataClients;
     
     AppDelegate *mainDelegate;
     
@@ -63,11 +63,19 @@
     self.tableView.dataSource = self;
     
     // Get the listing data
-    _myData = mainDelegate.sharedArrayClients;
+    _myDataClients = mainDelegate.sharedArrayClients;
+
+    // Sort array to be sure new opportunities are on top
+    [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Client*)a created_time];
+        NSDate *second = [(Client*)b created_time];
+        return [second compare:first];
+        //return [first compare:second];
+    }];
 
     
     // Assign detail view with first item
-    _selectedClient = [_myData firstObject];
+    _selectedClient = [_myDataClients firstObject];
     [self.detailViewController setDetailItem:_selectedClient];
     
     // Uncomment the following line to preserve selection between presentations.
@@ -104,7 +112,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return _myData.count;
+    return _myDataClients.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -114,7 +122,7 @@
     UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     // Get the client to be shown
-    Client *myClient = _myData[indexPath.row];
+    Client *myClient = _myDataClients[indexPath.row];
     
     // Get references to images and labels of cell
     UIImageView *pictureCell = (UIImageView*)[myCell.contentView viewWithTag:1];
@@ -138,7 +146,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selected listing to var
-    _selectedClient = _myData[indexPath.row];
+    _selectedClient = _myDataClients[indexPath.row];
     
     // Refresh detail view with selected item
     [self.detailViewController setDetailItem:_selectedClient];

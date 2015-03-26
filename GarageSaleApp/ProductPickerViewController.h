@@ -10,13 +10,17 @@
 
 @protocol ProductPickerViewControllerDelegate
 
--(void)productSelectedfromProductPicker:(NSString *)productIDSelected;
+-(void)productSelectedfromProductPicker:(NSMutableArray *)selectedProductsArray;
+-(BOOL)allowMultipleSelectionfromProductPicker;
+-(NSString*)getRelatedOwnerfromProductPicker;
 
 @end
 
 @interface ProductPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) id<ProductPickerViewControllerDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UIImageView *imageClient;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientName;
 @property (weak, nonatomic) IBOutlet UIButton *buttonSelectProduct;
 @property (weak, nonatomic) IBOutlet UITableView *myTable;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *filterTabs;

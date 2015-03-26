@@ -38,7 +38,7 @@
     self.myTable.dataSource = self;
     
     // Get the listing data
-    _myData = clientMethods.getClientArray;
+    _myData = [[NSMutableArray alloc] initWithArray:clientMethods.getClientArray];
    
     // Sort array in alphabetic order
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];

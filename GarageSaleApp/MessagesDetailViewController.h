@@ -13,10 +13,12 @@
 #import "ProductPickerViewController.h"
 #import "SendMessageViewController.h"
 #import "NewOpportunityViewController.h"
+#import "EditClientViewController.h"
+
 
 // Popover help  http://www.appcoda.com/uiactionsheet-uipopovercontroller-tutorial/
 
-@interface MessagesDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, ProductPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface MessagesDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, ProductPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, EditClientViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) id detailItem;
 

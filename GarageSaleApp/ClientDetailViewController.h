@@ -8,14 +8,33 @@
 
 #import <UIKit/UIKit.h>
 #import "Client.h"
+#import "ProductPickerViewController.h"
+#import "EditClientViewController.h"
+// #import "SendMessageViewController.h"
 
-@interface ClientDetailViewController : UIViewController
+// Popover help  http://www.appcoda.com/uiactionsheet-uipopovercontroller-tutorial/
+
+@interface ClientDetailViewController : UIViewController<UIActionSheetDelegate, ProductPickerViewControllerDelegate, EditClientViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) id detailItem;
 
-@property (weak, nonatomic) IBOutlet UIImageView *imagePicture;
-@property (weak, nonatomic) IBOutlet UILabel *labelName;
-@property (weak, nonatomic) IBOutlet UILabel *labelLastName;
-@property (weak, nonatomic) IBOutlet UILabel *labelZone;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientName;
+@property (weak, nonatomic) IBOutlet UILabel *labelCreatedTime;
+@property (weak, nonatomic) IBOutlet UILabel *labelLastInteractionTime;
+@property (weak, nonatomic) IBOutlet UIImageView *imageClient;
+@property (weak, nonatomic) IBOutlet UIImageView *imageClientStatus;
+@property (weak, nonatomic) IBOutlet UIImageView *imageClientSex;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientAddress;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientZone;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientPhones;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientEmail;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientLastInventaryTime;
+@property (weak, nonatomic) IBOutlet UIImageView *picClientZone;
+@property (weak, nonatomic) IBOutlet UIImageView *picClientPhone;
+@property (weak, nonatomic) IBOutlet UIImageView *picClientEmail;
+
+@property (weak, nonatomic) IBOutlet UIButton *buttonEdit;
+@property (weak, nonatomic) IBOutlet UIButton *buttonRelateProducts;
+@property (weak, nonatomic) IBOutlet UITableView *tableProducts;
 
 @end

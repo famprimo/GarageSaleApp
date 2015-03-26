@@ -268,14 +268,33 @@
     for (int i = 0; i < mainDelegate.sharedArrayOpportunities.count; i++)
     {
         Opportunity *opportunityTemp = [mainDelegate.sharedArrayOpportunities objectAtIndex: i];
-        if (productSelected.product_id == opportunityTemp.product_id)
+        if ([productSelected.product_id isEqualToString:opportunityTemp.product_id])
         {
             [opportunities addObject:opportunityTemp];
         }
     }
     
     return opportunities;
+}
 
+- (NSMutableArray*)getProductsFromClientId:(NSString*)clientIDtoSearch;
+{
+    NSMutableArray *productsArray = [[NSMutableArray alloc] init];
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    for (int i = 0; i < mainDelegate.sharedArrayProducts.count; i++)
+    {
+        Product *productTemp = [mainDelegate.sharedArrayProducts objectAtIndex: i];
+        if ([productTemp.client_id isEqualToString:clientIDtoSearch])
+        {
+            [productsArray addObject:productTemp];
+        }
+    }
+    
+    return productsArray;
 }
 
 

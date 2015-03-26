@@ -431,7 +431,7 @@
     ProductModel *productMethods = [[ProductModel alloc] init];
     
     // Insert message to table array
-    [_myData insertObject:newProduct atIndex:0];
+    // [_myData insertObject:newProduct atIndex:0];  NO ES NECESARIO PUES ESTA REFERENCIADO
     
     // Sort array to be sure new products are on top
     [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
