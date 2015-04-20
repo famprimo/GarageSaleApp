@@ -10,6 +10,7 @@
 
 @interface Message : NSObject
 
+@property (strong, nonatomic) NSString *fb_inbox_id;
 @property (strong, nonatomic) NSString *fb_msg_id;
 @property (strong, nonatomic) NSString *fb_from_id;
 @property (strong, nonatomic) NSString *fb_from_name;

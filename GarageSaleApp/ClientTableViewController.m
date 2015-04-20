@@ -65,12 +65,12 @@
     // Get the listing data
     _myDataClients = mainDelegate.sharedArrayClients;
 
-    // Sort array to be sure new opportunities are on top
+    // Sort client array to be ordered alphabetically
     [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
-        NSDate *first = [(Client*)a created_time];
-        NSDate *second = [(Client*)b created_time];
-        return [second compare:first];
-        //return [first compare:second];
+        NSString *first = [(Client*)a name];
+        NSString *second = [(Client*)b name];
+        //return [second compare:first];
+        return [first compare:second];
     }];
 
     

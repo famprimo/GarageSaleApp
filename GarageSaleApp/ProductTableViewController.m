@@ -230,22 +230,20 @@
     UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:4];
     UILabel *priceLabel = (UILabel*)[myCell.contentView viewWithTag:5];
     UILabel *codeLabel = (UILabel*)[myCell.contentView viewWithTag:6];
-    UILabel *typeLabel = (UILabel*)[myCell.contentView viewWithTag:7];
-    UILabel *dateLabel = (UILabel*)[myCell.contentView viewWithTag:8];
+    UILabel *dateLabel = (UILabel*)[myCell.contentView viewWithTag:7];
     
     // Set table cell labels to listing data
     productImage.image = [UIImage imageWithData:myProduct.picture];
     nameLabel.text = myProduct.name;
     codeLabel.text = myProduct.GS_code;
-    priceLabel.text = [NSString stringWithFormat:@"%@%.f", myProduct.currency, myProduct.published_price];
     dateLabel.text = [myProduct.created_time formattedAsTimeAgo];
     if ([myProduct.type isEqualToString:@"S"])
     {
-        typeLabel.text = @"Venta";
+        priceLabel.text = [NSString stringWithFormat:@"%@%.f", myProduct.currency, myProduct.price];
     }
     else // @"A"
     {
-        typeLabel.text = @"Publicidad";
+        priceLabel.text = @"Publicidad";
     }
     
     // Set mark and sold message depending on message status
@@ -275,8 +273,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"Row selected at row %li", (long)indexPath.row);
-    
     // Set selected listing to var
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         _selectedProduct = _mySearchData[indexPath.row];;
@@ -286,7 +282,6 @@
     
     // Refresh detail view with selected item
     [self.detailViewController setDetailItem:_selectedProduct];
-
 }
 
 
@@ -294,136 +289,162 @@
 
 - (void) makeFBRequestForPhotos;
 {
-    
-    ProductModel *productMethods = [[ProductModel alloc] init];
-    
     // Create string for FB request
-    // NSString *requestPhotosList = @"me/photos/uploaded?fields=created_time,id,link,updated_time,picture,name";
-    NSString *requestPhotosList = @"me/photos/tagged?fields=created_time,id,link,updated_time,picture,name";
-    
+    NSString *url = @"me/photos/tagged?fields=created_time,id,link,updated_time,picture,name&limit=100";
+    [self getFBPhotos:url];
+}
+
+- (void) getFBPhotos:(NSString*)url;
+{
     // Make FB request
-    [FBRequestConnection startWithGraphPath:requestPhotosList
+    [FBRequestConnection startWithGraphPath:url
                           completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                               
                               if (!error) { // FB request was a success!
                                   
                                   if (result[@"data"]) {   // There is FB data!
                                       
-                                      NSArray *photosArray = result[@"data"];
+                                      [self parseFBResultsRequestForPhotos:result];
                                       
-                                      // Get details and create array
-                                      for (int i=0; i<photosArray.count; i=i+1)
-                                      {
-                                          
-                                          // Review each photo
-                                          NSString *photoID = photosArray[i][@"id"];
-                                          
-                                          // Review if product exists
-                                          NSString *productID = [productMethods getProductIDfromFbPhotoId:photoID];
-                                          
-                                          if ([productID  isEqual: @"Not Found"])
-                                          {
-                                              // New product!
-                                              productID = [productMethods getNextProductID];
-                                              
-                                              Product *newProduct = [[Product alloc] init];
-                                              
-                                              newProduct.product_id = productID;
-                                              newProduct.client_id = @"";
-                                              newProduct.desc = photosArray[i][@"name"];
-                                              newProduct.fb_photo_id = photoID;
-                                              
-                                              // Get name, currency, price, GS code and type from photo description
-                                              
-                                              newProduct.name = [productMethods getProductNameFromFBPhotoDesc:newProduct.desc];
-                                              
-                                              NSString *tmpText;
-                                              
-                                              tmpText = [productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
-                                              if (![tmpText isEqualToString:@"Not Found"])
-                                              {
-                                                  newProduct.GS_code = [NSString stringWithFormat:@"GSN%@", tmpText];
-                                                  newProduct.type = @"A";
-                                                  
-                                              }
-                                              else
-                                              {
-                                                  tmpText = [productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
-                                                  if (![tmpText isEqualToString:@"Not Found"])
-                                                  {
-                                                      newProduct.GS_code = [NSString stringWithFormat:@"GS%@", tmpText];
-                                                      newProduct.type = @"S";
-                                                  }
-                                                  else
-                                                  {
-                                                      newProduct.GS_code = @"None";
-                                                      newProduct.type = @"A";
-                                                  }
-                                              }
-                                              
-                                              tmpText = [productMethods getTextThatFollows:@"s/. " fromMessage:newProduct.desc];
-                                              if (![tmpText isEqualToString:@"Not Found"]) {
-                                                  tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
-                                                  newProduct.currency = @"S/.";
-                                                  newProduct.initial_price = [tmpText integerValue];
-                                                  newProduct.published_price = newProduct.initial_price;
-                                              }
-                                              else
-                                              {
-                                                  tmpText = [productMethods getTextThatFollows:@"USD" fromMessage:newProduct.desc];
-                                                  if (![tmpText isEqualToString:@"Not Found"]) {
-                                                      tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
-                                                      newProduct.currency = @"USD";
-                                                      newProduct.initial_price = [tmpText integerValue];
-                                                      newProduct.published_price = newProduct.initial_price;
-                                                  }
-                                                  else {
-                                                      newProduct.currency = @"S/.";
-                                                      newProduct.initial_price = 0;
-                                                      newProduct.published_price = 0;
-                                                  }
-                                              }
-                                              
-                                              
-                                              NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
-                                              [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-                                              newProduct.created_time = [formatFBdates dateFromString:photosArray[i][@"created_time"]];
-                                              newProduct.updated_time = [formatFBdates dateFromString:photosArray[i][@"updated_time"]];
-                                              newProduct.fb_updated_time = [formatFBdates dateFromString:photosArray[i][@"updated_time"]];
-                                              
-                                              newProduct.picture_link = photosArray[i][@"picture"];
-                                              newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
-                                              newProduct.additional_pictures = @"";
-                                              newProduct.status = @"N";
-                                              newProduct.promotion_piority = 2;
-                                              newProduct.notes = @"";
-                                              newProduct.agent_id = @"00001";
-                                              
-                                              
-                                              // Insert new product to array and add row to table
-                                              [self addNewProduct:newProduct];
+                                      // Review is there is a next page
+                                      // skip the beginning of the url https://graph.facebook.com/
 
-                                          }
-                                          
+                                      NSString *next = result[@"paging"][@"next"];
+                                      if (next)
+                                      {
+                                          [self getFBPhotos:[next substringFromIndex:32]];
                                       }
-                                      [self.refreshControl endRefreshing];
+                                      else
+                                      {
+                                          [self.refreshControl endRefreshing];
+                                      }
 
                                   }
                                   else
                                   {
                                       [self.refreshControl endRefreshing];
                                   }
-                        
-                                  
                               }
                               else {
                                   // An error occurred, we need to handle the error
                                   // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                  NSLog(@"error %@", error.description);
+                                  NSLog(@"error getFBPhotos: %@", error.description);
+
+                                  [self.refreshControl endRefreshing];
                               }
                           } ];
 
     
+}
+
+
+- (void) parseFBResultsRequestForPhotos:(id)result
+{
+    ProductModel *productMethods = [[ProductModel alloc] init];
+
+    NSArray *photosArray = result[@"data"];
+    
+    // Get details and create array
+    for (int i=0; i<photosArray.count; i=i+1)
+    {
+        
+        // Review each photo
+        NSString *photoID = photosArray[i][@"id"];
+        
+        // Review if product exists
+        NSString *productID = [productMethods getProductIDfromFbPhotoId:photoID];
+        
+        if ([productID  isEqual: @"Not Found"])
+        {
+            // New product!
+            productID = [productMethods getNextProductID];
+            
+            Product *newProduct = [[Product alloc] init];
+            
+            newProduct.product_id = productID;
+            newProduct.client_id = @"";
+            newProduct.desc = photosArray[i][@"name"];
+            newProduct.fb_photo_id = photoID;
+            newProduct.fb_link = photosArray[i][@"link"];
+            
+            // Get name, currency, price, GS code and type from photo description
+            
+            newProduct.name = [productMethods getProductNameFromFBPhotoDesc:newProduct.desc];
+            
+            NSString *tmpText;
+            
+            tmpText = [productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
+            if (![tmpText isEqualToString:@"Not Found"])
+            {
+                newProduct.GS_code = [NSString stringWithFormat:@"GSN%@", tmpText];
+                newProduct.type = @"A";
+                
+            }
+            else
+            {
+                tmpText = [productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
+                if (![tmpText isEqualToString:@"Not Found"])
+                {
+                    newProduct.GS_code = [NSString stringWithFormat:@"GS%@", tmpText];
+                    newProduct.type = @"S";
+                }
+                else
+                {
+                    newProduct.GS_code = @"None";
+                    newProduct.type = @"A";
+                }
+            }
+            
+            tmpText = [productMethods getTextThatFollows:@"s/. " fromMessage:newProduct.desc];
+            if (![tmpText isEqualToString:@"Not Found"]) {
+                tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
+                newProduct.currency = @"S/.";
+                newProduct.price = [tmpText integerValue];
+            }
+            else
+            {
+                tmpText = [productMethods getTextThatFollows:@"USD " fromMessage:newProduct.desc];
+                if (![tmpText isEqualToString:@"Not Found"]) {
+                    tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
+                    newProduct.currency = @"USD";
+                    newProduct.price = [tmpText integerValue];
+                }
+                else {
+                    newProduct.currency = @"S/.";
+                    newProduct.price = 0;
+                }
+            }
+            
+            
+            NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+            [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+            newProduct.created_time = [formatFBdates dateFromString:photosArray[i][@"created_time"]];
+            newProduct.updated_time = [formatFBdates dateFromString:photosArray[i][@"updated_time"]];
+            newProduct.fb_updated_time = [formatFBdates dateFromString:photosArray[i][@"updated_time"]];
+            
+            newProduct.picture_link = photosArray[i][@"picture"];
+            newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
+            newProduct.additional_pictures = @"";
+            newProduct.status = @"N";
+            newProduct.promotion_piority = 2;
+            newProduct.notes = @"";
+            newProduct.agent_id = @"00001";
+            
+            // Status... Sold?
+            tmpText = [productMethods getTextThatFollows:@"VENDID" fromMessage:newProduct.desc];
+            if (![tmpText isEqualToString:@"Not Found"])
+            {
+                newProduct.status = @"S";
+            }
+
+            
+            // Insert new product to array and add row to table
+            [self addNewProduct:newProduct];
+            
+        }
+        
+    }
+
 }
 
 - (void) addNewProduct:(Product*)newProduct;

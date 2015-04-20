@@ -16,9 +16,9 @@
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *desc;
 @property (strong, nonatomic) NSString *fb_photo_id;
+@property (strong, nonatomic) NSString *fb_link;
 @property (strong, nonatomic) NSString *currency; // (S/.) (USD)
-@property (nonatomic) float initial_price;
-@property (nonatomic) float published_price;
+@property (nonatomic) float price;
 @property (strong, nonatomic) NSDate *created_time;
 @property (strong, nonatomic) NSDate *updated_time;
 @property (strong, nonatomic) NSDate *solddisabled_time;

@@ -13,7 +13,6 @@
 		C00ED0EA19644A5A0045A65E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C00ED0E819644A5A0045A65E /* InfoPlist.strings */; };
 		C00ED0EC19644A5A0045A65E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED0EB19644A5A0045A65E /* main.m */; };
 		C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED0EF19644A5A0045A65E /* AppDelegate.m */; };
-		C00ED0F319644A5A0045A65E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C00ED0F119644A5A0045A65E /* Main.storyboard */; };
 		C00ED0F819644A5A0045A65E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C00ED0F719644A5A0045A65E /* Images.xcassets */; };
 		C00ED0FF19644A5A0045A65E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0FE19644A5A0045A65E /* XCTest.framework */; };
 		C00ED10019644A5A0045A65E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C00ED0DF19644A5A0045A65E /* Foundation.framework */; };
@@ -61,6 +60,9 @@
 		C08C479A1AB3295400B29FCA /* NS-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = C08C47991AB3295400B29FCA /* NS-Extensions.m */; };
 		C0B81D721A7D4D5E008B6C1C /* EditProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B81D701A7D4D5E008B6C1C /* EditProductViewController.m */; };
 		C0B81D731A7D4D5E008B6C1C /* EditProductViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B81D711A7D4D5E008B6C1C /* EditProductViewController.xib */; };
+		C0BC0B481AE02B3700DE63C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0BC0B471AE02B3700DE63C8 /* Main.storyboard */; };
+		C0BC39511AC7878F0004CFCE /* MessagesSinceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0BC394F1AC7878F0004CFCE /* MessagesSinceTableViewController.m */; };
+		C0BC39521AC7878F0004CFCE /* MessagesSinceTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0BC39501AC7878F0004CFCE /* MessagesSinceTableViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,7 +86,6 @@
 		C00ED0ED19644A5A0045A65E /* GarageSaleApp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GarageSaleApp-Prefix.pch"; sourceTree = "<group>"; };
 		C00ED0EE19644A5A0045A65E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C00ED0EF19644A5A0045A65E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		C00ED0F219644A5A0045A65E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C00ED0F719644A5A0045A65E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		C00ED0FD19644A5A0045A65E /* GarageSaleAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GarageSaleAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C00ED0FE19644A5A0045A65E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -166,6 +167,10 @@
 		C0B81D6F1A7D4D5E008B6C1C /* EditProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditProductViewController.h; sourceTree = "<group>"; };
 		C0B81D701A7D4D5E008B6C1C /* EditProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditProductViewController.m; sourceTree = "<group>"; };
 		C0B81D711A7D4D5E008B6C1C /* EditProductViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditProductViewController.xib; sourceTree = "<group>"; };
+		C0BC0B471AE02B3700DE63C8 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		C0BC394E1AC7878F0004CFCE /* MessagesSinceTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesSinceTableViewController.h; sourceTree = "<group>"; };
+		C0BC394F1AC7878F0004CFCE /* MessagesSinceTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesSinceTableViewController.m; sourceTree = "<group>"; };
+		C0BC39501AC7878F0004CFCE /* MessagesSinceTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessagesSinceTableViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,7 +249,7 @@
 			children = (
 				C00ED0EE19644A5A0045A65E /* AppDelegate.h */,
 				C00ED0EF19644A5A0045A65E /* AppDelegate.m */,
-				C00ED0F119644A5A0045A65E /* Main.storyboard */,
+				C0BC0B471AE02B3700DE63C8 /* Main.storyboard */,
 				C00ED0F719644A5A0045A65E /* Images.xcassets */,
 				C0292AEA1A5E20EB00283E71 /* Popovers */,
 				C008BA2E19C3CAB3008616E4 /* Message */,
@@ -368,6 +373,7 @@
 		C0292AEA1A5E20EB00283E71 /* Popovers */ = {
 			isa = PBXGroup;
 			children = (
+				C0BC39481AC787330004CFCE /* Messages Since */,
 				C05C815E1AC37AB90097EB42 /* Edit Client */,
 				C05C815D1AC37AB20097EB42 /* Edit Product */,
 				C05C815C1AC37AAB0097EB42 /* New Opportunity */,
@@ -475,6 +481,16 @@
 			name = Setup;
 			sourceTree = "<group>";
 		};
+		C0BC39481AC787330004CFCE /* Messages Since */ = {
+			isa = PBXGroup;
+			children = (
+				C0BC394E1AC7878F0004CFCE /* MessagesSinceTableViewController.h */,
+				C0BC394F1AC7878F0004CFCE /* MessagesSinceTableViewController.m */,
+				C0BC39501AC7878F0004CFCE /* MessagesSinceTableViewController.xib */,
+			);
+			name = "Messages Since";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -552,13 +568,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0666E4B1A44B39100B045A0 /* NewOpportunityViewController.xib in Resources */,
+				C0BC0B481AE02B3700DE63C8 /* Main.storyboard in Resources */,
 				C00ED0F819644A5A0045A65E /* Images.xcassets in Resources */,
 				C00ED0EA19644A5A0045A65E /* InfoPlist.strings in Resources */,
-				C00ED0F319644A5A0045A65E /* Main.storyboard in Resources */,
 				C05C81581AC379EC0097EB42 /* EditClientViewController.xib in Resources */,
 				C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */,
 				C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */,
 				C038FCAB1AB269D000A6D287 /* ProductPickerViewController.xib in Resources */,
+				C0BC39521AC7878F0004CFCE /* MessagesSinceTableViewController.xib in Resources */,
 				C0B81D731A7D4D5E008B6C1C /* EditProductViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -589,6 +606,7 @@
 				C0815E1719644C460021A153 /* Product.m in Sources */,
 				C038FCAA1AB269D000A6D287 /* ProductPickerViewController.m in Sources */,
 				C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */,
+				C0BC39511AC7878F0004CFCE /* MessagesSinceTableViewController.m in Sources */,
 				C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */,
 				C03E8E711A4740A800965BF7 /* OpportunityDetailViewController.m in Sources */,
 				C08C479A1AB3295400B29FCA /* NS-Extensions.m in Sources */,
@@ -642,14 +660,6 @@
 				C00ED0E919644A5A0045A65E /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		C00ED0F119644A5A0045A65E /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C00ED0F219644A5A0045A65E /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 		C00ED10719644A5A0045A65E /* InfoPlist.strings */ = {

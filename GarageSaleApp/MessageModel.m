@@ -19,6 +19,7 @@
 
     // Create message #1
     Message *tempMessage = [[Message alloc] init];
+    tempMessage.fb_inbox_id = @"153344961539458";
     tempMessage.fb_msg_id = @"153344961539458_1378402423";
     tempMessage.fb_from_id = @"10203554768023190";
     tempMessage.fb_from_name = @"Mily de la Cruz";
@@ -38,6 +39,7 @@
     
     // Create message #2
     tempMessage = [[Message alloc] init];
+    tempMessage.fb_inbox_id = @"1469889866608936";
     tempMessage.fb_msg_id = @"1469889866608936_1408489028";
     tempMessage.fb_from_id = @"10152156045491377";
     tempMessage.fb_from_name = @"Amparo Gonzalez";
@@ -57,6 +59,7 @@
     
     // Create message #3
     tempMessage = [[Message alloc] init];
+    tempMessage.fb_inbox_id = @"1469889866608936";
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152156045491377";
     tempMessage.fb_from_name = @"Amparo Gonzalez";
@@ -76,6 +79,7 @@
 
     // Create message #4
     tempMessage = [[Message alloc] init];
+    tempMessage.fb_inbox_id = @"1469889866608936";
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152156045491377";
     tempMessage.fb_from_name = @"Amparo Gonzalez";
@@ -95,6 +99,7 @@
 
     // Create message #5
     tempMessage = [[Message alloc] init];
+    tempMessage.fb_inbox_id = @"1469889866608936";
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152779700000003";
     tempMessage.fb_from_name = @"Melisa Celi";
@@ -114,6 +119,7 @@
 
     // Create message #6
     tempMessage = [[Message alloc] init];
+    tempMessage.fb_inbox_id = @"1469889866608936";
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152779700000003";
     tempMessage.fb_from_name = @"Melisa Celi";
@@ -133,6 +139,7 @@
 
     // Create message #7
     tempMessage = [[Message alloc] init];
+    tempMessage.fb_inbox_id = @"1469889866608936";
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152779700000005";
     tempMessage.fb_from_name = @"Ivan Rosado";
@@ -152,6 +159,7 @@
 
     // Create message #8
     tempMessage = [[Message alloc] init];
+    tempMessage.fb_inbox_id = @"1469889866608936";
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152779700000005";
     tempMessage.fb_from_name = @"Ivan Rosado";
@@ -173,6 +181,7 @@
         
         // Create message #?
         tempMessage = [[Message alloc] init];
+        tempMessage.fb_inbox_id = @"1469889866608936";
         tempMessage.fb_msg_id = @"1469889866608936_143534523426";
         tempMessage.fb_from_id = @"10152779700000005";
         tempMessage.fb_from_name = @"Ivan Rosado";
@@ -255,8 +264,7 @@
     return messagesArray;
 }
 
-/*
-- (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID withoutMessage:(NSString*)messageToNotConsider; // Return an array with all messages from a client
+- (NSMutableArray*)getMessagesArrayForProduct:(NSString*)productForID; // Return an array with all messages for a product
 {
     NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
     
@@ -271,14 +279,14 @@
         messageToReview = [[Message alloc] init];
         messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
         
-        if ([messageToReview.client_id isEqual:clientFromID] && ![messageToReview.fb_msg_id isEqualToString:messageToNotConsider])
+        if ([messageToReview.product_id isEqual:productForID])
         {
             [messagesArray addObject:messageToReview];
         }
-    }    
+    }
     return messagesArray;
 }
-*/
+
 
 - (Message*)getLastMessageFromClient:(NSString*)clientFromID; // Return the last message for a specific client
 {

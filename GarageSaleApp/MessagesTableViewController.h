@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MessagesSinceTableViewController.h"
 
 @class MessagesDetailViewController;
 
-@interface MessagesTableViewController : UITableViewController
+@interface MessagesTableViewController : UITableViewController <UIActionSheetDelegate, MessagesSinceViewControllerDelegate>
 
 @property (strong, nonatomic) MessagesDetailViewController *detailViewController;
 

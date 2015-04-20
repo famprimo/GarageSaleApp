@@ -7,14 +7,16 @@
 //
 
 #import "MessagesDetailViewController.h"
-#import "Message.h"
 #import "Product.h"
+#import "Message.h"
 #import "ProductModel.h"
 #import "Client.h"
 #import "ClientModel.h"
 #import "Opportunity.h"
 #import "OpportunityModel.h"
 #import "NSDate+NVTimeAgo.h"
+#import <FacebookSDK/FacebookSDK.h>
+
 
 @interface MessagesDetailViewController ()
 {
@@ -32,6 +34,8 @@
     
     NSString *_client2Type;
     NSString *_templateTypeForPopover;
+    
+    UIRefreshControl *_refreshControl;
 }
 
 // For Popover
@@ -40,7 +44,6 @@
 @property (nonatomic, strong) UIPopoverController *sendMessagePopover;
 @property (nonatomic, strong) UIPopoverController *createOpportunityPopover;
 @property (nonatomic, strong) UIPopoverController *editClientPopover;
-
 
 @end
 
@@ -62,6 +65,10 @@
     [self configureView];
     
     _messageRowHeight = 80;
+    
+    _refreshControl = [[UIRefreshControl alloc] init];
+    [_refreshControl addTarget:self action:@selector(getPreviousMessages:) forControlEvents:UIControlEventValueChanged];
+    [self.tableMessages addSubview:_refreshControl];
 
 }
 
@@ -200,6 +207,9 @@
         [self UpdateProductRelated];
         [self.tableOpportunities reloadData];
         
+        // [NSTimer scheduledTimerWithTimeInterval:1.0f
+        //                                  target:self selector:@selector(getFBNewMessages:) userInfo:nil repeats:YES];
+        
     }
 }
 
@@ -326,7 +336,7 @@
         
         self.labelProductName.text = _selectedProduct.name;
         self.labelProductGSCode.text = _selectedProduct.GS_code;
-        self.labelProductPrice.text = [NSString stringWithFormat:@"%@%.f", _selectedProduct.currency, _selectedProduct.published_price];
+        self.labelProductPrice.text = [NSString stringWithFormat:@"%@%.f", _selectedProduct.currency, _selectedProduct.price];
         self.labelProductDetails.text = _selectedProduct.desc;
         self.labelProductDetails.numberOfLines = 0;
         [self.labelProductDetails sizeToFit];
@@ -431,6 +441,20 @@
 }
 
 #pragma mark - Managing button actions
+
+- (IBAction)getPreviousMessages:(id)sender
+{
+    NSString *url = [NSString stringWithFormat:@"%@/comments", _selectedClient.fb_inbox_id];
+
+    [self getFBInboxComments:url withClientID:_selectedClient.client_id];
+    
+    [_refreshControl endRefreshing];
+
+    // [self.tableMessages reloadData];
+    
+}
+
+
 
 - (IBAction)replyMessage:(id)sender
 {
@@ -673,6 +697,8 @@
 
 - (IBAction)seeProductInFacebook:(id)sender
 {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:_selectedProduct.fb_link]];
+
 }
 
 #pragma mark - Table view data source
@@ -719,15 +745,16 @@
         NSString *cellIdentifier = @"Cell";
         UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         
-        // Get the message to be shown
-        Message *myMessage = _myDataMessages[indexPath.row];
-        
         // Get references to images and labels of cell
         UIImageView *clientImage = (UIImageView*)[myCell.contentView viewWithTag:1];
         UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:2];
         UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:3];
         UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:4];
         UIImageView *bubbleImage = (UIImageView*)[myCell.contentView viewWithTag:5];
+        
+
+        // Get the message to be shown
+        Message *myMessage = _myDataMessages[indexPath.row];
         
         // Set client picture
         if ([myMessage.recipient isEqualToString:@"G"])
@@ -737,7 +764,7 @@
         else
         {
             clientImage.image = [UIImage imageNamed:@"GarageSale"];
-         }
+        }
         
         // Make client picture rounded
         clientImage.layer.cornerRadius = clientImage.frame.size.width / 2;
@@ -748,10 +775,10 @@
         CGRect datetimeLabelFrame = datetimeLabel.frame;
         datetimeLabelFrame.size.width = 200;
         datetimeLabel.frame = datetimeLabelFrame;
-
+        
         datetimeLabel.text = [myMessage.datetime formattedAsTimeAgo];
         [datetimeLabel sizeToFit];
-
+        
         
         // Set message text
         
@@ -773,11 +800,11 @@
             productImage.image = [UIImage imageNamed:@"Blank"];
         }
         messageLabel.frame = messageLabelFrame;
-
+        
         messageLabel.text = myMessage.message;
         messageLabel.numberOfLines = 0;
         [messageLabel sizeToFit];
-
+        
         
         // Define position of objects depending on the recipient
         
@@ -809,7 +836,7 @@
             imageProductFrame.size.width = 40;
             imageProductFrame.size.height = 40;
             productImage.frame = imageProductFrame;
-
+            
             CGRect datetimeLabelFrame = datetimeLabel.frame;
             int datetimepositionX = messageLabelFrame.origin.x + messageLabelFrame.size.width - datetimeLabelFrame.size.width;
             if (datetimepositionX < 85) {
@@ -818,7 +845,7 @@
             datetimeLabelFrame.origin.x = datetimepositionX;
             datetimeLabelFrame.origin.y = messageLabelFrame.origin.y + messageLabelFrame.size.height + 5;
             datetimeLabel.frame = datetimeLabelFrame;
-
+            
         }
         else
         {
@@ -838,7 +865,7 @@
             datetimeLabelFrame.origin.x = 340 - datetimeLabelFrame.size.width;
             datetimeLabelFrame.origin.y = messageLabelFrame.origin.y + messageLabelFrame.size.height + 5;
             datetimeLabel.frame = datetimeLabelFrame;
-
+            
             CGRect imageProductFrame = productImage.frame;
             imageProductFrame.origin.x = messageLabelFrame.origin.x - 45;
             if ((imageProductFrame.origin.x + imageProductFrame.size.width) > datetimeLabelFrame.origin.x)
@@ -1037,5 +1064,132 @@
     [self UpdateProductRelated];
 
 }
+
+
+#pragma mark - Connect with Facebook
+
+- (void) getFBInboxComments:(NSString *)url withClientID:(NSString *)fromClientID;
+{
+    [FBRequestConnection startWithGraphPath:url completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+     {
+         if (!error) {  // FB request was a success!
+             
+             if (result[@"data"]) {   // There is FB data!
+                 
+                 NSArray *jsonMessagesArray = result[@"data"];
+                 
+                 [self parseFBInboxComments:jsonMessagesArray withClientID:fromClientID];
+                 
+                 // Review if there are more comments from this chat
+                 
+                 // EVALUAR SI TODOS LOS MENSAJES YA ESTAN REGISTRADOS PARA NO SEGUIR...!!!!
+                 
+                 NSString *next = result[@"paging"][@"next"];
+                 
+                 if (next && jsonMessagesArray.count>=25)
+                 {
+                     [self getFBInboxComments:[next substringFromIndex:32] withClientID:fromClientID];
+                 }
+             }
+             
+         } else {
+             // An error occurred, we need to handle the error
+             // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+             NSLog(@"error getFBInboxComments: %@", error.description);
+         }
+     }];
+    
+}
+
+- (void) parseFBInboxComments:(NSArray *)jsonMessagesArray withClientID:(NSString *)fromClientID;
+{
+    MessageModel *messagesMethods = [[MessageModel alloc] init];
+    ClientModel *clientMethods = [[ClientModel alloc] init];
+    
+    Client *tmpClient = [clientMethods getClientFromClientId:fromClientID];
+    NSString *fbInboxID = tmpClient.fb_inbox_id;
+    NSString *fbIDfromInbox = tmpClient.fb_client_id;
+    NSString *fbNamefromInbox = [NSString stringWithFormat:@"%@ %@", tmpClient.name, tmpClient.last_name];
+    
+    // Add all messages from this conversation
+    
+    for (int i=0; i<jsonMessagesArray.count; i=i+1)
+    {
+        NSDictionary *newMessage = jsonMessagesArray[i];
+        
+        // Validate if the comment/message exists
+        if (![messagesMethods existMessage:newMessage[@"id"]])
+        {
+            // New message!
+            Message *tempMessage = [[Message alloc] init];
+            
+            tempMessage.fb_inbox_id = fbInboxID;
+            tempMessage.fb_msg_id = newMessage[@"id"];
+            tempMessage.fb_from_id = newMessage[@"from"][@"id"];
+            tempMessage.fb_from_name = newMessage[@"from"][@"name"];
+            tempMessage.client_id = fromClientID;
+            tempMessage.message = newMessage[@"message"];
+            
+            tempMessage.fb_created_time = newMessage[@"created_time"];
+            NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+            [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+            tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time];
+            
+            tempMessage.fb_photo_id = nil;
+            tempMessage.product_id = nil;
+            tempMessage.agent_id = @"00001";
+            tempMessage.status = @"N";
+            tempMessage.type = @"I";
+            
+            if ([tempMessage.fb_from_name hasPrefix:@"Garage"])
+            {
+                tempMessage.recipient = @"C";
+                tempMessage.fb_from_id = fbIDfromInbox;
+                tempMessage.fb_from_name = fbNamefromInbox;
+            }
+            else
+            { tempMessage.recipient = @"G";}
+            
+            tempMessage.client_id = fromClientID;
+            
+            // Insert new message to array and add row to table
+            [self addNewMessage:tempMessage];
+            
+        }
+    }
+    
+}
+
+
+- (void) addNewMessage:(Message*)newMessage;
+{
+    MessageModel *messageMethods = [[MessageModel alloc] init];
+    
+    // Insert message to messages table array
+    
+    [_myDataMessages insertObject:newMessage atIndex:0];
+    
+    // Update database
+    [messageMethods addNewMessage:newMessage];
+    
+    // Sort array to be sure new messages are on top
+    
+    [_myDataMessages sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Message*)a datetime];
+        NSDate *second = [(Message*)b datetime];
+        return [first compare:second];
+    }];
+    
+    // Reload table
+    [UIView transitionWithView:self.tableMessages
+                      duration:0.5f
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^(void) {
+                        [self.tableMessages reloadData];
+                    } completion:NULL];
+    
+}
+
+
 
 @end

@@ -1,19 +1,136 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditProductViewController">
             <connections>
+                <outlet property="buttonSave" destination="3Pm-6Q-PLe" id="y8g-lb-N3Y"/>
+                <outlet property="imageProduct" destination="Yc2-5h-isr" id="vxV-pa-3jl"/>
+                <outlet property="labelProductCreationDate" destination="jU8-hS-gSa" id="8WN-JK-yNv"/>
+                <outlet property="labelProductName" destination="wN0-wY-jIZ" id="0sd-zk-YxV"/>
+                <outlet property="picBackground" destination="CEM-XD-2Ah" id="jEa-mW-Rpx"/>
+                <outlet property="tabCurrency" destination="kBH-Hp-6qw" id="7x0-1w-mny"/>
+                <outlet property="tabType" destination="L2R-IX-7nF" id="lRE-TI-KvP"/>
+                <outlet property="textDesc" destination="82s-rM-GCa" id="qpI-K1-PU7"/>
+                <outlet property="textGScode" destination="AhK-o1-MNR" id="dzh-kA-eB6"/>
+                <outlet property="textName" destination="LT2-GH-W2l" id="33C-Wy-gpJ"/>
+                <outlet property="textNotes" destination="TJa-8Z-lcV" id="V3B-m7-6s1"/>
+                <outlet property="textPublishedPrice" destination="ZUc-gj-aSJ" id="fDT-2b-4BK"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <rect key="frame" x="0.0" y="0.0" width="800" height="400"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" tag="5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Blank" translatesAutoresizingMaskIntoConstraints="NO" id="CEM-XD-2Ah">
+                    <rect key="frame" x="0.0" y="90" width="800" height="310"/>
+                    <color key="backgroundColor" red="0.98176008609999998" green="1" blue="0.96743402619999996" alpha="1" colorSpace="calibratedRGB"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yc2-5h-isr">
+                    <rect key="frame" x="10" y="10" width="70" height="70"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Nombre del producto" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wN0-wY-jIZ">
+                    <rect key="frame" x="88" y="15" width="523" height="21"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                    <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Nombre:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1FE-Lh-efL">
+                    <rect key="frame" x="16" y="148" width="64" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Descripción:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qIK-M9-7pP">
+                    <rect key="frame" x="0.0" y="193" width="80" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Precio:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QF0-nM-JbS">
+                    <rect key="frame" x="495" y="204" width="59" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Código GS:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kdh-i3-zzN">
+                    <rect key="frame" x="0.0" y="106" width="80" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="LT2-GH-W2l">
+                    <rect key="frame" x="88" y="144" width="485" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AhK-o1-MNR">
+                    <rect key="frame" x="88" y="102" width="173" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZUc-gj-aSJ">
+                    <rect key="frame" x="606" y="200" width="181" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="82s-rM-GCa">
+                    <rect key="frame" x="88" y="189" width="378" height="191"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TJa-8Z-lcV">
+                    <rect key="frame" x="495" y="267" width="292" height="113"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="L2R-IX-7nF">
+                    <rect key="frame" x="606" y="102" width="181" height="29"/>
+                    <segments>
+                        <segment title="Venta"/>
+                        <segment title="Publicidad"/>
+                    </segments>
+                </segmentedControl>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kBH-Hp-6qw">
+                    <rect key="frame" x="606" y="145" width="181" height="29"/>
+                    <segments>
+                        <segment title="Soles"/>
+                        <segment title="Dólares"/>
+                    </segments>
+                </segmentedControl>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Pm-6Q-PLe">
+                    <rect key="frame" x="625" y="23" width="162" height="44"/>
+                    <color key="backgroundColor" white="0.66666666669999997" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                    <state key="normal" title="Grabar">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="saveProductEdits:" destination="-1" eventType="touchUpInside" id="maD-jh-DYf"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fecha de creacion" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jU8-hS-gSa">
+                    <rect key="frame" x="88" y="59" width="249" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notas:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FDU-uh-AqI">
+                    <rect key="frame" x="495" y="243" width="86" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="222" y="345"/>
         </view>
     </objects>
+    <resources>
+        <image name="Blank" width="237" height="150"/>
+    </resources>
 </document>

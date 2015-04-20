@@ -15,7 +15,7 @@
 - (NSMutableArray*)getMessagesArray; // Return an array with all messages
 - (NSMutableArray*)getMessagesArrayFromClients; // Return an array will all messages with recipient "GarageSale"
 - (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID; // Return an array with all messages from a client
-//- (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID withoutMessage:(NSString*)messageToNotConsider; // Return an array with all messages from a client
+- (NSMutableArray*)getMessagesArrayForProduct:(NSString*)productForID; // Return an array with all messages for a product
 - (Message*)getLastMessageFromClient:(NSString*)clientFromID; // Return the last message for a specific client
 - (BOOL)addNewMessage:(Message*)newMessage;
 - (BOOL)existMessage:(NSString*)messageIDToValidate; // Review an array of Messages to check if a given Message ID exists

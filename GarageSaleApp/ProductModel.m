@@ -28,9 +28,9 @@
     tempProduct.name = @"Bajo Ibáñez";
     tempProduct.desc = @"GS3024 Bajo Ibáñez GSR395 Precio $270. 5 cuerdas. 2 Pastillas activas. Perfecto estado, solo 1 dueño. 1 quiñe No incluye estuche, ni correa. Si estás interesado te mandamos más fotos ";
     tempProduct.fb_photo_id = @"XXXX";
+    tempProduct.fb_link = @"http://www.facebook.com";
     tempProduct.currency = @"USD";
-    tempProduct.initial_price = 270.0;
-    tempProduct.published_price = 270.0;
+    tempProduct.price = 270.0;
     tempProduct.created_time = [dateFormat dateFromString:@"20140501"];
     tempProduct.updated_time = [dateFormat dateFromString:@"20140501"];
     tempProduct.solddisabled_time = nil;
@@ -59,9 +59,9 @@
     tempProduct.name = @"Silla Vienesas";
     tempProduct.desc = @"TBAJARON A s/. 160 c/u Sillas Vienesas GS1472";
     tempProduct.fb_photo_id = @"XXXX";
+    tempProduct.fb_link = @"http://www.facebook.com";
     tempProduct.currency = @"S/.";
-    tempProduct.initial_price = 200.0;
-    tempProduct.published_price = 160.0;
+    tempProduct.price = 160.0;
     tempProduct.created_time = [dateFormat dateFromString:@"20140301"];
     tempProduct.updated_time = [dateFormat dateFromString:@"20140301"];
     tempProduct.solddisabled_time = nil;
@@ -89,9 +89,9 @@
     tempProduct.name = @"Silla Graco para bebé";
     tempProduct.desc = @"GS2906 Silla Graco para bebé, se puede usar desde 2.5 kg. (recién nacido) hasta 10 kg. s/. 200 Tiempo de uso 5 meses Está completo y casi nuevo (solo algunas marcas en el plástico de la base por el uso) base + silla portabebé + manual de usuario. SAN ISIDRO";
     tempProduct.fb_photo_id = @"XXXX";
+    tempProduct.fb_link = @"http://www.facebook.com";
     tempProduct.currency = @"S/.";
-    tempProduct.initial_price = 200.0;
-    tempProduct.published_price = 200.0;
+    tempProduct.price = 200.0;
     tempProduct.created_time = [dateFormat dateFromString:@"20140219"];
     tempProduct.updated_time = [dateFormat dateFromString:@"20140219"];
     tempProduct.solddisabled_time = nil;
@@ -119,9 +119,9 @@
     tempProduct.name = @"Cocina de hierro";
     tempProduct.desc = @"Cocina de hierro marca Mónica s/. 1,100 GS2308";
     tempProduct.fb_photo_id = @"XXXX";
+    tempProduct.fb_link = @"http://www.facebook.com";
     tempProduct.currency = @"S/.";
-    tempProduct.initial_price = 1100.0;
-    tempProduct.published_price = 1100.0;
+    tempProduct.price = 1100.0;
     tempProduct.created_time = [dateFormat dateFromString:@"20140315"];
     tempProduct.updated_time = [dateFormat dateFromString:@"20140315"];
     tempProduct.solddisabled_time = nil;
@@ -140,11 +140,41 @@
 
     // Add product #4 to the array
     [products addObject:tempProduct];
+
+    // Create product #5
+    tempProduct = [[Product alloc] init];
+    tempProduct.product_id = @"0000005";
+    tempProduct.client_id = @"00004";
+    tempProduct.GS_code = @"GSN2356";
+    tempProduct.name = @"Ropa para ninos";
+    tempProduct.desc = @"GSN2356 Ropa para ninos en buen estado";
+    tempProduct.fb_photo_id = @"XXXX";
+    tempProduct.fb_link = @"http://www.facebook.com";
+    tempProduct.currency = @"S/.";
+    tempProduct.price = 0;
+    tempProduct.created_time = [dateFormat dateFromString:@"20150115"];
+    tempProduct.updated_time = [dateFormat dateFromString:@"20150115"];
+    tempProduct.solddisabled_time = nil;
+    tempProduct.fb_updated_time = nil;
+    tempProduct.type = @"A";
+    tempProduct.picture_link = @"https://scontent-a.xx.fbcdn.net/hphotos-prn2/v/t1.0-9/s720x720/540629_572941262734576_1798615268_n.jpg?oh=ead54861abe199b5c8e064ffd4492ef7&oe=5540E1FC";
+    tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    //
+    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/left-paper-128.png"];
+    tempProduct.additional_pictures = @"";
+    tempProduct.status = @"U";
+    tempProduct.last_promotion_time = [dateFormat dateFromString:@"20150215"];
+    tempProduct.promotion_piority = 2;
+    tempProduct.notes = @"";
+    tempProduct.agent_id = @"00001";
     
+    // Add product #5 to the array
+    [products addObject:tempProduct];
+
     // Set last product ID
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    mainDelegate.lastProductID = 4;
+    mainDelegate.lastProductID = 5;
 
     // Return the producct array as the return value
     return products;
@@ -422,8 +452,11 @@
             {
                 if ( [paragraphs[i] rangeOfString:@"USD"].location == NSNotFound )
                 {
-                    productName = [NSString stringWithString:paragraphs[i]];
-                    break;
+                    if ( [paragraphs[i] rangeOfString:@"VENDID"].location == NSNotFound )
+                    {
+                        productName = [NSString stringWithString:paragraphs[i]];
+                        break;
+                    }
                 }
             }
         }

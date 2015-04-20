@@ -22,6 +22,7 @@
     Client *tempClient = [[Client alloc] init];
     tempClient.client_id = @"00001";
     tempClient.fb_client_id = @"10152779700000001";
+    tempClient.fb_inbox_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Georghette";
     tempClient.last_name = @"Juliette Sutta";
@@ -52,6 +53,7 @@
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00002";
     tempClient.fb_client_id = @"10152779700000002";
+    tempClient.fb_inbox_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Natalia";
     tempClient.last_name = @"Gallardo";
@@ -81,6 +83,7 @@
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00003";
     tempClient.fb_client_id = @"10152779700000003";
+    tempClient.fb_inbox_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Melisa";
     tempClient.last_name = @"Celi";
@@ -110,6 +113,7 @@
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00004";
     tempClient.fb_client_id = @"10152779700000004";
+    tempClient.fb_inbox_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Amparo";
     tempClient.last_name = @"Gonzalez";
@@ -139,6 +143,7 @@
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00005";
     tempClient.fb_client_id = @"10152779700000005";
+    tempClient.fb_inbox_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Ivan";
     tempClient.last_name = @"Rosado";
@@ -168,6 +173,7 @@
     tempClient = [[Client alloc] init];
     tempClient.client_id = @"00006";
     tempClient.fb_client_id = @"10152779700000006";
+    tempClient.fb_inbox_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Mily";
     tempClient.last_name = @"de la Cruz";

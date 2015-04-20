@@ -320,7 +320,7 @@
         keyRange = [reviewedText rangeOfString:@"#PRECIO"];
         if (keyRange.location != NSNotFound)
         {
-            [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%f", relatedProduct.initial_price]];
+            [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%f", relatedProduct.price]];
         }
     }    
     

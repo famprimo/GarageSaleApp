@@ -10,13 +10,15 @@
 #import "ClientPickerViewController.h"
 #import "SendMessageViewController.h"
 #import "NewOpportunityViewController.h"
+#import "EditProductViewController.h"
 
 
-@interface ProductDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
+
+@interface ProductDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, EditProductViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) id detailItem;
 
-@property (strong, nonatomic) IBOutlet UIButton *buttonStatus;
+@property (weak, nonatomic) IBOutlet UIButton *buttonChangeProductStatus;
 @property (weak, nonatomic) IBOutlet UIButton *buttonSeeInFacebook;
 @property (weak, nonatomic) IBOutlet UIButton *buttonMessageToOwner;
 @property (weak, nonatomic) IBOutlet UIButton *buttonNewOpportunity;
@@ -27,10 +29,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
 @property (weak, nonatomic) IBOutlet UIImageView *imageProductSold;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductName;
-@property (weak, nonatomic) IBOutlet UILabel *labelProductType;
 @property (weak, nonatomic) IBOutlet UILabel *labelGSCode;
 @property (weak, nonatomic) IBOutlet UILabel *labelPrice;
-@property (weak, nonatomic) IBOutlet UILabel *labelInitialPrice;
 @property (weak, nonatomic) IBOutlet UILabel *labelDescription;
 @property (weak, nonatomic) IBOutlet UILabel *labelCreationDate;
 @property (weak, nonatomic) IBOutlet UILabel *labelNotes;
@@ -45,6 +45,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *picOwnerZone;
 @property (weak, nonatomic) IBOutlet UIImageView *picOwnerPhone;
 
+@property (weak, nonatomic) IBOutlet UITableView *tableMessages;
 @property (weak, nonatomic) IBOutlet UITableView *tableOpportunities;
 
 -(IBAction)relateToClient:(id)sender;

@@ -73,8 +73,8 @@
     self.labelProductGSCode.text = _relatedProduct.GS_code;
     self.labelProductCurrency.text = _relatedProduct.currency;
     self.labelProductDesc.text = _relatedProduct.desc;
-    self.labelProductPrice.text = [NSString stringWithFormat:@"%@%.f", _relatedProduct.currency, _relatedProduct.initial_price];
-    self.textOpportunityPrice.text = [NSString stringWithFormat:@"%.f", _relatedProduct.initial_price];
+    self.labelProductPrice.text = [NSString stringWithFormat:@"%@%.f", _relatedProduct.currency, _relatedProduct.price];
+    self.textOpportunityPrice.text = [NSString stringWithFormat:@"%.f", _relatedProduct.price];
     
     self.imageClient.image = [UIImage imageWithData:_clientBuyer.picture];
     

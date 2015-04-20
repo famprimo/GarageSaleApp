@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MessagesTableViewController.h"
 #import "Message.h"
 #import "MessageModel.h"
 #import "ClientPickerViewController.h"

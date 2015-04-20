@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) NSString *client_id;
 @property (strong, nonatomic) NSString *fb_client_id;
+@property (strong, nonatomic) NSString *fb_inbox_id;
 @property (strong, nonatomic) NSString *type; // (F)acebook (O)ffline
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *last_name;
