@@ -483,7 +483,7 @@
     
     
     self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
-    self.sendMessagePopover.popoverContentSize = CGSizeMake(600.0, 400.0);
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(800.0, 500.0);
     [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
                                              inView:self.view
                            permittedArrowDirections:UIPopoverArrowDirectionAny
@@ -499,7 +499,7 @@
     
     
     self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
-    self.sendMessagePopover.popoverContentSize = CGSizeMake(600.0, 400.0);
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(800.0, 500.0);
     [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
                                              inView:self.view
                            permittedArrowDirections:UIPopoverArrowDirectionAny
@@ -516,7 +516,7 @@
 -(NSString*)GetBuyerIdFromMessage;
 {
     
-    return _selectedOpportunity.buyer_id;
+    return _selectedOpportunity.client_id;
 }
 
 -(NSString*)GetOwnerIdFromMessage;
@@ -801,8 +801,8 @@
         // Get the information to be shown
         Opportunity *myOpportunity = _myDataOpportunities[indexPath.row];
         
-        Product *relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:myOpportunity.product_id];
-        Client *clientRelatedToOpportunity = [[[ClientModel alloc] init] getClientFromClientId:myOpportunity.buyer_id];
+        // Product *relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:myOpportunity.product_id];
+        Client *clientRelatedToOpportunity = [[[ClientModel alloc] init] getClientFromClientId:myOpportunity.client_id];
         
         // Set client data
         clientImage.image = [UIImage imageWithData:clientRelatedToOpportunity.picture];

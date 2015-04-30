@@ -171,7 +171,7 @@
     Opportunity *myOpportunity = _myData[indexPath.row];
     
     Product *relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:myOpportunity.product_id];
-    Client *clientRelatedToOpportunity = [[[ClientModel alloc] init] getClientFromClientId:myOpportunity.buyer_id];
+    Client *clientRelatedToOpportunity = [[[ClientModel alloc] init] getClientFromClientId:myOpportunity.client_id];
 
     // Set product data
     
@@ -206,18 +206,22 @@
     if ([myOpportunity.status isEqualToString:@"O"])
     {
         opportunityStatus.text = @"Oportunidad abierta";
+        productLabel.textColor = [UIColor blueColor];
     }
     else if ([myOpportunity.status isEqualToString:@"C"])
     {
         opportunityStatus.text = [NSString stringWithFormat:@"Oportunidad cerrada %@", [myOpportunity.closedsold_time formattedAsTimeAgo]];
+        productLabel.textColor = [UIColor grayColor];
     }
     else if ([myOpportunity.status isEqualToString:@"S"])
     {
         opportunityStatus.text = [NSString stringWithFormat:@"Producto vendido %@, pero pendiente de pago", [myOpportunity.closedsold_time formattedAsTimeAgo]];
+        productLabel.textColor = [UIColor blackColor];
     }
     else if ([myOpportunity.status isEqualToString:@"P"])
     {
         opportunityStatus.text = [NSString stringWithFormat:@"Producto vendido %@, y pagado %@", [myOpportunity.closedsold_time formattedAsTimeAgo], [myOpportunity.paid_time formattedAsTimeAgo]];
+        productLabel.textColor = [UIColor blackColor];
     }
 
     

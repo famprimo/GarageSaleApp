@@ -104,16 +104,15 @@
     
     tempOpportunity.opportunity_id = [opportunityMethods getNextOpportunityID];
     tempOpportunity.product_id = _relatedProduct.product_id;
-    tempOpportunity.buyer_id = _clientBuyer.client_id;
-    tempOpportunity.owner_id = _relatedProduct.client_id;
-    tempOpportunity.initial_price = self.labelProductPrice.text.intValue;
-    tempOpportunity.price_sold = 0;
+    tempOpportunity.client_id = _clientBuyer.client_id;
+    tempOpportunity.initial_price = self.textOpportunityPrice.text.intValue;
+    tempOpportunity.price_sold = tempOpportunity.initial_price;
     tempOpportunity.created_time = [NSDate date];
     tempOpportunity.closedsold_time = nil;
     tempOpportunity.paid_time = nil;
     tempOpportunity.status = @"O";
     tempOpportunity.notes = @"Notas";
-    tempOpportunity.commision = 0;
+    tempOpportunity.commision = tempOpportunity.initial_price * 0.1;
     tempOpportunity.agent_id = @"00001";
 
     [opportunityMethods addNewOpportunity:tempOpportunity];

@@ -8,6 +8,8 @@
 
 #import "OpportunityModel.h"
 #import "Opportunity.h"
+#import "Product.h"
+#import "ProductModel.h"
 #import "AppDelegate.h"
 
 @implementation OpportunityModel
@@ -24,8 +26,7 @@
     Opportunity *tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000001";
     tempOpportunity.product_id = @"0000001";
-    tempOpportunity.buyer_id = @"00003";
-    tempOpportunity.owner_id = @"00001";
+    tempOpportunity.client_id = @"00003";
     tempOpportunity.initial_price = 290.0;
     tempOpportunity.price_sold = 0;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140501"];
@@ -43,14 +44,13 @@
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000002";
     tempOpportunity.product_id = @"0000001";
-    tempOpportunity.buyer_id = @"00004";
-    tempOpportunity.owner_id = @"00001";
+    tempOpportunity.client_id = @"00004";
     tempOpportunity.initial_price = 290.0;
     tempOpportunity.price_sold = 0;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140530"];
-    tempOpportunity.closedsold_time = nil;
+    tempOpportunity.closedsold_time = [dateFormat dateFromString:@"20140620"];
     tempOpportunity.paid_time = nil;
-    tempOpportunity.status = @"O";
+    tempOpportunity.status = @"C";
     tempOpportunity.notes = @"Notas";
     tempOpportunity.commision = 0;
     tempOpportunity.agent_id = @"00001";
@@ -62,8 +62,7 @@
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000003";
     tempOpportunity.product_id = @"0000002";
-    tempOpportunity.buyer_id = @"00002";
-    tempOpportunity.owner_id = @"00001";
+    tempOpportunity.client_id = @"00002";
     tempOpportunity.initial_price = 1100.0;
     tempOpportunity.price_sold = 0;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140302"];
@@ -81,8 +80,7 @@
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000004";
     tempOpportunity.product_id = @"0000004";
-    tempOpportunity.buyer_id = @"00005";
-    tempOpportunity.owner_id = @"00002";
+    tempOpportunity.client_id = @"00005";
     tempOpportunity.initial_price = 100000;
     tempOpportunity.price_sold = 990000;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20131201"];
@@ -100,8 +98,7 @@
     tempOpportunity = [[Opportunity alloc] init];
     tempOpportunity.opportunity_id = @"0000005";
     tempOpportunity.product_id = @"0000002";
-    tempOpportunity.buyer_id = @"00006";
-    tempOpportunity.owner_id = @"00001";
+    tempOpportunity.client_id = @"00006";
     tempOpportunity.initial_price = 250.0;
     tempOpportunity.price_sold = 0;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140601"];
@@ -216,13 +213,17 @@
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     Opportunity *opportunityToReview = [[Opportunity alloc] init];
+    Product *tmpProduct = [[Product alloc] init];
+    ProductModel *productMethods = [[ProductModel alloc] init];
     
     for (int i=0; i<mainDelegate.sharedArrayOpportunities.count; i=i+1)
     {
         opportunityToReview = [[Opportunity alloc] init];
         opportunityToReview = (Opportunity *)mainDelegate.sharedArrayOpportunities[i];
         
-        if ([opportunityToReview.buyer_id isEqualToString:clientID] || [opportunityToReview.owner_id isEqualToString:clientID])
+        tmpProduct = [productMethods getProductFromProductId:opportunityToReview.product_id];
+        
+        if ([opportunityToReview.client_id isEqualToString:clientID] || [tmpProduct.client_id isEqualToString:clientID])
         {
             [opportunitiesArray addObject:opportunityToReview];
         }
@@ -243,7 +244,7 @@
     for (int i = 0; i < mainDelegate.sharedArrayClients.count; i++)
     {
         Client* clientTemp = [mainDelegate.sharedArrayClients objectAtIndex: i];
-        if (opportunitySelected.buyer_id == clientTemp.client_id)
+        if (opportunitySelected.client_id == clientTemp.client_id)
         {
             clientFound = clientTemp;
             break;

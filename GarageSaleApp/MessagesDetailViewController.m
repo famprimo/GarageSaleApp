@@ -353,7 +353,7 @@
             
             // Define if related client would be the owner or the interested (buyer)
             
-            if (([_selectedProduct.client_id isEqualToString:_selectedClient.client_id]) && ([_selectedOpportunity.buyer_id length] > 0))
+            if (([_selectedProduct.client_id isEqualToString:_selectedClient.client_id]) && ([_selectedOpportunity.client_id length] > 0))
             {
                 // show the client interested (buyer)
                 if ([_selectedClient.sex isEqualToString:@"M"])
@@ -366,7 +366,7 @@
                 }
                 self.labelClient2Title.text = @"Interesado:";
                 _client2Type = @"I";
-                _relatedClient = [clientMethods getClientFromClientId:_selectedOpportunity.buyer_id];
+                _relatedClient = [clientMethods getClientFromClientId:_selectedOpportunity.client_id];
                 if ([_relatedClient.sex isEqualToString:@"M"])
                 {
                     self.labelClient2Title.text = @"Interesado:";
@@ -979,7 +979,7 @@
         Opportunity *myOpportunity = _myDataOpportunities[indexPath.row];
         
         Product *relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:myOpportunity.product_id];
-        Client *clientRelatedToOpportunity = [[[ClientModel alloc] init] getClientFromClientId:myOpportunity.buyer_id];
+        Client *clientRelatedToOpportunity = [[[ClientModel alloc] init] getClientFromClientId:myOpportunity.client_id];
         
         // Set product data
         
