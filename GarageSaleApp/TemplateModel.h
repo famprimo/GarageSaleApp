@@ -13,12 +13,13 @@
 
 @interface TemplateModel : NSObject
 
-- (NSMutableArray*)getTemplates;
+- (void)saveTemplates;
+- (NSMutableArray*)getTemplatesFromCoreData;
 - (NSMutableArray*)getTemplatesFromType:(NSString*)templateType;
 - (NSString*)getNextTemplateID;
 - (BOOL)addNewTemplate:(Template*)newTemplate;
-- (void)updateTemplate:(Template*)templateToUpdate;
-- (void)updateTemplate:(Template*)templateToUpdate withArray:(NSMutableArray*)arrayTemplates;
+- (BOOL)updateTemplate:(Template*)templateToUpdate;
+- (BOOL)updateTemplate:(Template*)templateToUpdate withArray:(NSMutableArray*)arrayTemplates;
 - (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProduct:(Product*)relatedProduct;
 
 @end

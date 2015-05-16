@@ -41,9 +41,10 @@
     self.imageProduct.image = [UIImage imageWithData:_productToEdit.picture];
 
     self.textName.text = _productToEdit.name;
-    self.textGScode.text = _productToEdit.GS_code;
+    self.textGScode.text = _productToEdit.codeGS;
     self.textDesc.text = _productToEdit.desc;
-    self.textPublishedPrice.text = [NSString stringWithFormat:@"%.f", _productToEdit.price];
+    // self.textPublishedPrice.text = [NSString stringWithFormat:@"%.f", _productToEdit.price];
+    self.textPublishedPrice.text = [NSString stringWithFormat:@"%@", _productToEdit.price];
     self.textNotes.text = _productToEdit.notes;
     
     if ([_productToEdit.type isEqualToString:@"S"])
@@ -77,10 +78,10 @@
     ProductModel *productMethods = [[ProductModel alloc] init];
     
     _productToEdit.name = self.textName.text;
-    _productToEdit.GS_code = self.textGScode.text;
+    _productToEdit.codeGS = self.textGScode.text;
     _productToEdit.desc = self.textDesc.text;
     _productToEdit.notes = self.textNotes.text;
-    _productToEdit.price = [self.textPublishedPrice.text intValue];
+    _productToEdit.price = [NSNumber numberWithFloat:[self.textPublishedPrice.text intValue]];
     _productToEdit.updated_time = [NSDate date];
 
     if (self.tabType.selectedSegmentIndex == 0)

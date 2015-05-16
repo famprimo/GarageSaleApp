@@ -13,11 +13,12 @@
 
 @interface ProductModel : NSObject
 
-- (NSMutableArray*)getProducts;
-- (NSMutableArray*)getProductArray; // Return an array with all products
+- (void)saveProducts;
+- (NSMutableArray*)getProductsFromCoreData;
+- (NSMutableArray*)getProductArray;
 - (NSString*)getNextProductID;
 - (BOOL)addNewProduct:(Product*)newProduct;
-- (void)updateProduct:(Product*)productToUpdate;
+- (BOOL)updateProduct:(Product*)productToUpdate;
 - (void)updateProduct:(Product*)productToUpdate withArray:(NSMutableArray*)arrayProducts;
 - (Client*)getClient:(Product*)productFound;
 - (NSMutableArray*)getOpportunitiesFromProduct:(Product*)productSelected;

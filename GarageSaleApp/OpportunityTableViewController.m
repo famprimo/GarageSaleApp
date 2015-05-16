@@ -62,7 +62,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    // Get the listing data
+    // Get the opportunities data
     _myData = [[[OpportunityModel alloc] init] getOpportunitiesArray];
     
     // Sort array to be sure new opportunities are on top

@@ -189,7 +189,7 @@
         self.labelProductName.text = productSelected.name;
         if ([productSelected.type isEqualToString:@"S"])
         {
-            self.labelPrice.text = [NSString stringWithFormat:@"%@%.f", productSelected.currency, productSelected.price];
+            self.labelPrice.text = [NSString stringWithFormat:@"%@%@", productSelected.currency, productSelected.price];
         }
         else // @"A"
         {
@@ -205,7 +205,7 @@
             self.buttonChangeProductStatus.backgroundColor = [UIColor darkGrayColor];
         }
         
-        self.labelGSCode.text = productSelected.GS_code;
+        self.labelGSCode.text = productSelected.codeGS;
         self.labelCreationDate.text = [productSelected.created_time formattedAsDateComplete];
         
         self.labelDescription.text = productSelected.desc;
@@ -248,7 +248,7 @@
             
             self.labelPublishedAgo.text = @"Publicado por:";
             self.imageOwner.image = [UIImage imageWithData:ownerForProduct.picture];
-            self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",ownerForProduct.zone];
+            self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",ownerForProduct.client_zone];
             self.labelOwnerPhones.text = ownerForProduct.phone1;
             
             // Owner Address

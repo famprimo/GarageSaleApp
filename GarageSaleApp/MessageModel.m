@@ -11,9 +11,19 @@
 
 @implementation MessageModel
 
-- (NSMutableArray*)getMessages; // Updates the array with message list with new messages from database
+- (NSManagedObjectContext *)managedObjectContext
 {
-    NSMutableArray *messages = [[NSMutableArray alloc] init];
+    NSManagedObjectContext *context = nil;
+    id delegate = [[UIApplication sharedApplication] delegate];
+    if ([delegate performSelector:@selector(managedObjectContext)]) {
+        context = [delegate managedObjectContext];
+    }
+    return context;
+}
+
+
+- (void)saveMessages;
+{
     NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
     [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
 
@@ -35,7 +45,7 @@
     tempMessage.recipient = @"G";
    
     // Add message #1 to the array
-    [messages addObject:tempMessage];
+    [self addNewMessage:tempMessage];
     
     // Create message #2
     tempMessage = [[Message alloc] init];
@@ -55,7 +65,7 @@
     tempMessage.recipient = @"G";
     
     // Add message #2 to the array
-    [messages addObject:tempMessage];
+    [self addNewMessage:tempMessage];
     
     // Create message #3
     tempMessage = [[Message alloc] init];
@@ -75,7 +85,7 @@
     tempMessage.recipient = @"G";
     
     // Add message #3 to the array
-    [messages addObject:tempMessage];
+    [self addNewMessage:tempMessage];
 
     // Create message #4
     tempMessage = [[Message alloc] init];
@@ -95,7 +105,7 @@
     tempMessage.recipient = @"C";
     
     // Add message #4 to the array
-    [messages addObject:tempMessage];
+    [self addNewMessage:tempMessage];
 
     // Create message #5
     tempMessage = [[Message alloc] init];
@@ -115,7 +125,7 @@
     tempMessage.recipient = @"C";
     
     // Add message #5 to the array
-    [messages addObject:tempMessage];
+    [self addNewMessage:tempMessage];
 
     // Create message #6
     tempMessage = [[Message alloc] init];
@@ -135,7 +145,7 @@
     tempMessage.recipient = @"G";
     
     // Add message #6 to the array
-    [messages addObject:tempMessage];
+    [self addNewMessage:tempMessage];
 
     // Create message #7
     tempMessage = [[Message alloc] init];
@@ -155,7 +165,7 @@
     tempMessage.recipient = @"C";
     
     // Add message #7 to the array
-    [messages addObject:tempMessage];
+    [self addNewMessage:tempMessage];
 
     // Create message #8
     tempMessage = [[Message alloc] init];
@@ -175,7 +185,7 @@
     tempMessage.recipient = @"C";
     
     // Add message #8 to the array
-    [messages addObject:tempMessage];
+    [self addNewMessage:tempMessage];
 
     for (int i=0; i<20; i=i+1) {
         
@@ -197,11 +207,21 @@
         tempMessage.recipient = @"G";
         
         // Add message #? to the array
-        [messages addObject:tempMessage];
+        [self addNewMessage:tempMessage];
 
     }
-    // Return the producct array as the return value
-    return messages;
+}
+
+- (NSMutableArray*)getMessagesFromCoreData; // Return an array with all messages
+{
+    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
+    
+    // Fetch data from persistent data store
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Messages"];
+    messagesArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    
+    return messagesArray;
 }
 
 - (NSMutableArray*)getMessagesArray; // Return an array with all messages
@@ -342,7 +362,33 @@
     
     [mainDelegate.sharedArrayMessages addObject:newMessage];
     
+    // Save object in persistent data store
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:@"Messages" inManagedObjectContext:context];
+    [newObject setValue:newMessage.fb_inbox_id forKey:@"fb_inbox_id"];
+    [newObject setValue:newMessage.fb_msg_id forKey:@"fb_msg_id"];
+    [newObject setValue:newMessage.fb_from_id forKey:@"fb_from_id"];
+    [newObject setValue:newMessage.fb_from_name forKey:@"fb_from_name"];
+    [newObject setValue:newMessage.message forKey:@"message"];
+    [newObject setValue:newMessage.fb_created_time forKey:@"fb_created_time"];
+    [newObject setValue:newMessage.datetime forKey:@"datetime"];
+    [newObject setValue:newMessage.fb_photo_id forKey:@"fb_photo_id"];
+    [newObject setValue:newMessage.product_id forKey:@"product_id"];
+    [newObject setValue:newMessage.client_id forKey:@"client_id"];
+    [newObject setValue:newMessage.agent_id forKey:@"agent_id"];
+    [newObject setValue:newMessage.status forKey:@"status"];
+    [newObject setValue:newMessage.type forKey:@"type"];
+    [newObject setValue:newMessage.recipient forKey:@"recipient"];
+   
+    NSError *error = nil;
+    // Save the object to persistent store
+    if (![context save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        updateSuccessful = NO;
+    }
+    
     return updateSuccessful;
+
 }
 
 - (BOOL)existMessage:(NSString*)messageIDToValidate; // Review an array of Messages to check if a given Message ID exists

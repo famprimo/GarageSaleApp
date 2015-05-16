@@ -10,8 +10,9 @@
 
 @class ClientDetailViewController;
 
-@interface ClientTableViewController : UITableViewController
+@interface ClientTableViewController : UITableViewController <UISearchBarDelegate, UISearchDisplayDelegate>
 
 @property (strong, nonatomic) ClientDetailViewController *detailViewController;
+@property IBOutlet UISearchBar *clientSearchBar;
 
 @end

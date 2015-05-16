@@ -24,6 +24,9 @@
     // Data for the table
     NSMutableArray *_myDataClients;
     
+    // Data for the search
+    NSMutableArray *_mySearchData;
+    
     // The message that is selected from the table
     Client *_selectedClientBox;
  
@@ -36,6 +39,9 @@
 
 
 @implementation MessagesTableViewController
+
+@synthesize clientSearchBar;
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -163,6 +169,72 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark Content Filtering & UISearchDisplayController Delegate Methods
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    // Remove all objects from the filtered search array
+    [_mySearchData removeAllObjects];
+    NSArray *tempArray;
+    
+    // Filter the array using the search text
+    if (![searchText isEqualToString:@""])
+    {
+        NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"(name contains[c] %@) OR (last_name contains[c] %@)", searchText, searchText];
+        tempArray = [_myDataClients filteredArrayUsingPredicate:resultPredicate];
+    }
+    else
+    {
+        tempArray = [NSArray arrayWithArray:_myDataClients];
+    }
+    
+    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
+    
+}
+
+-(void) searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+{
+    
+    // Remove all objects from the filtered search array
+    NSArray *tempArray;
+    
+    if (_mySearchData == nil)
+    {
+        tempArray = [NSMutableArray arrayWithArray:_myDataClients];
+    }
+    else
+    {
+        tempArray = [NSMutableArray arrayWithArray:_mySearchData];
+    }
+    
+    [_mySearchData removeAllObjects];
+    
+    // Remove all objects from the filtered search array
+    
+    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    // Tells the table data source to reload when text changes
+    [self filterContentForSearchText:searchString scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+{
+    // Tells the table data source to reload when scope bar selection changes
+    [self filterContentForSearchText:self.searchDisplayController.searchBar.text scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+
 
 
 #pragma mark - Table view data source
@@ -173,16 +245,25 @@
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    // Return the number of rows in the section.
-    return _myDataClients.count;
-}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 81.0;
 }
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    // Return the number of rows in the section.
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return _mySearchData.count;
+        
+    } else {
+        return _myDataClients.count;
+    }
+    
+}
+
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -194,11 +275,17 @@
     Message *lastMessageFromClient = [[Message alloc] init];
     
     // Retrieve cell
-    NSString *cellIdentifier = @"Cell";
-    UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    UITableViewCell *myCell;
+    Client *myClient = [[Client alloc] init];
     
-    // Get the listing to be shown
-    Client *myClient = _myDataClients[indexPath.row];
+    // Get the client to be shown
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        myCell = [self.tableView dequeueReusableCellWithIdentifier:@"Cell"];
+        myClient = _mySearchData[indexPath.row];;
+    } else {
+        myCell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+        myClient = _myDataClients[indexPath.row];
+    }
     
     // Get references to images and labels of cell
     UIImageView *clientImage = (UIImageView*)[myCell.contentView viewWithTag:1];
@@ -326,8 +413,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selected listing to var
-    _selectedClientBox = _myDataClients[indexPath.row];
-    
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        _selectedClientBox = _mySearchData[indexPath.row];
+    } else {
+        _selectedClientBox = _myDataClients[indexPath.row];
+    }
+
     // Refresh detail view with selected item
     [self.detailViewController setDetailItem:_selectedClientBox];
 }
@@ -470,7 +561,7 @@
                                           tmpText = [productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
                                           if (![tmpText isEqualToString:@"Not Found"])
                                           {
-                                              newProduct.GS_code = [NSString stringWithFormat:@"GSN%@", tmpText];
+                                              newProduct.codeGS = [NSString stringWithFormat:@"GSN%@", tmpText];
                                               newProduct.type = @"A";
                                               
                                           }
@@ -479,12 +570,12 @@
                                               tmpText = [productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
                                               if (![tmpText isEqualToString:@"Not Found"])
                                               {
-                                                  newProduct.GS_code = [NSString stringWithFormat:@"GS%@", tmpText];
+                                                  newProduct.codeGS = [NSString stringWithFormat:@"GS%@", tmpText];
                                                   newProduct.type = @"S";
                                               }
                                               else
                                               {
-                                                  newProduct.GS_code = @"None";
+                                                  newProduct.codeGS = @"None";
                                                   newProduct.type = @"A";
                                               }
                                           }
@@ -493,7 +584,7 @@
                                           if (![tmpText isEqualToString:@"Not Found"]) {
                                               tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
                                               newProduct.currency = @"S/.";
-                                              newProduct.price = [tmpText integerValue];
+                                              newProduct.price = [NSNumber numberWithFloat:[tmpText integerValue]];
                                           }
                                           else
                                           {
@@ -501,7 +592,7 @@
                                               if (![tmpText isEqualToString:@"Not Found"]) {
                                                   tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
                                                   newProduct.currency = @"USD";
-                                                  newProduct.price = [tmpText integerValue];
+                                                  newProduct.price = [NSNumber numberWithFloat:[tmpText integerValue]];
                                               }
                                               else {
                                                   newProduct.currency = @"S/.";
@@ -519,7 +610,7 @@
                                           newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
                                           newProduct.additional_pictures = @"";
                                           newProduct.status = @"N";
-                                          newProduct.promotion_piority = 2;
+                                          newProduct.promotion_piority = @"2";
                                           newProduct.notes = @"";
                                           newProduct.agent_id = @"00001";
                                           
@@ -768,7 +859,7 @@
                     newClient.created_time = [NSDate date];
                     newClient.last_interacted_time = tempMessage.datetime;
                     
-                    [clientMethods addNewClient:newClient];
+                    // [clientMethods addNewClient:newClient];
                     [newClientsArray addObject:newClient];
                     
                 }
@@ -910,7 +1001,7 @@
             [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
             newClient.last_interacted_time = [formatFBdates dateFromString:jsonArray[i][@"updated_time"]];;
             
-            [clientMethods addNewClient:newClient];
+            //[clientMethods addNewClient:newClient];
             [newClientsArray addObject:newClient];
         }
         
@@ -1071,7 +1162,8 @@
                                       newClient.picture_link = result[@"picture"][@"data"][@"url"];
                                       newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
                                       
-                                      [clientMethods updateClient:newClient];
+                                      //[clientMethods updateClient:newClient];
+                                      [clientMethods addNewClient:newClient];
                                       
                                   }
                                   else {

@@ -152,7 +152,7 @@
             self.imageClientSex.image = [UIImage imageNamed:@"Female"];
         }
 
-        self.labelClientZone.text = _selectedClient.zone;
+        self.labelClientZone.text = _selectedClient.client_zone;
         self.labelClientPhones.text = [NSString stringWithFormat:@"%@ %@ %@", _selectedClient.phone1, _selectedClient.phone2, _selectedClient.phone3];
         self.labelClientEmail.text = _selectedClient.email;
         self.labelCreatedTime.text = [NSString stringWithFormat:@"Creado: %@", [_selectedClient.created_time formattedAsDateComplete]];

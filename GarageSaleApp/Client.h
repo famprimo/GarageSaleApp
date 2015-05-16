@@ -17,7 +17,7 @@
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *last_name;
 @property (strong, nonatomic) NSString *sex; // (M)ale (F)emale
-@property (strong, nonatomic) NSString *zone;
+@property (strong, nonatomic) NSString *client_zone;
 @property (strong, nonatomic) NSString *address;
 @property (strong, nonatomic) NSString *phone1;
 @property (strong, nonatomic) NSString *phone2;

@@ -22,7 +22,13 @@
     Product *_selectedProduct;
     Client *_selectedClientOwner;
     Client *_selectedClientBuyer;
+    
+    NSString *_templateTypeForPopover;
 }
+
+// For Popover
+@property (nonatomic, strong) UIPopoverController *sendMessagePopover;
+@property (nonatomic, strong) UIPopoverController *editOpportunityPopover;
 
 @end
 
@@ -159,18 +165,26 @@
         labelBuyerAddressFrame.size.width = 212;
         labelBuyerAddressFrame.size.height = 46;
         self.labelBuyerAddress.frame = labelBuyerAddressFrame;
+        
+        CGRect labelOpportunityNotesFrame = self.labelOpportunityNotes.frame;
+        labelOpportunityNotesFrame.origin.x = 95;
+        labelOpportunityNotesFrame.origin.y = 607;
+        labelOpportunityNotesFrame.size.width = 564;
+        labelOpportunityNotesFrame.size.height = 83;
+        self.labelOpportunityNotes.frame = labelOpportunityNotesFrame;
 
-        // Set Opportunity DAta
+
+        // Set Opportunity Data
         
         if ([_selectedOpportunity.status isEqualToString:@"S"])
         {
-            self.labelOpportunityPrice.text = [NSString stringWithFormat:@"%@%.f", _selectedProduct.currency, _selectedOpportunity.price_sold];
+            self.labelOpportunityPrice.text = [NSString stringWithFormat:@"%@%@", _selectedProduct.currency, _selectedOpportunity.price_sold];
         }
         else
         {
-            self.labelOpportunityPrice.text = [NSString stringWithFormat:@"%@%.f", _selectedProduct.currency, _selectedOpportunity.initial_price];
+            self.labelOpportunityPrice.text = [NSString stringWithFormat:@"%@%@", _selectedProduct.currency, _selectedOpportunity.initial_price];
         }
-        self.labelOpportunityCommision.text = [NSString stringWithFormat:@"%@%.f", _selectedProduct.currency, _selectedOpportunity.commision];
+        self.labelOpportunityCommision.text = [NSString stringWithFormat:@"%@%@", _selectedProduct.currency, _selectedOpportunity.commision];
         
         self.labelOpportunityCreatedDate.text = [NSString stringWithFormat:@"Creada el %@", [_selectedOpportunity.created_time formattedAsDateComplete]];
         
@@ -212,9 +226,12 @@
             
             self.labelOpportunityClosedDate.text = @"";
             self.labelOpportunitySoldDate.text = [NSString stringWithFormat:@"Vendida el %@", [_selectedOpportunity.closedsold_time formattedAsDateComplete]];
-            self.labelOpportunityPaidDate.text = [NSString stringWithFormat:@"Vendida el %@", [_selectedOpportunity.paid_time formattedAsDateComplete]];
+            self.labelOpportunityPaidDate.text = [NSString stringWithFormat:@"Comisión pagada el %@", [_selectedOpportunity.paid_time formattedAsDateComplete]];
         }
-        
+
+        self.labelOpportunityNotes.text = _selectedOpportunity.notes;
+        self.labelOpportunityNotes.numberOfLines = 0;
+        [self.labelOpportunityNotes sizeToFit];
         
         // Set Product Data
         
@@ -222,14 +239,14 @@
         self.labelProductName.text = _selectedProduct.name;
         if ([_selectedProduct.type isEqualToString:@"S"])
         {
-            self.labelPrice.text = [NSString stringWithFormat:@"%@%.f", _selectedProduct.currency, _selectedProduct.price];
+            self.labelPrice.text = [NSString stringWithFormat:@"%@%@", _selectedProduct.currency, _selectedProduct.price];
         }
         else // @"A"
         {
             self.labelPrice.text = @"Publicidad";
         }
         
-        self.labelGSCode.text = _selectedProduct.GS_code;
+        self.labelGSCode.text = _selectedProduct.codeGS;
         
         self.labelDescription.text = _selectedProduct.desc;
         self.labelDescription.numberOfLines = 0;
@@ -263,7 +280,7 @@
         self.imageOwner.clipsToBounds = YES;
         
         self.imageOwner.image = [UIImage imageWithData:_selectedClientOwner.picture];
-        self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",_selectedClientOwner.zone];
+        self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",_selectedClientOwner.client_zone];
         self.labelOwnerPhones.text = _selectedClientOwner.phone1;
         
         // Owner Address
@@ -304,7 +321,7 @@
         self.imageBuyer.clipsToBounds = YES;
         
         self.imageBuyer.image = [UIImage imageWithData:_selectedClientBuyer.picture];
-        self.labelBuyerZone.text = [NSString stringWithFormat:@"Vive en %@",_selectedClientBuyer.zone];
+        self.labelBuyerZone.text = [NSString stringWithFormat:@"Vive en %@",_selectedClientBuyer.client_zone];
         self.labelBuyerPhones.text = _selectedClientBuyer.phone1;
         
         // Buyer Address
@@ -336,16 +353,87 @@
 
 - (IBAction)updateOpportunityStatus:(id)sender
 {
+    EditOpportunityViewController *editOpportunityController = [[EditOpportunityViewController alloc] initWithNibName:@"EditOpportunityViewController" bundle:nil];
+    editOpportunityController.delegate = self;
+    
+    self.editOpportunityPopover = [[UIPopoverController alloc] initWithContentViewController:editOpportunityController];
+    self.editOpportunityPopover.popoverContentSize = CGSizeMake(700.0, 380.0);
+    [self.editOpportunityPopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                             inView:self.view
+                           permittedArrowDirections:UIPopoverArrowDirectionAny
+                                           animated:YES];
+
 }
 
+-(Opportunity *)getOpportunityforEdit;
+{
+    return _selectedOpportunity;
+}
+
+-(void)opportunityEdited:(Opportunity *)editedOpportunity;
+{
+    // Dismiss the popover view
+    [self.editOpportunityPopover dismissPopoverAnimated:YES];
+    
+    [self configureView];
+}
 
 - (IBAction)sendMessageToOwner:(id)sender
 {
+    _templateTypeForPopover = @"O";
+    
+    SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
+    sendMessageController.delegate = self;
+    
+    self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(800.0, 500.0);
+    [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                             inView:self.view
+                           permittedArrowDirections:UIPopoverArrowDirectionAny
+                                           animated:YES];
 }
 
 
 - (IBAction)sendMessageToBuyer:(id)sender
 {
+    _templateTypeForPopover = @"C";
+    
+    SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
+    sendMessageController.delegate = self;
+    
+    self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(800.0, 500.0);
+    [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                             inView:self.view
+                           permittedArrowDirections:UIPopoverArrowDirectionAny
+                                           animated:YES];
+}
+
+-(NSString*)GetTemplateTypeFromMessage;
+{
+    return _templateTypeForPopover;
+}
+
+-(NSString*)GetBuyerIdFromMessage;
+{
+    return _selectedClientBuyer.client_id;
+}
+
+-(NSString*)GetOwnerIdFromMessage;
+{
+    return _selectedClientOwner.client_id;
+}
+
+-(NSString*)GetProductIdFromMessage;
+{
+    return _selectedProduct.product_id;
+}
+
+-(void)MessageSent;
+{
+    // Dismiss the popover view
+    [self.sendMessagePopover dismissPopoverAnimated:YES];
+    
 }
 
 

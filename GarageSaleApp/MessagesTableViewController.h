@@ -11,9 +11,10 @@
 
 @class MessagesDetailViewController;
 
-@interface MessagesTableViewController : UITableViewController <UIActionSheetDelegate, MessagesSinceViewControllerDelegate>
+@interface MessagesTableViewController : UITableViewController <UIActionSheetDelegate, MessagesSinceViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
 
 @property (strong, nonatomic) MessagesDetailViewController *detailViewController;
+@property IBOutlet UISearchBar *clientSearchBar;
 
 @end
 

@@ -13,14 +13,14 @@
 @property (strong, nonatomic) NSString *opportunity_id;
 @property (strong, nonatomic) NSString *product_id;
 @property (strong, nonatomic) NSString *client_id;
-@property (nonatomic) float initial_price;
-@property (nonatomic) float price_sold;
+@property (strong, nonatomic) NSNumber *initial_price;
+@property (strong, nonatomic) NSNumber *price_sold;
 @property (strong, nonatomic) NSDate *created_time;
 @property (strong, nonatomic) NSDate *closedsold_time;
 @property (strong, nonatomic) NSDate *paid_time;
 @property (strong, nonatomic) NSString *status; // (O)pen (C)losed (S)old (P)aid
 @property (strong, nonatomic) NSString *notes;
-@property (nonatomic) float commision;
+@property (strong, nonatomic) NSNumber *commision;
 @property (strong, nonatomic) NSString *agent_id;
 
 @end

@@ -235,11 +235,11 @@
     // Set table cell labels to listing data
     productImage.image = [UIImage imageWithData:myProduct.picture];
     nameLabel.text = myProduct.name;
-    codeLabel.text = myProduct.GS_code;
+    codeLabel.text = myProduct.codeGS;
     dateLabel.text = [myProduct.created_time formattedAsTimeAgo];
     if ([myProduct.type isEqualToString:@"S"])
     {
-        priceLabel.text = [NSString stringWithFormat:@"%@%.f", myProduct.currency, myProduct.price];
+        priceLabel.text = [NSString stringWithFormat:@"%@%@", myProduct.currency, myProduct.price];
     }
     else // @"A"
     {
@@ -376,7 +376,7 @@
             tmpText = [productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
             if (![tmpText isEqualToString:@"Not Found"])
             {
-                newProduct.GS_code = [NSString stringWithFormat:@"GSN%@", tmpText];
+                newProduct.codeGS = [NSString stringWithFormat:@"GSN%@", tmpText];
                 newProduct.type = @"A";
                 
             }
@@ -385,12 +385,12 @@
                 tmpText = [productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
                 if (![tmpText isEqualToString:@"Not Found"])
                 {
-                    newProduct.GS_code = [NSString stringWithFormat:@"GS%@", tmpText];
+                    newProduct.codeGS = [NSString stringWithFormat:@"GS%@", tmpText];
                     newProduct.type = @"S";
                 }
                 else
                 {
-                    newProduct.GS_code = @"None";
+                    newProduct.codeGS = @"None";
                     newProduct.type = @"A";
                 }
             }
@@ -399,7 +399,7 @@
             if (![tmpText isEqualToString:@"Not Found"]) {
                 tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
                 newProduct.currency = @"S/.";
-                newProduct.price = [tmpText integerValue];
+                newProduct.price = [NSNumber numberWithFloat:[tmpText integerValue]];
             }
             else
             {
@@ -407,7 +407,7 @@
                 if (![tmpText isEqualToString:@"Not Found"]) {
                     tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
                     newProduct.currency = @"USD";
-                    newProduct.price = [tmpText integerValue];
+                    newProduct.price = [NSNumber numberWithFloat:[tmpText integerValue]];
                 }
                 else {
                     newProduct.currency = @"S/.";
@@ -426,7 +426,7 @@
             newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
             newProduct.additional_pictures = @"";
             newProduct.status = @"N";
-            newProduct.promotion_piority = 2;
+            newProduct.promotion_piority = @"2";
             newProduct.notes = @"";
             newProduct.agent_id = @"00001";
             

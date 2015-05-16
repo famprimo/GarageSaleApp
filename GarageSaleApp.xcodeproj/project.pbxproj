@@ -47,6 +47,8 @@
 		C0666E4B1A44B39100B045A0 /* NewOpportunityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */; };
 		C069A40D1A84BD1F0059575E /* MessagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C069A40C1A84BD1F0059575E /* MessagesTableViewController.m */; };
 		C069A4131A84BD530059575E /* MessagesDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C069A4121A84BD530059575E /* MessagesDetailViewController.m */; };
+		C06CE37C1B02E4A800A2A10E /* EditOpportunityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06CE37A1B02E4A800A2A10E /* EditOpportunityViewController.m */; };
+		C06CE37D1B02E4A800A2A10E /* EditOpportunityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06CE37B1B02E4A800A2A10E /* EditOpportunityViewController.xib */; };
 		C06F66F31A4114B40013371F /* Template.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66F21A4114B40013371F /* Template.m */; };
 		C06F66FC1A4116910013371F /* SetupTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66FB1A4116910013371F /* SetupTableViewController.m */; };
 		C06F66FF1A4116A90013371F /* SetupDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66FE1A4116A90013371F /* SetupDetailViewController.m */; };
@@ -63,6 +65,8 @@
 		C0BC0B481AE02B3700DE63C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0BC0B471AE02B3700DE63C8 /* Main.storyboard */; };
 		C0BC39511AC7878F0004CFCE /* MessagesSinceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0BC394F1AC7878F0004CFCE /* MessagesSinceTableViewController.m */; };
 		C0BC39521AC7878F0004CFCE /* MessagesSinceTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0BC39501AC7878F0004CFCE /* MessagesSinceTableViewController.xib */; };
+		C0FA5D691AF1DC1D00B2B535 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0FA5D681AF1DC1D00B2B535 /* CoreData.framework */; };
+		C0FA5D6C1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C0FA5D6A1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,6 +146,9 @@
 		C069A40C1A84BD1F0059575E /* MessagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesTableViewController.m; sourceTree = "<group>"; };
 		C069A4111A84BD530059575E /* MessagesDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesDetailViewController.h; sourceTree = "<group>"; };
 		C069A4121A84BD530059575E /* MessagesDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesDetailViewController.m; sourceTree = "<group>"; };
+		C06CE3791B02E4A800A2A10E /* EditOpportunityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditOpportunityViewController.h; sourceTree = "<group>"; };
+		C06CE37A1B02E4A800A2A10E /* EditOpportunityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditOpportunityViewController.m; sourceTree = "<group>"; };
+		C06CE37B1B02E4A800A2A10E /* EditOpportunityViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditOpportunityViewController.xib; sourceTree = "<group>"; };
 		C06F66F11A4114B40013371F /* Template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Template.h; sourceTree = "<group>"; };
 		C06F66F21A4114B40013371F /* Template.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Template.m; sourceTree = "<group>"; };
 		C06F66FA1A4116910013371F /* SetupTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupTableViewController.h; sourceTree = "<group>"; };
@@ -171,6 +178,8 @@
 		C0BC394E1AC7878F0004CFCE /* MessagesSinceTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesSinceTableViewController.h; sourceTree = "<group>"; };
 		C0BC394F1AC7878F0004CFCE /* MessagesSinceTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesSinceTableViewController.m; sourceTree = "<group>"; };
 		C0BC39501AC7878F0004CFCE /* MessagesSinceTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessagesSinceTableViewController.xib; sourceTree = "<group>"; };
+		C0FA5D681AF1DC1D00B2B535 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		C0FA5D6B1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GarageSaleModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +187,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0FA5D691AF1DC1D00B2B535 /* CoreData.framework in Frameworks */,
 				C00ED0E219644A5A0045A65E /* CoreGraphics.framework in Frameworks */,
 				C019F93A19D88758009528EE /* FacebookSDK.framework in Frameworks */,
 				C00ED0E419644A5A0045A65E /* UIKit.framework in Frameworks */,
@@ -235,6 +245,7 @@
 		C00ED0DE19644A5A0045A65E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C0FA5D681AF1DC1D00B2B535 /* CoreData.framework */,
 				C019F93919D88758009528EE /* FacebookSDK.framework */,
 				C00ED0DF19644A5A0045A65E /* Foundation.framework */,
 				C00ED0E119644A5A0045A65E /* CoreGraphics.framework */,
@@ -250,6 +261,7 @@
 				C00ED0EE19644A5A0045A65E /* AppDelegate.h */,
 				C00ED0EF19644A5A0045A65E /* AppDelegate.m */,
 				C0BC0B471AE02B3700DE63C8 /* Main.storyboard */,
+				C0FA5D6A1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodeld */,
 				C00ED0F719644A5A0045A65E /* Images.xcassets */,
 				C0292AEA1A5E20EB00283E71 /* Popovers */,
 				C008BA2E19C3CAB3008616E4 /* Message */,
@@ -377,6 +389,7 @@
 				C05C815E1AC37AB90097EB42 /* Edit Client */,
 				C05C815D1AC37AB20097EB42 /* Edit Product */,
 				C05C815C1AC37AAB0097EB42 /* New Opportunity */,
+				C06CE3781B02E48600A2A10E /* Edit Opportunity */,
 				C05C815B1AC37AA30097EB42 /* Send Message */,
 				C05C815A1AC37A9A0097EB42 /* Product Picker */,
 				C05C81591AC37A8C0097EB42 /* Client Picker */,
@@ -464,6 +477,16 @@
 				C05C81561AC379EC0097EB42 /* EditClientViewController.xib */,
 			);
 			name = "Edit Client";
+			sourceTree = "<group>";
+		};
+		C06CE3781B02E48600A2A10E /* Edit Opportunity */ = {
+			isa = PBXGroup;
+			children = (
+				C06CE3791B02E4A800A2A10E /* EditOpportunityViewController.h */,
+				C06CE37A1B02E4A800A2A10E /* EditOpportunityViewController.m */,
+				C06CE37B1B02E4A800A2A10E /* EditOpportunityViewController.xib */,
+			);
+			name = "Edit Opportunity";
 			sourceTree = "<group>";
 		};
 		C06F66ED1A4111500013371F /* Setup */ = {
@@ -570,6 +593,7 @@
 				C0666E4B1A44B39100B045A0 /* NewOpportunityViewController.xib in Resources */,
 				C0BC0B481AE02B3700DE63C8 /* Main.storyboard in Resources */,
 				C00ED0F819644A5A0045A65E /* Images.xcassets in Resources */,
+				C06CE37D1B02E4A800A2A10E /* EditOpportunityViewController.xib in Resources */,
 				C00ED0EA19644A5A0045A65E /* InfoPlist.strings in Resources */,
 				C05C81581AC379EC0097EB42 /* EditClientViewController.xib in Resources */,
 				C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */,
@@ -625,6 +649,7 @@
 				C00ED12419644B4F0045A65E /* MenuModel.m in Sources */,
 				C029BA671969D26000125C4F /* CustomSegue.m in Sources */,
 				C05377801A41BA2A00EAAE76 /* TemplateModel.m in Sources */,
+				C06CE37C1B02E4A800A2A10E /* EditOpportunityViewController.m in Sources */,
 				C04E745B1A43D2B300F52E33 /* SendMessageViewController.m in Sources */,
 				C00ED0EC19644A5A0045A65E /* main.m in Sources */,
 				C0815E20196455590021A153 /* ProductTableViewController.m in Sources */,
@@ -632,6 +657,7 @@
 				C00ED11619644AA80045A65E /* SWRevealViewController.m in Sources */,
 				C03E8E6E1A47407400965BF7 /* OpportunityTableViewController.m in Sources */,
 				C0815E0E19644C250021A153 /* Client.m in Sources */,
+				C0FA5D6C1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -852,6 +878,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C0FA5D6A1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C0FA5D6B1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodel */,
+			);
+			currentVersion = C0FA5D6B1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodel */;
+			path = GarageSaleModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = C00ED0D419644A5A0045A65E /* Project object */;
 }

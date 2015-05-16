@@ -11,12 +11,12 @@
 
 @interface ClientModel : NSObject
 
-//- (NSMutableArray*)getClients:(NSMutableArray*)clientList;
-- (NSMutableArray*)getClients;
-- (NSMutableArray*)getClientArray; // Return an array with all clients
+- (void)saveClients;
+- (NSMutableArray*)getClientsFromCoreData;
+- (NSMutableArray*)getClientArray;
 - (NSString*)getNextClientID;
 - (BOOL)addNewClient:(Client*)newClient;
-- (void)updateClient:(Client*)clientToUpdate;
+- (BOOL)updateClient:(Client*)clientToUpdate;
 - (NSString*)getClientIDfromFbId:(NSString*)clientFbIdToValidate;
 - (UIImage*)getImageFromClientId:(NSString*)clientIDtoSearch;
 - (Client*)getClientFromClientId:(NSString*)clientIDtoSearch;

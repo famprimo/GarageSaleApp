@@ -11,10 +11,19 @@
 
 @implementation TemplateModel
 
-- (NSMutableArray*)getTemplates;
+- (NSManagedObjectContext *)managedObjectContext
 {
-    // Array to hold the listing data
-    NSMutableArray *templates = [[NSMutableArray alloc] init];
+    NSManagedObjectContext *context = nil;
+    id delegate = [[UIApplication sharedApplication] delegate];
+    if ([delegate performSelector:@selector(managedObjectContext)]) {
+        context = [delegate managedObjectContext];
+    }
+    return context;
+}
+
+
+- (void)saveTemplates;
+{
     NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
     [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
     
@@ -28,7 +37,7 @@
     tempTemplate.agent_id = @"00001";
     
     // Add template to the array
-    [templates addObject:tempTemplate];
+    [self addNewTemplate:tempTemplate];
 
     // Create template #2
     tempTemplate = [[Template alloc] init];
@@ -41,7 +50,7 @@
     tempTemplate.agent_id = @"00001";
     
     // Add template to the array
-    [templates addObject:tempTemplate];
+    [self addNewTemplate:tempTemplate];
     
     // Create template #3
     tempTemplate = [[Template alloc] init];
@@ -53,7 +62,7 @@
     tempTemplate.agent_id = @"00001";
     
     // Add template to the array
-    [templates addObject:tempTemplate];
+    [self addNewTemplate:tempTemplate];
     
     // Create template #4
     tempTemplate = [[Template alloc] init];
@@ -65,7 +74,7 @@
     tempTemplate.agent_id = @"00001";
     
     // Add template to the array
-    [templates addObject:tempTemplate];
+    [self addNewTemplate:tempTemplate];
     
     // Create template #5
     tempTemplate = [[Template alloc] init];
@@ -77,7 +86,7 @@
     tempTemplate.agent_id = @"00001";
     
     // Add template to the array
-    [templates addObject:tempTemplate];
+    [self addNewTemplate:tempTemplate];
     
     // Create template #6
     tempTemplate = [[Template alloc] init];
@@ -89,7 +98,7 @@
     tempTemplate.agent_id = @"00001";
     
     // Add template to the array
-    [templates addObject:tempTemplate];
+    [self addNewTemplate:tempTemplate];
     
     // Create template #7
     tempTemplate = [[Template alloc] init];
@@ -101,7 +110,7 @@
     tempTemplate.agent_id = @"00001";
     
     // Add template to the array
-    [templates addObject:tempTemplate];
+    [self addNewTemplate:tempTemplate];
     
     // Create template #8
     tempTemplate = [[Template alloc] init];
@@ -113,18 +122,40 @@
     tempTemplate.agent_id = @"00001";
     
     // Add template to the array
-    [templates addObject:tempTemplate];
+    [self addNewTemplate:tempTemplate];
 
-    
-    // Set last template ID
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    mainDelegate.lastTemplateID = 8;
-    
-    // Return the producct array as the return value
-    return templates;
 }
 
+- (NSMutableArray*)getTemplatesFromCoreData;
+{
+    NSMutableArray *templatesArray = [[NSMutableArray alloc] init];
+    
+    // Fetch data from persistent data store
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Templates"];
+    templatesArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    
+    // Set last product ID
+    Template *templateToReview = [[Template alloc] init];
+    int lastID = 0;
+    
+    for (int i=0; i<templatesArray.count; i=i+1)
+    {
+        templateToReview = [[Template alloc] init];
+        templateToReview = (Template *)templatesArray[i];
+        
+        if ([templateToReview.template_id intValue] > lastID)
+        {
+            lastID = [templateToReview.template_id intValue];
+        }
+    }
+    
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    mainDelegate.lastTemplateID = lastID;
+    
+    return templatesArray;
+}
 
 - (NSMutableArray*)getTemplatesFromType:(NSString*)templateType;
 {
@@ -173,12 +204,31 @@
     
     [mainDelegate.sharedArrayTemplates addObject:newTemplate];
     
+    // Save object in persistent data store
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:@"Templates" inManagedObjectContext:context];
+    [newObject setValue:newTemplate.template_id forKey:@"template_id"];
+    [newObject setValue:newTemplate.title forKey:@"title"];
+    [newObject setValue:newTemplate.text forKey:@"text"];
+    [newObject setValue:newTemplate.type forKey:@"type"];
+    [newObject setValue:newTemplate.updated_time forKey:@"updated_time"];
+    [newObject setValue:newTemplate.agent_id forKey:@"agent_id"];
+    
+    NSError *error = nil;
+    // Save the object to persistent store
+    if (![context save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        updateSuccessful = NO;
+    }
+    
     return updateSuccessful;
 }
 
 
-- (void)updateTemplate:(Template*)templateToUpdate;
+- (BOOL)updateTemplate:(Template*)templateToUpdate;
 {
+    BOOL updateSuccessful = YES;
+
     // To have access to shared arrays from AppDelegate
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -196,10 +246,24 @@
             break;
         }
     }
+    
+    // Save object in persistent data store
+    NSManagedObjectContext *context = [self managedObjectContext];
+    
+    NSError *error = nil;
+    // Save the object to persistent store
+    if (![context save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        updateSuccessful = NO;
+    }
+    
+    return updateSuccessful;
 }
 
-- (void)updateTemplate:(Template*)templateToUpdate withArray:(NSMutableArray*)arrayTemplates;
+- (BOOL)updateTemplate:(Template*)templateToUpdate withArray:(NSMutableArray*)arrayTemplates;
 {
+    BOOL updateSuccessful = YES;
+    
     Template *templateToReview = [[Template alloc] init];
     
     for (int i=0; i<arrayTemplates.count; i=i+1)
@@ -213,6 +277,19 @@
             break;
         }
     }
+    
+    // Save object in persistent data store
+    NSManagedObjectContext *context = [self managedObjectContext];
+    
+    NSError *error = nil;
+    // Save the object to persistent store
+    if (![context save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        updateSuccessful = NO;
+    }
+    
+    return updateSuccessful;
+
 }
 
 - (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProduct:(Product*)relatedProduct;
@@ -278,7 +355,7 @@
         keyRange = [reviewedText rangeOfString:@"#D-ZONA"];
         if (keyRange.location != NSNotFound)
         {
-            [reviewedText replaceCharactersInRange:keyRange withString:clientOwner.zone];
+            [reviewedText replaceCharactersInRange:keyRange withString:clientOwner.client_zone];
         }
         
         keyRange = [reviewedText rangeOfString:@"#D-LALO"];
@@ -320,7 +397,7 @@
         keyRange = [reviewedText rangeOfString:@"#PRECIO"];
         if (keyRange.location != NSNotFound)
         {
-            [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%f", relatedProduct.price]];
+            [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%@", relatedProduct.price]];
         }
     }    
     

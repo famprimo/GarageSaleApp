@@ -19,7 +19,6 @@
 {
     Client *_clientBuyer;
     Product *_relatedProduct;
-
 }
 @end
 
@@ -70,11 +69,11 @@
          self.imageSold.image = [UIImage imageNamed:@"Blank"];
     }
     self.labelProductName.text = _relatedProduct.name;
-    self.labelProductGSCode.text = _relatedProduct.GS_code;
+    self.labelProductGSCode.text = _relatedProduct.codeGS;
     self.labelProductCurrency.text = _relatedProduct.currency;
     self.labelProductDesc.text = _relatedProduct.desc;
-    self.labelProductPrice.text = [NSString stringWithFormat:@"%@%.f", _relatedProduct.currency, _relatedProduct.price];
-    self.textOpportunityPrice.text = [NSString stringWithFormat:@"%.f", _relatedProduct.price];
+    self.labelProductPrice.text = [NSString stringWithFormat:@"%@%@", _relatedProduct.currency, _relatedProduct.price];
+    self.textOpportunityPrice.text = [NSString stringWithFormat:@"%@", _relatedProduct.price];
     
     self.imageClient.image = [UIImage imageWithData:_clientBuyer.picture];
     
@@ -105,14 +104,14 @@
     tempOpportunity.opportunity_id = [opportunityMethods getNextOpportunityID];
     tempOpportunity.product_id = _relatedProduct.product_id;
     tempOpportunity.client_id = _clientBuyer.client_id;
-    tempOpportunity.initial_price = self.textOpportunityPrice.text.intValue;
+    tempOpportunity.initial_price = [NSNumber numberWithFloat:self.textOpportunityPrice.text.intValue];
     tempOpportunity.price_sold = tempOpportunity.initial_price;
     tempOpportunity.created_time = [NSDate date];
     tempOpportunity.closedsold_time = nil;
     tempOpportunity.paid_time = nil;
     tempOpportunity.status = @"O";
     tempOpportunity.notes = @"Notas";
-    tempOpportunity.commision = tempOpportunity.initial_price * 0.1;
+    tempOpportunity.commision = [NSNumber numberWithFloat:(tempOpportunity.initial_price.floatValue * 0.1)];
     tempOpportunity.agent_id = @"00001";
 
     [opportunityMethods addNewOpportunity:tempOpportunity];

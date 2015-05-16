@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
     </dependencies>
     <scenes>
         <!--Reveal View Controller-->
@@ -942,9 +942,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="308" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="o0r-k6-cGX">
+                            <rect key="frame" x="0.0" y="0.0" width="308" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="hRf-Eq-fp7" id="kKr-5R-rh0"/>
+                            </connections>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="Cell" rowHeight="81" id="kZA-yR-CtS">
-                                <rect key="frame" x="0.0" y="22" width="308" height="81"/>
+                                <rect key="frame" x="0.0" y="130" width="308" height="81"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kZA-yR-CtS" id="0z7-VH-Fqc">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="80"/>
@@ -997,8 +1005,20 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="C7T-ip-6Pv"/>
+                    <connections>
+                        <outlet property="searchDisplayController" destination="Bcj-c4-al2" id="rNZ-BB-GRn"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kQF-ic-rUN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="Bcj-c4-al2">
+                    <connections>
+                        <outlet property="delegate" destination="hRf-Eq-fp7" id="OER-KA-4UD"/>
+                        <outlet property="searchBar" destination="o0r-k6-cGX" id="dIo-pe-9UI"/>
+                        <outlet property="searchContentsController" destination="hRf-Eq-fp7" id="Enn-L9-72S"/>
+                        <outlet property="searchResultsDataSource" destination="hRf-Eq-fp7" id="DWR-Io-fz1"/>
+                        <outlet property="searchResultsDelegate" destination="hRf-Eq-fp7" id="W96-yy-AZZ"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="-630" y="-2110"/>
         </scene>
@@ -1039,9 +1059,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="308" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="aOR-ht-hWX">
+                            <rect key="frame" x="0.0" y="0.0" width="308" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="mtq-GA-Xqt" id="Pja-e5-vJS"/>
+                            </connections>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="80" id="7uu-5H-HgS">
-                                <rect key="frame" x="0.0" y="22" width="308" height="80"/>
+                                <rect key="frame" x="0.0" y="130" width="308" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7uu-5H-HgS" id="6Oa-dC-xEq">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="79"/>
@@ -1080,8 +1108,20 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="p9r-iC-wQX"/>
+                    <connections>
+                        <outlet property="searchDisplayController" destination="1hq-ie-yoC" id="loV-ho-w0e"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mF1-z6-QQk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="1hq-ie-yoC">
+                    <connections>
+                        <outlet property="delegate" destination="mtq-GA-Xqt" id="cFG-gy-PyY"/>
+                        <outlet property="searchBar" destination="aOR-ht-hWX" id="X0o-YT-T9t"/>
+                        <outlet property="searchContentsController" destination="mtq-GA-Xqt" id="nkQ-xQ-vNL"/>
+                        <outlet property="searchResultsDataSource" destination="mtq-GA-Xqt" id="idf-9L-yfd"/>
+                        <outlet property="searchResultsDelegate" destination="mtq-GA-Xqt" id="4hi-tT-bHe"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="2549" y="950"/>
         </scene>
@@ -1257,7 +1297,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="80" id="F9p-PM-3rV">
-                                <rect key="frame" x="0.0" y="50" width="308" height="80"/>
+                                <rect key="frame" x="0.0" y="114" width="308" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="F9p-PM-3rV" id="988-A4-g5q">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="79"/>
@@ -1302,6 +1342,14 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.98176008609999998" green="1" blue="0.96743402619999996" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ORD-V1-OO8">
+                                <rect key="frame" x="95" y="607" width="564" height="83"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <string key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.  </string>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" tag="5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Blank" id="ELq-Qg-cJt">
                                 <rect key="frame" x="413" y="69" width="292" height="258"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1329,7 +1377,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nombre del cliente" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lJb-7j-4vq">
-                                <rect key="frame" x="109" y="396" width="212" height="21"/>
+                                <rect key="frame" x="109" y="396" width="223" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -1470,14 +1518,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Precio" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ezn-Hq-WqC">
-                                <rect key="frame" x="551" y="157" width="123" height="21"/>
+                                <rect key="frame" x="551" y="157" width="137" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comision" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9XG-WJ-uhD">
-                                <rect key="frame" x="551" y="218" width="123" height="21"/>
+                                <rect key="frame" x="551" y="218" width="137" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -1490,21 +1538,21 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fecha de venta" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Acf-x7-yHj">
-                                <rect key="frame" x="445" y="186" width="229" height="21"/>
+                                <rect key="frame" x="445" y="186" width="243" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fecha de cierre" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="igM-hM-Pdf">
-                                <rect key="frame" x="444" y="157" width="229" height="21"/>
+                                <rect key="frame" x="444" y="157" width="244" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fecha de cobro" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="uTV-W1-Txu">
-                                <rect key="frame" x="445" y="247" width="229" height="21"/>
+                                <rect key="frame" x="431" y="247" width="257" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1517,7 +1565,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="DVN-Qv-EIf">
-                                <rect key="frame" x="109" y="550" width="120" height="44"/>
+                                <rect key="frame" x="109" y="539" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Avisar">
@@ -1528,7 +1576,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="US9-Zq-sHp">
-                                <rect key="frame" x="452" y="550" width="120" height="44"/>
+                                <rect key="frame" x="452" y="539" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Avisar">
@@ -1539,10 +1587,17 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fecha de creacion" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="veA-Eo-HS0">
-                                <rect key="frame" x="447" y="108" width="229" height="21"/>
+                                <rect key="frame" x="447" y="108" width="241" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notas:" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PKC-RU-q0v">
+                                <rect key="frame" x="31" y="605" width="56" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -1570,6 +1625,7 @@
                         <outlet property="labelOpportunityClosedDate" destination="igM-hM-Pdf" id="5yo-qE-wRn"/>
                         <outlet property="labelOpportunityCommision" destination="9XG-WJ-uhD" id="Qpf-ds-qAg"/>
                         <outlet property="labelOpportunityCreatedDate" destination="veA-Eo-HS0" id="KcY-Qn-ByK"/>
+                        <outlet property="labelOpportunityNotes" destination="ORD-V1-OO8" id="UE0-Vo-OhA"/>
                         <outlet property="labelOpportunityPaidDate" destination="uTV-W1-Txu" id="14j-gp-kyb"/>
                         <outlet property="labelOpportunityPrice" destination="ezn-Hq-WqC" id="d3Y-Oq-2GF"/>
                         <outlet property="labelOpportunitySoldDate" destination="Acf-x7-yHj" id="0xe-gJ-7kx"/>
@@ -1601,7 +1657,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CellOpp" rowHeight="80" id="WVY-gp-xFP">
-                                <rect key="frame" x="0.0" y="22" width="308" height="80"/>
+                                <rect key="frame" x="0.0" y="86" width="308" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WVY-gp-xFP" id="kOl-mI-Ne0">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="79"/>
@@ -1760,7 +1816,7 @@
                         </searchBar>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="80" id="ZmQ-es-iOR">
-                                <rect key="frame" x="0.0" y="66" width="308" height="80"/>
+                                <rect key="frame" x="0.0" y="130" width="308" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZmQ-es-iOR" id="9ID-gc-Mwd">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="79"/>
@@ -1832,7 +1888,7 @@
                 <searchDisplayController id="K4m-oI-OPJ">
                     <connections>
                         <outlet property="delegate" destination="cth-Pc-T8J" id="H31-Nw-KrJ"/>
-                        <outlet property="searchBar" destination="mOi-KW-V48" id="XG8-K8-hRt"/>
+                        <outlet property="searchBar" destination="mOi-KW-V48" id="bM9-5s-hCd"/>
                         <outlet property="searchContentsController" destination="cth-Pc-T8J" id="CjE-NL-jCC"/>
                         <outlet property="searchResultsDataSource" destination="cth-Pc-T8J" id="rHG-Sc-nSp"/>
                         <outlet property="searchResultsDelegate" destination="cth-Pc-T8J" id="e8l-FG-OrW"/>

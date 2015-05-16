@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "Opportunity.h"
+#import "SendMessageViewController.h"
+#import "EditOpportunityViewController.h"
 
-@interface OpportunityDetailViewController : UIViewController
+@interface OpportunityDetailViewController : UIViewController <UIActionSheetDelegate, SendMessageViewControllerDelegate, EditOpportunityViewControllerDelegate>
 
 @property (strong, nonatomic) id detailItem;
 
@@ -31,6 +33,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelOpportunityClosedDate;
 @property (weak, nonatomic) IBOutlet UILabel *labelOpportunitySoldDate;
 @property (weak, nonatomic) IBOutlet UILabel *labelOpportunityPaidDate;
+@property (weak, nonatomic) IBOutlet UILabel *labelOpportunityNotes;
 
 
 

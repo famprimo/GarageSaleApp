@@ -11,7 +11,8 @@
 
 @interface MessageModel : NSObject
 
-- (NSMutableArray*)getMessages; // Updates the array with message list with new messages from database
+- (void)saveMessages;
+- (NSMutableArray*)getMessagesFromCoreData; // Return an array with all messages
 - (NSMutableArray*)getMessagesArray; // Return an array with all messages
 - (NSMutableArray*)getMessagesArrayFromClients; // Return an array will all messages with recipient "GarageSale"
 - (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID; // Return an array with all messages from a client

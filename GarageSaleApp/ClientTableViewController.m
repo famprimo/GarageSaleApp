@@ -18,6 +18,9 @@
     // Data for the table
     NSMutableArray *_myDataClients;
     
+    // Data for the search
+    NSMutableArray *_mySearchData;
+
     AppDelegate *mainDelegate;
     
     // The product that is selected from the table
@@ -27,6 +30,9 @@
 @end
 
 @implementation ClientTableViewController
+
+@synthesize clientSearchBar;
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -62,8 +68,8 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    // Get the listing data
-    _myDataClients = mainDelegate.sharedArrayClients;
+    // Get the data
+    _myDataClients = [[[ClientModel alloc] init] getClientArray];
 
     // Sort client array to be ordered alphabetically
     [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
@@ -101,6 +107,73 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark Content Filtering & UISearchDisplayController Delegate Methods
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    // Remove all objects from the filtered search array
+    [_mySearchData removeAllObjects];
+    NSArray *tempArray;
+    
+    // Filter the array using the search text
+    if (![searchText isEqualToString:@""])
+    {
+        NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"(name contains[c] %@) OR (last_name contains[c] %@)", searchText, searchText];
+        tempArray = [_myDataClients filteredArrayUsingPredicate:resultPredicate];
+    }
+    else
+    {
+        tempArray = [NSArray arrayWithArray:_myDataClients];
+    }
+    
+    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
+    
+}
+
+-(void) searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+{
+    
+    // Remove all objects from the filtered search array
+    NSArray *tempArray;
+    
+    if (_mySearchData == nil)
+    {
+        tempArray = [NSMutableArray arrayWithArray:_myDataClients];
+    }
+    else
+    {
+        tempArray = [NSMutableArray arrayWithArray:_mySearchData];
+    }
+    
+    [_mySearchData removeAllObjects];
+    
+    // Remove all objects from the filtered search array
+    
+    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    // Tells the table data source to reload when text changes
+    [self filterContentForSearchText:searchString scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+{
+    // Tells the table data source to reload when scope bar selection changes
+    [self filterContentForSearchText:self.searchDisplayController.searchBar.text scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -109,20 +182,38 @@
     return 1;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 80;
+}
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return _myDataClients.count;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return _mySearchData.count;
+        
+    } else {
+        return _myDataClients.count;
+    }
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Retrieve cell
-    NSString *cellIdentifier = @"Cell";
-    UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
+    UITableViewCell *myCell;
+    Client *myClient = [[Client alloc] init];
+
     // Get the client to be shown
-    Client *myClient = _myDataClients[indexPath.row];
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        myCell = [self.tableView dequeueReusableCellWithIdentifier:@"Cell"];
+        myClient = _mySearchData[indexPath.row];;
+    } else {
+        myCell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+        myClient = _myDataClients[indexPath.row];
+    }
     
     // Get references to images and labels of cell
     UIImageView *pictureCell = (UIImageView*)[myCell.contentView viewWithTag:1];
@@ -137,7 +228,7 @@
     // Set table cell labels to listing data
     pictureCell.image = [UIImage imageWithData:myClient.picture];
     nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
-    zoneLabel.text = [NSString stringWithFormat:@"Vive en %@", myClient.zone];
+    zoneLabel.text = [NSString stringWithFormat:@"Vive en %@", myClient.client_zone];
     phoneLabel.text = myClient.phone1;
     
     return myCell;
@@ -146,8 +237,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selected listing to var
-    _selectedClient = _myDataClients[indexPath.row];
-    
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        _selectedClient = _mySearchData[indexPath.row];
+    } else {
+        _selectedClient = _myDataClients[indexPath.row];
+    }
+
     // Refresh detail view with selected item
     [self.detailViewController setDetailItem:_selectedClient];
 }

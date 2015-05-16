@@ -335,8 +335,8 @@
         }
         
         self.labelProductName.text = _selectedProduct.name;
-        self.labelProductGSCode.text = _selectedProduct.GS_code;
-        self.labelProductPrice.text = [NSString stringWithFormat:@"%@%.f", _selectedProduct.currency, _selectedProduct.price];
+        self.labelProductGSCode.text = _selectedProduct.codeGS;
+        self.labelProductPrice.text = [NSString stringWithFormat:@"%@%@", _selectedProduct.currency, _selectedProduct.price];
         self.labelProductDetails.text = _selectedProduct.desc;
         self.labelProductDetails.numberOfLines = 0;
         [self.labelProductDetails sizeToFit];
@@ -394,7 +394,7 @@
             
             self.LabelProductRelated.text = @"Producto relacionado:";
             self.imageClient2.image = [UIImage imageWithData:_relatedClient.picture];
-            self.labelClient2Zone.text = [NSString stringWithFormat:@"Vive en %@",_relatedClient.zone];
+            self.labelClient2Zone.text = [NSString stringWithFormat:@"Vive en %@",_relatedClient.client_zone];
             self.labelClient2Address.text = _relatedClient.address;
             self.labelClient2Phones.text = [NSString stringWithFormat:@"%@ %@ %@", _relatedClient.phone1, _relatedClient.phone2, _relatedClient.phone3];
             self.buttonRelateToOwner.hidden = YES;

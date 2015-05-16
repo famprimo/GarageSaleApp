@@ -89,7 +89,7 @@
     self.textEmail.text = _clientToEdit.email;
     self.textPhone1.text = _clientToEdit.phone1;
     self.textPhone2.text = _clientToEdit.phone2;
-    self.textZone.text = _clientToEdit.zone;
+    self.textZone.text = _clientToEdit.client_zone;
     self.textAddress.text = _clientToEdit.address;
     self.textNotes.text = _clientToEdit.notes;
     
@@ -129,7 +129,7 @@
     _clientToEdit.email = self.textEmail.text;
     _clientToEdit.phone1 = self.textPhone1.text;
     _clientToEdit.phone2 = self.textPhone2.text;
-    _clientToEdit.zone =  self.textZone.text;
+    _clientToEdit.client_zone =  self.textZone.text;
     _clientToEdit.address = self.textAddress.text;
     _clientToEdit.notes = self.textNotes.text;
     
