@@ -14,8 +14,10 @@
 #import "ClientModel.h"
 #import "Opportunity.h"
 #import "OpportunityModel.h"
+#import "Settings.h"
+#import "SettingsModel.h"
 #import "NSDate+NVTimeAgo.h"
-#import <FacebookSDK/FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 
 @interface MessagesDetailViewController ()
@@ -36,6 +38,9 @@
     NSString *_templateTypeForPopover;
     
     UIRefreshControl *_refreshControl;
+    
+    // Temp variables for user and page IDs
+    Settings *_tmpSettings;
 }
 
 // For Popover
@@ -60,6 +65,8 @@
     
     self.tableOpportunities.delegate = self;
     self.tableOpportunities.dataSource = self;
+    
+    _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
     
     // Update the view
     [self configureView];
@@ -1070,35 +1077,38 @@
 
 - (void) getFBInboxComments:(NSString *)url withClientID:(NSString *)fromClientID;
 {
-    [FBRequestConnection startWithGraphPath:url completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
-     {
-         if (!error) {  // FB request was a success!
-             
-             if (result[@"data"]) {   // There is FB data!
-                 
-                 NSArray *jsonMessagesArray = result[@"data"];
-                 
-                 [self parseFBInboxComments:jsonMessagesArray withClientID:fromClientID];
-                 
-                 // Review if there are more comments from this chat
-                 
-                 // EVALUAR SI TODOS LOS MENSAJES YA ESTAN REGISTRADOS PARA NO SEGUIR...!!!!
-                 
-                 NSString *next = result[@"paging"][@"next"];
-                 
-                 if (next && jsonMessagesArray.count>=25)
-                 {
-                     [self getFBInboxComments:[next substringFromIndex:32] withClientID:fromClientID];
-                 }
-             }
-             
-         } else {
-             // An error occurred, we need to handle the error
-             // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-             NSLog(@"error getFBInboxComments: %@", error.description);
-         }
-     }];
     
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url
+                                                                   parameters:nil];
+    
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+    {
+        if (!error) {  // FB request was a success!
+            
+            if (result[@"data"]) {   // There is FB data!
+                
+                NSArray *jsonMessagesArray = result[@"data"];
+                
+                [self parseFBInboxComments:jsonMessagesArray withClientID:fromClientID];
+                
+                // Review if there are more comments from this chat
+                
+                // EVALUAR SI TODOS LOS MENSAJES YA ESTAN REGISTRADOS PARA NO SEGUIR...!!!!
+                
+                NSString *next = result[@"paging"][@"next"];
+                
+                if (next && jsonMessagesArray.count>=25)
+                {
+                    [self getFBInboxComments:[next substringFromIndex:32] withClientID:fromClientID];
+                }
+            }
+            
+        } else {
+            // An error occurred, we need to handle the error
+            // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+            NSLog(@"error getFBInboxComments: %@", error.description);
+        }
+    }];
 }
 
 - (void) parseFBInboxComments:(NSArray *)jsonMessagesArray withClientID:(NSString *)fromClientID;
@@ -1141,14 +1151,17 @@
             tempMessage.status = @"N";
             tempMessage.type = @"I";
             
-            if ([tempMessage.fb_from_name hasPrefix:@"Garage"])
+            if ([tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_user_id] || [tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_page_id])
             {
+                // Message from GarageSale
                 tempMessage.recipient = @"C";
                 tempMessage.fb_from_id = fbIDfromInbox;
                 tempMessage.fb_from_name = fbNamefromInbox;
             }
             else
-            { tempMessage.recipient = @"G";}
+            {
+                tempMessage.recipient = @"G";
+            }
             
             tempMessage.client_id = fromClientID;
             

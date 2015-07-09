@@ -13,7 +13,7 @@
 
 @interface OpportunityModel : NSObject
 
-- (void)saveOpportunities;
+- (void)saveInitialDataforOpportunities;
 - (NSMutableArray*)getOpportunitiesFromCoreData;
 - (NSMutableArray*)getOpportunitiesArray;
 - (NSString*)getNextOpportunityID;

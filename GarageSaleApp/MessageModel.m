@@ -22,7 +22,7 @@
 }
 
 
-- (void)saveMessages;
+- (void)saveInitialDataforMessages;
 {
     NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
     [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
@@ -356,29 +356,24 @@
 {
     BOOL updateSuccessful = YES;
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    [mainDelegate.sharedArrayMessages addObject:newMessage];
-    
     // Save object in persistent data store
     NSManagedObjectContext *context = [self managedObjectContext];
-    NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:@"Messages" inManagedObjectContext:context];
-    [newObject setValue:newMessage.fb_inbox_id forKey:@"fb_inbox_id"];
-    [newObject setValue:newMessage.fb_msg_id forKey:@"fb_msg_id"];
-    [newObject setValue:newMessage.fb_from_id forKey:@"fb_from_id"];
-    [newObject setValue:newMessage.fb_from_name forKey:@"fb_from_name"];
-    [newObject setValue:newMessage.message forKey:@"message"];
-    [newObject setValue:newMessage.fb_created_time forKey:@"fb_created_time"];
-    [newObject setValue:newMessage.datetime forKey:@"datetime"];
-    [newObject setValue:newMessage.fb_photo_id forKey:@"fb_photo_id"];
-    [newObject setValue:newMessage.product_id forKey:@"product_id"];
-    [newObject setValue:newMessage.client_id forKey:@"client_id"];
-    [newObject setValue:newMessage.agent_id forKey:@"agent_id"];
-    [newObject setValue:newMessage.status forKey:@"status"];
-    [newObject setValue:newMessage.type forKey:@"type"];
-    [newObject setValue:newMessage.recipient forKey:@"recipient"];
+    NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"Messages" inManagedObjectContext:context];
+    
+    [coreDataObject setValue:newMessage.fb_inbox_id forKey:@"fb_inbox_id"];
+    [coreDataObject setValue:newMessage.fb_msg_id forKey:@"fb_msg_id"];
+    [coreDataObject setValue:newMessage.fb_from_id forKey:@"fb_from_id"];
+    [coreDataObject setValue:newMessage.fb_from_name forKey:@"fb_from_name"];
+    [coreDataObject setValue:newMessage.message forKey:@"message"];
+    [coreDataObject setValue:newMessage.fb_created_time forKey:@"fb_created_time"];
+    [coreDataObject setValue:newMessage.datetime forKey:@"datetime"];
+    [coreDataObject setValue:newMessage.fb_photo_id forKey:@"fb_photo_id"];
+    [coreDataObject setValue:newMessage.product_id forKey:@"product_id"];
+    [coreDataObject setValue:newMessage.client_id forKey:@"client_id"];
+    [coreDataObject setValue:newMessage.agent_id forKey:@"agent_id"];
+    [coreDataObject setValue:newMessage.status forKey:@"status"];
+    [coreDataObject setValue:newMessage.type forKey:@"type"];
+    [coreDataObject setValue:newMessage.recipient forKey:@"recipient"];
    
     NSError *error = nil;
     // Save the object to persistent store
@@ -386,10 +381,102 @@
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         updateSuccessful = NO;
     }
-    
+    else // update successful!
+    {
+        // To have access to shared arrays from AppDelegate
+        AppDelegate *mainDelegate;
+        mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        [mainDelegate.sharedArrayMessages addObject:newMessage];
+    }
+        
     return updateSuccessful;
 
 }
+
+
+- (BOOL)updateMessage:(Message*)messageToUpdate; // Update a message
+{
+    BOOL updateSuccessful = YES;
+    
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Messages" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    // Create Predicate
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"fb_msg_id", messageToUpdate.fb_msg_id];
+    [fetchRequest setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if (error) {
+        NSLog(@"Unable to execute fetch request");
+        NSLog(@"%@, %@", error, error.localizedDescription);
+        updateSuccessful = NO;
+    }
+    else
+    {
+        if (result.count == 0)
+        {
+            NSLog(@"No records retrieved");
+            updateSuccessful = NO;
+        }
+        else
+        {
+            // Set updated values
+            NSManagedObject *coreDataObject = (NSManagedObject *)[result objectAtIndex:0];
+            
+            [coreDataObject setValue:messageToUpdate.fb_inbox_id forKey:@"fb_inbox_id"];
+            [coreDataObject setValue:messageToUpdate.fb_msg_id forKey:@"fb_msg_id"];
+            [coreDataObject setValue:messageToUpdate.fb_from_id forKey:@"fb_from_id"];
+            [coreDataObject setValue:messageToUpdate.fb_from_name forKey:@"fb_from_name"];
+            [coreDataObject setValue:messageToUpdate.message forKey:@"message"];
+            [coreDataObject setValue:messageToUpdate.fb_created_time forKey:@"fb_created_time"];
+            [coreDataObject setValue:messageToUpdate.datetime forKey:@"datetime"];
+            [coreDataObject setValue:messageToUpdate.fb_photo_id forKey:@"fb_photo_id"];
+            [coreDataObject setValue:messageToUpdate.product_id forKey:@"product_id"];
+            [coreDataObject setValue:messageToUpdate.client_id forKey:@"client_id"];
+            [coreDataObject setValue:messageToUpdate.agent_id forKey:@"agent_id"];
+            [coreDataObject setValue:messageToUpdate.status forKey:@"status"];
+            [coreDataObject setValue:messageToUpdate.type forKey:@"type"];
+            [coreDataObject setValue:messageToUpdate.recipient forKey:@"recipient"];
+            
+            // Save object to persistent store
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Unable to save managed object context.");
+                NSLog(@"%@, %@", error, error.localizedDescription);
+                updateSuccessful = NO;
+            }
+            else // update successful!
+            {
+                // To have access to shared arrays from AppDelegate
+                AppDelegate *mainDelegate;
+                mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                
+                // Replace object in Shared Array
+                Message *messageToReview = [[Message alloc] init];
+                
+                for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+                {
+                    messageToReview = [[Message alloc] init];
+                    messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
+                    
+                    if ([messageToReview.fb_msg_id isEqual:messageToUpdate.fb_msg_id])
+                    {
+                        [mainDelegate.sharedArrayMessages replaceObjectAtIndex:i withObject:messageToUpdate];
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    return updateSuccessful;
+}
+
 
 - (BOOL)existMessage:(NSString*)messageIDToValidate; // Review an array of Messages to check if a given Message ID exists
 {
@@ -518,28 +605,6 @@
     
     return numberOfMessages;
 
-}
-
-- (void)updateMessage:(Message*)messageToUpdate; // Update a message
-{
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    Message *messageToReview = [[Message alloc] init];
-    
-    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
-    {
-        messageToReview = [[Message alloc] init];
-        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
-        
-        if ([messageToReview.fb_msg_id isEqual:messageToUpdate.fb_msg_id])
-        {
-            [mainDelegate.sharedArrayMessages replaceObjectAtIndex:i withObject:messageToUpdate];
-            break;
-        }
-    }
-    
 }
 
 

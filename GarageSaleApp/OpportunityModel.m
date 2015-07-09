@@ -24,7 +24,7 @@
     return context;
 }
 
-- (void)saveOpportunities;
+- (void)saveInitialDataforOpportunities;
 {
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"yyyyMMdd"];
@@ -35,7 +35,7 @@
     tempOpportunity.product_id = @"0000001";
     tempOpportunity.client_id = @"00003";
     tempOpportunity.initial_price = [NSNumber numberWithFloat:290.0];
-    tempOpportunity.price_sold = 0;
+    tempOpportunity.price_sold = [NSNumber numberWithFloat:0];
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140501"];
     tempOpportunity.closedsold_time = nil;
     tempOpportunity.paid_time = nil;
@@ -53,7 +53,7 @@
     tempOpportunity.product_id = @"0000001";
     tempOpportunity.client_id = @"00004";
     tempOpportunity.initial_price = [NSNumber numberWithFloat:290.0];
-    tempOpportunity.price_sold = 0;
+    tempOpportunity.price_sold = [NSNumber numberWithFloat:0];
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140530"];
     tempOpportunity.closedsold_time = [dateFormat dateFromString:@"20140620"];
     tempOpportunity.paid_time = nil;
@@ -71,7 +71,7 @@
     tempOpportunity.product_id = @"0000002";
     tempOpportunity.client_id = @"00002";
     tempOpportunity.initial_price = [NSNumber numberWithFloat:1100.0];
-    tempOpportunity.price_sold = 0;
+    tempOpportunity.price_sold = [NSNumber numberWithFloat:0];
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140302"];
     tempOpportunity.closedsold_time = nil;
     tempOpportunity.paid_time = nil;
@@ -165,6 +165,7 @@
     return opportunityArray;
 }
 
+
 - (NSString*)getNextOpportunityID;
 {
     AppDelegate *mainDelegate;
@@ -180,33 +181,36 @@
 {
     BOOL updateSuccessful = YES;
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    [mainDelegate.sharedArrayOpportunities addObject:newOpportunity];
-    
     // Save object in persistent data store
     NSManagedObjectContext *context = [self managedObjectContext];
-    NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:@"Opportunities" inManagedObjectContext:context];
-    [newObject setValue:newOpportunity.opportunity_id forKey:@"opportunity_id"];
-    [newObject setValue:newOpportunity.product_id forKey:@"product_id"];
-    [newObject setValue:newOpportunity.client_id forKey:@"client_id"];
-    [newObject setValue:newOpportunity.initial_price forKey:@"initial_price"];
-    [newObject setValue:newOpportunity.price_sold forKey:@"price_sold"];
-    [newObject setValue:newOpportunity.created_time forKey:@"created_time"];
-    [newObject setValue:newOpportunity.closedsold_time forKey:@"closedsold_time"];
-    [newObject setValue:newOpportunity.paid_time forKey:@"paid_time"];
-    [newObject setValue:newOpportunity.status forKey:@"status"];
-    [newObject setValue:newOpportunity.notes forKey:@"notes"];
-    [newObject setValue:newOpportunity.commision forKey:@"commision"];
-    [newObject setValue:newOpportunity.agent_id forKey:@"agent_id"];
+    NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"Opportunities" inManagedObjectContext:context];
+    
+    [coreDataObject setValue:newOpportunity.opportunity_id forKey:@"opportunity_id"];
+    [coreDataObject setValue:newOpportunity.product_id forKey:@"product_id"];
+    [coreDataObject setValue:newOpportunity.client_id forKey:@"client_id"];
+    [coreDataObject setValue:newOpportunity.initial_price forKey:@"initial_price"];
+    [coreDataObject setValue:newOpportunity.price_sold forKey:@"price_sold"];
+    [coreDataObject setValue:newOpportunity.created_time forKey:@"created_time"];
+    [coreDataObject setValue:newOpportunity.closedsold_time forKey:@"closedsold_time"];
+    [coreDataObject setValue:newOpportunity.paid_time forKey:@"paid_time"];
+    [coreDataObject setValue:newOpportunity.status forKey:@"status"];
+    [coreDataObject setValue:newOpportunity.notes forKey:@"notes"];
+    [coreDataObject setValue:newOpportunity.commision forKey:@"commision"];
+    [coreDataObject setValue:newOpportunity.agent_id forKey:@"agent_id"];
     
     NSError *error = nil;
     // Save the object to persistent store
     if (![context save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         updateSuccessful = NO;
+    }
+    else // update successful!
+    {
+        // To have access to shared arrays from AppDelegate
+        AppDelegate *mainDelegate;
+        mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        [mainDelegate.sharedArrayOpportunities addObject:newOpportunity];
     }
     
     return updateSuccessful;
@@ -216,32 +220,78 @@
 {
     BOOL updateSuccessful = YES;
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    Opportunity *opportunityToReview = [[Opportunity alloc] init];
-    
-    for (int i=0; i<mainDelegate.sharedArrayOpportunities.count; i=i+1)
-    {
-        opportunityToReview = [[Opportunity alloc] init];
-        opportunityToReview = (Opportunity *)mainDelegate.sharedArrayOpportunities[i];
-        
-        if ([opportunityToReview.opportunity_id isEqual:opportunityToUpdate.opportunity_id])
-        {
-            [mainDelegate.sharedArrayOpportunities replaceObjectAtIndex:i withObject:opportunityToUpdate];
-            break;
-        }
-    }
-    
-    // Save object in persistent data store
     NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Opportunities" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    // Create Predicate
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"opportunity_id", opportunityToUpdate.opportunity_id];
+    [fetchRequest setPredicate:predicate];
     
     NSError *error = nil;
-    // Save the object to persistent store
-    if (![context save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if (error) {
+        NSLog(@"Unable to execute fetch request");
+        NSLog(@"%@, %@", error, error.localizedDescription);
         updateSuccessful = NO;
+    }
+    else
+    {
+        if (result.count == 0)
+        {
+            NSLog(@"No records retrieved");
+            updateSuccessful = NO;
+        }
+        else
+        {
+            // Set updated values
+            NSManagedObject *coreDataObject = (NSManagedObject *)[result objectAtIndex:0];
+            
+            [coreDataObject setValue:opportunityToUpdate.opportunity_id forKey:@"opportunity_id"];
+            [coreDataObject setValue:opportunityToUpdate.product_id forKey:@"product_id"];
+            [coreDataObject setValue:opportunityToUpdate.client_id forKey:@"client_id"];
+            [coreDataObject setValue:opportunityToUpdate.initial_price forKey:@"initial_price"];
+            [coreDataObject setValue:opportunityToUpdate.price_sold forKey:@"price_sold"];
+            [coreDataObject setValue:opportunityToUpdate.created_time forKey:@"created_time"];
+            [coreDataObject setValue:opportunityToUpdate.closedsold_time forKey:@"closedsold_time"];
+            [coreDataObject setValue:opportunityToUpdate.paid_time forKey:@"paid_time"];
+            [coreDataObject setValue:opportunityToUpdate.status forKey:@"status"];
+            [coreDataObject setValue:opportunityToUpdate.notes forKey:@"notes"];
+            [coreDataObject setValue:opportunityToUpdate.commision forKey:@"commision"];
+            [coreDataObject setValue:opportunityToUpdate.agent_id forKey:@"agent_id"];
+            
+            // Save object to persistent store
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Unable to save managed object context.");
+                NSLog(@"%@, %@", error, error.localizedDescription);
+                updateSuccessful = NO;
+            }
+            else // update successful!
+            {
+                // To have access to shared arrays from AppDelegate
+                AppDelegate *mainDelegate;
+                mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                
+                // Replace object in Shared Array
+                Opportunity *opportunityToReview = [[Opportunity alloc] init];
+                
+                for (int i=0; i<mainDelegate.sharedArrayOpportunities.count; i=i+1)
+                {
+                    opportunityToReview = [[Opportunity alloc] init];
+                    opportunityToReview = (Opportunity *)mainDelegate.sharedArrayOpportunities[i];
+                    
+                    if ([opportunityToReview.opportunity_id isEqual:opportunityToUpdate.opportunity_id])
+                    {
+                        [mainDelegate.sharedArrayOpportunities replaceObjectAtIndex:i withObject:opportunityToUpdate];
+                        break;
+                    }
+                }
+                
+            }
+        }
     }
     
     return updateSuccessful;

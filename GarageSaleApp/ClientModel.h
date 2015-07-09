@@ -11,7 +11,7 @@
 
 @interface ClientModel : NSObject
 
-- (void)saveClients;
+- (void)saveInitialDataforClients;
 - (NSMutableArray*)getClientsFromCoreData;
 - (NSMutableArray*)getClientArray;
 - (NSString*)getNextClientID;

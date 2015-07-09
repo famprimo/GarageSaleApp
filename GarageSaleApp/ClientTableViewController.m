@@ -87,18 +87,11 @@
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)menuButtonClicked:(id)sender
 {
     [self.revealViewController revealToggleAnimated:YES];
-}
-
-- (void)newClient:(id)sender
-{
-    // code for adding a new product
 }
 
 - (void)didReceiveMemoryWarning
@@ -225,7 +218,7 @@
     pictureCell.layer.cornerRadius = pictureCell.frame.size.width / 2;
     pictureCell.clipsToBounds = YES;
     
-    // Set table cell labels to listing data
+    // Set table cell labels to client data
     pictureCell.image = [UIImage imageWithData:myClient.picture];
     nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
     zoneLabel.text = [NSString stringWithFormat:@"Vive en %@", myClient.client_zone];
@@ -236,7 +229,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Set selected listing to var
+    // Set selected cell to client
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         _selectedClient = _mySearchData[indexPath.row];
     } else {
@@ -247,54 +240,5 @@
     [self.detailViewController setDetailItem:_selectedClient];
 }
 
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -22,7 +22,7 @@
 }
 
 
-- (void)saveTemplates;
+- (void)saveInitialDataforTemplates;
 {
     NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
     [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
@@ -198,21 +198,16 @@
 {
     BOOL updateSuccessful = YES;
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    [mainDelegate.sharedArrayTemplates addObject:newTemplate];
-    
     // Save object in persistent data store
     NSManagedObjectContext *context = [self managedObjectContext];
-    NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:@"Templates" inManagedObjectContext:context];
-    [newObject setValue:newTemplate.template_id forKey:@"template_id"];
-    [newObject setValue:newTemplate.title forKey:@"title"];
-    [newObject setValue:newTemplate.text forKey:@"text"];
-    [newObject setValue:newTemplate.type forKey:@"type"];
-    [newObject setValue:newTemplate.updated_time forKey:@"updated_time"];
-    [newObject setValue:newTemplate.agent_id forKey:@"agent_id"];
+    NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"Templates" inManagedObjectContext:context];
+    
+    [coreDataObject setValue:newTemplate.template_id forKey:@"template_id"];
+    [coreDataObject setValue:newTemplate.title forKey:@"title"];
+    [coreDataObject setValue:newTemplate.text forKey:@"text"];
+    [coreDataObject setValue:newTemplate.type forKey:@"type"];
+    [coreDataObject setValue:newTemplate.updated_time forKey:@"updated_time"];
+    [coreDataObject setValue:newTemplate.agent_id forKey:@"agent_id"];
     
     NSError *error = nil;
     // Save the object to persistent store
@@ -220,7 +215,15 @@
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         updateSuccessful = NO;
     }
-    
+    else // update successful!
+    {
+        // To have access to shared arrays from AppDelegate
+        AppDelegate *mainDelegate;
+        mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        [mainDelegate.sharedArrayTemplates addObject:newTemplate];
+    }
+
     return updateSuccessful;
 }
 
@@ -228,69 +231,78 @@
 - (BOOL)updateTemplate:(Template*)templateToUpdate;
 {
     BOOL updateSuccessful = YES;
-
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    Template *templateToReview = [[Template alloc] init];
-    
-    for (int i=0; i<mainDelegate.sharedArrayTemplates.count; i=i+1)
-    {
-        templateToReview = [[Template alloc] init];
-        templateToReview = (Template *)mainDelegate.sharedArrayTemplates[i];
-        
-        if ([templateToReview.template_id isEqual:templateToUpdate.template_id])
-        {
-            [mainDelegate.sharedArrayTemplates replaceObjectAtIndex:i withObject:templateToUpdate];
-            break;
-        }
-    }
-    
-    // Save object in persistent data store
     NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Templates" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    // Create Predicate
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"template_id", templateToUpdate.template_id];
+    [fetchRequest setPredicate:predicate];
+
     NSError *error = nil;
-    // Save the object to persistent store
-    if (![context save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if (error) {
+        NSLog(@"Unable to execute fetch request");
+        NSLog(@"%@, %@", error, error.localizedDescription);
         updateSuccessful = NO;
     }
-    
+    else
+    {
+        if (result.count == 0)
+        {
+            NSLog(@"No records retrieved");
+            updateSuccessful = NO;
+        }
+        else
+        {
+            // Set updated values
+            NSManagedObject *coreDataObject = (NSManagedObject *)[result objectAtIndex:0];
+            
+            [coreDataObject setValue:templateToUpdate.template_id forKey:@"template_id"];
+            [coreDataObject setValue:templateToUpdate.title forKey:@"title"];
+            [coreDataObject setValue:templateToUpdate.text forKey:@"text"];
+            [coreDataObject setValue:templateToUpdate.type forKey:@"type"];
+            [coreDataObject setValue:templateToUpdate.updated_time forKey:@"updated_time"];
+            [coreDataObject setValue:templateToUpdate.agent_id forKey:@"agent_id"];
+            
+            // Save object to persistent store
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Unable to save managed object context.");
+                NSLog(@"%@, %@", error, error.localizedDescription);
+                updateSuccessful = NO;
+            }
+            else // update successful!
+            {
+                // To have access to shared arrays from AppDelegate
+                AppDelegate *mainDelegate;
+                mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+ 
+                // Replace object in Shared Array
+                Template *templateToReview = [[Template alloc] init];
+                
+                for (int i=0; i<mainDelegate.sharedArrayTemplates.count; i=i+1)
+                {
+                    templateToReview = [[Template alloc] init];
+                    templateToReview = (Template *)mainDelegate.sharedArrayTemplates[i];
+                    
+                    if ([templateToReview.template_id isEqual:templateToUpdate.template_id])
+                    {
+                        [mainDelegate.sharedArrayTemplates replaceObjectAtIndex:i withObject:templateToUpdate];
+                        break;
+                    }
+                }
+
+            }
+        }
+    }
+
     return updateSuccessful;
 }
 
-- (BOOL)updateTemplate:(Template*)templateToUpdate withArray:(NSMutableArray*)arrayTemplates;
-{
-    BOOL updateSuccessful = YES;
-    
-    Template *templateToReview = [[Template alloc] init];
-    
-    for (int i=0; i<arrayTemplates.count; i=i+1)
-    {
-        templateToReview = [[Template alloc] init];
-        templateToReview = (Template *)arrayTemplates[i];
-        
-        if ([templateToReview.template_id isEqual:templateToUpdate.template_id])
-        {
-            [arrayTemplates replaceObjectAtIndex:i withObject:templateToUpdate];
-            break;
-        }
-    }
-    
-    // Save object in persistent data store
-    NSManagedObjectContext *context = [self managedObjectContext];
-    
-    NSError *error = nil;
-    // Save the object to persistent store
-    if (![context save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        updateSuccessful = NO;
-    }
-    
-    return updateSuccessful;
-
-}
 
 - (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProduct:(Product*)relatedProduct;
 {

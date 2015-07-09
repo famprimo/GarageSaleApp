@@ -23,7 +23,6 @@
 		C00ED12319644B4F0045A65E /* MenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED11E19644B4F0045A65E /* MenuItem.m */; };
 		C00ED12419644B4F0045A65E /* MenuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED12019644B4F0045A65E /* MenuModel.m */; };
 		C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C00ED12219644B4F0045A65E /* MenuViewController.m */; };
-		C019F93A19D88758009528EE /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C019F93919D88758009528EE /* FacebookSDK.framework */; };
 		C019F93F19D88944009528EE /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = C019F93C19D88944009528EE /* Message.m */; };
 		C019F94019D88944009528EE /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C019F93E19D88944009528EE /* MessageModel.m */; };
 		C02486F019646AA5005DCBE6 /* ClientTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02486EF19646AA5005DCBE6 /* ClientTableViewController.m */; };
@@ -37,9 +36,12 @@
 		C03E8E711A4740A800965BF7 /* OpportunityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C03E8E701A4740A800965BF7 /* OpportunityDetailViewController.m */; };
 		C042ECCF1A3934DB00AC9A4D /* ClientPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */; };
 		C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */; };
+		C04BBCD71B2B257700BABD42 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = C04BBCD61B2B257700BABD42 /* Settings.m */; };
 		C04E745B1A43D2B300F52E33 /* SendMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C04E74591A43D2B300F52E33 /* SendMessageViewController.m */; };
 		C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */; };
 		C05377801A41BA2A00EAAE76 /* TemplateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C053777F1A41BA2A00EAAE76 /* TemplateModel.m */; };
+		C05B17091B0C146F0006820F /* OpportunitiesFilterTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05B17071B0C146F0006820F /* OpportunitiesFilterTableViewController.m */; };
+		C05B170A1B0C146F0006820F /* OpportunitiesFilterTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C05B17081B0C146F0006820F /* OpportunitiesFilterTableViewController.xib */; };
 		C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */; };
 		C05C81571AC379EC0097EB42 /* EditClientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05C81551AC379EC0097EB42 /* EditClientViewController.m */; };
 		C05C81581AC379EC0097EB42 /* EditClientViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C05C81561AC379EC0097EB42 /* EditClientViewController.xib */; };
@@ -52,6 +54,7 @@
 		C06F66F31A4114B40013371F /* Template.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66F21A4114B40013371F /* Template.m */; };
 		C06F66FC1A4116910013371F /* SetupTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66FB1A4116910013371F /* SetupTableViewController.m */; };
 		C06F66FF1A4116A90013371F /* SetupDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06F66FE1A4116A90013371F /* SetupDetailViewController.m */; };
+		C0786C901B23977A00557488 /* SettingsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0786C8F1B23977A00557488 /* SettingsModel.m */; };
 		C0815E0E19644C250021A153 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E0D19644C250021A153 /* Client.m */; };
 		C0815E1119644C2D0021A153 /* ClientModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1019644C2D0021A153 /* ClientModel.m */; };
 		C0815E1419644C390021A153 /* OpportunityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1319644C390021A153 /* OpportunityModel.m */; };
@@ -65,6 +68,9 @@
 		C0BC0B481AE02B3700DE63C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0BC0B471AE02B3700DE63C8 /* Main.storyboard */; };
 		C0BC39511AC7878F0004CFCE /* MessagesSinceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0BC394F1AC7878F0004CFCE /* MessagesSinceTableViewController.m */; };
 		C0BC39521AC7878F0004CFCE /* MessagesSinceTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0BC39501AC7878F0004CFCE /* MessagesSinceTableViewController.xib */; };
+		C0CF9C7E1B0966E700C14157 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0CF9C7B1B0966E700C14157 /* FBSDKCoreKit.framework */; };
+		C0CF9C7F1B0966E700C14157 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0CF9C7C1B0966E700C14157 /* FBSDKLoginKit.framework */; };
+		C0CF9C821B09696700C14157 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0CF9C811B09696700C14157 /* FBSDKShareKit.framework */; };
 		C0FA5D691AF1DC1D00B2B535 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0FA5D681AF1DC1D00B2B535 /* CoreData.framework */; };
 		C0FA5D6C1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C0FA5D6A1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
@@ -104,7 +110,6 @@
 		C00ED12019644B4F0045A65E /* MenuModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuModel.m; sourceTree = "<group>"; };
 		C00ED12119644B4F0045A65E /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
 		C00ED12219644B4F0045A65E /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
-		C019F93919D88758009528EE /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		C019F93B19D88944009528EE /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		C019F93C19D88944009528EE /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		C019F93D19D88944009528EE /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
@@ -129,11 +134,16 @@
 		C042ECCC1A3934DB00AC9A4D /* ClientPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientPickerViewController.h; sourceTree = "<group>"; };
 		C042ECCD1A3934DB00AC9A4D /* ClientPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientPickerViewController.m; sourceTree = "<group>"; };
 		C042ECCE1A3934DB00AC9A4D /* ClientPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ClientPickerViewController.xib; sourceTree = "<group>"; };
+		C04BBCD51B2B257700BABD42 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		C04BBCD61B2B257700BABD42 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
 		C04E74581A43D2B300F52E33 /* SendMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendMessageViewController.h; sourceTree = "<group>"; };
 		C04E74591A43D2B300F52E33 /* SendMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendMessageViewController.m; sourceTree = "<group>"; };
 		C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendMessageViewController.xib; sourceTree = "<group>"; };
 		C053777E1A41BA2A00EAAE76 /* TemplateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateModel.h; sourceTree = "<group>"; };
 		C053777F1A41BA2A00EAAE76 /* TemplateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateModel.m; sourceTree = "<group>"; };
+		C05B17061B0C146F0006820F /* OpportunitiesFilterTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpportunitiesFilterTableViewController.h; sourceTree = "<group>"; };
+		C05B17071B0C146F0006820F /* OpportunitiesFilterTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpportunitiesFilterTableViewController.m; sourceTree = "<group>"; };
+		C05B17081B0C146F0006820F /* OpportunitiesFilterTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OpportunitiesFilterTableViewController.xib; sourceTree = "<group>"; };
 		C05C6A8319F1D5B800BCF9BD /* NSDate+NVTimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NVTimeAgo.h"; sourceTree = "<group>"; };
 		C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NVTimeAgo.m"; sourceTree = "<group>"; };
 		C05C81541AC379EC0097EB42 /* EditClientViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditClientViewController.h; sourceTree = "<group>"; };
@@ -155,6 +165,8 @@
 		C06F66FB1A4116910013371F /* SetupTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupTableViewController.m; sourceTree = "<group>"; };
 		C06F66FD1A4116A90013371F /* SetupDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupDetailViewController.h; sourceTree = "<group>"; };
 		C06F66FE1A4116A90013371F /* SetupDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupDetailViewController.m; sourceTree = "<group>"; };
+		C0786C8E1B23977A00557488 /* SettingsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsModel.h; sourceTree = "<group>"; };
+		C0786C8F1B23977A00557488 /* SettingsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsModel.m; sourceTree = "<group>"; };
 		C0815E0C19644C250021A153 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		C0815E0D19644C250021A153 /* Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
 		C0815E0F19644C2D0021A153 /* ClientModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientModel.h; sourceTree = "<group>"; };
@@ -178,6 +190,9 @@
 		C0BC394E1AC7878F0004CFCE /* MessagesSinceTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesSinceTableViewController.h; sourceTree = "<group>"; };
 		C0BC394F1AC7878F0004CFCE /* MessagesSinceTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesSinceTableViewController.m; sourceTree = "<group>"; };
 		C0BC39501AC7878F0004CFCE /* MessagesSinceTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessagesSinceTableViewController.xib; sourceTree = "<group>"; };
+		C0CF9C7B1B0966E700C14157 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		C0CF9C7C1B0966E700C14157 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		C0CF9C811B09696700C14157 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		C0FA5D681AF1DC1D00B2B535 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C0FA5D6B1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GarageSaleModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -187,9 +202,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0CF9C821B09696700C14157 /* FBSDKShareKit.framework in Frameworks */,
+				C0CF9C7E1B0966E700C14157 /* FBSDKCoreKit.framework in Frameworks */,
 				C0FA5D691AF1DC1D00B2B535 /* CoreData.framework in Frameworks */,
+				C0CF9C7F1B0966E700C14157 /* FBSDKLoginKit.framework in Frameworks */,
 				C00ED0E219644A5A0045A65E /* CoreGraphics.framework in Frameworks */,
-				C019F93A19D88758009528EE /* FacebookSDK.framework in Frameworks */,
 				C00ED0E419644A5A0045A65E /* UIKit.framework in Frameworks */,
 				C00ED0E019644A5A0045A65E /* Foundation.framework in Frameworks */,
 			);
@@ -245,8 +262,10 @@
 		C00ED0DE19644A5A0045A65E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C0CF9C7B1B0966E700C14157 /* FBSDKCoreKit.framework */,
+				C0CF9C811B09696700C14157 /* FBSDKShareKit.framework */,
+				C0CF9C7C1B0966E700C14157 /* FBSDKLoginKit.framework */,
 				C0FA5D681AF1DC1D00B2B535 /* CoreData.framework */,
-				C019F93919D88758009528EE /* FacebookSDK.framework */,
 				C00ED0DF19644A5A0045A65E /* Foundation.framework */,
 				C00ED0E119644A5A0045A65E /* CoreGraphics.framework */,
 				C00ED0E319644A5A0045A65E /* UIKit.framework */,
@@ -268,6 +287,7 @@
 				C00ED11819644AB70045A65E /* Product */,
 				C00ED11A19644AE00045A65E /* Client */,
 				C00ED11919644AD80045A65E /* Opportunity */,
+				C0786C891B237BC500557488 /* Settings */,
 				C06F66ED1A4111500013371F /* Setup */,
 				C00ED11B19644AEF0045A65E /* Menu */,
 				C00ED11C19644B000045A65E /* About */,
@@ -385,6 +405,7 @@
 		C0292AEA1A5E20EB00283E71 /* Popovers */ = {
 			isa = PBXGroup;
 			children = (
+				C05B16FD1B0C13EF0006820F /* Opportunities Filter */,
 				C0BC39481AC787330004CFCE /* Messages Since */,
 				C05C815E1AC37AB90097EB42 /* Edit Client */,
 				C05C815D1AC37AB20097EB42 /* Edit Product */,
@@ -406,6 +427,16 @@
 				C029BA661969D26000125C4F /* CustomUnwindSegue.m */,
 			);
 			name = "Custom Segues";
+			sourceTree = "<group>";
+		};
+		C05B16FD1B0C13EF0006820F /* Opportunities Filter */ = {
+			isa = PBXGroup;
+			children = (
+				C05B17061B0C146F0006820F /* OpportunitiesFilterTableViewController.h */,
+				C05B17071B0C146F0006820F /* OpportunitiesFilterTableViewController.m */,
+				C05B17081B0C146F0006820F /* OpportunitiesFilterTableViewController.xib */,
+			);
+			name = "Opportunities Filter";
 			sourceTree = "<group>";
 		};
 		C05C6A8219F1D56100BCF9BD /* Date Time Ago */ = {
@@ -504,6 +535,17 @@
 			name = Setup;
 			sourceTree = "<group>";
 		};
+		C0786C891B237BC500557488 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				C04BBCD51B2B257700BABD42 /* Settings.h */,
+				C04BBCD61B2B257700BABD42 /* Settings.m */,
+				C0786C8E1B23977A00557488 /* SettingsModel.h */,
+				C0786C8F1B23977A00557488 /* SettingsModel.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
 		C0BC39481AC787330004CFCE /* Messages Since */ = {
 			isa = PBXGroup;
 			children = (
@@ -595,6 +637,7 @@
 				C00ED0F819644A5A0045A65E /* Images.xcassets in Resources */,
 				C06CE37D1B02E4A800A2A10E /* EditOpportunityViewController.xib in Resources */,
 				C00ED0EA19644A5A0045A65E /* InfoPlist.strings in Resources */,
+				C05B170A1B0C146F0006820F /* OpportunitiesFilterTableViewController.xib in Resources */,
 				C05C81581AC379EC0097EB42 /* EditClientViewController.xib in Resources */,
 				C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */,
 				C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */,
@@ -619,6 +662,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0786C901B23977A00557488 /* SettingsModel.m in Sources */,
 				C02486F019646AA5005DCBE6 /* ClientTableViewController.m in Sources */,
 				C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */,
 				C0B81D721A7D4D5E008B6C1C /* EditProductViewController.m in Sources */,
@@ -632,6 +676,8 @@
 				C00ED0F019644A5A0045A65E /* AppDelegate.m in Sources */,
 				C0BC39511AC7878F0004CFCE /* MessagesSinceTableViewController.m in Sources */,
 				C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */,
+				C04BBCD71B2B257700BABD42 /* Settings.m in Sources */,
+				C05B17091B0C146F0006820F /* OpportunitiesFilterTableViewController.m in Sources */,
 				C03E8E711A4740A800965BF7 /* OpportunityDetailViewController.m in Sources */,
 				C08C479A1AB3295400B29FCA /* NS-Extensions.m in Sources */,
 				C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */,

@@ -21,7 +21,7 @@
     return context;
 }
 
-- (void)saveClients;
+- (void)saveInitialDataforClients;
 {
     // Array to hold the listing data
     NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
@@ -267,43 +267,46 @@
 {
     BOOL updateSuccessful = YES;
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    [mainDelegate.sharedArrayClients addObject:newClient];
-    
     // Save object in persistent data store
     NSManagedObjectContext *context = [self managedObjectContext];
-    NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:@"Clients" inManagedObjectContext:context];
-    [newObject setValue:newClient.client_id forKey:@"client_id"];
-    [newObject setValue:newClient.fb_client_id forKey:@"fb_client_id"];
-    [newObject setValue:newClient.type forKey:@"type"];
-    [newObject setValue:newClient.name forKey:@"name"];
-    [newObject setValue:newClient.last_name forKey:@"last_name"];
-    [newObject setValue:newClient.sex forKey:@"sex"];
-    [newObject setValue:newClient.client_zone forKey:@"client_zone"];
-    [newObject setValue:newClient.address forKey:@"address"];
-    [newObject setValue:newClient.client_id forKey:@"client_id"];
-    [newObject setValue:newClient.phone1 forKey:@"phone1"];
-    [newObject setValue:newClient.phone2 forKey:@"phone2"];
-    [newObject setValue:newClient.phone3 forKey:@"phone3"];
-    [newObject setValue:newClient.email forKey:@"email"];
-    [newObject setValue:newClient.preference forKey:@"preference"];
-    [newObject setValue:newClient.picture_link forKey:@"picture_link"];
-    [newObject setValue:newClient.picture forKey:@"picture"];
-    [newObject setValue:newClient.status forKey:@"status"];
-    [newObject setValue:newClient.created_time forKey:@"created_time"];
-    [newObject setValue:newClient.last_interacted_time forKey:@"last_interacted_time"];
-    [newObject setValue:newClient.last_inventory_time forKey:@"last_inventory_time"];
-    [newObject setValue:newClient.notes forKey:@"notes"];
-    [newObject setValue:newClient.agent_id forKey:@"agent_id"];
+    NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"Clients" inManagedObjectContext:context];
+    
+    [coreDataObject setValue:newClient.client_id forKey:@"client_id"];
+    [coreDataObject setValue:newClient.fb_client_id forKey:@"fb_client_id"];
+    [coreDataObject setValue:newClient.type forKey:@"type"];
+    [coreDataObject setValue:newClient.name forKey:@"name"];
+    [coreDataObject setValue:newClient.last_name forKey:@"last_name"];
+    [coreDataObject setValue:newClient.sex forKey:@"sex"];
+    [coreDataObject setValue:newClient.client_zone forKey:@"client_zone"];
+    [coreDataObject setValue:newClient.address forKey:@"address"];
+    [coreDataObject setValue:newClient.client_id forKey:@"client_id"];
+    [coreDataObject setValue:newClient.phone1 forKey:@"phone1"];
+    [coreDataObject setValue:newClient.phone2 forKey:@"phone2"];
+    [coreDataObject setValue:newClient.phone3 forKey:@"phone3"];
+    [coreDataObject setValue:newClient.email forKey:@"email"];
+    [coreDataObject setValue:newClient.preference forKey:@"preference"];
+    [coreDataObject setValue:newClient.picture_link forKey:@"picture_link"];
+    [coreDataObject setValue:newClient.picture forKey:@"picture"];
+    [coreDataObject setValue:newClient.status forKey:@"status"];
+    [coreDataObject setValue:newClient.created_time forKey:@"created_time"];
+    [coreDataObject setValue:newClient.last_interacted_time forKey:@"last_interacted_time"];
+    [coreDataObject setValue:newClient.last_inventory_time forKey:@"last_inventory_time"];
+    [coreDataObject setValue:newClient.notes forKey:@"notes"];
+    [coreDataObject setValue:newClient.agent_id forKey:@"agent_id"];
     
     NSError *error = nil;
     // Save the object to persistent store
     if (![context save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         updateSuccessful = NO;
+    }
+    else // update successful!
+    {
+        // To have access to shared arrays from AppDelegate
+        AppDelegate *mainDelegate;
+        mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        [mainDelegate.sharedArrayClients addObject:newClient];
     }
 
     return updateSuccessful;
@@ -313,34 +316,89 @@
 {
     BOOL updateSuccessful = YES;
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
-    Client *clientToReview = [[Client alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Clients" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
     
-    for (int i=0; i<mainDelegate.sharedArrayClients.count; i=i+1)
+    // Create Predicate
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"client_id", clientToUpdate.client_id];
+    [fetchRequest setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if (error) {
+        NSLog(@"Unable to execute fetch request");
+        NSLog(@"%@, %@", error, error.localizedDescription);
+        updateSuccessful = NO;
+    }
+    else
     {
-        clientToReview = [[Client alloc] init];
-        clientToReview = (Client *)mainDelegate.sharedArrayClients[i];
-        
-        if ([clientToReview.client_id isEqual:clientToUpdate.client_id])
+        if (result.count == 0)
         {
-            [mainDelegate.sharedArrayClients replaceObjectAtIndex:i withObject:clientToUpdate];
-            break;
+            NSLog(@"No records retrieved");
+            updateSuccessful = NO;
+        }
+        else
+        {
+            // Set updated values
+            NSManagedObject *coreDataObject = (NSManagedObject *)[result objectAtIndex:0];
+            
+            [coreDataObject setValue:clientToUpdate.client_id forKey:@"client_id"];
+            [coreDataObject setValue:clientToUpdate.fb_client_id forKey:@"fb_client_id"];
+            [coreDataObject setValue:clientToUpdate.type forKey:@"type"];
+            [coreDataObject setValue:clientToUpdate.name forKey:@"name"];
+            [coreDataObject setValue:clientToUpdate.last_name forKey:@"last_name"];
+            [coreDataObject setValue:clientToUpdate.sex forKey:@"sex"];
+            [coreDataObject setValue:clientToUpdate.client_zone forKey:@"client_zone"];
+            [coreDataObject setValue:clientToUpdate.address forKey:@"address"];
+            [coreDataObject setValue:clientToUpdate.client_id forKey:@"client_id"];
+            [coreDataObject setValue:clientToUpdate.phone1 forKey:@"phone1"];
+            [coreDataObject setValue:clientToUpdate.phone2 forKey:@"phone2"];
+            [coreDataObject setValue:clientToUpdate.phone3 forKey:@"phone3"];
+            [coreDataObject setValue:clientToUpdate.email forKey:@"email"];
+            [coreDataObject setValue:clientToUpdate.preference forKey:@"preference"];
+            [coreDataObject setValue:clientToUpdate.picture_link forKey:@"picture_link"];
+            [coreDataObject setValue:clientToUpdate.picture forKey:@"picture"];
+            [coreDataObject setValue:clientToUpdate.status forKey:@"status"];
+            [coreDataObject setValue:clientToUpdate.created_time forKey:@"created_time"];
+            [coreDataObject setValue:clientToUpdate.last_interacted_time forKey:@"last_interacted_time"];
+            [coreDataObject setValue:clientToUpdate.last_inventory_time forKey:@"last_inventory_time"];
+            [coreDataObject setValue:clientToUpdate.notes forKey:@"notes"];
+            [coreDataObject setValue:clientToUpdate.agent_id forKey:@"agent_id"];
+            
+            // Save object to persistent store
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Unable to save managed object context.");
+                NSLog(@"%@, %@", error, error.localizedDescription);
+                updateSuccessful = NO;
+            }
+            else // update successful!
+            {
+                // To have access to shared arrays from AppDelegate
+                AppDelegate *mainDelegate;
+                mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                
+                // Replace object in Shared Array
+                Client *clientToReview = [[Client alloc] init];
+                
+                for (int i=0; i<mainDelegate.sharedArrayClients.count; i=i+1)
+                {
+                    clientToReview = [[Client alloc] init];
+                    clientToReview = (Client *)mainDelegate.sharedArrayClients[i];
+                    
+                    if ([clientToReview.client_id isEqual:clientToUpdate.client_id])
+                    {
+                        [mainDelegate.sharedArrayClients replaceObjectAtIndex:i withObject:clientToUpdate];
+                        break;
+                    }
+                }
+            }
         }
     }
 
-    // Save object in persistent data store
-    NSManagedObjectContext *context = [self managedObjectContext];
-
-    NSError *error = nil;
-    // Save the object to persistent store
-    if (![context save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        updateSuccessful = NO;
-    }
-    
     return updateSuccessful;
 }
 

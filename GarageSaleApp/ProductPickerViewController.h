@@ -16,7 +16,7 @@
 
 @end
 
-@interface ProductPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface ProductPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchDisplayDelegate>
 
 @property (nonatomic, strong) id<ProductPickerViewControllerDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UIImageView *imageClient;
@@ -24,5 +24,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *buttonSelectProduct;
 @property (weak, nonatomic) IBOutlet UITableView *myTable;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *filterTabs;
+@property (weak, nonatomic) IBOutlet UISearchBar *productSearchBar;
 
 @end

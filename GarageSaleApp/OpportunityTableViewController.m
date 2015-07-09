@@ -15,6 +15,7 @@
 #import "ClientModel.h"
 #import "Product.h"
 #import "ProductModel.h"
+#import "NS-Extensions.h"
 #import "NSDate+NVTimeAgo.h"
 
 
@@ -22,11 +23,19 @@
 {
     // Data for the table
     NSMutableArray *_myData;
-        
+    
+    // Data for the search and filter
+    NSMutableArray *_mySearchData;
+    
     // The product that is selected from the table
     Opportunity *_selectedOpportunity;
     
+    // For Filter
+    NSString *_filterSelected;
 }
+// For Popover
+@property (nonatomic, strong) UIPopoverController *opportunitiesFilterPopover;
+
 @end
 
 @implementation OpportunityTableViewController
@@ -53,8 +62,9 @@
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
     
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newOpportunity:)];
-    self.navigationItem.rightBarButtonItem = addButton;
+    UIBarButtonItem *menuButtonSetup = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"Setup"] makeThumbnailOfSize:CGSizeMake(20, 20)] style:UIBarButtonItemStylePlain target:self action:@selector(setupButtonClicked:)];
+    menuButtonSetup.width = 40;
+    self.navigationItem.rightBarButtonItem = menuButtonSetup;
     
     self.detailViewController = (OpportunityDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
     
@@ -65,6 +75,11 @@
     // Get the opportunities data
     _myData = [[[OpportunityModel alloc] init] getOpportunitiesArray];
     
+    _filterSelected = @"Activas";  // Default filter
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"status like[c] 'O' OR status like[c] 'S'"];
+    NSArray *tempArray = [_myData filteredArrayUsingPredicate:resultPredicate];
+    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
+
     // Sort array to be sure new opportunities are on top
     [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
         NSDate *first = [(Opportunity*)a created_time];
@@ -89,15 +104,132 @@
     [self.revealViewController revealToggleAnimated:YES];
 }
 
-- (void)newOpportunity:(id)sender
+- (void)setupButtonClicked:(id)sender
 {
-    // code for adding a new product
+    OpportunitiesFilterTableViewController *opportunitiesFilterController = [[OpportunitiesFilterTableViewController alloc] initWithNibName:@"OpportunitiesFilterTableViewController" bundle:nil];
+    opportunitiesFilterController.delegate = self;
+    
+    
+    self.opportunitiesFilterPopover = [[UIPopoverController alloc] initWithContentViewController:opportunitiesFilterController];
+    self.opportunitiesFilterPopover.popoverContentSize = CGSizeMake(180.0, 160.0);
+    [self.opportunitiesFilterPopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+}
+
+-(NSString*)getCurrentFilter;
+{
+    return _filterSelected;
+}
+
+-(void)filterSet:(NSString*)selectedFilter;
+{
+    // Dismiss the popover view
+    [self.opportunitiesFilterPopover dismissPopoverAnimated:NO];
+
+    _filterSelected = selectedFilter;
+    
+    // Remove all objects from the filtered search array
+    [_mySearchData removeAllObjects];
+    
+    NSArray *tempArray;
+    
+    NSString *filterPredicate = @"";
+    
+    if ([_filterSelected isEqualToString:@"Activas"])
+    {
+        filterPredicate = @"status like[c] 'O' OR status like[c] 'S'";
+    }
+    else if ([_filterSelected isEqualToString:@"Abiertas"])
+    {
+        filterPredicate = @"status like[c] 'O'";
+    }
+    else if ([_filterSelected isEqualToString:@"Vendidas"])
+    {
+        filterPredicate = @"status like[c] 'S'";
+    }
+    
+    // Filter the array using the predicate
+    if (![_filterSelected isEqualToString:@"Todas"])
+    {
+        NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:filterPredicate];
+        tempArray = [_myData filteredArrayUsingPredicate:resultPredicate];
+    }
+    else
+    {
+        tempArray = [NSArray arrayWithArray:_myData];
+    }
+    
+    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
+    
+    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark Content Filtering & UISearchDisplayController Delegate Methods
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    ProductModel *productMethods = [[ProductModel alloc] init];
+    NSArray *tempArray;
+    
+    if ([_filterSelected isEqualToString:@"Todas"])
+    {
+        tempArray = [NSArray arrayWithArray:_myData];
+    }
+    else
+    {
+        tempArray = [NSArray arrayWithArray:_mySearchData];
+    }
+
+    // Remove all objects from the filtered search array
+    [_mySearchData removeAllObjects];
+
+    // Search for opportunites that matches searchText
+    Opportunity *tempOpportunity = [[Opportunity alloc] init];
+    Product *tempProduct = [[Product alloc] init];
+    
+    for (int i=0; i<tempArray.count; i=i+1)
+    {
+        tempOpportunity = [tempArray objectAtIndex:i];
+        tempProduct = [productMethods getProductFromProductId:tempOpportunity.product_id];
+        
+        if ([[tempProduct.name uppercaseString] containsString:[searchText uppercaseString]])
+        {
+            [_mySearchData addObject:tempOpportunity];
+        }
+     }
+}
+
+-(void) searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+{
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    // Tells the table data source to reload when text changes
+    [self filterContentForSearchText:searchString scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+{
+    // Tells the table data source to reload when scope bar selection changes
+    [self filterContentForSearchText:self.searchDisplayController.searchBar.text scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+
 
 #pragma mark - Table view data source
 
@@ -110,7 +242,13 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return _myData.count;
+    if (tableView == self.searchDisplayController.searchResultsTableView || ![_filterSelected isEqualToString:@"Todas"])
+    {
+        return _mySearchData.count;
+    } else
+    {
+        return _myData.count;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -120,9 +258,17 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    // Retrieve cell
-    UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:@"CellOpp" forIndexPath:indexPath];
+    UITableViewCell *myCell;
+    Opportunity *myOpportunity = [[Opportunity alloc] init];
+    if (tableView == self.searchDisplayController.searchResultsTableView || ![_filterSelected isEqualToString:@"Todas"])
+    {
+        myCell = [self.tableView dequeueReusableCellWithIdentifier:@"CellOpp"];
+        myOpportunity = _mySearchData[indexPath.row];;
+    } else
+    {
+        myCell = [tableView dequeueReusableCellWithIdentifier:@"CellOpp"];
+        myOpportunity = _myData[indexPath.row];
+    }
 
     // Get references to images and labels of cell
     UILabel *productLabel = (UILabel*)[myCell.contentView viewWithTag:1];
@@ -166,9 +312,6 @@
     // Make client picture rounded
     clientImage.layer.cornerRadius = clientImage.frame.size.width / 2;
     clientImage.clipsToBounds = YES;
-
-    // Get the information to be shown
-    Opportunity *myOpportunity = _myData[indexPath.row];
     
     Product *relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:myOpportunity.product_id];
     Client *clientRelatedToOpportunity = [[[ClientModel alloc] init] getClientFromClientId:myOpportunity.client_id];
@@ -231,9 +374,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Set selected listing to var
-    _selectedOpportunity = _myData[indexPath.row];
-    
+    // Set selected item to detail view
+    if (tableView == self.searchDisplayController.searchResultsTableView || ![_filterSelected isEqualToString:@"Todas"])
+    {
+        _selectedOpportunity = _mySearchData[indexPath.row];;
+    } else
+    {
+        _selectedOpportunity = _myData[indexPath.row];
+    }
+        
     // Refresh detail view with selected item
     [self.detailViewController setDetailItem:_selectedOpportunity];
 }

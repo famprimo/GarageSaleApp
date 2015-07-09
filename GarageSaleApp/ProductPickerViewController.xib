@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProductPickerViewController">
@@ -12,6 +12,8 @@
                 <outlet property="imageClient" destination="kRn-O7-qTp" id="ccW-0E-Pr3"/>
                 <outlet property="labelClientName" destination="uBo-Zs-U6k" id="ovU-dL-NeW"/>
                 <outlet property="myTable" destination="FGF-7j-HeZ" id="lsG-LO-0hX"/>
+                <outlet property="productSearchBar" destination="BLl-YJ-9f1" id="awG-9r-hMj"/>
+                <outlet property="searchDisplayController" destination="xxu-bO-8Yx" id="xT3-Ha-SzH"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -21,8 +23,16 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="FGF-7j-HeZ">
-                    <rect key="frame" x="0.0" y="126" width="500" height="374"/>
+                    <rect key="frame" x="0.0" y="130" width="500" height="370"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <searchBar key="tableHeaderView" contentMode="redraw" id="BLl-YJ-9f1">
+                        <rect key="frame" x="0.0" y="170" width="500" height="44"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <textInputTraits key="textInputTraits"/>
+                        <connections>
+                            <outlet property="delegate" destination="-1" id="WkH-By-uyJ"/>
+                        </connections>
+                    </searchBar>
                 </tableView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Seleccione un producto:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AoF-z6-6nG">
                     <rect key="frame" x="8" y="69" width="258" height="21"/>
@@ -66,5 +76,14 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="-65" y="271"/>
         </view>
+        <searchDisplayController id="xxu-bO-8Yx">
+            <connections>
+                <outlet property="delegate" destination="-1" id="8G7-GJ-WkZ"/>
+                <outlet property="searchBar" destination="BLl-YJ-9f1" id="4QH-WR-wbV"/>
+                <outlet property="searchContentsController" destination="-1" id="MlD-kz-NrN"/>
+                <outlet property="searchResultsDataSource" destination="-1" id="mwH-2X-PRs"/>
+                <outlet property="searchResultsDelegate" destination="-1" id="gfZ-rL-aFu"/>
+            </connections>
+        </searchDisplayController>
     </objects>
 </document>

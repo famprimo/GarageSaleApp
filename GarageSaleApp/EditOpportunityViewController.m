@@ -17,6 +17,9 @@
 @interface EditOpportunityViewController ()
 {
     Opportunity *_opportunityToEdit;
+    Client *_clientBuyer;
+    Product *_relatedProduct;
+    Client *_clientOwner;
 }
 @end
 
@@ -31,9 +34,9 @@
 
     _opportunityToEdit = [self.delegate getOpportunityforEdit];
     
-    Client *_clientBuyer = [clientMethods getClientFromClientId:_opportunityToEdit.client_id];
-    Product *_relatedProduct = [productMethods getProductFromProductId:_opportunityToEdit.product_id];
-    Client *_clientOwner = [clientMethods getClientFromClientId:_relatedProduct.client_id];
+    _clientBuyer = [clientMethods getClientFromClientId:_opportunityToEdit.client_id];
+    _relatedProduct = [productMethods getProductFromProductId:_opportunityToEdit.product_id];
+    _clientOwner = [clientMethods getClientFromClientId:_relatedProduct.client_id];
     
     CGRect imageProductFrame = self.imageProduct.frame;
     imageProductFrame.origin.x = 15;
@@ -128,6 +131,9 @@
     {
         [self.buttonOption1 setTitle:@"Cerrar" forState:UIControlStateNormal];
         [self.buttonOption2 setTitle:@"Vendido!" forState:UIControlStateNormal];
+        
+        self.textOpportunityPrice.text = [NSString stringWithFormat:@"%@", _opportunityToEdit.initial_price];
+        self.textOpportunityCommision.text = [NSString stringWithFormat:@"%f", (self.textOpportunityPrice.text.intValue * 0.1)];
     }
     else if ([_opportunityToEdit.status isEqualToString:@"C"])
     {
@@ -140,7 +146,7 @@
     else if ([_opportunityToEdit.status isEqualToString:@"S"])
     {
         self.buttonOption1.hidden = YES;
-        [self.buttonOption2 setTitle:@"Cobrado!" forState:UIControlStateNormal];
+        [self.buttonOption2 setTitle:@"Pagada!" forState:UIControlStateNormal];
         self.textOpportunityPrice.enabled = NO;
         self.textOpportunityCommision.enabled = NO;
         self.textOpportunityNotes.editable = NO;
@@ -181,6 +187,7 @@
 - (IBAction)actionOption2:(id)sender
 {
     OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
+    ProductModel *productMethods = [[ProductModel alloc] init];
     
     if ([_opportunityToEdit.status isEqualToString:@"O"])
     {
@@ -190,6 +197,10 @@
         _opportunityToEdit.notes = self.textOpportunityNotes.text;
         _opportunityToEdit.price_sold = [NSNumber numberWithFloat:self.textOpportunityPrice.text.intValue];
         _opportunityToEdit.commision = [NSNumber numberWithFloat:self.textOpportunityCommision.text.intValue];
+        
+        // Update product status!
+        _relatedProduct.status = @"S";
+        [productMethods updateProduct:_relatedProduct];
     }
     else if ([_opportunityToEdit.status isEqualToString:@"C"])
     {

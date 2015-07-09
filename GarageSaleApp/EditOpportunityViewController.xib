@@ -36,7 +36,7 @@
                     <rect key="frame" x="15" y="94" width="90" height="90"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AXh-p5-hhP">
-                    <rect key="frame" x="15" y="119" width="90" height="40"/>
+                    <rect key="frame" x="15" y="94" width="90" height="90"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oeq-gR-5wW">
                     <rect key="frame" x="15" y="234" width="40" height="40"/>

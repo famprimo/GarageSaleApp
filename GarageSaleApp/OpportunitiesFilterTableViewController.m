@@ -1,20 +1,20 @@
 //
-//  MessagesSinceTableViewController.m
+//  OpportunitiesFilterTableViewController.m
 //  GarageSaleApp
 //
-//  Created by Federico Amprimo on 28/03/15.
+//  Created by Federico Amprimo on 19/05/15.
 //  Copyright (c) 2015 Federico Amprimo. All rights reserved.
 //
 
-#import "MessagesSinceTableViewController.h"
+#import "OpportunitiesFilterTableViewController.h"
 
-@interface MessagesSinceTableViewController ()
+@interface OpportunitiesFilterTableViewController ()
 {
-    NSDate *_dateSince;
+    NSString *_optionSelected;
 }
 @end
 
-@implementation MessagesSinceTableViewController
+@implementation OpportunitiesFilterTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -25,25 +25,26 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    _dateSince = [self.delegate getCurrentSinceDate];
+    _optionSelected = [self.delegate getCurrentFilter];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    NSTimeInterval secondsSince = -(int)[_dateSince timeIntervalSinceDate:[NSDate date]];
-    int optionSelected = 3;
-    if (secondsSince < 60*60*24*5)
+    int optionSelected = 3; // @"Todas"
+    
+    if ([_optionSelected isEqualToString:@"Activas"])
     {
         optionSelected = 0;
     }
-    else if (secondsSince < 60*60*24*20)
+    else if ([_optionSelected isEqualToString:@"Abiertas"])
     {
         optionSelected = 1;
     }
-    else if (secondsSince < 60*60*24*30*3)
+    else if ([_optionSelected isEqualToString:@"Vendidas"])
     {
         optionSelected = 2;
     }
+
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:optionSelected inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
 }
 
@@ -66,6 +67,10 @@
     return 4;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 40.0;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -74,23 +79,23 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-
+    
     // Configure the cell...
     if (indexPath.row == 0)
     {
-        cell.textLabel.text = @"Hace 1 día";
+        cell.textLabel.text = @"Activas";
     }
     else if (indexPath.row == 1)
     {
-        cell.textLabel.text = @"Hace 1 semana";
+        cell.textLabel.text = @"Solo Abiertas";
     }
     else if (indexPath.row == 2)
     {
-        cell.textLabel.text = @"Hace 1 mes";
+        cell.textLabel.text = @"Solo Vendidas";
     }
     else
     {
-        cell.textLabel.text = @"Hace 6 meses";
+        cell.textLabel.text = @"Todas";
     }
     return cell;
 }
@@ -98,26 +103,26 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0)
     {
-        _dateSince = [NSDate dateWithTimeInterval:-60*60*24*1 sinceDate:[NSDate date]];
+        _optionSelected = @"Activas";
     }
     else if (indexPath.row == 1)
     {
-        _dateSince = [NSDate dateWithTimeInterval:-60*60*24*7 sinceDate:[NSDate date]];
+        _optionSelected = @"Abiertas";
     }
     else if (indexPath.row == 2)
     {
-        _dateSince = [NSDate dateWithTimeInterval:-60*60*24*30 sinceDate:[NSDate date]];
+        _optionSelected = @"Vendidas";
     }
     else
     {
-        _dateSince = [NSDate dateWithTimeInterval:-60*60*24*30*6 sinceDate:[NSDate date]];
+        _optionSelected = @"Todas";
     }
     
-    [self.delegate sinceDateSelected:_dateSince];
+    [self.delegate filterSet:_optionSelected];
 }
 
 @end

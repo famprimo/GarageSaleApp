@@ -11,7 +11,7 @@
 
 @interface MessageModel : NSObject
 
-- (void)saveMessages;
+- (void)saveInitialDataforMessages;
 - (NSMutableArray*)getMessagesFromCoreData; // Return an array with all messages
 - (NSMutableArray*)getMessagesArray; // Return an array with all messages
 - (NSMutableArray*)getMessagesArrayFromClients; // Return an array will all messages with recipient "GarageSale"
@@ -24,6 +24,6 @@
 - (NSString*)getCommentID:(NSString*)facebookLink; // Search for 'comment_id=' on a Facebook link to get _id
 - (NSString*)getMessagesIDs:(NSMutableArray*)messagesArray; // Method that returns the IDs of all the Messages in the array sent
 - (int)numberOfMessagesNotReplied; // Method that returns the total number of messages not replied yet
-- (void)updateMessage:(Message*)messageToUpdate; // Update a message
+- (BOOL)updateMessage:(Message*)messageToUpdate; // Update a message
 
 @end

@@ -158,6 +158,7 @@
         self.labelCreatedTime.text = [NSString stringWithFormat:@"Creado: %@", [_selectedClient.created_time formattedAsDateComplete]];
         self.labelLastInteractionTime.text = [NSString stringWithFormat:@"Última interacción: %@", [_selectedClient.last_interacted_time formattedAsTimeAgo]];
         self.labelClientLastInventaryTime.text = [NSString stringWithFormat:@"Último inventario %@", [_selectedClient.last_inventory_time formattedAsTimeAgo]];
+        self.labelClientFBCode.text = _selectedClient.fb_client_id;
         
         
         // Load products from the client

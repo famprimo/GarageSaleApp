@@ -16,9 +16,11 @@
 #import "OpportunityModel.h"
 #import "Message.h"
 #import "MessageModel.h"
+#import "Settings.h"
+#import "SettingsModel.h"
 #import "NSDate+NVTimeAgo.h"
 #import "NS-Extensions.h"
-#import <FacebookSDK/FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @interface ProductDetailViewController ()
 
@@ -38,6 +40,9 @@
     NSInteger _messageRowHeight;
     
     UIRefreshControl *_refreshControl;
+    
+    // Temp variables for user and page IDs
+    Settings *_tmpSettings;
     
 }
 
@@ -77,6 +82,8 @@
     self.tableOpportunities.dataSource = self;
 
     _messageRowHeight = 80;
+    
+    _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
 
     _refreshControl = [[UIRefreshControl alloc] init];
     [_refreshControl addTarget:self action:@selector(getPreviousMessages:) forControlEvents:UIControlEventValueChanged];
@@ -862,8 +869,11 @@
 
 - (void) getFBPhotoComments:url forProduct:(Product *)forProduct;
 {
-    [FBRequestConnection startWithGraphPath:url completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url
+                                                                   parameters:nil];
+    
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+    {
         if (!error) {  // FB request was a success!
             
             if (result[@"data"]) {   // There is FB data!
@@ -891,7 +901,6 @@
             NSLog(@"error getFBNotifications: %@", error.description);
         }
     }];
-    
 }
 
 
@@ -933,8 +942,9 @@
             tempMessage.agent_id = @"00001";
             tempMessage.type = @"P";
             
-            if ([tempMessage.fb_from_name hasPrefix:@"Garage"])
+            if ([tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_user_id] || [tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_page_id])
             {
+                // Message from GarageSale
                 tempMessage.recipient = @"C";
                 tempMessage.status = @"D";
             }
@@ -1014,7 +1024,10 @@
 {
     
     // Make FB request
-    [FBRequestConnection startWithGraphPath:url completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url
+                                                                   parameters:nil];
+    
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
      {
          if (!error) { // FB request was a success!
              
@@ -1035,8 +1048,7 @@
              // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
              NSLog(@"error getFBPhotoComments: %@", error.description);
          }
-     } ];
-    
+     }];
 }
 
 
@@ -1088,8 +1100,9 @@
             tempMessage.agent_id = @"00001";
             tempMessage.type = @"P";
             
-            if ([tempMessage.fb_from_name hasPrefix:@"Garage"])
+            if ([tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_user_id] || [tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_page_id])
             {
+                // Message from GarageSale
                 tempMessage.recipient = @"C";
                 tempMessage.client_id = fromClientID;
                 tempMessage.fb_inbox_id = fromClientID;
@@ -1162,42 +1175,58 @@
         newClient = [[Client alloc] init];
         newClient = (Client *)newClientsArray[i];
         
+        /*
+        if ([newClient.fb_client_id isEqualToString:_tmpSettings.fb_user_id] || [newClient.fb_client_id isEqualToString:_tmpSettings.fb_page_id]) {
+            // Garage Sale
+            
+            newClient.name = @"Garage";
+            newClient.last_name = @"Sale";
+            newClient.sex = @"F";
+            newClient.picture_link = @"";
+            newClient.picture = [NSData dataWithContentsOfFile:@"Garage Sale"];
+
+        }
+        */
+        
         requestClientDetails = [[NSMutableString alloc] init];
         [requestClientDetails appendString:newClient.fb_client_id];
         [requestClientDetails appendString:@"?fields=first_name,last_name,gender,picture"];
         
         NSLog(@"%@ - %@: %@", newClient.fb_client_id, newClient.name, requestClientDetails);
+        
         // Make FB request
-        [FBRequestConnection startWithGraphPath:requestClientDetails
-                              completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                                  
-                                  if (!error) { // FB request was a success!
-                                      
-                                      newClient.name = result[@"first_name"];
-                                      newClient.last_name = result[@"last_name"];
-                                      if ([result[@"gender"] isEqualToString:@"male"])
-                                      {
-                                          newClient.sex = @"M";
-                                      }
-                                      else
-                                      {
-                                          newClient.sex = @"F";
-                                      }
-                                      newClient.picture_link = result[@"picture"][@"data"][@"url"];
-                                      newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
-                                      
-                                      [clientMethods updateClient:newClient];
-                                      
-                                      // Reload table to include new client details
-                                      [self.tableMessages reloadData];
-                                      
-                                  }
-                                  else {
-                                      // An error occurred, we need to handle the error
-                                      // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                      NSLog(@"error makeFBRequestForClientsDetails: %@", error.description);
-                                  }
-                              } ];
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:requestClientDetails
+                                                                       parameters:nil];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+        {
+            if (!error) { // FB request was a success!
+                
+                newClient.name = result[@"first_name"];
+                newClient.last_name = result[@"last_name"];
+                if ([result[@"gender"] isEqualToString:@"male"])
+                {
+                    newClient.sex = @"M";
+                }
+                else
+                {
+                    newClient.sex = @"F";
+                }
+                newClient.picture_link = result[@"picture"][@"data"][@"url"];
+                newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
+                
+                [clientMethods updateClient:newClient];
+                
+                // Reload table to include new client details
+                [self.tableMessages reloadData];
+                
+            }
+            else {
+                // An error occurred, we need to handle the error
+                // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                NSLog(@"error makeFBRequestForClientsDetails: %@", error.description);
+            }
+        }];
     }
 }
 

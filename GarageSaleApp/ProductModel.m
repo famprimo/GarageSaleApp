@@ -22,7 +22,7 @@
     return context;
 }
 
-- (void)saveProducts;
+- (void)saveInitialDataforProducts;
 {
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"yyyyMMdd"];
@@ -242,36 +242,31 @@
 {
     BOOL updateSuccessful = YES;
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
-    [mainDelegate.sharedArrayProducts addObject:newProduct];
-    
     // Save object in persistent data store
     NSManagedObjectContext *context = [self managedObjectContext];
-    NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:@"Products" inManagedObjectContext:context];
-    [newObject setValue:newProduct.product_id forKey:@"product_id"];
-    [newObject setValue:newProduct.client_id forKey:@"client_id"];
-    [newObject setValue:newProduct.codeGS forKey:@"codeGS"];
-    [newObject setValue:newProduct.name forKey:@"name"];
-    [newObject setValue:newProduct.desc forKey:@"desc"];
-    [newObject setValue:newProduct.fb_photo_id forKey:@"fb_photo_id"];
-    [newObject setValue:newProduct.currency forKey:@"currency"];
-    [newObject setValue:newProduct.price forKey:@"price"];
-    [newObject setValue:newProduct.created_time forKey:@"created_time"];
-    [newObject setValue:newProduct.updated_time forKey:@"updated_time"];
-    [newObject setValue:newProduct.solddisabled_time forKey:@"solddisabled_time"];
-    [newObject setValue:newProduct.fb_updated_time forKey:@"fb_updated_time"];
-    [newObject setValue:newProduct.type forKey:@"type"];
-    [newObject setValue:newProduct.picture_link forKey:@"picture_link"];
-    [newObject setValue:newProduct.picture forKey:@"picture"];
-    [newObject setValue:newProduct.additional_pictures forKey:@"additional_pictures"];
-    [newObject setValue:newProduct.status forKey:@"status"];
-    [newObject setValue:newProduct.last_promotion_time forKey:@"last_promotion_time"];
-    [newObject setValue:newProduct.promotion_piority forKey:@"promotion_piority"];
-    [newObject setValue:newProduct.notes forKey:@"notes"];
-    [newObject setValue:newProduct.agent_id forKey:@"agent_id"];
+    NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"Products" inManagedObjectContext:context];
+    
+    [coreDataObject setValue:newProduct.product_id forKey:@"product_id"];
+    [coreDataObject setValue:newProduct.client_id forKey:@"client_id"];
+    [coreDataObject setValue:newProduct.codeGS forKey:@"codeGS"];
+    [coreDataObject setValue:newProduct.name forKey:@"name"];
+    [coreDataObject setValue:newProduct.desc forKey:@"desc"];
+    [coreDataObject setValue:newProduct.fb_photo_id forKey:@"fb_photo_id"];
+    [coreDataObject setValue:newProduct.currency forKey:@"currency"];
+    [coreDataObject setValue:newProduct.price forKey:@"price"];
+    [coreDataObject setValue:newProduct.created_time forKey:@"created_time"];
+    [coreDataObject setValue:newProduct.updated_time forKey:@"updated_time"];
+    [coreDataObject setValue:newProduct.solddisabled_time forKey:@"solddisabled_time"];
+    [coreDataObject setValue:newProduct.fb_updated_time forKey:@"fb_updated_time"];
+    [coreDataObject setValue:newProduct.type forKey:@"type"];
+    [coreDataObject setValue:newProduct.picture_link forKey:@"picture_link"];
+    [coreDataObject setValue:newProduct.picture forKey:@"picture"];
+    [coreDataObject setValue:newProduct.additional_pictures forKey:@"additional_pictures"];
+    [coreDataObject setValue:newProduct.status forKey:@"status"];
+    [coreDataObject setValue:newProduct.last_promotion_time forKey:@"last_promotion_time"];
+    [coreDataObject setValue:newProduct.promotion_piority forKey:@"promotion_piority"];
+    [coreDataObject setValue:newProduct.notes forKey:@"notes"];
+    [coreDataObject setValue:newProduct.agent_id forKey:@"agent_id"];
     
     NSError *error = nil;
     // Save the object to persistent store
@@ -279,6 +274,15 @@
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         updateSuccessful = NO;
     }
+    else // update successful!
+    {
+        // To have access to shared arrays from AppDelegate
+        AppDelegate *mainDelegate;
+        mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        [mainDelegate.sharedArrayProducts addObject:newProduct];
+    }
+
     
     return updateSuccessful;
 }
@@ -286,33 +290,87 @@
 - (BOOL)updateProduct:(Product*)productToUpdate;
 {
     BOOL updateSuccessful = YES;
-    
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    Product *productToReview = [[Product alloc] init];
-    
-    for (int i=0; i<mainDelegate.sharedArrayProducts.count; i=i+1)
-    {
-        productToReview = [[Product alloc] init];
-        productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
-        
-        if ([productToReview.product_id isEqual:productToUpdate.product_id])
-        {
-            [mainDelegate.sharedArrayProducts replaceObjectAtIndex:i withObject:productToUpdate];
-            break;
-        }
-    }
-    
-    // Save object in persistent data store
+
     NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Products" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    // Create Predicate
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"product_id", productToUpdate.product_id];
+    [fetchRequest setPredicate:predicate];
     
     NSError *error = nil;
-    // Save the object to persistent store
-    if (![context save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if (error) {
+        NSLog(@"Unable to execute fetch request");
+        NSLog(@"%@, %@", error, error.localizedDescription);
         updateSuccessful = NO;
+    }
+    else
+    {
+        if (result.count == 0)
+        {
+            NSLog(@"No records retrieved");
+            updateSuccessful = NO;
+        }
+        else
+        {
+            // Set updated values
+            NSManagedObject *coreDataObject = (NSManagedObject *)[result objectAtIndex:0];
+            
+            [coreDataObject setValue:productToUpdate.product_id forKey:@"product_id"];
+            [coreDataObject setValue:productToUpdate.client_id forKey:@"client_id"];
+            [coreDataObject setValue:productToUpdate.codeGS forKey:@"codeGS"];
+            [coreDataObject setValue:productToUpdate.name forKey:@"name"];
+            [coreDataObject setValue:productToUpdate.desc forKey:@"desc"];
+            [coreDataObject setValue:productToUpdate.fb_photo_id forKey:@"fb_photo_id"];
+            [coreDataObject setValue:productToUpdate.currency forKey:@"currency"];
+            [coreDataObject setValue:productToUpdate.price forKey:@"price"];
+            [coreDataObject setValue:productToUpdate.created_time forKey:@"created_time"];
+            [coreDataObject setValue:productToUpdate.updated_time forKey:@"updated_time"];
+            [coreDataObject setValue:productToUpdate.solddisabled_time forKey:@"solddisabled_time"];
+            [coreDataObject setValue:productToUpdate.fb_updated_time forKey:@"fb_updated_time"];
+            [coreDataObject setValue:productToUpdate.type forKey:@"type"];
+            [coreDataObject setValue:productToUpdate.picture_link forKey:@"picture_link"];
+            [coreDataObject setValue:productToUpdate.picture forKey:@"picture"];
+            [coreDataObject setValue:productToUpdate.additional_pictures forKey:@"additional_pictures"];
+            [coreDataObject setValue:productToUpdate.status forKey:@"status"];
+            [coreDataObject setValue:productToUpdate.last_promotion_time forKey:@"last_promotion_time"];
+            [coreDataObject setValue:productToUpdate.promotion_piority forKey:@"promotion_piority"];
+            [coreDataObject setValue:productToUpdate.notes forKey:@"notes"];
+            [coreDataObject setValue:productToUpdate.agent_id forKey:@"agent_id"];
+            
+            // Save object to persistent store
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Unable to save managed object context.");
+                NSLog(@"%@, %@", error, error.localizedDescription);
+                updateSuccessful = NO;
+            }
+            else // update successful!
+            {
+                // To have access to shared arrays from AppDelegate
+                AppDelegate *mainDelegate;
+                mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                
+                // Replace object in Shared Array
+                Product *productToReview = [[Product alloc] init];
+                
+                for (int i=0; i<mainDelegate.sharedArrayProducts.count; i=i+1)
+                {
+                    productToReview = [[Product alloc] init];
+                    productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
+                    
+                    if ([productToReview.product_id isEqual:productToUpdate.product_id])
+                    {
+                        [mainDelegate.sharedArrayProducts replaceObjectAtIndex:i withObject:productToUpdate];
+                        break;
+                    }
+                }
+            }
+        }
     }
     
     return updateSuccessful;

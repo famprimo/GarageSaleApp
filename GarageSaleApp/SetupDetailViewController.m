@@ -58,7 +58,13 @@
     _selectedTemplate.updated_time = [NSDate date];
     
     [templateMethods updateTemplate:_selectedTemplate];
-    [templateMethods updateTemplate:_selectedTemplate withArray:_myDataTemplates];
+
+    // Load data again
+    _myDataTemplates = [[NSMutableArray alloc] init];
+    _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:_selectedType];
+
+    // [templateMethods updateTemplate:_selectedTemplate withArray:_myDataTemplates];
+    
     [self.tableTemplates reloadData];
 
 }

@@ -8,6 +8,8 @@
 
 #import "MenuViewController.h"
 #import "SWRevealViewController.h"
+#import "AppDelegate.h"
+#import "SettingsModel.h"
 
 @interface MenuViewController ()
 {
@@ -38,25 +40,36 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    
     // Fetch the menu items
     self.menuItems = [[[MenuModel alloc] init] getMenuItem];
     
     // Creates Facebook login buton
-    FBLoginView *loginView = [[FBLoginView alloc] initWithReadPermissions:@[@"public_profile", @"email", @"user_friends"]];
-    loginView.delegate = self;
+    FBSDKLoginButton *loginButton = [[FBSDKLoginButton alloc] init];
+    [FBSDKProfile enableUpdatesOnAccessTokenChange:YES];
     
-    // Align the button in the center horizontally
-    // loginView.frame = CGRectOffset(loginView.frame, (self.view.center.x - (loginView.frame.size.width / 2)), 5);
+    CGRect loginButtonFrame = loginButton.frame;
+    loginButtonFrame.origin.x = 10;
+    loginButtonFrame.origin.y = 30;
+    loginButtonFrame.size.width = 40;
+    loginButtonFrame.size.height = 40;
+    loginButton.frame = loginButtonFrame;
     
-    CGRect loginViewFrame = loginView.frame;
-    loginViewFrame.origin.x = 10;
-    loginViewFrame.origin.y = 30;
-    loginViewFrame.size.width = 40;
-    loginViewFrame.size.height = 40;
-    loginView.frame = loginViewFrame;
-    
-    [self.view addSubview:loginView];
+    [self.view addSubview:loginButton];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeProfileChange:) name:FBSDKProfileDidChangeNotification object:nil];
+    loginButton.readPermissions = @[@"public_profile", @"email", @"user_friends"];
+    loginButton.delegate = self;
+    
+
+    if ([FBSDKAccessToken currentAccessToken]) {
+        // User is logged in
+        NSLog(@"User is already logged in");
+        self.profilePictureView.profileID = [FBSDKProfile currentProfile].userID;
+        self.nameLabel.text = [FBSDKProfile currentProfile].name;
+        
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -162,123 +175,68 @@
 }
 
 
-#pragma mark - Facebook
+#pragma mark - FBSDKLoginButtonDelegate
 
-- (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user
+
+- (void)loginButton:(FBSDKLoginButton *)loginButton didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error
 {
-    NSLog(@"%@", user.name);
-    self.nameLabel.text = user.name;
-    self.profilePictureView.profileID = user.objectID;
-}
-
-- (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView
-{
-    NSLog(@"You are logged in!");
-    
-    // DESCOMENTAR PARA TENER PERMISOS
-    // [self requestPermissions];
-
-}
-
-- (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView
-{
-    NSLog(@"You are logged out!");
-}
-
-
-// You need to override loginView:handleError in order to handle possible errors that can occur during login
-- (void)loginView:(FBLoginView *)loginView handleError:(NSError *)error {
-    NSString *alertMessage, *alertTitle;
-    
-    // If the user should perform an action outside of you app to recover,
-    // the SDK will provide a message for the user, you just need to surface it.
-    // This conveniently handles cases li   ke Facebook password change or unverified Facebook accounts.
-    if ([FBErrorUtility shouldNotifyUserForError:error]) {
-        alertTitle = @"Facebook error";
-        alertMessage = [FBErrorUtility userMessageForError:error];
-        
-        // This code will handle session closures since that happen outside of the app.
-        // You can take a look at our error handling guide to know more about it
-        // https://developers.facebook.com/docs/ios/errors
-    } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession) {
-        alertTitle = @"Session Error";
-        alertMessage = @"Your current session is no longer valid. Please log in again.";
-        
-        // If the user has cancelled a login, we will do nothing.
-        // You can also choose to show the user a message if cancelling login will result in
-        // the user not being able to complete a task they had initiated in your app
-        // (like accessing FB-stored information or posting to Facebook)
-    } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled) {
-        NSLog(@"user cancelled login");
-        
-        // For simplicity, this sample handles other errors with a generic message
-        // You can checkout our error handling guide for more detailed information
-        // https://developers.facebook.com/docs/ios/errors
-    } else {
-        alertTitle  = @"Something went wrong";
-        alertMessage = @"Please try again later.";
-        NSLog(@"Unexpected error:%@", error);
-    }
-    
-    if (alertMessage) {
+    if (error) {
+        NSLog(@"Unexpected login error: %@", error);
+        NSString *alertMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?: @"There was a problem logging in. Please try again later.";
+        NSString *alertTitle = error.userInfo[FBSDKErrorLocalizedTitleKey] ?: @"Oops";
         [[[UIAlertView alloc] initWithTitle:alertTitle
                                     message:alertMessage
                                    delegate:nil
                           cancelButtonTitle:@"OK"
                           otherButtonTitles:nil] show];
     }
+    else
+    {
+        NSLog(@"Logged in!");
+    }
 }
 
-- (void)requestPermissions;
+- (void)loginButtonDidLogOut:(FBSDKLoginButton *)loginButton
 {
-    // These are the permissions we need:
-    NSArray *permissionsNeeded = @[@"public_profile", @"manage_notifications", @"read_stream", @"user_photos", @"user_friends", @"read_mailbox"];
-    
-    // Request the permissions the user currently has
-    [FBRequestConnection startWithGraphPath:@"/me/permissions"
-                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                              if (!error){
-                                  // These are the current permissions the user has
-                                  NSDictionary *currentPermissions= [(NSArray *)[result data] objectAtIndex:0];
-                                  
-                                  // We will store here the missing permissions that we will have to request
-                                  NSMutableArray *requestPermissions = [[NSMutableArray alloc] initWithArray:@[]];
-                                  
-                                  // Check if all the permissions we need are present in the user's current permissions
-                                  // If they are not present add them to the permissions to be requested
-                                  for (NSString *permission in permissionsNeeded){
-                                      if (![currentPermissions objectForKey:permission]){
-                                          [requestPermissions addObject:permission];
-                                      }
-                                  }
-                                  
-                                  // If we have permissions to request
-                                  if ([requestPermissions count] > 0){
-                                      // Ask for the missing permissions
-                                      [FBSession.activeSession
-                                       requestNewReadPermissions:requestPermissions
-                                       completionHandler:^(FBSession *session, NSError *error) {
-                                           if (!error) {
-                                               // Permission granted, we can request the user information
+}
 
-                                           } else {
-                                               // An error occurred, we need to handle the error
-                                               // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                               NSLog(@"error %@", error.description);
-                                           }
-                                       }];
-                                  } else {
-                                      // Permissions are present
-                                      // We can request the user information
-                                  }
-                                  
-                              } else {
-                                  // An error occurred, we need to handle the error
-                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                  NSLog(@"error %@", error.description);
-                              }
-                          }];
-    
+- (void)observeProfileChange:(NSNotification *)notfication
+{
+    if ([FBSDKProfile currentProfile])
+    {
+        self.profilePictureView.profileID = [FBSDKProfile currentProfile].userID;
+        self.nameLabel.text = [FBSDKProfile currentProfile].name;
+
+        [self setFacebookPageID];
+    }
+}
+
+- (void)setFacebookPageID;
+{
+    if ([FBSDKAccessToken currentAccessToken])
+    {
+        NSString *url = @"me?fields=id,name,accounts";
+        
+        // Prepare for FB request
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+         {
+             if (!error) {  // FB request was a success!
+                 
+                 NSString *userID = result[@"id"];
+                 NSString *userName = result[@"name"];
+                 NSString *pageID = result[@"accounts"][@"data"][0][@"id"];
+                 NSString *pageName = result[@"accounts"][@"data"][0][@"name"];
+                 NSString *pageToken = result[@"accounts"][@"data"][0][@"access_token"];
+                 
+                 if (![[[SettingsModel alloc] init] updateSettingsUser:userName withUserID:userID andPageID:pageID andPageName:pageName andPageTokenID:pageToken]) {
+                     NSLog(@"Error updating settings");
+                 }
+
+             }
+         }];
+    }
 }
 
 

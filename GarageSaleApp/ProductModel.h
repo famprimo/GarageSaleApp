@@ -13,7 +13,7 @@
 
 @interface ProductModel : NSObject
 
-- (void)saveProducts;
+- (void)saveInitialDataforProducts;
 - (NSMutableArray*)getProductsFromCoreData;
 - (NSMutableArray*)getProductArray;
 - (NSString*)getNextProductID;

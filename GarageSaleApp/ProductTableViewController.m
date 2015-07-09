@@ -11,8 +11,8 @@
 #import "SWRevealViewController.h"
 #import "Product.h"
 #import "ProductModel.h"
-#import <FacebookSDK/FacebookSDK.h>
 #import "NSDate+NVTimeAgo.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @interface ProductTableViewController ()
 {
@@ -273,7 +273,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Set selected listing to var
+    // Set selected item to detail view
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         _selectedProduct = _mySearchData[indexPath.row];;
     } else {
@@ -291,50 +291,54 @@
 {
     // Create string for FB request
     NSString *url = @"me/photos/tagged?fields=created_time,id,link,updated_time,picture,name&limit=100";
+    // NSString *url = @"me/photos/uploaded?fields=created_time,id,link,updated_time,picture,name&limit=100";
+
     [self getFBPhotos:url];
 }
 
 - (void) getFBPhotos:(NSString*)url;
 {
     // Make FB request
-    [FBRequestConnection startWithGraphPath:url
-                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                              
-                              if (!error) { // FB request was a success!
-                                  
-                                  if (result[@"data"]) {   // There is FB data!
-                                      
-                                      [self parseFBResultsRequestForPhotos:result];
-                                      
-                                      // Review is there is a next page
-                                      // skip the beginning of the url https://graph.facebook.com/
-
-                                      NSString *next = result[@"paging"][@"next"];
-                                      if (next)
-                                      {
-                                          [self getFBPhotos:[next substringFromIndex:32]];
-                                      }
-                                      else
-                                      {
-                                          [self.refreshControl endRefreshing];
-                                      }
-
-                                  }
-                                  else
-                                  {
-                                      [self.refreshControl endRefreshing];
-                                  }
-                              }
-                              else {
-                                  // An error occurred, we need to handle the error
-                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                  NSLog(@"error getFBPhotos: %@", error.description);
-
-                                  [self.refreshControl endRefreshing];
-                              }
-                          } ];
-
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url
+                                                                   parameters:nil];
     
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+    {
+        if (!error) { // FB request was a success!
+            
+            if (result[@"data"]) {   // There is FB data!
+                
+                [self parseFBResultsRequestForPhotos:result];
+                
+                // Review is there is a next page
+                // skip the beginning of the url https://graph.facebook.com/
+                
+                NSString *next = result[@"paging"][@"next"];
+                if (next)
+                {
+                    [self getFBPhotos:[next substringFromIndex:32]];
+                }
+                else
+                {
+                    [self.refreshControl endRefreshing];
+                }
+                
+            }
+            else
+            {
+                [self.refreshControl endRefreshing];
+            }
+        }
+        else {
+            // An error occurred, we need to handle the error
+            // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+            NSLog(@"error getFBPhotos: %@", error.description);
+            
+            [self.refreshControl endRefreshing];
+        }
+
+    }];
+
 }
 
 

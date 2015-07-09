@@ -9,15 +9,18 @@
 #import "MessagesTableViewController.h"
 #import "MessagesDetailViewController.h"
 #import "SWRevealViewController.h"
+#import "Settings.h"
+#import "SettingsModel.h"
 #import "Message.h"
 #import "MessageModel.h"
 #import "Client.h"
 #import "ClientModel.h"
 #import "Product.h"
 #import "ProductModel.h"
-#import <FacebookSDK/FacebookSDK.h>
 #import "NSDate+NVTimeAgo.h"
 #import "NS-Extensions.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 @interface MessagesTableViewController ()
 {
@@ -31,6 +34,9 @@
     Client *_selectedClientBox;
  
     NSDate *_messagesSinceDate;
+    
+    // Temp variables for user and page IDs
+    Settings *_tmpSettings;
 }
 // For Popover
 @property (nonatomic, strong) UIPopoverController *messagesSincePopover;
@@ -77,6 +83,7 @@
     
     // Get the data
     _myDataClients = [[[ClientModel alloc] init] getClientArray];
+    _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
     
     // Define the Since date for a week ago
     _messagesSinceDate = [NSDate dateWithTimeInterval:-60*60*24*1 sinceDate:[NSDate date]];
@@ -137,11 +144,9 @@
 
 - (void)refreshTableGesture:(id)sender
 {
+    // Make all Facebook requests
     
-    [self makeFBRequestForNewNotifications];
-    
-    [self makeFBRequestForNewInbox];
-    
+    [self makeFBrequests];
 }
 
 - (NSString*)updateTableTitle
@@ -401,7 +406,16 @@
         }
         else
         {
-            messageLabel.text = [NSString stringWithFormat:@"Garage Sale: %@", lastMessageFromClient.message];
+            if ([lastMessageFromClient.fb_from_id isEqualToString:_tmpSettings.fb_user_id])
+            {
+                // Message from GarageSale user
+                messageLabel.text = [NSString stringWithFormat:@"%@: %@", _tmpSettings.fb_user_name, lastMessageFromClient.message];
+            }
+            else
+            {
+                // Message from GarageSale page
+                messageLabel.text = [NSString stringWithFormat:@"%@: %@", _tmpSettings.fb_page_name, lastMessageFromClient.message];
+            }
         }
         datetimeLabel.text = [lastMessageFromClient.datetime formattedAsTimeAgo];
 
@@ -426,7 +440,29 @@
 
 #pragma mark - Contact with Facebook
 
+- (void) makeFBrequests;
+{
+    if (![[FBSDKAccessToken currentAccessToken] hasGranted:@"read_mailbox"])
+    {
+        FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+        
+        [loginManager logInWithReadPermissions:@[@"read_stream", @"user_photos", @"user_friends", @"read_mailbox", @"read_page_mailboxes"] handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+            //TODO: process error or result.
+            NSLog(@"%@",error);
+        }];
+    }
+    
+    // @"manage_notifications", @"manage_pages", @"publish_pages"
+    
+    // self.loginButton.readPermissions = @[@"public_profile", @"manage_notifications", @"read_stream", @"user_photos", @"user_friends", @"read_mailbox", @"manage_pages", @"publish_pages", @"read_page_mailboxes"];
+    
+    [self makeFBRequestForNewNotifications];
+    
+    [self makeFBRequestForNewInbox];
+    
+    [self makeFBRequestForNewPageMessages];
 
+}
 
 - (void) makeFBRequestForNewNotifications;
 {
@@ -437,43 +473,50 @@
 
 - (void) getFBNotifications:(NSString*)url;
 {
-    [FBRequestConnection startWithGraphPath:url completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                              
-                              if (!error) {  // FB request was a success!
-                                  
-                                  if (result[@"data"]) {   // There is FB data!
-                                      
-                                      NSArray *jsonArray = result[@"data"];
-                                      NSMutableArray *photosArray = [[NSMutableArray alloc] init];
-                                      
-                                      // Get photo IDs of all notifications
-                                      photosArray = [self getPhotosIDs:jsonArray];
-                                      
-                                      if (photosArray.count >0) { // New notifications related to photos!
-                                          
-                                          // Get message details for those notifications
-                                          [self makeFBRequestForPhotosDetails:photosArray];
-                                      }
-                                      
-                                      // Review is there is a next page
-                                      NSString *next = result[@"paging"][@"next"];
-                                      if (next)
-                                      {
-                                          [self getFBNotifications:[next substringFromIndex:32]];
-                                      }
-                                  }
-                                  else
-                                  {
-                                      [self.refreshControl endRefreshing];
-                                  }
-                                  
-                              } else {
-                                  // An error occurred, we need to handle the error
-                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                  NSLog(@"error getFBNotifications: %@", error.description);
-                              }
-                          }];
     
+    if ([[FBSDKAccessToken currentAccessToken] hasGranted:@"manage_pages"])
+    {
+        // Prepare for FB request
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+         {
+             
+             if (!error) {  // FB request was a success!
+                 
+                 if (result[@"data"]) {   // There is FB data!
+                     
+                     NSArray *jsonArray = result[@"data"];
+                     NSMutableArray *photosArray = [[NSMutableArray alloc] init];
+                     
+                     // Get photo IDs of all notifications
+                     photosArray = [self getPhotosIDs:jsonArray];
+                     
+                     if (photosArray.count >0) { // New notifications related to photos!
+                         
+                         // Get message details for those notifications
+                         [self makeFBRequestForPhotosDetails:photosArray];
+                     }
+                     
+                     // Review is there is a next page
+                     NSString *next = result[@"paging"][@"next"];
+                     if (next)
+                     {
+                         [self getFBNotifications:[next substringFromIndex:32]];
+                     }
+                 }
+                 else
+                 {
+                     [self.refreshControl endRefreshing];
+                 }
+                 
+             } else {
+                 // An error occurred, we need to handle the error
+                 // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                 NSLog(@"error getFBNotifications: %@", error.description);
+             }
+         }];
+    }
 }
 
 - (NSMutableArray*)getPhotosIDs:(NSArray*)arrayResultsData;
@@ -524,207 +567,215 @@
     }
     
     // Make FB request
-    [FBRequestConnection startWithGraphPath:requestPhotosList
-                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                              
-                              if (!error) { // FB request was a success!
-                                  
-                                  // Get details and create array
-                                  for (int i=0; i<photosArray.count; i=i+1)
-                                  {
-                                      
-                                      // Review each photo
-                                      NSString *photoID = result[photosArray[i]][@"id"];
-                                      
-                                      // Review if product exists
-                                      NSString *productID = [productMethods getProductIDfromFbPhotoId:photoID];
-                                      
-                                      if ([productID isEqual: @"Not Found"])
-                                      {
-                                          // New product!
-                                          productID = [productMethods getNextProductID];
-                                          
-                                          Product *newProduct = [[Product alloc] init];
-                                          
-                                          newProduct.product_id = productID;
-                                          newProduct.client_id = @"";
-                                          newProduct.desc = result[photosArray[i]][@"name"];
-                                          newProduct.fb_photo_id = photoID;
-                                          newProduct.fb_link = result[photosArray[i]][@"link"];
-                                          
-                                          // Get name, currency, price, GS code and type from photo description
-                                          
-                                          newProduct.name = [productMethods getProductNameFromFBPhotoDesc:newProduct.desc];
-                                          
-                                          NSString *tmpText;
-                                          
-                                          tmpText = [productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
-                                          if (![tmpText isEqualToString:@"Not Found"])
-                                          {
-                                              newProduct.codeGS = [NSString stringWithFormat:@"GSN%@", tmpText];
-                                              newProduct.type = @"A";
-                                              
-                                          }
-                                          else
-                                          {
-                                              tmpText = [productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
-                                              if (![tmpText isEqualToString:@"Not Found"])
-                                              {
-                                                  newProduct.codeGS = [NSString stringWithFormat:@"GS%@", tmpText];
-                                                  newProduct.type = @"S";
-                                              }
-                                              else
-                                              {
-                                                  newProduct.codeGS = @"None";
-                                                  newProduct.type = @"A";
-                                              }
-                                          }
-                                          
-                                          tmpText = [productMethods getTextThatFollows:@"s/. " fromMessage:newProduct.desc];
-                                          if (![tmpText isEqualToString:@"Not Found"]) {
-                                              tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
-                                              newProduct.currency = @"S/.";
-                                              newProduct.price = [NSNumber numberWithFloat:[tmpText integerValue]];
-                                          }
-                                          else
-                                          {
-                                              tmpText = [productMethods getTextThatFollows:@"USD " fromMessage:newProduct.desc];
-                                              if (![tmpText isEqualToString:@"Not Found"]) {
-                                                  tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
-                                                  newProduct.currency = @"USD";
-                                                  newProduct.price = [NSNumber numberWithFloat:[tmpText integerValue]];
-                                              }
-                                              else {
-                                                  newProduct.currency = @"S/.";
-                                                  newProduct.price = 0;
-                                              }
-                                          }
-                                          
-                                          NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
-                                          [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-                                          newProduct.created_time = [formatFBdates dateFromString:result[photosArray[i]][@"created_time"]];
-                                          newProduct.updated_time = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
-                                          newProduct.fb_updated_time = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
-                                          
-                                          newProduct.picture_link = result[photosArray[i]][@"picture"];
-                                          newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
-                                          newProduct.additional_pictures = @"";
-                                          newProduct.status = @"N";
-                                          newProduct.promotion_piority = @"2";
-                                          newProduct.notes = @"";
-                                          newProduct.agent_id = @"00001";
-                                          
-                                          
-                                          [productMethods addNewProduct:newProduct];
-                                          
-                                      }
-                                      
-                                      // Review each comment
-                                      NSArray *jsonArray = result[photosArray[i]][@"comments"][@"data"];
-                                      NSMutableArray *commentsIDArray = [[NSMutableArray alloc] init];
-                                      Message *tempMessage;
-                                      Client *tempClient;
-                                      
-                                      for (int j=0; j<jsonArray.count; j=j+1)
-                                      {
-                                          NSDictionary *newMessage = jsonArray[j];
-                                          [commentsIDArray addObject:newMessage[@"id"]];
-                                          
-                                          // Validate if the comment/message exists
-                                          if (![messagesMethods existMessage:newMessage[@"id"]])
-                                          {
-                                              // New message!
-                                              tempMessage = [[Message alloc] init];
-                                              
-                                              tempMessage.fb_msg_id = newMessage[@"id"];
-                                              tempMessage.fb_from_id = newMessage[@"from"][@"id"];
-                                              tempMessage.fb_from_name = newMessage[@"from"][@"name"];
-                                              tempMessage.message = newMessage[@"message"];
-                                              
-                                              tempMessage.fb_created_time = newMessage[@"created_time"];
-                                              NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
-                                              [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-                                              tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time];
-                                              
-                                              tempMessage.fb_photo_id = photoID;
-                                              tempMessage.product_id = productID;
-                                              tempMessage.agent_id = @"00001";
-                                              tempMessage.type = @"P";
-                                              
-                                              if ([tempMessage.fb_from_name hasPrefix:@"Garage"])
-                                              {
-                                                  tempMessage.recipient = @"C";
-                                                  tempMessage.status = @"D";
-                                              }
-                                              else
-                                              {
-                                                  tempMessage.recipient = @"G";
-                                                  tempMessage.status = @"N";
-                                              }
-                                              
-                                              // Review if client exists
-                                              NSString *fromClientID = [clientMethods getClientIDfromFbId:tempMessage.fb_from_id];
-                                              
-                                              if ([fromClientID  isEqual: @"Not Found"])
-                                              {
-                                                  // New client!
-                                                  
-                                                  tempMessage.client_id = [clientMethods getNextClientID];;
-                                                  
-                                                  Client *newClient = [[Client alloc] init];
-                                                  
-                                                  newClient.client_id = tempMessage.client_id;
-                                                  newClient.fb_client_id = tempMessage.fb_from_id;
-                                                  newClient.fb_inbox_id = newClient.fb_client_id;
-                                                  newClient.type = @"F";
-                                                  newClient.name = tempMessage.fb_from_name; // TEMPORAL
-                                                  newClient.preference = @"F";
-                                                  newClient.status = @"N";
-                                                  newClient.created_time = [NSDate date];
-                                                  newClient.last_interacted_time = tempMessage.datetime;
-                                                  
-                                                  [clientMethods addNewClient:newClient];
-                                                  [newClientsArray addObject:newClient];
-                                                  
-                                              }
-                                              else
-                                              {
-                                                  tempMessage.client_id = fromClientID;
-                                                  tempClient = [clientMethods getClientFromClientId:fromClientID];
-                                                  tempMessage.fb_inbox_id = tempClient.fb_inbox_id;
-                                              }
-                                              
-                                              // Insert new message to array and add row to table
-                                              [self addNewMessage:tempMessage];
-                                              
-                                          }
-                                      }
-                                      
-                                      // Call method for getting sub comments
-                                      [self makeFBRequestForSubComments:commentsIDArray];
-                                      
-                                  }
-                                  
-                                  // Get details for each new client found
-                                  
-                                  if (newClientsArray.count>0)
-                                  {
-                                      [self makeFBRequestForClientsDetails:newClientsArray];
-                                  }
-                                  
-                                  // Disable refresh icon and update table title
-                                  
-                                  //[self.refreshControl endRefreshing];
-                                  self.navigationItem.title = [self updateTableTitle];
-                                  
-                              }
-                              else {
-                                  // An error occurred, we need to handle the error
-                                  // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                  NSLog(@"error makeFBRequestForPhotosDetails: %@", error.description);
-                              }
-                          } ];
-    
+    if ([FBSDKAccessToken currentAccessToken])
+    {
+        // Prepare for FB request
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:requestPhotosList parameters:nil];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+         {
+             if (!error) { // FB request was a success!
+                 
+                 // Get details and create array
+                 for (int i=0; i<photosArray.count; i=i+1)
+                 {
+                     
+                     // Review each photo
+                     NSString *photoID = result[photosArray[i]][@"id"];
+                     
+                     // Review if product exists
+                     NSString *productID = [productMethods getProductIDfromFbPhotoId:photoID];
+                     
+                     if ([productID isEqual: @"Not Found"])
+                     {
+                         // New product!
+                         productID = [productMethods getNextProductID];
+                         
+                         Product *newProduct = [[Product alloc] init];
+                         
+                         newProduct.product_id = productID;
+                         newProduct.client_id = @"";
+                         newProduct.desc = result[photosArray[i]][@"name"];
+                         newProduct.fb_photo_id = photoID;
+                         newProduct.fb_link = result[photosArray[i]][@"link"];
+                         
+                         // Get name, currency, price, GS code and type from photo description
+                         
+                         newProduct.name = [productMethods getProductNameFromFBPhotoDesc:newProduct.desc];
+                         
+                         NSString *tmpText;
+                         
+                         tmpText = [productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
+                         if (![tmpText isEqualToString:@"Not Found"])
+                         {
+                             newProduct.codeGS = [NSString stringWithFormat:@"GSN%@", tmpText];
+                             newProduct.type = @"A";
+                             
+                         }
+                         else
+                         {
+                             tmpText = [productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
+                             if (![tmpText isEqualToString:@"Not Found"])
+                             {
+                                 newProduct.codeGS = [NSString stringWithFormat:@"GS%@", tmpText];
+                                 newProduct.type = @"S";
+                             }
+                             else
+                             {
+                                 newProduct.codeGS = @"None";
+                                 newProduct.type = @"A";
+                             }
+                         }
+                         
+                         tmpText = [productMethods getTextThatFollows:@"s/. " fromMessage:newProduct.desc];
+                         if (![tmpText isEqualToString:@"Not Found"]) {
+                             tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
+                             newProduct.currency = @"S/.";
+                             newProduct.price = [NSNumber numberWithFloat:[tmpText integerValue]];
+                         }
+                         else
+                         {
+                             tmpText = [productMethods getTextThatFollows:@"USD " fromMessage:newProduct.desc];
+                             if (![tmpText isEqualToString:@"Not Found"]) {
+                                 tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
+                                 newProduct.currency = @"USD";
+                                 newProduct.price = [NSNumber numberWithFloat:[tmpText integerValue]];
+                             }
+                             else {
+                                 newProduct.currency = @"S/.";
+                                 newProduct.price = 0;
+                             }
+                         }
+                         
+                         NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+                         [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+                         newProduct.created_time = [formatFBdates dateFromString:result[photosArray[i]][@"created_time"]];
+                         newProduct.updated_time = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
+                         newProduct.fb_updated_time = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
+                         
+                         newProduct.picture_link = result[photosArray[i]][@"picture"];
+                         newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
+                         newProduct.additional_pictures = @"";
+                         newProduct.status = @"N";
+                         newProduct.promotion_piority = @"2";
+                         newProduct.notes = @"";
+                         newProduct.agent_id = @"00001";
+                         
+                         
+                         [productMethods addNewProduct:newProduct];
+                         
+                     }
+                     
+                     // Review each comment
+                     NSArray *jsonArray = result[photosArray[i]][@"comments"][@"data"];
+                     NSMutableArray *commentsIDArray = [[NSMutableArray alloc] init];
+                     Message *tempMessage;
+                     Client *tempClient;
+                     
+                     for (int j=0; j<jsonArray.count; j=j+1)
+                     {
+                         NSDictionary *newMessage = jsonArray[j];
+                         [commentsIDArray addObject:newMessage[@"id"]];
+                         
+                         // Validate if the comment/message exists
+                         if (![messagesMethods existMessage:newMessage[@"id"]])
+                         {
+                             // New message!
+                             tempMessage = [[Message alloc] init];
+                             
+                             tempMessage.fb_msg_id = newMessage[@"id"];
+                             tempMessage.fb_from_id = newMessage[@"from"][@"id"];
+                             tempMessage.fb_from_name = newMessage[@"from"][@"name"];
+                             tempMessage.message = newMessage[@"message"];
+                             
+                             tempMessage.fb_created_time = newMessage[@"created_time"];
+                             NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+                             [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+                             tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time];
+                             
+                             tempMessage.fb_photo_id = photoID;
+                             tempMessage.product_id = productID;
+                             tempMessage.agent_id = @"00001";
+                             tempMessage.type = @"P";
+                             
+                             NSLog(@"%@ : %@", tempMessage.fb_from_name, [FBSDKProfile currentProfile].name);
+                             
+                             if ([tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_user_id] || [tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_page_id])
+                             {
+                                 // Is a message from GarageSale!
+                                 tempMessage.recipient = @"C";
+                                 tempMessage.status = @"D";
+                             }
+                             else
+                             {
+                                 tempMessage.recipient = @"G";
+                                 tempMessage.status = @"N";
+                             }
+                             
+                             // Review if client exists
+                             NSString *fromClientID = [clientMethods getClientIDfromFbId:tempMessage.fb_from_id];
+                             
+                             if ([fromClientID  isEqual: @"Not Found"])
+                             {
+                                 // New client!
+                                 
+                                 tempMessage.client_id = [clientMethods getNextClientID];;
+                                 
+                                 Client *newClient = [[Client alloc] init];
+                                 
+                                 newClient.client_id = tempMessage.client_id;
+                                 newClient.fb_client_id = tempMessage.fb_from_id;
+                                 newClient.fb_inbox_id = newClient.fb_client_id;
+                                 newClient.type = @"F";
+                                 newClient.name = tempMessage.fb_from_name; // TEMPORAL
+                                 newClient.preference = @"F";
+                                 newClient.status = @"N";
+                                 newClient.created_time = [NSDate date];
+                                 newClient.last_interacted_time = tempMessage.datetime;
+                                 
+                                 [clientMethods addNewClient:newClient];
+                                 [newClientsArray addObject:newClient];
+                                 
+                             }
+                             else
+                             {
+                                 tempMessage.client_id = fromClientID;
+                                 tempClient = [clientMethods getClientFromClientId:fromClientID];
+                                 tempMessage.fb_inbox_id = tempClient.fb_inbox_id;
+                             }
+                             
+                             // Insert new message to array and add row to table
+                             [self addNewMessage:tempMessage];
+                             
+                         }
+                     }
+                     
+                     // Call method for getting sub comments
+                     [self makeFBRequestForSubComments:commentsIDArray];
+                     
+                 }
+                 
+                 // Get details for each new client found
+                 
+                 if (newClientsArray.count>0)
+                 {
+                     [self makeFBRequestForClientsDetails:newClientsArray];
+                 }
+                 
+                 // Disable refresh icon and update table title
+                 
+                 //[self.refreshControl endRefreshing];
+                 self.navigationItem.title = [self updateTableTitle];
+                 
+             }
+             else {
+                 // An error occurred, we need to handle the error
+                 // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                 NSLog(@"error makeFBRequestForPhotosDetails: %@", error.description);
+             }
+             
+         }];
+    }
 }
 
 
@@ -752,29 +803,31 @@
 {
 
     // Make FB request
-        [FBRequestConnection startWithGraphPath:url completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
-         {
-             if (!error) { // FB request was a success!
-                 
-                 [self parseFBPhotoSubComments:result];
-
-                 // Review is there is a next page
-                 // skip the beginning of the url https://graph.facebook.com/
-                 
-                 NSString *next = result[@"paging"][@"next"];
-                 if (next)
-                 {
-                     [self getFBPhotoSubComments:[next substringFromIndex:32]];
-                 }
-
-             }
-             else {
-                 // An error occurred, we need to handle the error
-                 // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                 NSLog(@"error getFBPhotoComments: %@", error.description);
-             }
-         } ];
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url
+                                                                   parameters:nil];
     
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+    {
+        if (!error) { // FB request was a success!
+            
+            [self parseFBPhotoSubComments:result];
+            
+            // Review is there is a next page
+            // skip the beginning of the url https://graph.facebook.com/
+            
+            NSString *next = result[@"paging"][@"next"];
+            if (next)
+            {
+                [self getFBPhotoSubComments:[next substringFromIndex:32]];
+            }
+            
+        }
+        else {
+            // An error occurred, we need to handle the error
+            // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+            NSLog(@"error getFBPhotoComments: %@", error.description);
+        }
+    }];
 }
 
 
@@ -826,8 +879,11 @@
             tempMessage.agent_id = @"00001";
             tempMessage.type = @"P";
             
-            if ([tempMessage.fb_from_name hasPrefix:@"Garage"])
+            NSLog(@"%@ : %@", tempMessage.fb_from_name, [FBSDKProfile currentProfile].name);
+
+            if ([tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_user_id] || [tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_page_id])
             {
+                // Is a message from GarageSale
                 tempMessage.recipient = @"C";
                 tempMessage.client_id = fromClientID;
                 tempMessage.fb_inbox_id = fromClientID;
@@ -859,7 +915,7 @@
                     newClient.created_time = [NSDate date];
                     newClient.last_interacted_time = tempMessage.datetime;
                     
-                    // [clientMethods addNewClient:newClient];
+                    [clientMethods addNewClient:newClient];
                     [newClientsArray addObject:newClient];
                     
                 }
@@ -897,27 +953,17 @@
 
     [self getFBInbox:url];
 
-    // me/inbox?fields=id,to,updated_time&limit=50&since=1427587200
-    // NSString *url = [NSString stringWithFormat:@"me/inbox?fields=id,to,updated_time&limit=50&since=%ld", (long)[_messagesSinceDate timeIntervalSince1970]];
-    // Bajar los chats y comparar con la fecha de ultima interaccion de cada cliente -- El cliente lo toma de "to"... el primero que no sea "Garage"
-    // si es mayor, hacer el pedido de los comentarios de esos clientes solamente
-    // 1426957567601945/comments?limit=50&since=1427587200  -- El codigo es el del chat, no del cliente
-    // NSString *url = [NSString stringWithFormat:@"%@/comments?limit=50&since=%ld", fbInboxID, (long)[_messagesSinceDate timeIntervalSince1970]];
-    // El pedido tiene que ser uno por uno para poder explorar los comentarios hasta la fecha maxima
-    // actualizar el cliente con la informacion de update time del chat
-    // MAS ADELANTE: en configuracion tener un switch para indicar si toma o no la fecha de ultima interaccion para entrar a ver los mensajes
-    
-    // REVISAR: hacer el pedido inicial que incluye comments, revisar los comments y si son mas de 25 y hay next, hacer un pedido adicional por los comentarios
-
 }
 
 - (void) getFBInbox:(NSString*)url;
 {
-
-    [FBRequestConnection startWithGraphPath:url completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url
+                                                                   parameters:nil];
+    
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
     {
         if (!error) {  // FB request was a success!
-    
+            
             if (result[@"data"]) {   // There is FB data!
                 
                 [self parseFBInbox:result];
@@ -948,7 +994,6 @@
             NSLog(@"error getFBInbox: %@", error.description);
         }
     }];
-    
 }
 
 - (void) parseFBInbox:(id)result;
@@ -972,7 +1017,10 @@
         fbNamefromInbox = jsonArray[i][@"to"][@"data"][1][@"name"];
         fbIDfromInbox = jsonArray[i][@"to"][@"data"][1][@"id"];
         
-        if ([fbNamefromInbox hasPrefix:@"Garage"])
+        NSLog(@"%@ : %@", fbNamefromInbox, [FBSDKProfile currentProfile].name);
+
+        // Make sure it takes the ID and name of the client, not of GarageSale
+        if ([fbIDfromInbox isEqualToString:_tmpSettings.fb_user_id] || [fbIDfromInbox isEqualToString:_tmpSettings.fb_page_id])
         {
             fbNamefromInbox = jsonArray[i][@"to"][@"data"][0][@"name"];
             fbIDfromInbox = jsonArray[i][@"to"][@"data"][0][@"id"];
@@ -1001,7 +1049,7 @@
             [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
             newClient.last_interacted_time = [formatFBdates dateFromString:jsonArray[i][@"updated_time"]];;
             
-            //[clientMethods addNewClient:newClient];
+            [clientMethods addNewClient:newClient];
             [newClientsArray addObject:newClient];
         }
         
@@ -1033,35 +1081,38 @@
 
 - (void) getFBInboxComments:(NSString *)url withClientID:(NSString *)fromClientID;
 {
-    [FBRequestConnection startWithGraphPath:url completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
-     {
-         if (!error) {  // FB request was a success!
-             
-             if (result[@"data"]) {   // There is FB data!
-                 
-                 NSArray *jsonMessagesArray = result[@"data"];
-                 
-                 [self parseFBInboxComments:jsonMessagesArray withClientID:fromClientID];
-                 
-                 // Review if there are more comments from this chat
-                 
-                 // EVALUAR SI TODOS LOS MENSAJES YA ESTAN REGISTRADOS PARA NO SEGUIR...!!!!
-                 
-                 NSString *next = result[@"paging"][@"next"];
-                 
-                 if (next && jsonMessagesArray.count>=25)
-                 {
-                     [self getFBInboxComments:[next substringFromIndex:32] withClientID:fromClientID];
-                 }
-             }
-             
-         } else {
-             // An error occurred, we need to handle the error
-             // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-             NSLog(@"error getFBInboxComments: %@", error.description);
-         }
-     }];
     
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url
+                                                                   parameters:nil];
+    
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+    {
+        if (!error) {  // FB request was a success!
+            
+            if (result[@"data"]) {   // There is FB data!
+                
+                NSArray *jsonMessagesArray = result[@"data"];
+                
+                [self parseFBInboxComments:jsonMessagesArray withClientID:fromClientID];
+                
+                // Review if there are more comments from this chat
+                
+                // EVALUAR SI TODOS LOS MENSAJES YA ESTAN REGISTRADOS PARA NO SEGUIR...!!!!
+                
+                NSString *next = result[@"paging"][@"next"];
+                
+                if (next && jsonMessagesArray.count>=25)
+                {
+                    [self getFBInboxComments:[next substringFromIndex:32] withClientID:fromClientID];
+                }
+            }
+            
+        } else {
+            // An error occurred, we need to handle the error
+            // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+            NSLog(@"error getFBInboxComments: %@", error.description);
+        }
+    }];
 }
 
 - (void) parseFBInboxComments:(NSArray *)jsonMessagesArray withClientID:(NSString *)fromClientID;
@@ -1104,8 +1155,11 @@
             tempMessage.status = @"N";
             tempMessage.type = @"I";
             
-            if ([tempMessage.fb_from_name hasPrefix:@"Garage"])
+            NSLog(@"%@ : %@", tempMessage.fb_from_name, [FBSDKProfile currentProfile].name);
+            
+            if ([tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_user_id] || [tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_page_id])
             {
+                // Message from GarageSale
                 tempMessage.recipient = @"C";
                 tempMessage.fb_from_id = fbIDfromInbox;
                 tempMessage.fb_from_name = fbNamefromInbox;
@@ -1122,6 +1176,64 @@
     }
 
 }
+
+- (void) makeFBRequestForNewPageMessages;
+{
+    /*
+    NSString *url = [NSString stringWithFormat:@"979887295375412/notifications?fields=application,link&include_read=true&since=%ld", (long)[_messagesSinceDate timeIntervalSince1970]];;
+    [self getFBPageMessages:url];
+     */
+}
+
+- (void) getFBPageMessages:(NSString*)url;
+{
+    
+    if ([[FBSDKAccessToken currentAccessToken] hasGranted:@"manage_pages"])
+    {
+        // Prepare for FB request
+        //FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
+        
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+         {
+             
+             if (!error) {  // FB request was a success!
+                 
+                 if (result[@"data"]) {   // There is FB data!
+                     
+                     NSArray *jsonArray = result[@"data"];
+                     NSMutableArray *photosArray = [[NSMutableArray alloc] init];
+                     
+                     // Get photo IDs of all notifications
+                     photosArray = [self getPhotosIDs:jsonArray];
+                     
+                     if (photosArray.count >0) { // New notifications related to photos!
+                         
+                         // Get message details for those notifications
+                         [self makeFBRequestForPhotosDetails:photosArray];
+                     }
+                     
+                     // Review is there is a next page
+                     NSString *next = result[@"paging"][@"next"];
+                     if (next)
+                     {
+                         [self getFBNotifications:[next substringFromIndex:32]];
+                     }
+                 }
+                 else
+                 {
+                     [self.refreshControl endRefreshing];
+                 }
+                 
+             } else {
+                 // An error occurred, we need to handle the error
+                 // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                 NSLog(@"error getFBPageMessages: %@", error.description);
+             }
+         }];
+    }
+}   
 
 
 - (void) makeFBRequestForClientsDetails:(NSMutableArray*)newClientsArray;
@@ -1143,35 +1255,38 @@
         [requestClientDetails appendString:@"?fields=first_name,last_name,gender,picture"];
         
         NSLog(@"%@ - %@: %@", newClient.fb_client_id, newClient.name, requestClientDetails);
+        
         // Make FB request
-        [FBRequestConnection startWithGraphPath:requestClientDetails
-                              completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                                  
-                                  if (!error) { // FB request was a success!
-                                      
-                                      newClient.name = result[@"first_name"];
-                                      newClient.last_name = result[@"last_name"];
-                                      if ([result[@"gender"] isEqualToString:@"male"])
-                                      {
-                                          newClient.sex = @"M";
-                                      }
-                                      else
-                                      {
-                                          newClient.sex = @"F";
-                                      }
-                                      newClient.picture_link = result[@"picture"][@"data"][@"url"];
-                                      newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
-                                      
-                                      //[clientMethods updateClient:newClient];
-                                      [clientMethods addNewClient:newClient];
-                                      
-                                  }
-                                  else {
-                                      // An error occurred, we need to handle the error
-                                      // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                                      NSLog(@"error makeFBRequestForClientsDetails: %@", error.description);
-                                  }
-                              } ];
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:requestClientDetails
+                                                                       parameters:nil];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+        {
+            if (!error) { // FB request was a success!
+                
+                newClient.name = result[@"first_name"];
+                newClient.last_name = result[@"last_name"];
+                if ([result[@"gender"] isEqualToString:@"male"])
+                {
+                    newClient.sex = @"M";
+                }
+                else
+                {
+                    newClient.sex = @"F";
+                }
+                newClient.picture_link = result[@"picture"][@"data"][@"url"];
+                newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
+                
+                [clientMethods updateClient:newClient];
+                //[clientMethods addNewClient:newClient];
+                
+            }
+            else {
+                // An error occurred, we need to handle the error
+                // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                NSLog(@"error makeFBRequestForClientsDetails: %@", error.description);
+            }
+        }];
     }
 }
 

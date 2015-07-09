@@ -7,15 +7,19 @@
 //
 
 #import "AppDelegate.h"
+#import "SettingsModel.h"
 #import "ProductModel.h"
 #import "ClientModel.h"
 #import "OpportunityModel.h"
 #import "MessageModel.h"
 #import "TemplateModel.h"
-#import <FacebookSDK/FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <FBSDKShareKit/FBSDKShareKit.h>
 
 @implementation AppDelegate
 
+@synthesize sharedSettings;
 @synthesize sharedArrayProducts;
 @synthesize sharedArrayClients;
 @synthesize sharedArrayOpportunities;
@@ -34,18 +38,30 @@
 {
     // Override point for customization after application launch.
     
-    [FBLoginView class];
-    [FBProfilePictureView class];
+    [FBSDKLoginButton class];
+    [FBSDKProfilePictureView class];
+    [FBSDKSendButton class];
+    [FBSDKShareButton class];
 
     // Load Shared Arrays with Data
     
-    /*
-    [[[ClientModel alloc] init] saveClients];
-    [[[ProductModel alloc] init] saveProducts];
-    [[[OpportunityModel alloc] init] saveOpportunities];
-    [[[MessageModel alloc] init] saveMessages];
-    [[[TemplateModel alloc] init] saveTemplates];
-    */
+    sharedSettings = [[[SettingsModel alloc] init] getSettingsFromCoreData];
+
+    if (!sharedSettings)
+    {
+        [[[SettingsModel alloc] init] saveInitialDataforSettings];
+    }
+    
+    if ([[[[SettingsModel alloc] init] getSharedSettings].initial_data_loaded isEqualToString:@"N"])
+    {
+        [[[ClientModel alloc] init] saveInitialDataforClients];
+        [[[ProductModel alloc] init] saveInitialDataforProducts];
+        [[[OpportunityModel alloc] init] saveInitialDataforOpportunities];
+        [[[MessageModel alloc] init] saveInitialDataforMessages];
+        [[[TemplateModel alloc] init] saveInitialDataforTemplates];
+        
+        [[[SettingsModel alloc] init] updateSettingsInitialDataSaved];
+    }
     
     sharedArrayClients = [[[ClientModel alloc] init] getClientsFromCoreData];
     sharedArrayProducts = [[[ProductModel alloc] init] getProductsFromCoreData];
@@ -53,13 +69,22 @@
     sharedArrayMessages = [[[MessageModel alloc] init] getMessagesFromCoreData];
     sharedArrayTemplates = [[[TemplateModel alloc] init] getTemplatesFromCoreData];
     
-    return YES;
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                    didFinishLaunchingWithOptions:launchOptions];
 }
+
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
-    return wasHandled;
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                          openURL:url
+                                                sourceApplication:sourceApplication
+                                                       annotation:annotation];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    [FBSDKAppEvents activateApp];
 }
 
 							
@@ -78,11 +103,6 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
