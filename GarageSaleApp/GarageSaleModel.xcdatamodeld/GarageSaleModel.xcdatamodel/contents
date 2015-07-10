@@ -9,6 +9,7 @@
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fb_client_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fb_inbox_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fb_page_message_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="last_interacted_time" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="last_inventory_time" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="last_name" optional="YES" attributeType="String" syncable="YES"/>
@@ -104,7 +105,7 @@
         <attribute name="updated_time" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Clients" positionX="-387" positionY="54" width="128" height="418"/>
+        <element name="Clients" positionX="-387" positionY="54" width="128" height="435"/>
         <element name="Messages" positionX="-209" positionY="324" width="128" height="285"/>
         <element name="Opportunities" positionX="-569" positionY="72" width="128" height="253"/>
         <element name="Products" positionX="-810" positionY="198" width="128" height="403"/>

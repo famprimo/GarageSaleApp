@@ -32,6 +32,7 @@
     tempClient.client_id = @"00001";
     tempClient.fb_client_id = @"10152779700000001";
     tempClient.fb_inbox_id = @"";
+    tempClient.fb_page_message_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Georghette";
     tempClient.last_name = @"Juliette Sutta";
@@ -62,6 +63,7 @@
     tempClient.client_id = @"00002";
     tempClient.fb_client_id = @"10152779700000002";
     tempClient.fb_inbox_id = @"";
+    tempClient.fb_page_message_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Natalia";
     tempClient.last_name = @"Gallardo";
@@ -91,6 +93,7 @@
     tempClient.client_id = @"00003";
     tempClient.fb_client_id = @"10152779700000003";
     tempClient.fb_inbox_id = @"";
+    tempClient.fb_page_message_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Melisa";
     tempClient.last_name = @"Celi";
@@ -120,6 +123,7 @@
     tempClient.client_id = @"00004";
     tempClient.fb_client_id = @"10152779700000004";
     tempClient.fb_inbox_id = @"";
+    tempClient.fb_page_message_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Amparo";
     tempClient.last_name = @"Gonzalez";
@@ -149,6 +153,7 @@
     tempClient.client_id = @"00005";
     tempClient.fb_client_id = @"10152779700000005";
     tempClient.fb_inbox_id = @"";
+    tempClient.fb_page_message_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Ivan";
     tempClient.last_name = @"Rosado";
@@ -178,6 +183,7 @@
     tempClient.client_id = @"00006";
     tempClient.fb_client_id = @"10152779700000006";
     tempClient.fb_inbox_id = @"";
+    tempClient.fb_page_message_id = @"";
     tempClient.type = @"F";
     tempClient.name = @"Mily";
     tempClient.last_name = @"de la Cruz";
@@ -203,7 +209,6 @@
     [self addNewClient:tempClient];
     
 }
-
 
 
 - (NSMutableArray*)getClientsFromCoreData;
@@ -251,6 +256,7 @@
     return clientsArray;
 }
 
+
 - (NSString*)getNextClientID;
 {
     AppDelegate *mainDelegate;
@@ -263,6 +269,7 @@
     return nextID;
 }
 
+
 - (BOOL)addNewClient:(Client*)newClient;
 {
     BOOL updateSuccessful = YES;
@@ -273,6 +280,8 @@
     
     [coreDataObject setValue:newClient.client_id forKey:@"client_id"];
     [coreDataObject setValue:newClient.fb_client_id forKey:@"fb_client_id"];
+    [coreDataObject setValue:newClient.fb_inbox_id forKey:@"fb_inbox_id"];
+    [coreDataObject setValue:newClient.fb_page_message_id forKey:@"fb_page_message_id"];
     [coreDataObject setValue:newClient.type forKey:@"type"];
     [coreDataObject setValue:newClient.name forKey:@"name"];
     [coreDataObject setValue:newClient.last_name forKey:@"last_name"];
@@ -312,6 +321,7 @@
     return updateSuccessful;
 }
 
+
 - (BOOL)updateClient:(Client*)clientToUpdate;
 {
     BOOL updateSuccessful = YES;
@@ -348,6 +358,8 @@
             
             [coreDataObject setValue:clientToUpdate.client_id forKey:@"client_id"];
             [coreDataObject setValue:clientToUpdate.fb_client_id forKey:@"fb_client_id"];
+            [coreDataObject setValue:clientToUpdate.fb_inbox_id forKey:@"fb_inbox_id"];
+            [coreDataObject setValue:clientToUpdate.fb_page_message_id forKey:@"fb_page_message_id"];
             [coreDataObject setValue:clientToUpdate.type forKey:@"type"];
             [coreDataObject setValue:clientToUpdate.name forKey:@"name"];
             [coreDataObject setValue:clientToUpdate.last_name forKey:@"last_name"];
@@ -402,6 +414,7 @@
     return updateSuccessful;
 }
 
+
 - (NSString*)getClientIDfromFbId:(NSString*)clientFbIdToValidate;
 {
     // Review an array of Messages to check if a given Message ID exists
@@ -454,6 +467,7 @@
     }
     return clientImage;
 }
+
 
 - (Client*)getClientFromClientId:(NSString*)clientIDtoSearch;
 {

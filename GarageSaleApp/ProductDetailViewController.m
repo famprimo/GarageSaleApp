@@ -401,7 +401,6 @@
     
 }
 
-
 -(IBAction)showPopoverClientPicker:(id)sender;
 {
     ClientPickerViewController *clientPickerController = [[ClientPickerViewController alloc] initWithNibName:@"ClientPickerViewController" bundle:nil];
@@ -465,7 +464,6 @@
     return productSelected.product_id;
 }
 
-
 -(void)OpportunityCreated;
 {
     // Dismiss the popover view
@@ -514,7 +512,6 @@
     
 }
 
-
 -(NSString*)GetTemplateTypeFromMessage;
 {
     return _templateTypeForPopover;
@@ -542,14 +539,12 @@
     return productSelected.product_id;
 }
 
-
 -(void)MessageSent;
 {
     // Dismiss the popover view
     [self.sendMessagePopover dismissPopoverAnimated:YES];
     
 }
-
 
 - (IBAction)editProductDetails:(id)sender
 {
@@ -592,7 +587,6 @@
 
 
 #pragma mark - Table view data source
-
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -864,8 +858,9 @@
     }
 }
 
-#pragma mark - Contact with Facebook
 
+
+#pragma mark - Contact with Facebook
 
 - (void) getFBPhotoComments:url forProduct:(Product *)forProduct;
 {
@@ -902,7 +897,6 @@
         }
     }];
 }
-
 
 - (void) parseFBPhotoComments:(NSArray*)commentsArray forProduct:(Product *)forProduct;
 {
@@ -967,7 +961,8 @@
                 
                 newClient.client_id = tempMessage.client_id;
                 newClient.fb_client_id = tempMessage.fb_from_id;
-                newClient.fb_inbox_id = newClient.fb_client_id;
+                newClient.fb_inbox_id = @"";
+                newClient.fb_page_message_id = @"";
                 newClient.type = @"F";
                 newClient.name = tempMessage.fb_from_name; // TEMPORAL
                 newClient.preference = @"F";
@@ -1051,7 +1046,6 @@
      }];
 }
 
-
 - (void) parseFBPhotoSubComments:(id)result;
 {
     MessageModel *messagesMethods = [[MessageModel alloc] init];
@@ -1126,7 +1120,8 @@
                     
                     newClient.client_id = tempMessage.client_id;
                     newClient.fb_client_id = tempMessage.fb_from_id;
-                    newClient.fb_inbox_id = tempMessage.fb_from_id;
+                    newClient.fb_inbox_id = @"";
+                    newClient.fb_page_message_id = @"";
                     newClient.type = @"F";
                     newClient.name = tempMessage.fb_from_name; // TEMPORAL
                     newClient.preference = @"F";
@@ -1159,7 +1154,6 @@
     }
     
 }
-
 
 - (void) makeFBRequestForClientsDetails:(NSMutableArray*)newClientsArray;
 {
@@ -1229,7 +1223,6 @@
         }];
     }
 }
-
 
 - (void) addNewMessage:(Message*)newMessage;
 {

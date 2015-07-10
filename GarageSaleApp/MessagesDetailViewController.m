@@ -84,6 +84,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+
 #pragma mark - Managing the detail item
 
 - (void)setDetailItem:(id)newDetailItem
@@ -219,7 +220,6 @@
         
     }
 }
-
 
 - (void)UpdateProductRelated
 {
@@ -447,6 +447,7 @@
 
 }
 
+
 #pragma mark - Managing button actions
 
 - (IBAction)getPreviousMessages:(id)sender
@@ -454,14 +455,18 @@
     NSString *url = [NSString stringWithFormat:@"%@/comments", _selectedClient.fb_inbox_id];
 
     [self getFBInboxComments:url withClientID:_selectedClient.client_id];
+
+    
+    url = [NSString stringWithFormat:@"%@/messages", _selectedClient.fb_page_message_id];
+    
+    [self getFBPageMessagesComments:url withClientID:_selectedClient.client_id];
+    
     
     [_refreshControl endRefreshing];
 
     // [self.tableMessages reloadData];
     
 }
-
-
 
 - (IBAction)replyMessage:(id)sender
 {
@@ -508,7 +513,6 @@
                            permittedArrowDirections:UIPopoverArrowDirectionAny
                                            animated:YES];
 }
-
 
 -(NSString*)GetTemplateTypeFromMessage;
 {
@@ -562,7 +566,6 @@
     
 }
 
-
 - (IBAction)markAsDone:(id)sender
 {
 }
@@ -593,18 +596,15 @@
     
 }
 
-
 -(NSString*)GetBuyerIdForOpportunity;
 {
     return _selectedClient.client_id;
 }
 
-
 -(NSString*)GetProductIdForOpportunity;
 {
     return _selectedProduct.product_id;
 }
-
 
 - (IBAction)relateToClient:(id)sender
 {
@@ -633,8 +633,6 @@
     
     [self configureView];
 }
-
-
 
 - (IBAction)relateToProduct:(id)sender
 {
@@ -707,6 +705,7 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:_selectedProduct.fb_link]];
 
 }
+
 
 #pragma mark - Table view data source
 
@@ -1162,6 +1161,102 @@
             {
                 tempMessage.recipient = @"G";
             }
+            
+            tempMessage.client_id = fromClientID;
+            
+            // Insert new message to array and add row to table
+            [self addNewMessage:tempMessage];
+            
+        }
+    }
+    
+}
+
+- (void) getFBPageMessagesComments:(NSString *)url withClientID:(NSString *)fromClientID;
+{
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
+    
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+     {
+         if (!error) {  // FB request was a success!
+             
+             if (result[@"data"]) {   // There is FB data!
+                 
+                 NSArray *jsonMessagesArray = result[@"data"];
+                 
+                 [self parseFBPageMessagesComments:jsonMessagesArray withClientID:fromClientID];
+                 
+                 // Review if there are more comments from this chat
+                 
+                 // EVALUAR SI TODOS LOS MENSAJES YA ESTAN REGISTRADOS PARA NO SEGUIR...!!!!
+                 
+                 NSString *next = result[@"paging"][@"next"];
+                 
+                 if (next && jsonMessagesArray.count>=25)
+                 {
+                     [self getFBPageMessagesComments:[next substringFromIndex:32] withClientID:fromClientID];
+                 }
+             }
+             
+         } else {
+             // An error occurred, we need to handle the error
+             // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+             NSLog(@"error getFBPageMessagesComments: %@", error.description);
+         }
+     }];
+}
+
+- (void) parseFBPageMessagesComments:(NSArray *)jsonMessagesArray withClientID:(NSString *)fromClientID;
+{
+    MessageModel *messagesMethods = [[MessageModel alloc] init];
+    ClientModel *clientMethods = [[ClientModel alloc] init];
+    
+    Client *tmpClient = [clientMethods getClientFromClientId:fromClientID];
+    NSString *fbInboxID = tmpClient.fb_inbox_id;
+    NSString *fbIDfromInbox = tmpClient.fb_client_id;
+    NSString *fbNamefromInbox = [NSString stringWithFormat:@"%@ %@", tmpClient.name, tmpClient.last_name];
+    
+    // Add all messages from this conversation
+    
+    for (int i=0; i<jsonMessagesArray.count; i=i+1)
+    {
+        NSDictionary *newMessage = jsonMessagesArray[i];
+        
+        // Validate if the comment/message exists
+        if (![messagesMethods existMessage:newMessage[@"id"]])
+        {
+            // New message!
+            Message *tempMessage = [[Message alloc] init];
+            
+            tempMessage.fb_inbox_id = fbInboxID;
+            tempMessage.fb_msg_id = newMessage[@"id"];
+            tempMessage.fb_from_id = newMessage[@"from"][@"id"];
+            tempMessage.fb_from_name = newMessage[@"from"][@"name"];
+            tempMessage.client_id = fromClientID;
+            tempMessage.message = newMessage[@"message"];
+            
+            tempMessage.fb_created_time = newMessage[@"created_time"];
+            NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+            [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+            tempMessage.datetime = [formatFBdates dateFromString:tempMessage.fb_created_time];
+            
+            tempMessage.fb_photo_id = nil;
+            tempMessage.product_id = nil;
+            tempMessage.agent_id = @"00001";
+            tempMessage.status = @"N";
+            tempMessage.type = @"M"; // Page message!
+            
+            NSLog(@"%@ : %@", tempMessage.fb_from_name, [FBSDKProfile currentProfile].name);
+            
+            if ([tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_user_id] || [tempMessage.fb_from_id isEqualToString:_tmpSettings.fb_page_id])
+            {
+                // Message from GarageSale
+                tempMessage.recipient = @"C";
+                tempMessage.fb_from_id = fbIDfromInbox;
+                tempMessage.fb_from_name = fbNamefromInbox;
+            }
+            else
+            { tempMessage.recipient = @"G";}
             
             tempMessage.client_id = fromClientID;
             
