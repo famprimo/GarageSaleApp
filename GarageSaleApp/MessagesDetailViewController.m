@@ -14,6 +14,8 @@
 #import "ClientModel.h"
 #import "Opportunity.h"
 #import "OpportunityModel.h"
+#import "Attachment.h"
+#import "AttachmentModel.h"
 #import "Settings.h"
 #import "SettingsModel.h"
 #import "NSDate+NVTimeAgo.h"
@@ -180,9 +182,9 @@
                 return [first compare:second];
             }];
             
-            int lastRowNumber = [self.tableMessages numberOfRowsInSection:0] - 1;
-            NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRowNumber inSection:0];
-            [self.tableMessages scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            // Go to last message
+            
+            [self.tableMessages scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.tableMessages numberOfRowsInSection:0]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
             
             _selectedMessage = [_myDataMessages lastObject];
         }
@@ -452,15 +454,19 @@
 
 - (IBAction)getPreviousMessages:(id)sender
 {
-    NSString *url = [NSString stringWithFormat:@"%@/comments", _selectedClient.fb_inbox_id];
-
-    [self getFBInboxComments:url withClientID:_selectedClient.client_id];
-
+    NSString *url;
     
-    url = [NSString stringWithFormat:@"%@/messages", _selectedClient.fb_page_message_id];
+    if (![_selectedClient.fb_inbox_id isEqualToString:@""])
+    {
+        url = [NSString stringWithFormat:@"%@/comments", _selectedClient.fb_inbox_id];
+        [self getFBInboxComments:url withClientID:_selectedClient.client_id];
+    }
     
-    [self getFBPageMessagesComments:url withClientID:_selectedClient.client_id];
-    
+    if (![_selectedClient.fb_page_message_id isEqualToString:@""])
+    {
+        url = [NSString stringWithFormat:@"%@/messages", _selectedClient.fb_page_message_id];
+        [self getFBPageMessagesComments:url withClientID:_selectedClient.client_id];
+    }
     
     [_refreshControl endRefreshing];
 
@@ -564,6 +570,13 @@
     // Dismiss the popover view
     [self.sendMessagePopover dismissPopoverAnimated:YES];
     
+    // Reload messages to show the new one
+    [self getPreviousMessages:nil];
+    
+    // Go to last messages
+    [self.tableMessages scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.tableMessages numberOfRowsInSection:0]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+
+    _selectedMessage = [_myDataMessages lastObject];
 }
 
 - (IBAction)markAsDone:(id)sender
@@ -747,6 +760,9 @@
         ProductModel *productMethods = [[ProductModel alloc] init];
         Product *productRelatedToMessage = [[Product alloc] init];
         
+        AttachmentModel *attachmentMethods = [[AttachmentModel alloc] init];
+        Attachment *tempAttachment;
+        
         // Retrieve cell
         NSString *cellIdentifier = @"Cell";
         UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -757,7 +773,13 @@
         UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:3];
         UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:4];
         UIImageView *bubbleImage = (UIImageView*)[myCell.contentView viewWithTag:5];
-        
+
+        // Clear any image added programmaticaly
+        for (UIView *subview in myCell.subviews) {
+            if (subview.tag == 1000) {
+                [subview removeFromSuperview];
+            }
+        }
 
         // Get the message to be shown
         Message *myMessage = _myDataMessages[indexPath.row];
@@ -792,13 +814,12 @@
         messageLabelFrame.size.width = 230;
         
         // Set image for product or message
-        // if ([myMessage.type isEqualToString:@"P"])
         if ([myMessage.product_id length] > 0)
         {
             productRelatedToMessage = [productMethods getProductFromProductId:myMessage.product_id];
             productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
             
-            // Change width of the message text if there is an image
+            // Change width of the message text if there is a product image
             messageLabelFrame.size.width = messageLabelFrame.size.width - 45;
         }
         else
@@ -824,7 +845,6 @@
             clientImage.frame = clientImageFrame;
             
             messageLabelFrame = messageLabel.frame;
-            // if ([myMessage.type isEqualToString:@"P"])
             if ([myMessage.product_id length] > 0)
             {
                 messageLabelFrame.origin.x = 85;
@@ -845,9 +865,7 @@
             
             CGRect datetimeLabelFrame = datetimeLabel.frame;
             int datetimepositionX = messageLabelFrame.origin.x + messageLabelFrame.size.width - datetimeLabelFrame.size.width;
-            if (datetimepositionX < 85) {
-                datetimepositionX = 85;
-            }
+            datetimepositionX = MAX( datetimepositionX, 85 );
             datetimeLabelFrame.origin.x = datetimepositionX;
             datetimeLabelFrame.origin.y = messageLabelFrame.origin.y + messageLabelFrame.size.height + 5;
             datetimeLabel.frame = datetimeLabelFrame;
@@ -886,13 +904,58 @@
         }
         
         _messageRowHeight = messageLabelFrame.size.height + 30;
-        // if ([myMessage.type isEqualToString:@"P"] && _messageRowHeight<50)
         if (([myMessage.product_id length] > 0) && _messageRowHeight<50)
         {
             _messageRowHeight = 50;
         }
         
+        // Add pictures if there are attachments
+
+        int picturesWidth = 0;
         
+        if ([myMessage.attachments isEqualToString:@"Y"])
+        {
+            int initialPosX = 0;
+            int initialPosY = 5;
+            int imageSize = 70;
+            int imagesPerRow = 3;
+            int imagePosX = 0;
+            int imagePosY = 0;
+            int direction = 1;
+            
+            if ([myMessage.recipient isEqualToString:@"G"])
+            {
+                initialPosX = 50;
+            }
+            else
+            {
+                initialPosX = 337 - imageSize;
+                direction = -1;
+            }
+            
+            NSMutableArray *attachmentsArray = [attachmentMethods getAttachmentsForFBMessageId:myMessage.fb_msg_id];
+            for (int i = 0; i < attachmentsArray.count; i++)
+            {
+                tempAttachment = [[Attachment alloc] init];
+                tempAttachment = attachmentsArray[i];
+                
+                imagePosX = initialPosX + direction * (i % imagesPerRow) * (imageSize + 5);
+                imagePosY = initialPosY + floor(i / imagesPerRow) * (imageSize + 5);
+                
+                UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(imagePosX, imagePosY, imageSize, imageSize)];
+                imgView.image = [UIImage imageWithData:tempAttachment.picture];
+                imgView.tag = 1000;
+                
+                [myCell addSubview:imgView];
+            }
+            picturesWidth = MIN( attachmentsArray.count, imagesPerRow ) * (imageSize + 5) + 20;
+            _messageRowHeight = imagePosY + imageSize + 25;
+            
+            CGRect datetimeLabelFrame = datetimeLabel.frame;
+            datetimeLabelFrame.origin.y = _messageRowHeight - 20;
+            datetimeLabel.frame = datetimeLabelFrame;
+        }
+
         // Set bubble
         bubbleImage.image = [UIImage imageNamed:@"Blank"];
         bubbleImage.layer.cornerRadius = 5.0;
@@ -909,8 +972,7 @@
         }
         else
         {
-            // if ([myMessage.type isEqualToString:@"P"])
-            if ([_selectedMessage.product_id length] > 0)
+            if ([myMessage.product_id length] > 0)
             {
                 bubbleImageFrame.origin.x = productImage.frame.origin.x - 3;
             }
@@ -928,7 +990,26 @@
             bubbleImageFrame.size.width = 343 - bubbleImageFrame.origin.x;
         }
         
+        // Adjust bubble if there are pictures
+        bubbleImageFrame.size.width = MAX( bubbleImageFrame.size.width, picturesWidth );
+        bubbleImageFrame.origin.x = MIN( bubbleImageFrame.origin.x, 345 - picturesWidth);
+        
         bubbleImage.frame = bubbleImageFrame;
+        
+        UIColor *bubbleColor;
+        if ([myMessage.type isEqualToString:@"P"]) // Photo
+        {
+            bubbleColor = [UIColor colorWithRed:234/255.0f green:240/255.0f blue:243/255.0f alpha:1.0f];
+        }
+        else if ([myMessage.type isEqualToString:@"I"]) // Inbox
+        {
+            bubbleColor = [UIColor colorWithRed:231/255.0f green:240/255.0f blue:250/255.0f alpha:1.0f];
+        }
+        else // Message to Page - Conversation
+        {
+            bubbleColor = [UIColor colorWithRed:246/255.0f green:247/255.0f blue:236/255.0f alpha:1.0f];
+        }
+        bubbleImage.backgroundColor = bubbleColor;
         
         return myCell;
     }
@@ -1146,6 +1227,7 @@
             
             tempMessage.fb_photo_id = nil;
             tempMessage.product_id = nil;
+            tempMessage.attachments = @"N";
             tempMessage.agent_id = @"00001";
             tempMessage.status = @"N";
             tempMessage.type = @"I";
@@ -1213,6 +1295,7 @@
     
     Client *tmpClient = [clientMethods getClientFromClientId:fromClientID];
     NSString *fbInboxID = tmpClient.fb_inbox_id;
+    NSString *fbPageMessageID = tmpClient.fb_page_message_id;
     NSString *fbIDfromInbox = tmpClient.fb_client_id;
     NSString *fbNamefromInbox = [NSString stringWithFormat:@"%@ %@", tmpClient.name, tmpClient.last_name];
     
@@ -1242,6 +1325,12 @@
             
             tempMessage.fb_photo_id = nil;
             tempMessage.product_id = nil;
+            
+            // Review if there are attachments
+            if (newMessage[@"attachments"])
+            { tempMessage.attachments = @"Y"; }
+            else { tempMessage.attachments = @"N"; }
+            
             tempMessage.agent_id = @"00001";
             tempMessage.status = @"N";
             tempMessage.type = @"M"; // Page message!
@@ -1263,11 +1352,41 @@
             // Insert new message to array and add row to table
             [self addNewMessage:tempMessage];
             
+            // If there are attachments, include them
+            if ([tempMessage.attachments isEqualToString:@"Y"])
+            {
+                NSMutableArray *attachmentsArray = newMessage[@"attachments"][@"data"];
+                [self parseFBMessageAttachments:attachmentsArray for:tempMessage];
+            }
         }
     }
-    
 }
 
+- (void) parseFBMessageAttachments:(NSMutableArray*)attachmentsArray for:(Message*)containerMessage;
+{
+    AttachmentModel *attachmentMethods = [[AttachmentModel alloc] init];
+    Attachment *tempAttachment = [[Attachment alloc] init];
+    
+    // Add all messages from this conversation
+    
+    for (int i=0; i<attachmentsArray.count; i=i+1)
+    {
+        NSDictionary *newAttachment = attachmentsArray[i];
+        tempAttachment = [[Attachment alloc] init];
+        
+        tempAttachment.fb_msg_id = containerMessage.fb_msg_id;
+        tempAttachment.fb_attachment_id = newAttachment[@"id"];
+        tempAttachment.client_id = containerMessage.client_id;
+        tempAttachment.datetime = containerMessage.datetime;
+        tempAttachment.fb_name = newAttachment[@"name"];
+        tempAttachment.picture_link = newAttachment[@"image_data"][@"url"];
+        tempAttachment.preview_link = newAttachment[@"image_data"][@"preview_url"];
+        tempAttachment.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempAttachment.picture_link]];
+        tempAttachment.agent_id = @"00001";
+        
+        [attachmentMethods addNewAttachment:tempAttachment];
+    }
+}
 
 - (void) addNewMessage:(Message*)newMessage;
 {

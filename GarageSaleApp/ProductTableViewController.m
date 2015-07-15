@@ -11,6 +11,8 @@
 #import "SWRevealViewController.h"
 #import "Product.h"
 #import "ProductModel.h"
+#import "Settings.h"
+#import "SettingsModel.h"
 #import "NSDate+NVTimeAgo.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
@@ -26,6 +28,8 @@
    // The product that is selected from the table
     Product *_selectedProduct;
 
+    // Temp variables for user and page IDs
+    Settings *_tmpSettings;
 }
 @end
 
@@ -63,6 +67,8 @@
 
     // Get the data
     _myData = [[[ProductModel alloc] init] getProductArray];
+    _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
+
     
     // Sort array to be sure new products are on top
     [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
@@ -289,11 +295,19 @@
 
 - (void) makeFBRequestForPhotos;
 {
-    // Create string for FB request
-    NSString *url = @"me/photos/tagged?fields=created_time,id,link,updated_time,picture,name&limit=100";
-    // NSString *url = @"me/photos/uploaded?fields=created_time,id,link,updated_time,picture,name&limit=100";
 
-    [self getFBPhotos:url];
+    if (![_tmpSettings.fb_page_id isEqualToString:@""])
+    {
+        NSString *url = [NSString stringWithFormat:@"%@/photos/uploaded?fields=created_time,id,link,updated_time,picture,name&limit=100", _tmpSettings.fb_page_id];;
+        
+        [self getFBPhotos:url];
+    }
+    else
+    {
+        [self setFacebookPageID];
+        
+        _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
+    }
 }
 
 - (void) getFBPhotos:(NSString*)url;
@@ -340,7 +354,6 @@
     }];
 
 }
-
 
 - (void) parseFBResultsRequestForPhotos:(id)result
 {
@@ -449,6 +462,34 @@
         
     }
 
+}
+
+- (void)setFacebookPageID;
+{
+    if ([FBSDKAccessToken currentAccessToken])
+    {
+        NSString *url = @"me?fields=id,name,accounts";
+        
+        // Prepare for FB request
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+         {
+             if (!error) {  // FB request was a success!
+                 
+                 NSString *userID = result[@"id"];
+                 NSString *userName = result[@"name"];
+                 NSString *pageID = result[@"accounts"][@"data"][0][@"id"];
+                 NSString *pageName = result[@"accounts"][@"data"][0][@"name"];
+                 NSString *pageToken = result[@"accounts"][@"data"][0][@"access_token"];
+                 
+                 if (![[[SettingsModel alloc] init] updateSettingsUser:userName withUserID:userID andPageID:pageID andPageName:pageName andPageTokenID:pageToken]) {
+                     NSLog(@"Error updating settings");
+                 }
+                 
+             }
+         }];
+    }
 }
 
 - (void) addNewProduct:(Product*)newProduct;

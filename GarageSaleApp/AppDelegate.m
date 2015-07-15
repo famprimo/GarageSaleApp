@@ -12,6 +12,7 @@
 #import "ClientModel.h"
 #import "OpportunityModel.h"
 #import "MessageModel.h"
+#import "AttachmentModel.h"
 #import "TemplateModel.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
@@ -24,6 +25,7 @@
 @synthesize sharedArrayClients;
 @synthesize sharedArrayOpportunities;
 @synthesize sharedArrayMessages;
+@synthesize sharedArrayAttachments;
 @synthesize sharedArrayTemplates;
 @synthesize lastProductID;
 @synthesize lastCientID;
@@ -58,6 +60,7 @@
         [[[ProductModel alloc] init] saveInitialDataforProducts];
         [[[OpportunityModel alloc] init] saveInitialDataforOpportunities];
         [[[MessageModel alloc] init] saveInitialDataforMessages];
+        [[[AttachmentModel alloc] init] saveInitialDataforAttachments];
         [[[TemplateModel alloc] init] saveInitialDataforTemplates];
         
         [[[SettingsModel alloc] init] updateSettingsInitialDataSaved];
@@ -67,6 +70,7 @@
     sharedArrayProducts = [[[ProductModel alloc] init] getProductsFromCoreData];
     sharedArrayOpportunities = [[[OpportunityModel alloc] init] getOpportunitiesFromCoreData];
     sharedArrayMessages = [[[MessageModel alloc] init] getMessagesFromCoreData];
+    sharedArrayAttachments = [[[AttachmentModel alloc] init] getAttachmentsFromCoreData];
     sharedArrayTemplates = [[[TemplateModel alloc] init] getTemplatesFromCoreData];
     
     return [[FBSDKApplicationDelegate sharedInstance] application:application

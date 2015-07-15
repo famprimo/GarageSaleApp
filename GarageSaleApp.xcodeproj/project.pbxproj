@@ -62,6 +62,8 @@
 		C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1919644C4D0021A153 /* ProductModel.m */; };
 		C0815E1D196455350021A153 /* ProductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1C196455350021A153 /* ProductDetailViewController.m */; };
 		C0815E20196455590021A153 /* ProductTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0815E1F196455590021A153 /* ProductTableViewController.m */; };
+		C083CF5A1B50C5BA005273ED /* AttachmentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C083CF591B50C5BA005273ED /* AttachmentModel.m */; };
+		C083CF5E1B50C7F8005273ED /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = C083CF5D1B50C7F8005273ED /* Attachment.m */; };
 		C08C479A1AB3295400B29FCA /* NS-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = C08C47991AB3295400B29FCA /* NS-Extensions.m */; };
 		C0B81D721A7D4D5E008B6C1C /* EditProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B81D701A7D4D5E008B6C1C /* EditProductViewController.m */; };
 		C0B81D731A7D4D5E008B6C1C /* EditProductViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B81D711A7D4D5E008B6C1C /* EditProductViewController.xib */; };
@@ -181,6 +183,10 @@
 		C0815E1C196455350021A153 /* ProductDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductDetailViewController.m; sourceTree = "<group>"; };
 		C0815E1E196455590021A153 /* ProductTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewController.h; sourceTree = "<group>"; };
 		C0815E1F196455590021A153 /* ProductTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductTableViewController.m; sourceTree = "<group>"; };
+		C083CF581B50C5BA005273ED /* AttachmentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentModel.h; sourceTree = "<group>"; };
+		C083CF591B50C5BA005273ED /* AttachmentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentModel.m; sourceTree = "<group>"; };
+		C083CF5C1B50C7F8005273ED /* Attachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Attachment.h; sourceTree = "<group>"; };
+		C083CF5D1B50C7F8005273ED /* Attachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Attachment.m; sourceTree = "<group>"; };
 		C08C47981AB3295400B29FCA /* NS-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NS-Extensions.h"; sourceTree = "<group>"; };
 		C08C47991AB3295400B29FCA /* NS-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NS-Extensions.m"; sourceTree = "<group>"; };
 		C0B81D6F1A7D4D5E008B6C1C /* EditProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditProductViewController.h; sourceTree = "<group>"; };
@@ -284,6 +290,7 @@
 				C00ED0F719644A5A0045A65E /* Images.xcassets */,
 				C0292AEA1A5E20EB00283E71 /* Popovers */,
 				C008BA2E19C3CAB3008616E4 /* Message */,
+				C083CF531B50C57C005273ED /* Attachment */,
 				C00ED11819644AB70045A65E /* Product */,
 				C00ED11A19644AE00045A65E /* Client */,
 				C00ED11919644AD80045A65E /* Opportunity */,
@@ -546,6 +553,17 @@
 			name = Settings;
 			sourceTree = "<group>";
 		};
+		C083CF531B50C57C005273ED /* Attachment */ = {
+			isa = PBXGroup;
+			children = (
+				C083CF5C1B50C7F8005273ED /* Attachment.h */,
+				C083CF5D1B50C7F8005273ED /* Attachment.m */,
+				C083CF581B50C5BA005273ED /* AttachmentModel.h */,
+				C083CF591B50C5BA005273ED /* AttachmentModel.m */,
+			);
+			name = Attachment;
+			sourceTree = "<group>";
+		};
 		C0BC39481AC787330004CFCE /* Messages Since */ = {
 			isa = PBXGroup;
 			children = (
@@ -686,8 +704,10 @@
 				C05C81571AC379EC0097EB42 /* EditClientViewController.m in Sources */,
 				C069A4131A84BD530059575E /* MessagesDetailViewController.m in Sources */,
 				C00ED12519644B4F0045A65E /* MenuViewController.m in Sources */,
+				C083CF5E1B50C7F8005273ED /* Attachment.m in Sources */,
 				C0666E4A1A44B39100B045A0 /* NewOpportunityViewController.m in Sources */,
 				C019F94019D88944009528EE /* MessageModel.m in Sources */,
+				C083CF5A1B50C5BA005273ED /* AttachmentModel.m in Sources */,
 				C00ED12319644B4F0045A65E /* MenuItem.m in Sources */,
 				C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */,
 				C042ECCF1A3934DB00AC9A4D /* ClientPickerViewController.m in Sources */,

@@ -38,6 +38,7 @@
     tempMessage.fb_photo_id = @"XXXXX";
     tempMessage.product_id = @"0000001";
     tempMessage.client_id = @"00006";
+    tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"N";
     tempMessage.type = @"P";
@@ -58,6 +59,7 @@
     tempMessage.fb_photo_id = @"XXXXX";
     tempMessage.product_id = @"";
     tempMessage.client_id = @"00004";
+    tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"D";
     tempMessage.type = @"I";
@@ -78,6 +80,7 @@
     tempMessage.fb_photo_id = @"XXXXX";
     tempMessage.product_id = @"0000002";
     tempMessage.client_id = @"00004";
+    tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"D";
     tempMessage.type = @"P";
@@ -98,6 +101,7 @@
     tempMessage.fb_photo_id = @"XXXXX";
     tempMessage.product_id = @"0000002";
     tempMessage.client_id = @"00004";
+    tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"D";
     tempMessage.type = @"P";
@@ -118,6 +122,7 @@
     tempMessage.fb_photo_id = @"XXXXX";
     tempMessage.product_id = @"";
     tempMessage.client_id = @"00003";
+    tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"D";
     tempMessage.type = @"I";
@@ -138,6 +143,7 @@
     tempMessage.fb_photo_id = @"XXXXX";
     tempMessage.product_id = @"";
     tempMessage.client_id = @"00003";
+    tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"N";
     tempMessage.type = @"I";
@@ -158,6 +164,7 @@
     tempMessage.fb_photo_id = @"XXXXX";
     tempMessage.product_id = @"";
     tempMessage.client_id = @"00005";
+    tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"N";
     tempMessage.type = @"I";
@@ -178,6 +185,7 @@
     tempMessage.fb_photo_id = @"XXXXX";
     tempMessage.product_id = @"";
     tempMessage.client_id = @"00005";
+    tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
     tempMessage.status = @"N";
     tempMessage.type = @"I";
@@ -200,6 +208,7 @@
         tempMessage.fb_photo_id = @"XXXXX";
         tempMessage.product_id = @"";
         tempMessage.client_id = @"00005";
+        tempMessage.attachments = @"N";
         tempMessage.agent_id = @"00001";
         tempMessage.status = @"N";
         tempMessage.type = @"I";
@@ -307,7 +316,6 @@
     return messagesArray;
 }
 
-
 - (Message*)getLastMessageFromClient:(NSString*)clientFromID; // Return the last message for a specific client
 {
     Message *lastMessage;
@@ -370,6 +378,7 @@
     [coreDataObject setValue:newMessage.fb_photo_id forKey:@"fb_photo_id"];
     [coreDataObject setValue:newMessage.product_id forKey:@"product_id"];
     [coreDataObject setValue:newMessage.client_id forKey:@"client_id"];
+    [coreDataObject setValue:newMessage.attachments forKey:@"attachments"];
     [coreDataObject setValue:newMessage.agent_id forKey:@"agent_id"];
     [coreDataObject setValue:newMessage.status forKey:@"status"];
     [coreDataObject setValue:newMessage.type forKey:@"type"];
@@ -393,7 +402,6 @@
     return updateSuccessful;
 
 }
-
 
 - (BOOL)updateMessage:(Message*)messageToUpdate; // Update a message
 {
@@ -439,6 +447,7 @@
             [coreDataObject setValue:messageToUpdate.fb_photo_id forKey:@"fb_photo_id"];
             [coreDataObject setValue:messageToUpdate.product_id forKey:@"product_id"];
             [coreDataObject setValue:messageToUpdate.client_id forKey:@"client_id"];
+            [coreDataObject setValue:messageToUpdate.attachments forKey:@"attachments"];
             [coreDataObject setValue:messageToUpdate.agent_id forKey:@"agent_id"];
             [coreDataObject setValue:messageToUpdate.status forKey:@"status"];
             [coreDataObject setValue:messageToUpdate.type forKey:@"type"];
@@ -477,7 +486,6 @@
     return updateSuccessful;
 }
 
-
 - (BOOL)existMessage:(NSString*)messageIDToValidate; // Review an array of Messages to check if a given Message ID exists
 {
     BOOL exists = NO;
@@ -501,7 +509,6 @@
     }
     return exists;
 }
-
 
 - (NSString*)getPhotoID:(NSString*)facebookLink; // Search for 'fbid=' on a Facebook link to get photo_id
 {
@@ -538,7 +545,6 @@
     return photoID;
 }
 
-
 - (NSString*)getCommentID:(NSString*)facebookLink; // Search for 'comment_id=' on a Facebook link to get _id
 {
     NSString *commentID;
@@ -557,7 +563,6 @@
 
     return commentID;
 }
-
 
 - (NSString*)getMessagesIDs:(NSMutableArray*)messagesArray; // Method that returns the IDs of all the Messages in the array sent
 {

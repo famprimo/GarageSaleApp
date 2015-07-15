@@ -37,6 +37,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelProductDesc;
 
 @property (strong, nonatomic) IBOutlet UIButton *buttonSend;
+@property (weak, nonatomic) IBOutlet UIButton *buttonPostInPhoto;
 @property (strong, nonatomic) IBOutlet UITextView *labelTemplateText;
 
 

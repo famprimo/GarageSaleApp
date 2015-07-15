@@ -13,6 +13,11 @@
 #import "ClientModel.h"
 #import "Product.h"
 #import "ProductModel.h"
+#import "Settings.h"
+#import "SettingsModel.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+
 
 @interface SendMessageViewController ()
 {
@@ -26,13 +31,17 @@
     Client *_clientOwner;
     NSString *_templateType;
     Product *_relatedProduct;
+    
+    // Temp variables for user and page IDs
+    Settings *_tmpSettings;
 }
 
 @end
 
 @implementation SendMessageViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
@@ -40,6 +49,9 @@
     self.tableTemplates.delegate = self;
     self.tableTemplates.dataSource = self;
     
+    // General settings
+    _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
+
     _clientBuyer = [[Client alloc] init];
     NSString *tmpID = [self.delegate GetBuyerIdFromMessage];
     if (![tmpID isEqualToString:@""])
@@ -73,7 +85,6 @@
     {
         [self.filterTabs setSelectedSegmentIndex:1];
     }
-    
     
     CGRect imageBuyerFrame = self.imageBuyer.frame;
     imageBuyerFrame.origin.x = 312;
@@ -207,6 +218,7 @@
         self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
         self.labelProductName.text = @"";
         self.labelProductDesc.text = @"";
+        self.buttonPostInPhoto.hidden = YES;
     }
 
     
@@ -246,11 +258,11 @@
 
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 - (IBAction)selectTab:(id)sender
 {
@@ -271,11 +283,43 @@
 
 -(IBAction)sendMessage:(id)sender;
 {
-    if (_selectedTemplate)
+    NSString *pageMessageID;
+    
+    if ([_templateType isEqualToString:@"C"])
     {
-        // CODIGO PARA ENVIAR MENSAJE A TRAVES DE FACEBOOK
+        pageMessageID = _clientBuyer.fb_page_message_id;
+    }
+    else // "O"
+    {
+        pageMessageID = _clientOwner.fb_page_message_id;
+    }
+    
+    if (_selectedTemplate && ![pageMessageID isEqualToString:@""])
+    {
+        // Send messages via Facabook
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [params setObject:self.labelTemplateText.text forKey:@"message"];
+        // [params setObject:_imageToShare forKey:@"picture"];
 
-        [self.delegate MessageSent];
+        NSString *url = [NSString stringWithFormat:@"/%@/messages", pageMessageID];
+
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:params tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"POST"];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+        {
+            if (!error)
+            {  // FB post was a success!
+                
+                [self.delegate MessageSent];
+            }
+            else
+            {
+                // An error occurred, we need to handle the error
+                // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                NSLog(@"error sendMessage: %@", error.description);
+            }
+        }];
+        
     }
 }
 

@@ -933,6 +933,7 @@
             
             tempMessage.fb_photo_id = forProduct.fb_photo_id;
             tempMessage.product_id = forProduct.product_id;
+            tempMessage.attachments = @"N";
             tempMessage.agent_id = @"00001";
             tempMessage.type = @"P";
             
@@ -1091,6 +1092,7 @@
             
             tempMessage.fb_photo_id = photoID;
             tempMessage.product_id = productID;
+            tempMessage.attachments = @"N";
             tempMessage.agent_id = @"00001";
             tempMessage.type = @"P";
             

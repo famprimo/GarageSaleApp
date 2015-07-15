@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14D136" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Attachments" syncable="YES">
+        <attribute name="agent_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="client_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="datetime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="fb_attachment_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fb_msg_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fb_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="picture" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="picture_link" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="preview_link" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="Clients" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="agent_id" optional="YES" attributeType="String" syncable="YES"/>
@@ -30,6 +41,7 @@
     </entity>
     <entity name="Messages" syncable="YES">
         <attribute name="agent_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="attachments" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="client_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="datetime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="fb_created_time" optional="YES" attributeType="String" syncable="YES"/>
@@ -105,8 +117,9 @@
         <attribute name="updated_time" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Attachments" positionX="-603" positionY="207" width="128" height="180"/>
         <element name="Clients" positionX="-387" positionY="54" width="128" height="435"/>
-        <element name="Messages" positionX="-209" positionY="324" width="128" height="285"/>
+        <element name="Messages" positionX="-209" positionY="324" width="128" height="300"/>
         <element name="Opportunities" positionX="-569" positionY="72" width="128" height="253"/>
         <element name="Products" positionX="-810" positionY="198" width="128" height="403"/>
         <element name="Settings" positionX="-603" positionY="207" width="128" height="135"/>

@@ -960,7 +960,7 @@
                         </searchBar>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="Cell" rowHeight="81" id="kZA-yR-CtS">
-                                <rect key="frame" x="0.0" y="130" width="308" height="81"/>
+                                <rect key="frame" x="0.0" y="66" width="308" height="81"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kZA-yR-CtS" id="0z7-VH-Fqc">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="80"/>
@@ -1077,7 +1077,7 @@
                         </searchBar>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="80" id="7uu-5H-HgS">
-                                <rect key="frame" x="0.0" y="130" width="308" height="80"/>
+                                <rect key="frame" x="0.0" y="66" width="308" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7uu-5H-HgS" id="6Oa-dC-xEq">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="79"/>
@@ -1845,7 +1845,7 @@
                         </searchBar>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="80" id="ZmQ-es-iOR">
-                                <rect key="frame" x="0.0" y="130" width="308" height="80"/>
+                                <rect key="frame" x="0.0" y="66" width="308" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZmQ-es-iOR" id="9ID-gc-Mwd">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="79"/>

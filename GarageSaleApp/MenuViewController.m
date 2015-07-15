@@ -67,7 +67,7 @@
         NSLog(@"User is already logged in");
         self.profilePictureView.profileID = [FBSDKProfile currentProfile].userID;
         self.nameLabel.text = [FBSDKProfile currentProfile].name;
-        
+                
     }
     
 }
@@ -193,6 +193,9 @@
     else
     {
         NSLog(@"Logged in!");
+        
+        [self reviewFacebookPermisions];
+        [self setFacebookPageID];
     }
 }
 
@@ -209,6 +212,62 @@
 
         [self setFacebookPageID];
     }
+}
+
+- (void)reviewFacebookPermisions;
+{
+    NSArray *readPermissionsNeeded = @[@"read_stream", @"user_photos", @"user_friends", @"read_mailbox", @"read_page_mailboxes"];
+    NSArray *writePermissionsNeeded = @[@"manage_notifications", @"manage_pages", @"publish_pages"];
+    
+    NSMutableArray *readPermissionsRequest = [[NSMutableArray alloc] init];
+    NSMutableArray *writePermissionsRequest = [[NSMutableArray alloc] init];
+
+    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+
+    // Review read permissions
+    BOOL needRequest = NO;
+    for (int i=0; i<readPermissionsNeeded.count; i++)
+    {
+        if (![[FBSDKAccessToken currentAccessToken] hasGranted:readPermissionsNeeded[i]])
+        {
+            [readPermissionsRequest addObject:readPermissionsNeeded[i]];
+            needRequest = YES;
+        }
+    }
+    
+    if (needRequest)
+    {
+        [loginManager logInWithReadPermissions:readPermissionsRequest handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
+         {
+             //TODO: process error or result.
+             NSLog(@"%@",error);
+         }];
+    }
+    
+    // Review write permissions
+    needRequest = NO;
+    for (int i=0; i<writePermissionsNeeded.count; i++)
+    {
+        if (![[FBSDKAccessToken currentAccessToken] hasGranted:writePermissionsNeeded[i]])
+        {
+            [writePermissionsRequest addObject:writePermissionsNeeded[i]];
+            needRequest = YES;
+        }
+    }
+    
+    if (needRequest)
+    {
+        [loginManager logInWithPublishPermissions:writePermissionsRequest handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
+         {
+             //TODO: process error or result.
+             NSLog(@"%@",error);
+         }];
+    }
+    
+    
+    // @"manage_notifications", @"manage_pages", @"publish_pages"
+    // self.loginButton.readPermissions = @[@"public_profile", @"manage_notifications", @"read_stream", @"user_photos", @"user_friends", @"read_mailbox", @"manage_pages", @"publish_pages", @"read_page_mailboxes"];
+
 }
 
 - (void)setFacebookPageID;

@@ -17,6 +17,8 @@
 #import "ClientModel.h"
 #import "Product.h"
 #import "ProductModel.h"
+#import "Attachment.h"
+#import "AttachmentModel.h"
 #import "NSDate+NVTimeAgo.h"
 #import "NS-Extensions.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -439,35 +441,29 @@
 
 - (void) makeFBrequests;
 {
-    if (![[FBSDKAccessToken currentAccessToken] hasGranted:@"read_mailbox"])
-    {
-        FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-        
-        [loginManager logInWithReadPermissions:@[@"read_stream", @"user_photos", @"user_friends", @"read_mailbox", @"read_page_mailboxes"] handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-            //TODO: process error or result.
-            NSLog(@"%@",error);
-        }];
-    }
-    
-    // @"manage_notifications", @"manage_pages", @"publish_pages"
-    
-    // self.loginButton.readPermissions = @[@"public_profile", @"manage_notifications", @"read_stream", @"user_photos", @"user_friends", @"read_mailbox", @"manage_pages", @"publish_pages", @"read_page_mailboxes"];
-    
     [self makeFBRequestForNewNotifications];
     
     [self makeFBRequestForNewInbox];
     
     [self makeFBRequestForPageMessages];
-
 }
 
 - (void) makeFBRequestForNewNotifications;
 {
     // Create string for FB request - Notifications for the Page
     
-    NSString *url = [NSString stringWithFormat:@"%@/notifications?fields=application,link,object&include_read=true&since=%ld", _tmpSettings.fb_page_id, (long)[_messagesSinceDate timeIntervalSince1970]];;
-    
-    [self getFBNotifications:url];
+    if (![_tmpSettings.fb_page_id isEqualToString:@""])
+    {
+        NSString *url = [NSString stringWithFormat:@"%@/notifications?fields=application,link,object&include_read=true&since=%ld", _tmpSettings.fb_page_id, (long)[_messagesSinceDate timeIntervalSince1970]];;
+        
+        [self getFBNotifications:url];
+    }
+    else
+    {
+        [self setFacebookPageID];
+        
+        _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
+    }
 }
 
 - (void) getFBNotifications:(NSString*)url;
@@ -546,7 +542,6 @@
 
 - (void) makeFBRequestForPhotosDetails:(NSMutableArray*)photosArray;
 {
-    
     MessageModel *messagesMethods = [[MessageModel alloc] init];
     ClientModel *clientMethods = [[ClientModel alloc] init];
     ProductModel *productMethods = [[ProductModel alloc] init];
@@ -693,6 +688,7 @@
                              
                              tempMessage.fb_photo_id = photoID;
                              tempMessage.product_id = productID;
+                             tempMessage.attachments = @"N";
                              tempMessage.agent_id = @"00001";
                              tempMessage.type = @"P";
                              
@@ -872,6 +868,7 @@
             
             tempMessage.fb_photo_id = photoID;
             tempMessage.product_id = productID;
+            tempMessage.attachments = @"N";
             tempMessage.agent_id = @"00001";
             tempMessage.type = @"P";
             
@@ -1160,6 +1157,7 @@
             
             tempMessage.fb_photo_id = nil;
             tempMessage.product_id = nil;
+            tempMessage.attachments = @"N";
             tempMessage.agent_id = @"00001";
             tempMessage.status = @"N";
             tempMessage.type = @"I";
@@ -1188,11 +1186,18 @@
 
 - (void) makeFBRequestForPageMessages;
 {
-    
-    NSString *url = [NSString stringWithFormat:@"%@/conversations?fields=id,participants,updated_time,messages&since=%ld", _tmpSettings.fb_page_id, (long)[_messagesSinceDate timeIntervalSince1970]];;
-    
-    [self getFBPageMessages:url];
-    
+    if (![_tmpSettings.fb_page_id isEqualToString:@""])
+    {
+        NSString *url = [NSString stringWithFormat:@"%@/conversations?fields=id,participants,updated_time,messages&since=%ld", _tmpSettings.fb_page_id, (long)[_messagesSinceDate timeIntervalSince1970]];;
+        
+        [self getFBPageMessages:url];
+    }
+    else
+    {
+        [self setFacebookPageID];
+        
+        _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
+    }
 }
 
 - (void) getFBPageMessages:(NSString*)url;
@@ -1243,6 +1248,7 @@
 - (void) parseFBPageMessages:(id)result;
 {
     ClientModel *clientMethods = [[ClientModel alloc] init];
+    
     Client *tmpClient;
     
     NSMutableArray *newClientsArray = [[NSMutableArray alloc] init];
@@ -1262,15 +1268,15 @@
         fbNamefromInbox = jsonArray[i][@"participants"][@"data"][0][@"name"];
         fbIDfromInbox = jsonArray[i][@"participants"][@"data"][0][@"id"];
         
-        NSLog(@"%@ : %@", fbNamefromInbox, [FBSDKProfile currentProfile].name);
-        
         // Make sure it takes the ID and name of the client, not of GarageSale
         if ([fbIDfromInbox isEqualToString:_tmpSettings.fb_user_id] || [fbIDfromInbox isEqualToString:_tmpSettings.fb_page_id])
         {
-            fbNamefromInbox = jsonArray[i][@"to"][@"data"][1][@"name"];
-            fbIDfromInbox = jsonArray[i][@"to"][@"data"][1][@"id"];
+            fbNamefromInbox = jsonArray[i][@"participants"][@"data"][1][@"name"];
+            fbIDfromInbox = jsonArray[i][@"participants"][@"data"][1][@"id"];
         }
         
+        NSLog(@"%@ : %@", fbNamefromInbox, [FBSDKProfile currentProfile].name);
+
         // Review if client exists
         NSString *fromClientID = [clientMethods getClientIDfromFbId:fbIDfromInbox];
         
@@ -1407,6 +1413,12 @@
             
             tempMessage.fb_photo_id = nil;
             tempMessage.product_id = nil;
+            
+            // Review if there are attachments
+            if (newMessage[@"attachments"])
+            { tempMessage.attachments = @"Y"; }
+            else { tempMessage.attachments = @"N"; }
+            
             tempMessage.agent_id = @"00001";
             tempMessage.status = @"N";
             tempMessage.type = @"M"; // Page message!
@@ -1428,9 +1440,14 @@
             // Insert new message to array and add row to table
             [self addNewMessage:tempMessage];
             
+            // If there are attachments, include them
+            if ([tempMessage.attachments isEqualToString:@"Y"])
+            {
+                NSMutableArray *attachmentsArray = newMessage[@"attachments"][@"data"];
+                [self parseFBMessageAttachments:attachmentsArray for:tempMessage];
+            }
         }
     }
-    
 }
 
 - (void) makeFBRequestForClientsDetails:(NSMutableArray*)newClientsArray;
@@ -1486,6 +1503,61 @@
         }];
     }
 }
+
+- (void) parseFBMessageAttachments:(NSMutableArray*)attachmentsArray for:(Message*)containerMessage;
+{
+    AttachmentModel *attachmentMethods = [[AttachmentModel alloc] init];
+    Attachment *tempAttachment = [[Attachment alloc] init];
+    
+    // Add all messages from this conversation
+    
+    for (int i=0; i<attachmentsArray.count; i=i+1)
+    {
+        NSDictionary *newAttachment = attachmentsArray[i];
+        tempAttachment = [[Attachment alloc] init];
+
+        tempAttachment.fb_msg_id = containerMessage.fb_msg_id;
+        tempAttachment.fb_attachment_id = newAttachment[@"id"];
+        tempAttachment.client_id = containerMessage.client_id;
+        tempAttachment.datetime = containerMessage.datetime;
+        tempAttachment.fb_name = newAttachment[@"name"];
+        tempAttachment.picture_link = newAttachment[@"image_data"][@"url"];
+        tempAttachment.preview_link = newAttachment[@"image_data"][@"preview_url"];
+        tempAttachment.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempAttachment.picture_link]];
+        tempAttachment.agent_id = @"00001";
+        
+        [attachmentMethods addNewAttachment:tempAttachment];
+    }
+}
+
+- (void)setFacebookPageID;
+{
+    if ([FBSDKAccessToken currentAccessToken])
+    {
+        NSString *url = @"me?fields=id,name,accounts";
+        
+        // Prepare for FB request
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+         {
+             if (!error) {  // FB request was a success!
+                 
+                 NSString *userID = result[@"id"];
+                 NSString *userName = result[@"name"];
+                 NSString *pageID = result[@"accounts"][@"data"][0][@"id"];
+                 NSString *pageName = result[@"accounts"][@"data"][0][@"name"];
+                 NSString *pageToken = result[@"accounts"][@"data"][0][@"access_token"];
+                 
+                 if (![[[SettingsModel alloc] init] updateSettingsUser:userName withUserID:userID andPageID:pageID andPageName:pageName andPageTokenID:pageToken]) {
+                     NSLog(@"Error updating settings");
+                 }
+                 
+             }
+         }];
+    }
+}
+
 
 - (void) addNewMessage:(Message*)newMessage;
 {
