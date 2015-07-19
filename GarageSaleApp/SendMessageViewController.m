@@ -14,6 +14,8 @@
 #import "Product.h"
 #import "ProductModel.h"
 #import "Settings.h"
+#import "Message.h"
+#import "MessageModel.h"
 #import "SettingsModel.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
@@ -31,6 +33,7 @@
     Client *_clientOwner;
     NSString *_templateType;
     Product *_relatedProduct;
+    Message *_relatedMessage;
     
     // Temp variables for user and page IDs
     Settings *_tmpSettings;
@@ -53,27 +56,34 @@
     _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
 
     _clientBuyer = [[Client alloc] init];
-    NSString *tmpID = [self.delegate GetBuyerIdFromMessage];
+    NSString *tmpID = [self.delegate getBuyerIdFromMessage];
     if (![tmpID isEqualToString:@""])
     {
         _clientBuyer = [[[ClientModel alloc] init] getClientFromClientId:tmpID];
     }
 
     _clientOwner = [[Client alloc] init];
-    tmpID = [self.delegate GetOwnerIdFromMessage];
+    tmpID = [self.delegate getOwnerIdFromMessage];
     if (![tmpID isEqualToString:@""])
     {
         _clientOwner = [[[ClientModel alloc] init] getClientFromClientId:tmpID];
     }
 
     _relatedProduct = [[Product alloc] init];
-    tmpID = [self.delegate GetProductIdFromMessage];
+    tmpID = [self.delegate getProductIdFromMessage];
     if (![tmpID isEqualToString:@""])
     {
         _relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:tmpID];
     }
     
-    _templateType = [self.delegate GetTemplateTypeFromMessage];
+    _relatedMessage = [[Message alloc] init];
+    tmpID = [self.delegate getMessageIdFromMessage];
+    if (![tmpID isEqualToString:@""])
+    {
+        _relatedMessage = [[[MessageModel alloc] init] getMessageFromMessageId:tmpID];
+    }
+    
+    _templateType = [self.delegate getTemplateTypeFromMessage];
     
     _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:_templateType];
     _selectedTemplate = [[Template alloc] init];
@@ -264,6 +274,9 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+#pragma mark - Managing button actions
+
 - (IBAction)selectTab:(id)sender
 {
     if (self.filterTabs.selectedSegmentIndex == 0) // Compradores
@@ -299,7 +312,6 @@
         // Send messages via Facabook
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         [params setObject:self.labelTemplateText.text forKey:@"message"];
-        // [params setObject:_imageToShare forKey:@"picture"];
 
         NSString *url = [NSString stringWithFormat:@"/%@/messages", pageMessageID];
 
@@ -310,7 +322,7 @@
             if (!error)
             {  // FB post was a success!
                 
-                [self.delegate MessageSent];
+                [self.delegate messageSent:@"M"];
             }
             else
             {
@@ -320,6 +332,46 @@
             }
         }];
         
+    }
+}
+
+- (IBAction)postInPhoto:(id)sender
+{
+    if (_selectedTemplate)
+    {
+        // Post message on Photo via Facabook
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [params setObject:self.labelTemplateText.text forKey:@"message"];
+
+        NSString *url = @"";
+
+        if ([_relatedMessage.recipient isEqualToString:@"G"])
+        {
+            // Message sent to GS so reply is on the message
+            url = [NSString stringWithFormat:@"/%@/comments", _relatedMessage.fb_msg_id];
+        }
+        else
+        {
+            // Message sent to client so reply is on the photo
+            url = [NSString stringWithFormat:@"/%@/comments", _relatedProduct.fb_photo_id];
+        }
+        
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:params tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"POST"];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+         {
+             if (!error)
+             {  // FB post was a success!
+                 
+                 [self.delegate messageSent:@"P"];
+             }
+             else
+             {
+                 // An error occurred, we need to handle the error
+                 // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                 NSLog(@"error postInPhoto: %@", error.description);
+             }
+         }];
     }
 }
 

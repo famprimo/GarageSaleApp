@@ -646,11 +646,11 @@
                                 <rect key="frame" x="10" y="705" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Ya le respondi!">
+                                <state key="normal" title="Revisar">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="markAsDone:" destination="8fd-q3-GU3" eventType="touchUpInside" id="TFK-es-Ikj"/>
+                                    <action selector="reviewNewMessages:" destination="8fd-q3-GU3" eventType="touchUpInside" id="7ad-Tn-uU0"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="ktX-fp-6cf">
@@ -903,12 +903,12 @@
                     </view>
                     <connections>
                         <outlet property="LabelProductRelated" destination="roI-iy-X0H" id="D1s-Ku-z0I"/>
-                        <outlet property="buttonAlreadyReplied" destination="w25-iF-KPz" id="7cV-4w-nTF"/>
                         <outlet property="buttonMessageToRelatedClient" destination="9Zd-Sd-XC6" id="lLv-Fu-tbS"/>
                         <outlet property="buttonNewOpportunity" destination="3sU-xI-h1X" id="mPJ-qB-JXa"/>
                         <outlet property="buttonRelateToOwner" destination="MYZ-Fy-6XO" id="onG-31-FN7"/>
                         <outlet property="buttonRelateToProduct" destination="IER-jm-S7x" id="Kez-ld-fKW"/>
                         <outlet property="buttonReply" destination="Utd-KD-jNt" id="KWo-Uk-R6b"/>
+                        <outlet property="buttonReviewNewMessages" destination="w25-iF-KPz" id="PBM-on-xgK"/>
                         <outlet property="buttonSeeInFacebook" destination="EDn-MZ-cYu" id="tjk-If-oE0"/>
                         <outlet property="imageClient" destination="SGX-on-IdQ" id="TDz-Ep-pC1"/>
                         <outlet property="imageClient2" destination="Qfq-tp-BSj" id="GTJ-be-BzT"/>
@@ -960,7 +960,7 @@
                         </searchBar>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="Cell" rowHeight="81" id="kZA-yR-CtS">
-                                <rect key="frame" x="0.0" y="66" width="308" height="81"/>
+                                <rect key="frame" x="0.0" y="130" width="308" height="81"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kZA-yR-CtS" id="0z7-VH-Fqc">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="80"/>
@@ -1077,7 +1077,7 @@
                         </searchBar>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="80" id="7uu-5H-HgS">
-                                <rect key="frame" x="0.0" y="66" width="308" height="80"/>
+                                <rect key="frame" x="0.0" y="130" width="308" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7uu-5H-HgS" id="6Oa-dC-xEq">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="79"/>
@@ -1235,7 +1235,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ER6-cH-Wfg">
-                                <rect key="frame" x="382" y="623" width="146" height="103"/>
+                                <rect key="frame" x="306" y="623" width="146" height="103"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <string key="text">#DUENO
 #D-ELELLA
@@ -1247,15 +1247,11 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OcH-ww-2Gl">
-                                <rect key="frame" x="553" y="623" width="146" height="118"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ThJ-gT-nRp">
+                                <rect key="frame" x="587" y="623" width="112" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <string key="text">#COMPRADOR
-#C-ELELLA
-#C-LALO
-#C-TELEFONO 
-#PRODUCTO
-#PRECIO</string>
+                                <string key="text">#PRODUCTO
+#PRECIO #DESCRIPCION #FBLINK</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -1278,6 +1274,17 @@
                                     <action selector="newTemplate:" destination="xe0-94-aKr" eventType="touchUpInside" id="QDK-l1-OVX"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OcH-ww-2Gl">
+                                <rect key="frame" x="441" y="623" width="146" height="68"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <string key="text">#COMPRADOR
+#C-ELELLA
+#C-LALO
+#C-TELEFONO</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -1845,7 +1852,7 @@
                         </searchBar>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="80" id="ZmQ-es-iOR">
-                                <rect key="frame" x="0.0" y="66" width="308" height="80"/>
+                                <rect key="frame" x="0.0" y="130" width="308" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZmQ-es-iOR" id="9ID-gc-Mwd">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="79"/>

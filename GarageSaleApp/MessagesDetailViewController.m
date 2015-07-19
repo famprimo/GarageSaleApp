@@ -520,67 +520,21 @@
                                            animated:YES];
 }
 
--(NSString*)GetTemplateTypeFromMessage;
+- (IBAction)reviewNewMessages:(id)sender
 {
-    return _templateTypeForPopover;
-}
-
--(NSString*)GetBuyerIdFromMessage;
-{
-    if ([_client2Type isEqualToString:@"I"])
-    {
-        return _relatedClient.client_id;
-    }
-    else
-    {
-        return _selectedClient.client_id;
-    }
-}
-
--(NSString*)GetOwnerIdFromMessage;
-{
-    if (_relatedClient.client_id == nil)
-    {
-        return @"";
-    }
-    else if ([_client2Type isEqualToString:@"I"])
-    {
-        return _selectedClient.client_id;
-    }
-    else
-    {
-        return _relatedClient.client_id;
-    }
-}
-
--(NSString*)GetProductIdFromMessage;
-{
-    if (_selectedProduct.product_id == nil)
-    {
-        return @"";
-    }
-    else
-    {
-        return _selectedProduct.product_id;
-    }
-}
-
--(void)MessageSent;
-{
-    // Dismiss the popover view
-    [self.sendMessagePopover dismissPopoverAnimated:YES];
+    NSString *url;
     
-    // Reload messages to show the new one
-    [self getPreviousMessages:nil];
+    if (![_selectedClient.fb_inbox_id isEqualToString:@""])
+    {
+        url = [NSString stringWithFormat:@"%@/comments", _selectedClient.fb_inbox_id];
+        [self getFBInboxComments:url withClientID:_selectedClient.client_id];
+    }
     
-    // Go to last messages
-    [self.tableMessages scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.tableMessages numberOfRowsInSection:0]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-
-    _selectedMessage = [_myDataMessages lastObject];
-}
-
-- (IBAction)markAsDone:(id)sender
-{
+    if (![_selectedClient.fb_page_message_id isEqualToString:@""])
+    {
+        url = [NSString stringWithFormat:@"%@/messages", _selectedClient.fb_page_message_id];
+        [self getFBPageMessagesComments:url withClientID:_selectedClient.client_id];
+    }
 }
 
 - (IBAction)newOpportunity:(id)sender
@@ -597,28 +551,6 @@
                                                  animated:YES];
 }
 
--(void)OpportunityCreated;
-{
-    // Dismiss the popover view
-    [self.createOpportunityPopover dismissPopoverAnimated:YES];
-    
-    OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
-    
-    _myDataOpportunities = [opportunityMethods getOpportunitiesRelatedToClient:_selectedClient.client_id];
-    [self.tableOpportunities reloadData];
-    
-}
-
--(NSString*)GetBuyerIdForOpportunity;
-{
-    return _selectedClient.client_id;
-}
-
--(NSString*)GetProductIdForOpportunity;
-{
-    return _selectedProduct.product_id;
-}
-
 - (IBAction)relateToClient:(id)sender
 {
     ClientPickerViewController *clientPickerController = [[ClientPickerViewController alloc] initWithNibName:@"ClientPickerViewController" bundle:nil];
@@ -631,20 +563,6 @@
                                               inView:self.view
                             permittedArrowDirections:UIPopoverArrowDirectionAny
                                             animated:YES];
-}
-
--(void)clientSelectedfromClientPicker:(NSString *)clientIDSelected;
-{
-    // Dismiss the popover view
-    [self.clientPickerPopover dismissPopoverAnimated:YES];
-    
-    // Update the product with the client selected (owner)
-    ProductModel *productMethods = [[ProductModel alloc] init];
-    
-    _selectedProduct.client_id = clientIDSelected;
-    [productMethods updateProduct:_selectedProduct];
-    
-    [self configureView];
 }
 
 - (IBAction)relateToProduct:(id)sender
@@ -660,6 +578,128 @@
                             permittedArrowDirections:UIPopoverArrowDirectionAny
                                             animated:YES];
 }
+
+- (IBAction)editClientDetails:(id)sender
+{
+    EditClientViewController *editClientController = [[EditClientViewController alloc] initWithNibName:@"EditClientViewController" bundle:nil];
+    editClientController.delegate = self;
+    
+    self.editClientPopover = [[UIPopoverController alloc] initWithContentViewController:editClientController];
+    self.editClientPopover.popoverContentSize = CGSizeMake(800, 400);
+    [self.editClientPopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                            inView:self.view
+                          permittedArrowDirections:UIPopoverArrowDirectionAny
+                                          animated:YES];
+    
+}
+
+- (IBAction)seeProductInFacebook:(id)sender
+{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:_selectedProduct.fb_link]];
+
+}
+
+
+#pragma mark - Delegate methods for SendMessge
+
+-(NSString*)getTemplateTypeFromMessage;
+{
+    return _templateTypeForPopover;
+}
+
+-(NSString*)getBuyerIdFromMessage;
+{
+    if ([_client2Type isEqualToString:@"I"])
+    {
+        return _relatedClient.client_id;
+    }
+    else
+    {
+        return _selectedClient.client_id;
+    }
+}
+
+-(NSString*)getOwnerIdFromMessage;
+{
+    if (_relatedClient.client_id == nil)
+    {
+        return @"";
+    }
+    else if ([_client2Type isEqualToString:@"I"])
+    {
+        return _selectedClient.client_id;
+    }
+    else
+    {
+        return _relatedClient.client_id;
+    }
+}
+
+-(NSString*)getProductIdFromMessage;
+{
+    if (_selectedProduct.product_id == nil)
+    {
+        return @"";
+    }
+    else
+    {
+        return _selectedProduct.product_id;
+    }
+}
+
+-(NSString*)getMessageIdFromMessage;
+{
+    if (_selectedMessage.fb_msg_id == nil)
+    {
+        return @"";
+    }
+    else
+    {
+        return _selectedMessage.fb_msg_id;
+    }
+}
+
+-(void)messageSent:(NSString*)postType; // postType = (P)hoto (I)nbox (M)essage
+{
+    // Dismiss the popover view
+    [self.sendMessagePopover dismissPopoverAnimated:YES];
+    
+    // Reload messages to show the new one
+    [self getPreviousMessages:nil];
+    
+    // Go to last messages
+    [self.tableMessages scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.tableMessages numberOfRowsInSection:0]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    
+    _selectedMessage = [_myDataMessages lastObject];
+}
+
+
+#pragma mark - Delegate methods for NewOpportunity
+
+-(void)opportunityCreated;
+{
+    // Dismiss the popover view
+    [self.createOpportunityPopover dismissPopoverAnimated:YES];
+    
+    OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
+    
+    _myDataOpportunities = [opportunityMethods getOpportunitiesRelatedToClient:_selectedClient.client_id];
+    [self.tableOpportunities reloadData];
+    
+}
+
+-(NSString*)getBuyerIdForOpportunity;
+{
+    return _selectedClient.client_id;
+}
+
+-(NSString*)getProductIdForOpportunity;
+{
+    return _selectedProduct.product_id;
+}
+
+
+#pragma mark - Delegate methods for ProductPicker
 
 -(void)productSelectedfromProductPicker:(NSMutableArray *)selectedProductsArray;
 {
@@ -686,19 +726,24 @@
 }
 
 
-- (IBAction)editClientDetails:(id)sender
+#pragma mark - Delegate methods for ClientPicker
+
+-(void)clientSelectedfromClientPicker:(NSString *)clientIDSelected;
 {
-    EditClientViewController *editClientController = [[EditClientViewController alloc] initWithNibName:@"EditClientViewController" bundle:nil];
-    editClientController.delegate = self;
+    // Dismiss the popover view
+    [self.clientPickerPopover dismissPopoverAnimated:YES];
     
-    self.editClientPopover = [[UIPopoverController alloc] initWithContentViewController:editClientController];
-    self.editClientPopover.popoverContentSize = CGSizeMake(800, 400);
-    [self.editClientPopover presentPopoverFromRect:[(UIButton *)sender frame]
-                                            inView:self.view
-                          permittedArrowDirections:UIPopoverArrowDirectionAny
-                                          animated:YES];
+    // Update the product with the client selected (owner)
+    ProductModel *productMethods = [[ProductModel alloc] init];
     
+    _selectedProduct.client_id = clientIDSelected;
+    [productMethods updateProduct:_selectedProduct];
+    
+    [self configureView];
 }
+
+
+#pragma mark - Delegate methods for EditClient
 
 -(Client *)getClientforEdit;
 {
@@ -711,12 +756,6 @@
     [self.editClientPopover dismissPopoverAnimated:YES];
     
     [self configureView];
-}
-
-- (IBAction)seeProductInFacebook:(id)sender
-{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:_selectedProduct.fb_link]];
-
 }
 
 

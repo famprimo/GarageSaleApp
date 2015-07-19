@@ -351,6 +351,8 @@
 }
 
 
+#pragma mark - Managing button actions
+
 - (IBAction)updateOpportunityStatus:(id)sender
 {
     EditOpportunityViewController *editOpportunityController = [[EditOpportunityViewController alloc] initWithNibName:@"EditOpportunityViewController" bundle:nil];
@@ -363,19 +365,6 @@
                            permittedArrowDirections:UIPopoverArrowDirectionAny
                                            animated:YES];
 
-}
-
--(Opportunity *)getOpportunityforEdit;
-{
-    return _selectedOpportunity;
-}
-
--(void)opportunityEdited:(Opportunity *)editedOpportunity;
-{
-    // Dismiss the popover view
-    [self.editOpportunityPopover dismissPopoverAnimated:YES];
-    
-    [self configureView];
 }
 
 - (IBAction)sendMessageToOwner:(id)sender
@@ -393,7 +382,6 @@
                                            animated:YES];
 }
 
-
 - (IBAction)sendMessageToBuyer:(id)sender
 {
     _templateTypeForPopover = @"C";
@@ -409,27 +397,52 @@
                                            animated:YES];
 }
 
--(NSString*)GetTemplateTypeFromMessage;
+
+#pragma mark - Delegate methods for EditOpportunity
+
+-(Opportunity *)getOpportunityforEdit;
+{
+    return _selectedOpportunity;
+}
+
+-(void)opportunityEdited:(Opportunity *)editedOpportunity;
+{
+    // Dismiss the popover view
+    [self.editOpportunityPopover dismissPopoverAnimated:YES];
+    
+    [self configureView];
+}
+
+
+#pragma mark - Delegate methods for SendMessages
+
+-(NSString*)getTemplateTypeFromMessage;
 {
     return _templateTypeForPopover;
 }
 
--(NSString*)GetBuyerIdFromMessage;
+-(NSString*)getBuyerIdFromMessage;
 {
     return _selectedClientBuyer.client_id;
 }
 
--(NSString*)GetOwnerIdFromMessage;
+-(NSString*)getOwnerIdFromMessage;
 {
     return _selectedClientOwner.client_id;
 }
 
--(NSString*)GetProductIdFromMessage;
+-(NSString*)getProductIdFromMessage;
 {
     return _selectedProduct.product_id;
 }
 
--(void)MessageSent;
+-(NSString*)getMessageIdFromMessage;
+{
+    return @"";
+}
+
+
+-(void)messageSent:(NSString*)postType; // postType = (P)hoto (I)nbox (M)essage
 {
     // Dismiss the popover view
     [self.sendMessagePopover dismissPopoverAnimated:YES];

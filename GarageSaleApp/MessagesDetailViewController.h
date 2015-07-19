@@ -24,11 +24,11 @@
 @property (strong, nonatomic) id detailItem;
 
 @property (weak, nonatomic) IBOutlet UIButton *buttonReply;
-@property (weak, nonatomic) IBOutlet UIButton *buttonAlreadyReplied;
 @property (weak, nonatomic) IBOutlet UIButton *buttonMessageToRelatedClient;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRelateToProduct;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRelateToOwner;
 @property (weak, nonatomic) IBOutlet UIButton *buttonSeeInFacebook;
+@property (weak, nonatomic) IBOutlet UIButton *buttonReviewNewMessages;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageClient;
 @property (weak, nonatomic) IBOutlet UIImageView *imageClientStatus;

@@ -252,6 +252,7 @@
     [coreDataObject setValue:newProduct.name forKey:@"name"];
     [coreDataObject setValue:newProduct.desc forKey:@"desc"];
     [coreDataObject setValue:newProduct.fb_photo_id forKey:@"fb_photo_id"];
+    [coreDataObject setValue:newProduct.fb_link forKey:@"fb_link"];
     [coreDataObject setValue:newProduct.currency forKey:@"currency"];
     [coreDataObject setValue:newProduct.price forKey:@"price"];
     [coreDataObject setValue:newProduct.created_time forKey:@"created_time"];
@@ -327,6 +328,7 @@
             [coreDataObject setValue:productToUpdate.name forKey:@"name"];
             [coreDataObject setValue:productToUpdate.desc forKey:@"desc"];
             [coreDataObject setValue:productToUpdate.fb_photo_id forKey:@"fb_photo_id"];
+            [coreDataObject setValue:productToUpdate.fb_link forKey:@"fb_link"];
             [coreDataObject setValue:productToUpdate.currency forKey:@"currency"];
             [coreDataObject setValue:productToUpdate.price forKey:@"price"];
             [coreDataObject setValue:productToUpdate.created_time forKey:@"created_time"];

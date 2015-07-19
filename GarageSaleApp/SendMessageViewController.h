@@ -12,11 +12,12 @@
 
 @protocol SendMessageViewControllerDelegate
 
--(void)MessageSent;
--(NSString*)GetTemplateTypeFromMessage;
--(NSString*)GetBuyerIdFromMessage;
--(NSString*)GetOwnerIdFromMessage;
--(NSString*)GetProductIdFromMessage;
+-(void)messageSent:(NSString*)postType; // postType = (P)hoto (I)nbox (M)essage
+-(NSString*)getTemplateTypeFromMessage;
+-(NSString*)getBuyerIdFromMessage;
+-(NSString*)getOwnerIdFromMessage;
+-(NSString*)getProductIdFromMessage;
+-(NSString*)getMessageIdFromMessage;
 
 @end
 

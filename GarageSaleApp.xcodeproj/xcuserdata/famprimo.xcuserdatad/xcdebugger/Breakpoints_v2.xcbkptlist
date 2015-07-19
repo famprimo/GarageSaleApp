@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GarageSaleApp/MessagesTableViewController.m"
-            timestampString = "458425833.26307"
+            timestampString = "458940497.336993"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "913"
-            endingLineNumber = "913"
+            startingLineNumber = "912"
+            endingLineNumber = "912"
             landmarkName = "-parseFBPhotoSubComments:"
             landmarkType = "5">
          </BreakpointContent>

@@ -31,7 +31,8 @@
     Template *tempTemplate = [[Template alloc] init];
     tempTemplate.template_id = @"00001";
     tempTemplate.title = @"Aviso comprador";
-    tempTemplate.text = @"Hola #COMPRADOR. La dueña de es #DUENO y su teléfono es #D-TELEFONO. Coordina con #D-ELELLA cuando puedes ir a verlo, yo ya le avisé que #D-LALO vas a llamar. En caso lo llegues a comprar necesito que por favor me mandes un mensajito avisándome. Gracias. Saludos, Giuliana";
+    tempTemplate.text = @"Hola #COMPRADOR. La dueña de es #DUENO y su teléfono es #D-TELEFONO. Coordina con #D-ELELLA cuando puedes ir a verlo, yo ya le avisé que #D-LALO vas a llamar. En caso lo llegues a comprar necesito que por favor me mandes un mensajito avisándome. Gracias. Saludos, Giuliana   #DESCRIPCION    #FBLINK";
+
     tempTemplate.type = @"C";
     tempTemplate.updated_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempTemplate.agent_id = @"00001";
@@ -411,9 +412,65 @@
         {
             [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%@", relatedProduct.price]];
         }
+
+        keyRange = [reviewedText rangeOfString:@"#DESCRIPCION"];
+        if (keyRange.location != NSNotFound)
+        {
+            [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%@", relatedProduct.desc]];
+        }
+
+        keyRange = [reviewedText rangeOfString:@"#FBLINK"];
+        if (keyRange.location != NSNotFound)
+        {
+            [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%@", relatedProduct.fb_link]];
+        }
+
     }    
     
+    
+    
     return [NSString stringWithString:reviewedText];
+}
+
+
+#pragma mark -  Methods for shorte URL taken from http://www.warewoof.com/goo-gl-url-shortener-in-ios/
+
+-(void)shortenMapUrl:(NSString*)originalURL
+{
+    
+    NSString* googString = @"https://www.googleapis.com/urlshortener/v1/url";
+    NSURL* googUrl = [NSURL URLWithString:googString];
+    
+    NSMutableURLRequest* googReq = [NSMutableURLRequest requestWithURL:googUrl cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60.0f];
+    [googReq setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSString* longUrlString = [NSString stringWithFormat:@"{\"longUrl\": \"%@\"}",originalURL];
+    
+    NSData* longUrlData = [longUrlString dataUsingEncoding:NSUTF8StringEncoding];
+    [googReq setHTTPBody:longUrlData];
+    [googReq setHTTPMethod:@"POST"];
+    
+    NSURLConnection* connect = [[NSURLConnection alloc] initWithRequest:googReq delegate:self];
+    connect = nil;
+    
+}
+
+-(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    NSString *returnData = [NSString stringWithUTF8String:[data bytes]];
+    NSError* error = nil;
+    
+    NSArray* jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
+    
+    NSString* shortenedURL;
+    if (error == nil) {
+        if ([jsonArray valueForKey:@"id"] != nil) {
+            shortenedURL = [jsonArray valueForKey:@"id"];
+        }
+    } else {
+        NSLog(@"Error %@", error);
+    }
+    
+    NSLog(@"Returned URL: %@", shortenedURL);
 }
 
 @end

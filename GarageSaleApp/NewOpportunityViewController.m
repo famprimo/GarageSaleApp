@@ -28,8 +28,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    _clientBuyer = [[[ClientModel alloc] init] getClientFromClientId:[self.delegate GetBuyerIdForOpportunity]];
-    _relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:[self.delegate GetProductIdForOpportunity]];
+    _clientBuyer = [[[ClientModel alloc] init] getClientFromClientId:[self.delegate getBuyerIdForOpportunity]];
+    _relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:[self.delegate getProductIdForOpportunity]];
     
     CGRect imageProductFrame = self.imageProduct.frame;
     imageProductFrame.origin.x = 13;
@@ -116,7 +116,7 @@
 
     [opportunityMethods addNewOpportunity:tempOpportunity];
     
-    [self.delegate OpportunityCreated];
+    [self.delegate opportunityCreated];
 
 }
 

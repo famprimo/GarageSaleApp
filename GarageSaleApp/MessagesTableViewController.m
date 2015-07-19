@@ -200,7 +200,7 @@
     
 }
 
--(void) searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+-(void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
 {
     
     // Remove all objects from the filtered search array
@@ -241,7 +241,6 @@
     // Return YES to cause the search result table view to be reloaded.
     return YES;
 }
-
 
 
 #pragma mark - Table view data source

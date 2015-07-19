@@ -99,6 +99,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+
 #pragma mark - Managing the detail item
 
 - (void)setDetailItem:(id)newDetailItem
@@ -110,7 +111,6 @@
         [self configureView];
     }
 }
-
 
 - (void)configureView
 {
@@ -342,6 +342,9 @@
     }
 }
 
+
+#pragma mark - Managing button actions
+
 - (IBAction)changeProductStatus:(id)sender
 {
     ProductModel *productMethods = [[ProductModel alloc] init];
@@ -382,7 +385,6 @@
     
 }
 
-
 -(IBAction)relateToClient:(id)sender;
 {
     _clientPickerOrigin = @"RELATE";
@@ -390,7 +392,6 @@
     [self showPopoverClientPicker:sender];
     
 }
-
 
 -(IBAction)CreateOpportunity:(id)sender;
 {
@@ -451,34 +452,6 @@
     [self configureView];
 }
 
--(NSString*)GetBuyerIdForOpportunity;
-{
-    return _buyerSelected;
-}
-
--(NSString*)GetProductIdForOpportunity;
-{
-    Product *productSelected = [[Product alloc] init];
-    productSelected = (Product *)_detailItem;
-    
-    return productSelected.product_id;
-}
-
--(void)OpportunityCreated;
-{
-    // Dismiss the popover view
-    [self.createOpportunityPopover dismissPopoverAnimated:YES];
-    
-    Product *productSelected = [[Product alloc] init];
-    productSelected = (Product *)_detailItem;
-    
-    OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
-    
-    _myDataOpportunities = [opportunityMethods getOpportunitiesFromProduct:productSelected.product_id];
-    [self.tableOpportunities reloadData];
-    
-}
-
 -(IBAction)showPopoverSendMessageBuyer:(id)sender;
 {
     _templateTypeForPopover = @"C";
@@ -512,40 +485,6 @@
     
 }
 
--(NSString*)GetTemplateTypeFromMessage;
-{
-    return _templateTypeForPopover;
-}
-
--(NSString*)GetBuyerIdFromMessage;
-{
-    
-    return _selectedOpportunity.client_id;
-}
-
--(NSString*)GetOwnerIdFromMessage;
-{
-    Product *productSelected = [[Product alloc] init];
-    productSelected = (Product *)_detailItem;
-    
-    return productSelected.client_id;
-}
-
--(NSString*)GetProductIdFromMessage;
-{
-    Product *productSelected = [[Product alloc] init];
-    productSelected = (Product *)_detailItem;
-    
-    return productSelected.product_id;
-}
-
--(void)MessageSent;
-{
-    // Dismiss the popover view
-    [self.sendMessagePopover dismissPopoverAnimated:YES];
-    
-}
-
 - (IBAction)editProductDetails:(id)sender
 {
     EditProductViewController *editProductController = [[EditProductViewController alloc] initWithNibName:@"EditProductViewController" bundle:nil];
@@ -560,11 +499,53 @@
     
 }
 
+- (IBAction)goToFacebook:(id)sender
+{
+    Product *productSelected = [[Product alloc] init];
+    productSelected = (Product *)_detailItem;
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:productSelected.fb_link]];
+}
+
+
+#pragma mark - Delegate methods for NewOpportunity
+
+-(NSString*)getBuyerIdForOpportunity;
+{
+    return _buyerSelected;
+}
+
+-(NSString*)getProductIdForOpportunity;
+{
+    Product *productSelected = [[Product alloc] init];
+    productSelected = (Product *)_detailItem;
+    
+    return productSelected.product_id;
+}
+
+-(void)opportunityCreated;
+{
+    // Dismiss the popover view
+    [self.createOpportunityPopover dismissPopoverAnimated:YES];
+    
+    Product *productSelected = [[Product alloc] init];
+    productSelected = (Product *)_detailItem;
+    
+    OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
+    
+    _myDataOpportunities = [opportunityMethods getOpportunitiesFromProduct:productSelected.product_id];
+    [self.tableOpportunities reloadData];
+    
+}
+
+
+#pragma mark - Delegate methods for EditProduct
+
 -(Product *)getProductforEdit;
 {
     Product *productSelected = [[Product alloc] init];
     productSelected = (Product *)_detailItem;
-
+    
     return productSelected;
 }
 
@@ -576,14 +557,55 @@
     [self configureView];
 }
 
-- (IBAction)goToFacebook:(id)sender
+
+#pragma mark - Delegate methods for SendMessage
+
+-(NSString*)getTemplateTypeFromMessage;
+{
+    return _templateTypeForPopover;
+}
+
+-(NSString*)getBuyerIdFromMessage;
+{
+    
+    return _selectedOpportunity.client_id;
+}
+
+-(NSString*)getOwnerIdFromMessage;
 {
     Product *productSelected = [[Product alloc] init];
     productSelected = (Product *)_detailItem;
     
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:productSelected.fb_link]];
+    return productSelected.client_id;
 }
 
+-(NSString*)getProductIdFromMessage;
+{
+    Product *productSelected = [[Product alloc] init];
+    productSelected = (Product *)_detailItem;
+    
+    return productSelected.product_id;
+}
+
+-(NSString*)getMessageIdFromMessage;
+{
+    if (_selectedMessage.fb_msg_id == nil)
+    {
+        return @"";
+    }
+    else
+    {
+        return _selectedMessage.fb_msg_id;
+    }
+}
+
+
+-(void)messageSent:(NSString*)postType; // postType = (P)hoto (I)nbox (M)essage
+{
+    // Dismiss the popover view
+    [self.sendMessagePopover dismissPopoverAnimated:YES];
+    
+}
 
 
 #pragma mark - Table view data source
@@ -857,7 +879,6 @@
         self.buttonMessageToBuyer.enabled = YES;
     }
 }
-
 
 
 #pragma mark - Contact with Facebook

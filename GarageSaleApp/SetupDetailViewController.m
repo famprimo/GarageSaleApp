@@ -49,6 +49,9 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+#pragma mark - Managing button actions
+
 -(IBAction)saveTemplate:(id)sender;
 {
     TemplateModel *templateMethods = [[TemplateModel alloc] init];
@@ -102,6 +105,7 @@
     _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:_selectedType];
     [self.tableTemplates reloadData];
 }
+
 
 #pragma mark - Table view data source
 

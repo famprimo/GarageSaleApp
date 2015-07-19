@@ -583,6 +583,27 @@
     return messagesIDList;
 }
 
+- (Message*)getMessageFromMessageId:(NSString*)messageIDtoSearch;
+{
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Message *messageToReview = [[Message alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    {
+        messageToReview = [[Message alloc] init];
+        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
+        
+        if ([messageToReview.fb_msg_id isEqual:messageIDtoSearch])
+        {
+            break;
+        }
+    }
+    return messageToReview;
+}
+
 - (int)numberOfMessagesNotReplied; // Method that returns the total number of messages not replied yet
 {
     int numberOfMessages = 0;

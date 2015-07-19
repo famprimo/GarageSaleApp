@@ -170,7 +170,8 @@
     }
 }
 
-#pragma mark - Actions
+
+#pragma mark - Managing button actions
 
 - (IBAction)relateToProduct:(id)sender
 {
@@ -185,40 +186,6 @@
                              permittedArrowDirections:UIPopoverArrowDirectionAny
                                              animated:YES];
 }
-
--(void)productSelectedfromProductPicker:(NSMutableArray *)selectedProductsArray;
-{
-    // Dismiss the popover view
-    [self.productPickerPopover dismissPopoverAnimated:YES];
-    
-    ProductModel *productMethods = [[ProductModel alloc] init];
-    Product *selectedProduct = [[Product alloc] init];
-    
-    for (int i=0; i<selectedProductsArray.count; i=i+1)
-    {
-        selectedProduct = selectedProductsArray[i];
-        selectedProduct.client_id = _selectedClient.client_id;
-    
-        [productMethods updateProduct:selectedProduct];
-    }
-    
-    // Load products from the client
-    _myDataProducts = [[[ProductModel alloc] init] getProductsFromClientId:_selectedClient.client_id];
-    
-    [self.tableProducts reloadData];
-}
-
-
--(BOOL)allowMultipleSelectionfromProductPicker
-{
-    return YES;
-}
-
--(NSString*)getRelatedOwnerfromProductPicker
-{
-    return _selectedClient.client_id;
-}
-
 
 - (IBAction)editClientDetails:(id)sender
 {
@@ -235,6 +202,44 @@
 
 }
 
+
+#pragma mark - Delegate methods for ProductPicker
+
+-(void)productSelectedfromProductPicker:(NSMutableArray *)selectedProductsArray;
+{
+    // Dismiss the popover view
+    [self.productPickerPopover dismissPopoverAnimated:YES];
+    
+    ProductModel *productMethods = [[ProductModel alloc] init];
+    Product *selectedProduct = [[Product alloc] init];
+    
+    for (int i=0; i<selectedProductsArray.count; i=i+1)
+    {
+        selectedProduct = selectedProductsArray[i];
+        selectedProduct.client_id = _selectedClient.client_id;
+        
+        [productMethods updateProduct:selectedProduct];
+    }
+    
+    // Load products from the client
+    _myDataProducts = [[[ProductModel alloc] init] getProductsFromClientId:_selectedClient.client_id];
+    
+    [self.tableProducts reloadData];
+}
+
+-(BOOL)allowMultipleSelectionfromProductPicker
+{
+    return YES;
+}
+
+-(NSString*)getRelatedOwnerfromProductPicker
+{
+    return _selectedClient.client_id;
+}
+
+
+#pragma mark - Delegate methods for EditClient
+
 -(Client *)getClientforEdit;
 {
     return _selectedClient;
@@ -247,6 +252,7 @@
 
     [self configureView];
 }
+
 
 #pragma mark - Table view data source
 

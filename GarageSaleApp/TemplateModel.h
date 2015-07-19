@@ -11,7 +11,7 @@
 #import "Client.h"
 #import "Product.h"
 
-@interface TemplateModel : NSObject
+@interface TemplateModel : NSObject <NSURLConnectionDataDelegate>
 
 - (void)saveInitialDataforTemplates;
 - (NSMutableArray*)getTemplatesFromCoreData;

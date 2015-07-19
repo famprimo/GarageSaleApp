@@ -67,7 +67,8 @@
         NSLog(@"User is already logged in");
         self.profilePictureView.profileID = [FBSDKProfile currentProfile].userID;
         self.nameLabel.text = [FBSDKProfile currentProfile].name;
-                
+        
+        [self reviewFacebookPermisions];
     }
     
 }
@@ -217,7 +218,7 @@
 - (void)reviewFacebookPermisions;
 {
     NSArray *readPermissionsNeeded = @[@"read_stream", @"user_photos", @"user_friends", @"read_mailbox", @"read_page_mailboxes"];
-    NSArray *writePermissionsNeeded = @[@"manage_notifications", @"manage_pages", @"publish_pages"];
+    NSArray *writePermissionsNeeded = @[@"manage_notifications", @"manage_pages", @"publish_pages", @"publish_actions"];
     
     NSMutableArray *readPermissionsRequest = [[NSMutableArray alloc] init];
     NSMutableArray *writePermissionsRequest = [[NSMutableArray alloc] init];
