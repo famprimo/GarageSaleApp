@@ -17,5 +17,6 @@
 - (BOOL)addSettings:(Settings*)newSettings;
 - (BOOL)updateSettingsUser:(NSString*)userName withUserID:(NSString*)userID andPageID:(NSString*)pageID andPageName:(NSString*)pageName andPageTokenID:(NSString*)pageTokenID;
 - (BOOL)updateSettingsInitialDataSaved;
+- (BOOL)updateSettingsTemplateDataUptaded:(NSDate*)lastUpdateDate;
 
 @end

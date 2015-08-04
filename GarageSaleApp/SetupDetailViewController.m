@@ -106,6 +106,12 @@
     [self.tableTemplates reloadData];
 }
 
+- (IBAction)synchronizeTemplates:(id)sender
+{
+    // Synchronize with Parse
+    
+}
+
 
 #pragma mark - Table view data source
 

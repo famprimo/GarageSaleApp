@@ -17,6 +17,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
+#import <Parse/Parse.h>
 
 @implementation AppDelegate
 
@@ -38,6 +39,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // [Optional] Power your app with Local Datastore. For more info, go to
+    // https://parse.com/docs/ios_guide#localdatastore/iOS
+    [Parse enableLocalDatastore];
+    
+    // Initialize Parse.
+    [Parse setApplicationId:@"ZTq2y8PnUJRt3S9XrioiiWBErFFbyd81YJmPRMhM"
+                  clientKey:@"K9bIe2NfEj5vrLXPUXRNYTjWcmNCJpsGGJChyfFi"];
+    
+    // [Optional] Track statistics around application opens.
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    
     // Override point for customization after application launch.
     
     [FBSDKLoginButton class];

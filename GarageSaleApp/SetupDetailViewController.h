@@ -17,6 +17,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *buttonNewTemplate;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedControlType;
 @property (strong, nonatomic) IBOutlet UIImageView *imageTemplateIcon;
+@property (weak, nonatomic) IBOutlet UIButton *buttonSync;
 
 -(IBAction)saveTemplate:(id)sender;
 -(IBAction)newTemplate:(id)sender;

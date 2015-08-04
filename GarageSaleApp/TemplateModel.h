@@ -15,10 +15,11 @@
 
 - (void)saveInitialDataforTemplates;
 - (NSMutableArray*)getTemplatesFromCoreData;
+- (void)syncCoreDataWithParse;
 - (NSMutableArray*)getTemplatesFromType:(NSString*)templateType;
 - (NSString*)getNextTemplateID;
-- (BOOL)addNewTemplate:(Template*)newTemplate;
-- (BOOL)updateTemplate:(Template*)templateToUpdate;
+- (void)addNewTemplate:(Template*)newTemplate;
+- (void)updateTemplate:(Template*)templateToUpdate;
 - (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProduct:(Product*)relatedProduct;
 
 @end

@@ -8,6 +8,8 @@
 
 #import "TemplateModel.h"
 #import "AppDelegate.h"
+#import <Parse/Parse.h>
+#import "SettingsModel.h"
 
 @implementation TemplateModel
 
@@ -20,7 +22,6 @@
     }
     return context;
 }
-
 
 - (void)saveInitialDataforTemplates;
 {
@@ -158,6 +159,51 @@
     return templatesArray;
 }
 
+// IMPLEMENT PROTOCOL DELEGATE TO INFORM WHEN SYNC IS FINISHED!!!
+
+- (void)syncCoreDataWithParse;
+{
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    // Get latest information from Parse
+    PFQuery *query = [PFQuery queryWithClassName:@"Template"];
+    [query whereKey:@"updatedAt" greaterThan:mainDelegate.sharedSettings.template_last_update];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error)
+        {
+            // The find from Parse succeeded
+            for (PFObject *parseObject in objects)
+            {
+                Template *templateFromParse = [[Template alloc] init];
+                
+                templateFromParse.template_id = [parseObject valueForKey:@"template_id"];
+                templateFromParse.title = [parseObject valueForKey:@"title"];
+                templateFromParse.text = [parseObject valueForKey:@"text"];
+                templateFromParse.type = [parseObject valueForKey:@"type"];
+                templateFromParse.updated_time = [parseObject valueForKey:@"updated_time"];
+                templateFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
+                
+                // Update object in CoreData
+                NSString *results = [self updateTemplateToCoreData:templateFromParse];
+                
+                if ([results isEqualToString:@"NOT FOUND"])
+                {
+                    // Object is new! Add to CoreData;
+                    [self addNewTemplateToCoreData:templateFromParse];
+                }
+            }
+        }
+        else
+        {
+            // Log details of the failure
+            NSLog(@"Failed to retrieve the Template object from Parse. Error: %@ %@", error, [error userInfo]);
+        }
+    }];
+}
+
 - (NSMutableArray*)getTemplatesFromType:(NSString*)templateType;
 {
     NSMutableArray *templateArray = [[NSMutableArray alloc] init];
@@ -181,7 +227,6 @@
     return templateArray;
 }
 
-
 - (NSString*)getNextTemplateID;
 {
     AppDelegate *mainDelegate;
@@ -194,11 +239,34 @@
     return nextID;
 }
 
-
-- (BOOL)addNewTemplate:(Template*)newTemplate;
+- (void)addNewTemplate:(Template*)newTemplate;
 {
-    BOOL updateSuccessful = YES;
+    // Save object in Parse
+    PFObject *parseObject = [PFObject objectWithClassName:@"Template"];
     
+    parseObject[@"template_id"] = newTemplate.template_id;
+    parseObject[@"title"] = newTemplate.title;
+    parseObject[@"text"] = newTemplate.text;
+    parseObject[@"type"] = newTemplate.type;
+    parseObject[@"updated_time"] = newTemplate.updated_time;
+    parseObject[@"agent_id"] = newTemplate.agent_id;
+    
+    [parseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded)
+        {
+            // The object has been saved to Parse! ... Add to CoreData
+            [self addNewTemplateToCoreData:newTemplate];
+        }
+        else
+        {
+            // There was a problem, check error.description
+            NSLog(@"Can't Save Template in Parse! %@", error.description);
+        }
+    }];
+}
+
+- (void)addNewTemplateToCoreData:(Template *)newTemplate
+{
     // Save object in persistent data store
     NSManagedObjectContext *context = [self managedObjectContext];
     NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"Templates" inManagedObjectContext:context];
@@ -214,7 +282,6 @@
     // Save the object to persistent store
     if (![context save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        updateSuccessful = NO;
     }
     else // update successful!
     {
@@ -223,16 +290,55 @@
         mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         [mainDelegate.sharedArrayTemplates addObject:newTemplate];
+        
+        //Update last update time
+        [[[SettingsModel alloc] init] updateSettingsTemplateDataUptaded:newTemplate.updated_time];
     }
-
-    return updateSuccessful;
 }
 
-
-- (BOOL)updateTemplate:(Template*)templateToUpdate;
+- (void)updateTemplate:(Template*)templateToUpdate;
 {
-    BOOL updateSuccessful = YES;
+    // Update object in Parse
     
+    PFQuery *query = [PFQuery queryWithClassName:@"Template"];
+    [query whereKey:@"template_id" equalTo:templateToUpdate.template_id];
+
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *parseObject, NSError *error) {
+        if (!parseObject)
+        {
+            NSLog(@"Failed to retrieve the Template object from Parse");
+        }
+        else
+        {
+            // The find from Parse succeeded... Update values
+            parseObject[@"template_id"] = templateToUpdate.template_id;
+            parseObject[@"title"] = templateToUpdate.title;
+            parseObject[@"text"] = templateToUpdate.text;
+            parseObject[@"type"] = templateToUpdate.type;
+            parseObject[@"updated_time"] = templateToUpdate.updated_time;
+            parseObject[@"agent_id"] = templateToUpdate.agent_id;
+
+            [parseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded)
+                {
+                    // The object has been saved to Parse! ... Update CoreData
+                    [self updateTemplateToCoreData:templateToUpdate];
+                }
+                else
+                {
+                    // There was a problem, check error.description
+                    NSLog(@"Can't Save Template in Parse! %@", error.description);
+                }
+            }];
+        }
+    }];
+}
+
+- (NSString*)updateTemplateToCoreData:(Template*)templateToUpdate
+{
+    NSString *updateResults = @"OK";
+    
+    // Update object in persistent data store
     NSManagedObjectContext *context = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
@@ -242,21 +348,21 @@
     // Create Predicate
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"template_id", templateToUpdate.template_id];
     [fetchRequest setPredicate:predicate];
-
+    
     NSError *error = nil;
     NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     
     if (error) {
         NSLog(@"Unable to execute fetch request");
         NSLog(@"%@, %@", error, error.localizedDescription);
-        updateSuccessful = NO;
+        updateResults = @"ERROR";
     }
     else
     {
         if (result.count == 0)
         {
             NSLog(@"No records retrieved");
-            updateSuccessful = NO;
+            updateResults = @"NOT FOUND";
         }
         else
         {
@@ -274,14 +380,14 @@
             if (![self.managedObjectContext save:&error]) {
                 NSLog(@"Unable to save managed object context.");
                 NSLog(@"%@, %@", error, error.localizedDescription);
-                updateSuccessful = NO;
+                updateResults = @"ERROR";
             }
             else // update successful!
             {
                 // To have access to shared arrays from AppDelegate
                 AppDelegate *mainDelegate;
                 mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
- 
+                
                 // Replace object in Shared Array
                 Template *templateToReview = [[Template alloc] init];
                 
@@ -296,14 +402,14 @@
                         break;
                     }
                 }
-
+                
+                //Update last update time
+                [[[SettingsModel alloc] init] updateSettingsTemplateDataUptaded:templateToUpdate.updated_time];
             }
         }
     }
-
-    return updateSuccessful;
+    return updateResults;
 }
-
 
 - (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProduct:(Product*)relatedProduct;
 {

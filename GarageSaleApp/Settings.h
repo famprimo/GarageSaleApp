@@ -16,5 +16,6 @@
 @property (strong, nonatomic) NSString *fb_page_name;
 @property (strong, nonatomic) NSString *fb_page_token;
 @property (strong, nonatomic) NSString *initial_data_loaded; // (Y)es (N)o
+@property (strong, nonatomic) NSDate *template_last_update;
 
 @end

@@ -31,6 +31,7 @@
     tempSettings.fb_page_name = @"";
     tempSettings.fb_page_token = @"";
     tempSettings.initial_data_loaded = @"N";
+    tempSettings.template_last_update = [NSDate date];
     
     [self addSettings:tempSettings];
 }
@@ -80,6 +81,7 @@
     [coreDataObject setValue:newSettings.fb_page_name forKey:@"fb_page_name"];
     [coreDataObject setValue:newSettings.fb_page_token forKey:@"fb_page_token"];
     [coreDataObject setValue:newSettings.initial_data_loaded forKey:@"initial_data_loaded"];
+    [coreDataObject setValue:newSettings.template_last_update forKey:@"template_last_update"];
     
     NSError *error = nil;
     // Save the object to persistent store
@@ -98,6 +100,7 @@
         mainDelegate.sharedSettings.fb_page_id = newSettings.fb_page_id;
         mainDelegate.sharedSettings.fb_page_token = newSettings.fb_page_token;
         mainDelegate.sharedSettings.initial_data_loaded = newSettings.initial_data_loaded;
+        mainDelegate.sharedSettings.template_last_update = newSettings.template_last_update;
     }
     
     return updateSuccessful;
@@ -216,5 +219,56 @@
     return updateSuccessful;
 }
 
+- (BOOL)updateSettingsTemplateDataUptaded:(NSDate*)lastUpdateDate;
+{
+    BOOL updateSuccessful = YES;
+    
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Settings" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    NSError *error = nil;
+    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if (error) {
+        NSLog(@"Unable to execute fetch request.");
+        NSLog(@"%@, %@", error, error.localizedDescription);
+        updateSuccessful = NO;
+    }
+    else
+    {
+        if (result.count == 0)
+        {
+            NSLog(@"No records retrieved");
+            updateSuccessful = NO;
+        }
+        else
+        {
+            // Set updated values
+            NSManagedObject *coreDataObject = (NSManagedObject *)[result objectAtIndex:0];
+            
+            [coreDataObject setValue:lastUpdateDate forKey:@"template_last_update"];
+            
+            // Save object to persistent store
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Unable to save managed object context.");
+                NSLog(@"%@, %@", error, error.localizedDescription);
+                updateSuccessful = NO;
+            }
+            else // update successful!
+            {
+                // To have access to shared arrays from AppDelegate
+                AppDelegate *mainDelegate;
+                mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                
+                mainDelegate.sharedSettings.template_last_update = lastUpdateDate;
+            }
+        }
+    }
+    
+    return updateSuccessful;
+}
 
 @end
