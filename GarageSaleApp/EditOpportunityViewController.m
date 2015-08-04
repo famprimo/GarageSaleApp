@@ -45,13 +45,6 @@
     imageProductFrame.size.height = 90;
     self.imageProduct.frame = imageProductFrame;
     
-    CGRect imageSoldFrame = self.imageSold.frame;
-    imageSoldFrame.origin.x = 15;
-    imageSoldFrame.origin.y = 94;
-    imageSoldFrame.size.width = 90;
-    imageSoldFrame.size.height = 90;
-    self.imageSold.frame = imageSoldFrame;
-    
     CGRect imageClientFrame = self.imageClient.frame;
     imageClientFrame.origin.x = 15;
     imageClientFrame.origin.y = 234;
@@ -81,15 +74,9 @@
     self.imageOwnerStatus.frame = imageOwnerStatusFrame;
 
     
-    self.imageProduct.image = [UIImage imageWithData:_relatedProduct.picture];
-    if ([_relatedProduct.status isEqualToString:@"S"])
-    {
-        self.imageSold.image = [UIImage imageNamed:@"Sold"];
-    }
-    else
-    {
-        self.imageSold.image = [UIImage imageNamed:@"Blank"];
-    }
+    // self.imageProduct.image = [UIImage imageWithData:_relatedProduct.picture];
+    self.imageProduct.image = [UIImage imageWithData:[productMethods getProductPhotoFrom:_relatedProduct]];
+    
     self.labelProductName.text = _relatedProduct.name;
     self.labelProductCurrency.text = _relatedProduct.currency;
     self.labelProductCurrency2.text = _relatedProduct.currency;
@@ -99,7 +86,8 @@
     self.textOpportunityCommision.text = [NSString stringWithFormat:@"%@", _opportunityToEdit.commision];
     self.textOpportunityNotes.text = _opportunityToEdit.notes;
     
-    self.imageClient.image = [UIImage imageWithData:_clientBuyer.picture];
+    //self.imageClient.image = [UIImage imageWithData:_clientBuyer.picture];
+    self.imageClient.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_clientBuyer]];
     
     if ([_clientBuyer.status isEqualToString:@"V"])
     {
@@ -112,7 +100,8 @@
         self.imageClientStatus.image = [UIImage imageNamed:@"Blank"];
     }
 
-    self.imageOwner.image = [UIImage imageWithData:_clientOwner.picture];
+    //self.imageOwner.image = [UIImage imageWithData:_clientOwner.picture];
+    self.imageOwner.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_clientOwner]];
     
     if ([_clientOwner.status isEqualToString:@"V"])
     {

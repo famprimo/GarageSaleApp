@@ -11,6 +11,10 @@
         <attribute name="picture_link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="preview_link" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="ClientPhotos" syncable="YES">
+        <attribute name="client_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="picture" optional="YES" attributeType="Binary" syncable="YES"/>
+    </entity>
     <entity name="Clients" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="agent_id" optional="YES" attributeType="String" syncable="YES"/>
@@ -29,7 +33,6 @@
         <attribute name="phone1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone2" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone3" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="picture" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="picture_link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="preference" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sex" optional="YES" attributeType="String" syncable="YES"/>
@@ -51,6 +54,7 @@
         <attribute name="fb_msg_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fb_photo_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parent_fb_msg_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="product_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="recipient" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
@@ -74,6 +78,10 @@
         <relationship name="client" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clients" inverseName="opportunities" inverseEntity="Clients" syncable="YES"/>
         <relationship name="product" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Products" inverseName="opportunities" inverseEntity="Products" syncable="YES"/>
     </entity>
+    <entity name="ProductPhotos" syncable="YES">
+        <attribute name="picture" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="product_id" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="Products" syncable="YES">
         <attribute name="additional_pictures" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="agent_id" optional="YES" attributeType="String" syncable="YES"/>
@@ -88,7 +96,6 @@
         <attribute name="last_promotion_time" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="picture" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="picture_link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="price" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="product_id" optional="YES" attributeType="String" syncable="YES"/>
@@ -119,11 +126,13 @@
     </entity>
     <elements>
         <element name="Attachments" positionX="-603" positionY="207" width="128" height="180"/>
-        <element name="Clients" positionX="-387" positionY="54" width="128" height="435"/>
-        <element name="Messages" positionX="-209" positionY="324" width="128" height="300"/>
+        <element name="Clients" positionX="-387" positionY="54" width="128" height="420"/>
+        <element name="Messages" positionX="-209" positionY="324" width="128" height="315"/>
         <element name="Opportunities" positionX="-569" positionY="72" width="128" height="253"/>
-        <element name="Products" positionX="-810" positionY="198" width="128" height="420"/>
+        <element name="Products" positionX="-810" positionY="198" width="128" height="405"/>
         <element name="Settings" positionX="-603" positionY="207" width="128" height="135"/>
         <element name="Templates" positionX="-209" positionY="81" width="128" height="135"/>
+        <element name="ProductPhotos" positionX="-603" positionY="207" width="128" height="75"/>
+        <element name="ClientPhotos" positionX="-594" positionY="216" width="128" height="75"/>
     </elements>
 </model>

@@ -43,9 +43,9 @@
     tempProduct.solddisabled_time = nil;
     tempProduct.fb_updated_time = nil;
     tempProduct.type = @"S";
-    tempProduct.picture_link = @"https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-xap1/v/t1.0-9/1376503_708105319218169_2045785718_n.jpg?oh=9253637c8d6b70101c67951b37c9311f&oe=5521BD25&__gda__=1429145356_7b2f69769a6ae3da56923e8260bab2c4";
-    // tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-paper-128.png"];
+    tempProduct.picture_link = @"http://jiahome.co.uk/images/thumbnails/Traditional-Hardwood-Furniture.jpg";
+    //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
+    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-paper-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"S";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140501"];
@@ -72,9 +72,9 @@
     tempProduct.solddisabled_time = nil;
     tempProduct.fb_updated_time = nil;
     tempProduct.type = @"S";
-    tempProduct.picture_link = @"https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-ash2/v/t1.0-9/529445_473861852642518_1828250631_n.jpg?oh=23fe791f1a77d614d50285707b93ee38&oe=553A9F8F&__gda__=1429866536_5dc8e85fe0171ac093af304277b9fe0c";
+    tempProduct.picture_link = @"http://images-en.busytrade.com/240073800/Urban-Furniture.jpg";
     //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-rock-128.png"];
+    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-rock-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140301"];
@@ -101,9 +101,9 @@
     tempProduct.solddisabled_time = nil;
     tempProduct.fb_updated_time = nil;
     tempProduct.type = @"S";
-    tempProduct.picture_link = @"https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-prn2/v/t1.0-9/533606_660543743974327_2061893536_n.jpg?oh=91032b496fe2c9e3ee985b3cf6417a37&oe=5521F20D&__gda__=1433366363_1618f174046b4e67b5dc406189e59fa1";
+    tempProduct.picture_link = @"http://www.weaverfurnituresales.com/images/categories/12/palisade%20amish%20furniture.jpg";
     //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-scissors-128.png"];
+    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-scissors-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140219"];
@@ -130,9 +130,9 @@
     tempProduct.solddisabled_time = nil;
     tempProduct.fb_updated_time = nil;
     tempProduct.type = @"S";
-    tempProduct.picture_link = @"https://scontent-a.xx.fbcdn.net/hphotos-prn2/v/t1.0-9/s720x720/540629_572941262734576_1798615268_n.jpg?oh=ead54861abe199b5c8e064ffd4492ef7&oe=5540E1FC";
+    tempProduct.picture_link = @"http://www.homeapplianceinfo.com/products/refrigerator/hotpoint_refrigerator/1.jpg";
     //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/left-paper-128.png"];
+    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/left-paper-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140315"];
@@ -159,9 +159,9 @@
     tempProduct.solddisabled_time = nil;
     tempProduct.fb_updated_time = nil;
     tempProduct.type = @"A";
-    tempProduct.picture_link = @"https://scontent-a.xx.fbcdn.net/hphotos-prn2/v/t1.0-9/s720x720/540629_572941262734576_1798615268_n.jpg?oh=ead54861abe199b5c8e064ffd4492ef7&oe=5540E1FC";
+    tempProduct.picture_link = @"http://www.couponsandfreebiesmom.com/wp-content/uploads/2011/01/kohls-clothes.jpg";
     //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/left-paper-128.png"];
+    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/left-paper-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20150215"];
@@ -173,7 +173,6 @@
     [self addNewProduct:tempProduct];
 
 }
-
 
 - (NSMutableArray*)getProductsFromCoreData;
 {
@@ -261,7 +260,7 @@
     [coreDataObject setValue:newProduct.fb_updated_time forKey:@"fb_updated_time"];
     [coreDataObject setValue:newProduct.type forKey:@"type"];
     [coreDataObject setValue:newProduct.picture_link forKey:@"picture_link"];
-    [coreDataObject setValue:newProduct.picture forKey:@"picture"];
+    // [coreDataObject setValue:newProduct.picture forKey:@"picture"];
     [coreDataObject setValue:newProduct.additional_pictures forKey:@"additional_pictures"];
     [coreDataObject setValue:newProduct.status forKey:@"status"];
     [coreDataObject setValue:newProduct.last_promotion_time forKey:@"last_promotion_time"];
@@ -272,18 +271,33 @@
     NSError *error = nil;
     // Save the object to persistent store
     if (![context save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        NSLog(@"Can't Save Product! %@ %@", error, [error localizedDescription]);
         updateSuccessful = NO;
     }
     else // update successful!
     {
-        // To have access to shared arrays from AppDelegate
+        // Add object to Shared Array
         AppDelegate *mainDelegate;
         mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         [mainDelegate.sharedArrayProducts addObject:newProduct];
-    }
+        
+        // Add photo to CoreData
+        NSData *picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
+        
+        NSManagedObjectContext *context = [self managedObjectContext];
+        NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"ProductPhotos" inManagedObjectContext:context];
 
+        [coreDataObject setValue:newProduct.product_id forKey:@"product_id"];
+        [coreDataObject setValue:picture forKey:@"picture"];
+        
+        NSError *error = nil;
+        // Save the object to persistent store
+        if (![context save:&error]) {
+            NSLog(@"Can't Save Product Photo! %@ %@", error, [error localizedDescription]);
+            updateSuccessful = NO;
+        }
+    }
     
     return updateSuccessful;
 }
@@ -337,7 +351,7 @@
             [coreDataObject setValue:productToUpdate.fb_updated_time forKey:@"fb_updated_time"];
             [coreDataObject setValue:productToUpdate.type forKey:@"type"];
             [coreDataObject setValue:productToUpdate.picture_link forKey:@"picture_link"];
-            [coreDataObject setValue:productToUpdate.picture forKey:@"picture"];
+            // [coreDataObject setValue:productToUpdate.picture forKey:@"picture"];
             [coreDataObject setValue:productToUpdate.additional_pictures forKey:@"additional_pictures"];
             [coreDataObject setValue:productToUpdate.status forKey:@"status"];
             [coreDataObject setValue:productToUpdate.last_promotion_time forKey:@"last_promotion_time"];
@@ -353,11 +367,10 @@
             }
             else // update successful!
             {
-                // To have access to shared arrays from AppDelegate
+                // Replace object in Shared Array
                 AppDelegate *mainDelegate;
                 mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
                 
-                // Replace object in Shared Array
                 Product *productToReview = [[Product alloc] init];
                 
                 for (int i=0; i<mainDelegate.sharedArrayProducts.count; i=i+1)
@@ -371,11 +384,87 @@
                         break;
                     }
                 }
+                
+                // Add photo to CoreData if changed 
+                if (![[coreDataObject valueForKey:@"picture_link"] isEqualToString: productToUpdate.picture_link])
+                {
+                    NSData *picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:productToUpdate.picture_link]];
+
+                    NSManagedObjectContext *context = [self managedObjectContext];
+                    NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"ProductPhotos" inManagedObjectContext:context];
+                    
+                    [coreDataObject setValue:productToUpdate.product_id forKey:@"product_id"];
+                    [coreDataObject setValue:picture forKey:@"picture"];
+                    
+                    NSError *error = nil;
+                    // Save the object to persistent store
+                    if (![context save:&error]) {
+                        NSLog(@"Can't Save Product Photo! %@ %@", error, [error localizedDescription]);
+                        updateSuccessful = NO;
+                    }
+                }
             }
         }
     }
     
     return updateSuccessful;
+}
+
+- (NSData*)getProductPhotoFrom:(Product*)productSelected;
+{
+    NSData *productPhoto;
+    BOOL fetchSuccessful = YES;
+
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ProductPhotos" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    // Create Predicate
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"product_id", productSelected.product_id];
+    [fetchRequest setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if (error) {
+        NSLog(@"Unable to execute fetch request");
+        NSLog(@"%@, %@", error, error.localizedDescription);
+        fetchSuccessful = NO;
+    }
+    else
+    {
+        if (result.count == 0)
+        {
+            NSLog(@"No records retrieved");
+            fetchSuccessful = NO;
+        }
+        else
+        {
+            NSManagedObject *coreDataObject = (NSManagedObject *)[result objectAtIndex:0];
+            
+            // Get data for picture
+            productPhoto = [coreDataObject valueForKey:@"picture"];
+        }
+    }
+    
+    if (!fetchSuccessful)
+    {
+        // Generic Picture
+        productPhoto = UIImagePNGRepresentation([UIImage imageNamed:@"GenericProduct"]);
+
+    }
+    
+    // Review if product is sold to update the picture
+    
+    if ([productSelected.status isEqualToString:@"S"])
+    {
+        UIImage *mergedImage = [self mergeImage:[UIImage imageWithData:productPhoto] withImage:[UIImage imageNamed:@"Sold"]];
+        productPhoto = UIImagePNGRepresentation(mergedImage);
+    }
+    
+    return productPhoto;
 }
 
 - (void)updateProduct:(Product*)productToUpdate withArray:(NSMutableArray*)arrayProducts;
@@ -459,7 +548,6 @@
     return productsArray;
 }
 
-
 - (NSString*)getProductIDfromFbPhotoId:(NSString*)photoFbIdToValidate;
 {
     // Review an array of Products to check if a given FB Photo ID exists
@@ -505,7 +593,8 @@
         
         if ([productToReview.product_id isEqual:productIDtoSearch])
         {
-            productImage = [UIImage imageWithData:productToReview.picture];
+            // productImage = [UIImage imageWithData:productToReview.picture];
+            productImage = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:productToReview]];
             break;
         }
     }
@@ -597,5 +686,38 @@
     return [productName stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
+
+- (UIImage*)mergeImage:(UIImage*)first withImage:(UIImage*)second
+{
+    // get size of the first image
+    CGImageRef firstImageRef = first.CGImage;
+    CGFloat firstWidth = CGImageGetWidth(firstImageRef);
+    CGFloat firstHeight = CGImageGetHeight(firstImageRef);
+    
+    // get size of the second image
+    CGImageRef secondImageRef = second.CGImage;
+    CGFloat secondWidth = CGImageGetWidth(secondImageRef);
+    CGFloat secondHeight = CGImageGetHeight(secondImageRef);
+    
+    // build merged size
+    CGFloat maxWidth = MAX(firstWidth, secondWidth);
+    CGFloat maxHeight = MAX(firstHeight, secondHeight);
+    CGSize mergedSize = CGSizeMake(MAX(firstWidth, secondWidth), MAX(firstHeight, secondHeight));
+    
+    // capture image context ref
+    UIGraphicsBeginImageContext(mergedSize);
+    
+    //Draw images onto the context
+    [first drawInRect:CGRectMake(0, 0, maxWidth, maxHeight)];
+    [second drawInRect:CGRectMake(0, 0, maxWidth, maxHeight)];
+
+    // assign context to new UIImage
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // end context
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
 
 @end

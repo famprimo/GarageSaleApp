@@ -16,7 +16,6 @@
 @property (strong, nonatomic) id detailItem;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
-@property (weak, nonatomic) IBOutlet UIImageView *imageProductSold;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductName;
 @property (weak, nonatomic) IBOutlet UILabel *labelGSCode;
 @property (weak, nonatomic) IBOutlet UILabel *labelPrice;

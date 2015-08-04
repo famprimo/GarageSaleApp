@@ -162,7 +162,8 @@
         }
         
         self.labelClientPhone.text = [NSString stringWithFormat:@"%@ %@ %@", _selectedClient.phone1, _selectedClient.phone2, _selectedClient.phone3];
-        self.imageClient.image = [UIImage imageWithData:_selectedClient.picture];
+        //self.imageClient.image = [UIImage imageWithData:_selectedClient.picture];
+        self.imageClient.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:_selectedClient]];
         self.labelOpportunitiesRelated.text = [NSString stringWithFormat:@"Oportunidades relacionadas a %@ %@:", _selectedClient.name, _selectedClient.last_name];
 
         
@@ -175,15 +176,10 @@
         
         if (_myDataMessages.count > 0)
         {
-            // Sort array to be sure new messages are on top
-            [_myDataMessages sortUsingComparator:^NSComparisonResult(id a, id b) {
-                NSDate *first = [(Message*)a datetime];
-                NSDate *second = [(Message*)b datetime];
-                return [first compare:second];
-            }];
+            // Sort messages array
+            _myDataMessages = [messageMethods sortMessagesArrayConsideringParents:_myDataMessages];
             
             // Go to last message
-            
             [self.tableMessages scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.tableMessages numberOfRowsInSection:0]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
             
             _selectedMessage = [_myDataMessages lastObject];
@@ -237,13 +233,6 @@
     imageProductFrame.size.width = 140;
     imageProductFrame.size.height = 140;
     self.imageProduct.frame = imageProductFrame;
-    
-    CGRect imageProductSoldFrame = self.imageProductSold.frame;
-    imageProductSoldFrame.origin.x = 400;
-    imageProductSoldFrame.origin.y = 400;
-    imageProductSoldFrame.size.width = 140;
-    imageProductSoldFrame.size.height = 140; //80
-    self.imageProductSold.frame = imageProductSoldFrame;
     
     CGRect imageClient2Frame = self.imageClient2.frame;
     imageClient2Frame.origin.x = 400;
@@ -306,7 +295,6 @@
         
         // Hide information related to product
         self.imageProduct.image = [UIImage imageNamed:@"Blank"];
-        self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
         self.imageClient2.image = [UIImage imageNamed:@"Blank"];
         self.imageClient2Status.image = [UIImage imageNamed:@"Blank"];
         
@@ -334,14 +322,8 @@
     }
     else
     {
-        self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
-        self.imageProduct.image = [UIImage imageWithData:_selectedProduct.picture];
-        
-        // Set sold image if product is sold
-        if ([_selectedProduct.status isEqualToString:@"S"])
-        {
-            self.imageProductSold.image = [UIImage imageNamed:@"Sold"];
-        }
+        // self.imageProduct.image = [UIImage imageWithData:_selectedProduct.picture];
+        self.imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:_selectedProduct]];
         
         self.labelProductName.text = _selectedProduct.name;
         self.labelProductGSCode.text = _selectedProduct.codeGS;
@@ -402,7 +384,8 @@
             }
             
             self.LabelProductRelated.text = @"Producto relacionado:";
-            self.imageClient2.image = [UIImage imageWithData:_relatedClient.picture];
+            //self.imageClient2.image = [UIImage imageWithData:_relatedClient.picture];
+            self.imageClient2.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_relatedClient]];
             self.labelClient2Zone.text = [NSString stringWithFormat:@"Vive en %@",_relatedClient.client_zone];
             self.labelClient2Address.text = _relatedClient.address;
             self.labelClient2Phones.text = [NSString stringWithFormat:@"%@ %@ %@", _relatedClient.phone1, _relatedClient.phone2, _relatedClient.phone3];
@@ -478,7 +461,7 @@
 {
     if ((_relatedClient.client_id == nil) || ([_client2Type isEqualToString:@"O"]))
     {
-        _templateTypeForPopover = @"C";
+        _templateTypeForPopover = @"B";
     }
     else
     {
@@ -505,7 +488,7 @@
     }
     else
     {
-        _templateTypeForPopover = @"C";
+        _templateTypeForPopover = @"B";
     }
     
     SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
@@ -826,7 +809,8 @@
         // Set client picture
         if ([myMessage.recipient isEqualToString:@"G"])
         {
-            clientImage.image = [UIImage imageWithData:_selectedClient.picture];
+            //clientImage.image = [UIImage imageWithData:_selectedClient.picture];
+            clientImage.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:_selectedClient]];
         }
         else
         {
@@ -856,7 +840,8 @@
         if ([myMessage.product_id length] > 0)
         {
             productRelatedToMessage = [productMethods getProductFromProductId:myMessage.product_id];
-            productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
+            // productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
+            productImage.image = [UIImage imageWithData:[productMethods getProductPhotoFrom:productRelatedToMessage]];
             
             // Change width of the message text if there is a product image
             messageLabelFrame.size.width = messageLabelFrame.size.width - 45;
@@ -1065,7 +1050,6 @@
         UILabel *clientName = (UILabel*)[myCell.contentView viewWithTag:3];
         UILabel *opportunityStatus = (UILabel*)[myCell.contentView viewWithTag:4];
         UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:5];
-        UIImageView *productSoldImage = (UIImageView*)[myCell.contentView viewWithTag:6];
         UIImageView *clientImage = (UIImageView*)[myCell.contentView viewWithTag:7];
         UIImageView *clientStatus = (UIImageView*)[myCell.contentView viewWithTag:8];
         
@@ -1075,13 +1059,6 @@
         productImageFrame.size.width = 40;
         productImageFrame.size.height = 40;
         productImage.frame = productImageFrame;
-        
-        CGRect productSoldImageFrame = productSoldImage.frame;
-        productSoldImageFrame.origin.x = 8;
-        productSoldImageFrame.origin.y = 24; //32
-        productSoldImageFrame.size.width = 40;
-        productSoldImageFrame.size.height = 40; //23
-        productSoldImage.frame = productSoldImageFrame;
         
         CGRect clientImageFrame = clientImage.frame;
         clientImageFrame.origin.x = 56;
@@ -1110,18 +1087,12 @@
         // Set product data
         
         productLabel.text = relatedProduct.name;
-        productImage.image = [UIImage imageWithData:relatedProduct.picture];
-        if ([relatedProduct.status isEqualToString:@"S"])
-        {
-            productSoldImage.image = [UIImage imageNamed:@"Sold"];
-        }
-        else
-        {
-            productSoldImage.image = [UIImage imageNamed:@"Blank"];
-        }
+        // productImage.image = [UIImage imageWithData:relatedProduct.picture];
+        productImage.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:relatedProduct]];
         
         // Set client data
-        clientImage.image = [UIImage imageWithData:clientRelatedToOpportunity.picture];
+        //clientImage.image = [UIImage imageWithData:clientRelatedToOpportunity.picture];
+        clientImage.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:clientRelatedToOpportunity]];
         if ([clientRelatedToOpportunity.status isEqualToString:@"V"])
         {
             clientName.text = [NSString stringWithFormat:@"    %@ %@", clientRelatedToOpportunity.name, clientRelatedToOpportunity.last_name];
@@ -1257,6 +1228,7 @@
             tempMessage.fb_from_id = newMessage[@"from"][@"id"];
             tempMessage.fb_from_name = newMessage[@"from"][@"name"];
             tempMessage.client_id = fromClientID;
+            tempMessage.parent_fb_msg_id = nil;
             tempMessage.message = newMessage[@"message"];
             
             tempMessage.fb_created_time = newMessage[@"created_time"];
@@ -1355,6 +1327,7 @@
             tempMessage.fb_from_id = newMessage[@"from"][@"id"];
             tempMessage.fb_from_name = newMessage[@"from"][@"name"];
             tempMessage.client_id = fromClientID;
+            tempMessage.parent_fb_msg_id = nil;
             tempMessage.message = newMessage[@"message"];
             
             tempMessage.fb_created_time = newMessage[@"created_time"];

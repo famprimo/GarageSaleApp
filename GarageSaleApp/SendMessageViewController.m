@@ -87,11 +87,11 @@
     
     _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:_templateType];
     _selectedTemplate = [[Template alloc] init];
-    if ([_templateType isEqualToString:@"C"])
+    if ([_templateType isEqualToString:@"B"] || [_templateType isEqualToString:@"P"])
     {
         [self.filterTabs setSelectedSegmentIndex:0];
     }
-    else
+    else if ([_templateType isEqualToString:@"O"])
     {
         [self.filterTabs setSelectedSegmentIndex:1];
     }
@@ -131,15 +131,6 @@
     imageProductFrame.size.height = 70;
     self.imageProduct.frame = imageProductFrame;
 
-    
-    CGRect imageProductSoldFrame = self.imageProductSold.frame;
-    imageProductSoldFrame.origin.x = 554;
-    imageProductSoldFrame.origin.y = 415;
-    imageProductSoldFrame.size.width = 70;
-    imageProductSoldFrame.size.height = 70;
-    self.imageProductSold.frame = imageProductSoldFrame;
-
-    
     CGRect imageClientFrame = self.imageClient.frame;
     imageClientFrame.origin.x = 262;
     imageClientFrame.origin.y = 19;
@@ -164,9 +155,12 @@
 
     // Basic information
     
+    ClientModel *clientMethods = [[ClientModel alloc] init];
+    
     if (_clientBuyer)
     {
-        self.imageBuyer.image = [UIImage imageWithData:_clientBuyer.picture];
+        //self.imageBuyer.image = [UIImage imageWithData:_clientBuyer.picture];
+        self.imageBuyer.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_clientBuyer]];
         if ([_clientBuyer.status isEqualToString:@"V"])
         {
             self.labelBuyerName.text = [NSString stringWithFormat:@"    %@ %@", _clientBuyer.name, _clientBuyer.last_name];
@@ -187,7 +181,8 @@
     
     if (_clientOwner)
     {
-        self.imageOwner.image = [UIImage imageWithData:_clientOwner.picture];
+        //self.imageOwner.image = [UIImage imageWithData:_clientOwner.picture];
+        self.imageOwner.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_clientOwner]];
         if ([_clientOwner.status isEqualToString:@"V"])
         {
             self.labelOwnerName.text = [NSString stringWithFormat:@"    %@ %@", _clientOwner.name, _clientOwner.last_name];
@@ -209,15 +204,9 @@
 
     if (_relatedProduct)
     {
-        self.imageProduct.image = [UIImage imageWithData:_relatedProduct.picture];
-        if ([_relatedProduct.status isEqualToString:@"S"])
-        {
-            self.imageProductSold.image = [UIImage imageNamed:@"Sold"];
-        }
-        else
-        {
-            self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
-        }
+        // self.imageProduct.image = [UIImage imageWithData:_relatedProduct.picture];
+        self.imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:_relatedProduct]];
+        
         self.labelProductName.text = _relatedProduct.name;
         self.labelProductDesc.text = _relatedProduct.desc;
         
@@ -225,7 +214,6 @@
     else
     {
         self.imageProduct.image = [UIImage imageNamed:@"Blank"];
-        self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
         self.labelProductName.text = @"";
         self.labelProductDesc.text = @"";
         self.buttonPostInPhoto.hidden = YES;
@@ -234,9 +222,10 @@
     
     // Client (recipient) information
 
-    if ([_templateType isEqualToString:@"C"])
+    if ([_templateType isEqualToString:@"B"])
     {
-        self.imageClient.image = [UIImage imageWithData:_clientBuyer.picture];
+        //self.imageClient.image = [UIImage imageWithData:_clientBuyer.picture];
+        self.imageClient.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_clientBuyer]];
 
         if ([_clientBuyer.status isEqualToString:@"V"])
         {
@@ -249,9 +238,10 @@
             self.imageClientStatus.image = [UIImage imageNamed:@"Blank"];
         }
     }
-    else // "O"
+    else if ([_templateType isEqualToString:@"O"])
     {
-        self.imageClient.image = [UIImage imageWithData:_clientOwner.picture];
+        //self.imageClient.image = [UIImage imageWithData:_clientOwner.picture];
+        self.imageClient.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_clientOwner]];
         
         if ([_clientOwner.status isEqualToString:@"V"])
         {
@@ -281,7 +271,7 @@
 {
     if (self.filterTabs.selectedSegmentIndex == 0) // Compradores
     {
-        _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:@"C"];
+        _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:@"B"];
         _selectedTemplate = [[Template alloc] init];
     }
     else if (self.filterTabs.selectedSegmentIndex == 1) // Duenos
@@ -298,16 +288,16 @@
 {
     NSString *pageMessageID;
     
-    if ([_templateType isEqualToString:@"C"])
+    if ([_templateType isEqualToString:@"B"])
     {
         pageMessageID = _clientBuyer.fb_page_message_id;
     }
-    else // "O"
+    else if ([_templateType isEqualToString:@"O"]) 
     {
         pageMessageID = _clientOwner.fb_page_message_id;
     }
     
-    if (_selectedTemplate && ![pageMessageID isEqualToString:@""])
+    if (![self.labelTemplateText.text isEqualToString:@""] && ![pageMessageID isEqualToString:@""])
     {
         // Send messages via Facabook
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
@@ -337,7 +327,7 @@
 
 - (IBAction)postInPhoto:(id)sender
 {
-    if (_selectedTemplate)
+    if (![self.labelTemplateText.text isEqualToString:@""])
     {
         // Post message on Photo via Facabook
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];

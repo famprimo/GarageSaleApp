@@ -46,10 +46,6 @@
                                 <rect key="frame" x="15" y="90" width="180" height="180"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="wBJ-Gw-ik7">
-                                <rect key="frame" x="15" y="90" width="180" height="180"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Product name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="F9n-Oq-xko">
                                 <rect key="frame" x="15" y="25" width="692" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -136,18 +132,29 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="showPopoverSendMessageOwner:" destination="meX-J6-suy" eventType="touchUpInside" id="xlc-80-gaN"/>
+                                    <action selector="sendMessageOwner:" destination="meX-J6-suy" eventType="touchUpInside" id="crO-gp-U0z"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cYj-9j-NH4">
-                                <rect key="frame" x="590" y="717" width="100" height="44"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="pBP-kk-jnG">
+                                <rect key="frame" x="16" y="717" width="100" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Contactar">
+                                <state key="normal" title="Revisar">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="showPopoverSendMessageBuyer:" destination="N2Q-Bn-qGB" eventType="touchUpInside" id="qy0-Zi-3Ii"/>
+                                    <action selector="reviewNewMessages:" destination="meX-J6-suy" eventType="touchUpInside" id="eSD-vP-7Hn"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cRu-vA-3SC">
+                                <rect key="frame" x="295" y="717" width="100" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Responder">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="replyMessage:" destination="meX-J6-suy" eventType="touchUpInside" id="uQQ-On-IOf"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publicado por:" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wwg-vr-7Mg">
@@ -204,7 +211,7 @@
                                 </prototypes>
                             </tableView>
                             <tableView clipsSubviews="YES" tag="2" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" id="EGd-8a-IcV">
-                                <rect key="frame" x="16" y="339" width="379" height="422"/>
+                                <rect key="frame" x="16" y="339" width="379" height="370"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -325,6 +332,17 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cYj-9j-NH4">
+                                <rect key="frame" x="590" y="717" width="100" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Contactar">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendMessageBuyer:" destination="meX-J6-suy" eventType="touchUpInside" id="SE5-Eg-e8c"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -335,11 +353,12 @@
                         <outlet property="buttonMessageToOwner" destination="gJv-u8-Zbp" id="Ueu-cC-AmB"/>
                         <outlet property="buttonNewOpportunity" destination="fxE-Pb-qjN" id="6rg-n2-ul4"/>
                         <outlet property="buttonRelateToOwner" destination="YQq-9z-Yx1" id="Ybs-iC-3bM"/>
+                        <outlet property="buttonReply" destination="cRu-vA-3SC" id="M7e-5O-Cvq"/>
+                        <outlet property="buttonReviewNewMessages" destination="pBP-kk-jnG" id="eeZ-W5-YFT"/>
                         <outlet property="buttonSeeInFacebook" destination="Axd-jR-aC9" id="BCS-Lg-pvM"/>
                         <outlet property="imageOwner" destination="lac-hA-FyM" id="dGr-yd-BPP"/>
                         <outlet property="imageOwnerStatus" destination="IqX-1T-Y3f" id="pXW-ak-akW"/>
                         <outlet property="imageProduct" destination="fLz-CD-1Sa" id="Cgx-1N-3uF"/>
-                        <outlet property="imageProductSold" destination="wBJ-Gw-ik7" id="ebL-lc-b2G"/>
                         <outlet property="labelCreationDate" destination="tWQ-ny-gyM" id="fbd-Dg-0k0"/>
                         <outlet property="labelDescription" destination="sYT-Yz-S8P" id="e7W-Vg-FEM"/>
                         <outlet property="labelGSCode" destination="pap-Cx-Qvg" id="HRL-w2-GSk"/>
@@ -393,10 +412,6 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" tag="3" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="ccQ-Sp-drc">
-                                                    <rect key="frame" x="20" y="5" width="40" height="40"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                </imageView>
-                                                <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" tag="4" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Wz7-JU-BJ0">
                                                     <rect key="frame" x="20" y="5" width="40" height="40"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
@@ -665,10 +680,6 @@
                                 <rect key="frame" x="400" y="400" width="140" height="140"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="GSk-Pj-8Bo">
-                                <rect key="frame" x="400" y="400" width="140" height="140"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Qfq-tp-BSj">
                                 <rect key="frame" x="400" y="600" width="70" height="70"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -822,10 +833,6 @@
                                                     <rect key="frame" x="101" y="25" width="10" height="10"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
-                                                <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" tag="6" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="AbH-Gr-sjZ">
-                                                    <rect key="frame" x="7" y="31" width="40" height="23"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dRe-xg-6Ya">
                                                     <rect key="frame" x="101" y="42" width="189" height="29"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -915,7 +922,6 @@
                         <outlet property="imageClient2Status" destination="ktX-fp-6cf" id="PEn-aZ-oUM"/>
                         <outlet property="imageClientStatus" destination="JVY-x7-INq" id="drN-FN-Lb7"/>
                         <outlet property="imageProduct" destination="mJe-uh-jjh" id="eG3-4a-cql"/>
-                        <outlet property="imageProductSold" destination="GSk-Pj-8Bo" id="35v-KB-YAd"/>
                         <outlet property="labelClient2Address" destination="ez3-8U-02T" id="1lx-HH-v0X"/>
                         <outlet property="labelClient2Name" destination="ueK-9S-3Q1" id="YzF-g8-m2C"/>
                         <outlet property="labelClient2Phones" destination="W6P-vL-eeK" id="1Cb-UK-bqf"/>
@@ -1521,10 +1527,6 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="uBN-wA-i7u">
-                                <rect key="frame" x="31" y="128" width="140" height="140"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Precio" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="y3T-zD-cQV">
                                 <rect key="frame" x="248" y="90" width="141" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1627,7 +1629,6 @@
                         <outlet property="imageOwner" destination="ZKt-nA-IhJ" id="VcZ-xs-nTa"/>
                         <outlet property="imageOwnerStatus" destination="HqL-L3-dqv" id="AHt-LD-OW1"/>
                         <outlet property="imageProduct" destination="ln9-CD-5TJ" id="h5l-Td-PXR"/>
-                        <outlet property="imageProductSold" destination="uBN-wA-i7u" id="fqz-PL-HRa"/>
                         <outlet property="labelBuyerAddress" destination="E4h-hZ-3zH" id="cmP-Dz-MCf"/>
                         <outlet property="labelBuyerIntro" destination="lKW-30-G3v" id="Nrr-wm-ngi"/>
                         <outlet property="labelBuyerName" destination="U8e-vo-mcC" id="MTm-mg-2q4"/>
@@ -1696,10 +1697,6 @@
                                         </imageView>
                                         <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" tag="8" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="MvI-dD-14U">
                                             <rect key="frame" x="101" y="25" width="10" height="10"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        </imageView>
-                                        <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" tag="6" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Ejv-qp-MSl">
-                                            <rect key="frame" x="7" y="31" width="40" height="23"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EZj-Or-Cdo">
@@ -1877,10 +1874,6 @@
                                         </label>
                                         <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="gzC-mu-5Cp">
                                             <rect key="frame" x="2" y="5" width="10" height="10"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </imageView>
-                                        <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" tag="3" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="ftk-IP-fdW">
-                                            <rect key="frame" x="15" y="5" width="70" height="70"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="6" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GS code" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ix0-lf-Mbg">

@@ -46,7 +46,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelProductPrice;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductGSCode;
 @property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
-@property (weak, nonatomic) IBOutlet UIImageView *imageProductSold;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductDetails;
 
 @property (weak, nonatomic) IBOutlet UILabel *labelProductReference;

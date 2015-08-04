@@ -17,7 +17,6 @@
                 <outlet property="imageOwner" destination="F8d-FP-EeN" id="q2O-ux-Lxb"/>
                 <outlet property="imageOwnerStatus" destination="SQa-BD-S6m" id="9hY-g4-PMh"/>
                 <outlet property="imageProduct" destination="00V-Z8-Cif" id="sVn-vr-bzy"/>
-                <outlet property="imageProductSold" destination="D8J-j9-tl0" id="Kfe-FD-qvg"/>
                 <outlet property="labelBuyerName" destination="t5S-hL-yuj" id="9pi-WM-Swg"/>
                 <outlet property="labelClientName" destination="VhM-1M-UXz" id="Skm-8u-nhC"/>
                 <outlet property="labelOwnerName" destination="7ps-la-j76" id="52E-oj-clu"/>
@@ -132,9 +131,6 @@
                 </label>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SQa-BD-S6m">
                     <rect key="frame" x="360" y="460" width="10" height="10"/>
-                </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D8J-j9-tl0">
-                    <rect key="frame" x="554" y="415" width="70" height="70"/>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jEa-GS-R98">
                     <rect key="frame" x="639" y="17" width="141" height="44"/>

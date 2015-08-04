@@ -23,7 +23,6 @@
 
 @property (strong, nonatomic) IBOutlet UIButton *buttonCreateOpportunity;
 @property (strong, nonatomic) IBOutlet UIImageView *imageProduct;
-@property (strong, nonatomic) IBOutlet UIImageView *imageSold;
 @property (strong, nonatomic) IBOutlet UIImageView *imageClient;
 @property (strong, nonatomic) IBOutlet UIImageView *imageClientStatus;
 @property (strong, nonatomic) IBOutlet UILabel *labelProductName;

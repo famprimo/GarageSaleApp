@@ -38,7 +38,8 @@
     picBackgroundFrame.size.height = 310;
     self.picBackground.frame = picBackgroundFrame;
 
-    self.imageProduct.image = [UIImage imageWithData:_productToEdit.picture];
+    // self.imageProduct.image = [UIImage imageWithData:_productToEdit.picture];
+    self.imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:_productToEdit]];
 
     self.textName.text = _productToEdit.name;
     self.textGScode.text = _productToEdit.codeGS;

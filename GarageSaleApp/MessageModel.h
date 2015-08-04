@@ -26,5 +26,6 @@
 - (Message*)getMessageFromMessageId:(NSString*)messageIDtoSearch;
 - (int)numberOfMessagesNotReplied; // Method that returns the total number of messages not replied yet
 - (BOOL)updateMessage:(Message*)messageToUpdate; // Update a message
+- (NSMutableArray*)sortMessagesArrayConsideringParents:(NSMutableArray*)messagesArray; // Order an array of messages considering parent messages
 
 @end

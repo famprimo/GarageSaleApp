@@ -24,10 +24,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *buttonNewOpportunity;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRelateToOwner;
 @property (weak, nonatomic) IBOutlet UIButton *buttonMessageToBuyer;
-
+@property (weak, nonatomic) IBOutlet UIButton *buttonReply;
+@property (weak, nonatomic) IBOutlet UIButton *buttonReviewNewMessages;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
-@property (weak, nonatomic) IBOutlet UIImageView *imageProductSold;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductName;
 @property (weak, nonatomic) IBOutlet UILabel *labelGSCode;
 @property (weak, nonatomic) IBOutlet UILabel *labelPrice;
@@ -48,12 +48,13 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableMessages;
 @property (weak, nonatomic) IBOutlet UITableView *tableOpportunities;
 
+/*
 -(IBAction)relateToClient:(id)sender;
 -(IBAction)showPopoverClientPicker:(id)sender;
 -(IBAction)showPopoverSendMessageBuyer:(id)sender;
 -(IBAction)showPopoverSendMessageOwner:(id)sender;
 -(IBAction)CreateOpportunity:(id)sender;
 //-(IBAction)newOpportunity:(id)sender;
-
+*/
 
 @end

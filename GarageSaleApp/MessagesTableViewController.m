@@ -335,7 +335,8 @@
 
     
     // Client image, name and status
-    clientImage.image = [UIImage imageWithData:myClient.picture];
+    //clientImage.image = [UIImage imageWithData:myClient.picture];
+    clientImage.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:myClient]];
     clientImage.layer.cornerRadius = clientImage.frame.size.width / 2;
     clientImage.clipsToBounds = YES;
 
@@ -388,7 +389,8 @@
         {
             productImage.hidden = NO;
             productRelatedToMessage = [productMethods getProductFromProductId:lastMessageFromClient.product_id];
-            productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
+            // productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
+            productImage.image = [UIImage imageWithData:[productMethods getProductPhotoFrom:productRelatedToMessage]];
             messageLabelFrame.origin.x = 96;
             messageLabelFrame.size.width = 212;
             messageLabel.frame = messageLabelFrame;
@@ -646,7 +648,7 @@
                          newProduct.fb_updated_time = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
                          
                          newProduct.picture_link = result[photosArray[i]][@"picture"];
-                         newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
+                         // newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
                          newProduct.additional_pictures = @"";
                          newProduct.status = @"N";
                          newProduct.promotion_piority = @"2";
@@ -678,6 +680,7 @@
                              tempMessage.fb_msg_id = newMessage[@"id"];
                              tempMessage.fb_from_id = newMessage[@"from"][@"id"];
                              tempMessage.fb_from_name = newMessage[@"from"][@"name"];
+                             tempMessage.parent_fb_msg_id = nil;
                              tempMessage.message = newMessage[@"message"];
                              
                              tempMessage.fb_created_time = newMessage[@"created_time"];
@@ -858,6 +861,7 @@
             tempMessage.fb_msg_id = newMessage[@"id"];
             tempMessage.fb_from_id = newMessage[@"from"][@"id"];
             tempMessage.fb_from_name = newMessage[@"from"][@"name"];
+            tempMessage.parent_fb_msg_id = tmpMessageID;
             tempMessage.message = newMessage[@"message"];
             
             tempMessage.fb_created_time = newMessage[@"created_time"];
@@ -1147,6 +1151,7 @@
             tempMessage.fb_from_id = newMessage[@"from"][@"id"];
             tempMessage.fb_from_name = newMessage[@"from"][@"name"];
             tempMessage.client_id = fromClientID;
+            tempMessage.parent_fb_msg_id = nil;
             tempMessage.message = newMessage[@"message"];
             
             tempMessage.fb_created_time = newMessage[@"created_time"];
@@ -1403,6 +1408,7 @@
             tempMessage.fb_from_id = newMessage[@"from"][@"id"];
             tempMessage.fb_from_name = newMessage[@"from"][@"name"];
             tempMessage.client_id = fromClientID;
+            tempMessage.parent_fb_msg_id = nil;
             tempMessage.message = newMessage[@"message"];
             
             tempMessage.fb_created_time = newMessage[@"created_time"];
@@ -1488,7 +1494,7 @@
                     newClient.sex = @"F";
                 }
                 newClient.picture_link = result[@"picture"][@"data"][@"url"];
-                newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
+                //newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
                 
                 [clientMethods updateClient:newClient];
                 //[clientMethods addNewClient:newClient];

@@ -232,14 +232,14 @@
     // Get references to images and labels of cell
     UIImageView *markImage = (UIImageView*)[myCell.contentView viewWithTag:1];
     UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:2];
-    UIImageView *soldImage = (UIImageView*)[myCell.contentView viewWithTag:3];
     UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:4];
     UILabel *priceLabel = (UILabel*)[myCell.contentView viewWithTag:5];
     UILabel *codeLabel = (UILabel*)[myCell.contentView viewWithTag:6];
     UILabel *dateLabel = (UILabel*)[myCell.contentView viewWithTag:7];
     
     // Set table cell labels to listing data
-    productImage.image = [UIImage imageWithData:myProduct.picture];
+    // productImage.image = [UIImage imageWithData:myProduct.picture];
+    productImage.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:myProduct]];
     nameLabel.text = myProduct.name;
     codeLabel.text = myProduct.codeGS;
     dateLabel.text = [myProduct.created_time formattedAsTimeAgo];
@@ -256,22 +256,14 @@
     if ([myProduct.status isEqualToString:@"N"])
     {
         markImage.image = [UIImage imageNamed:@"BlueDot"];
-        soldImage.image = [UIImage imageNamed:@"Blank"];
-    }
-    else if ([myProduct.status isEqualToString:@"S"])
-    {
-        markImage.image = [UIImage imageNamed:@"Blank"];
-        soldImage.image = [UIImage imageNamed:@"Sold"];
     }
     else if ([myProduct.status isEqualToString:@"D"])
     {
         markImage.image = [UIImage imageNamed:@"Denied"];
-        soldImage.image = [UIImage imageNamed:@"Blank"];
     }
     else
     {
         markImage.image = [UIImage imageNamed:@"Blank"];
-        soldImage.image = [UIImage imageNamed:@"Blank"];
     }
     
     return myCell;
@@ -440,7 +432,7 @@
             newProduct.fb_updated_time = [formatFBdates dateFromString:photosArray[i][@"updated_time"]];
             
             newProduct.picture_link = photosArray[i][@"picture"];
-            newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
+            // newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
             newProduct.additional_pictures = @"";
             newProduct.status = @"N";
             newProduct.promotion_piority = @"2";

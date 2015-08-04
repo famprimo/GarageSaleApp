@@ -133,13 +133,6 @@
         productImageFrame.size.width = 180;
         productImageFrame.size.height = 180;
         self.imageProduct.frame = productImageFrame;
-
-        CGRect soldImageFrame = self.imageProductSold.frame;
-        soldImageFrame.origin.x = 15;
-        soldImageFrame.origin.y = 90; //124
-        soldImageFrame.size.width = 180;
-        soldImageFrame.size.height = 180; // 111
-        self.imageProductSold.frame = soldImageFrame;
         
         CGRect imageOwnerFrame = self.imageOwner.frame;
         imageOwnerFrame.origin.x = 410;
@@ -192,7 +185,9 @@
 
 
         // Set data
-        self.imageProduct.image = [UIImage imageWithData:productSelected.picture];
+        // self.imageProduct.image = [UIImage imageWithData:productSelected.picture];
+        self.imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:productSelected]];
+        
         self.labelProductName.text = productSelected.name;
         if ([productSelected.type isEqualToString:@"S"])
         {
@@ -233,19 +228,11 @@
         {   labelNotesFrame.size.height = 60;
             self.labelNotes.frame = labelNotesFrame; }
 
-        // Set sold image depending on product status
-        self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
-        if ([productSelected.status isEqualToString:@"S"])
-        {
-            self.imageProductSold.image = [UIImage imageNamed:@"Sold"];
-        }
-
         // Make owners picture rounded
         self.imageOwner.layer.cornerRadius = self.imageOwner.frame.size.width / 2;
         self.imageOwner.clipsToBounds = YES;
         
         self.buttonSeeInFacebook.imageView.image = [[UIImage imageNamed:@"Facebook"] makeThumbnailOfSize:CGSizeMake(40, 40)];
-
         
         // Set data for owner if assigned
         
@@ -254,7 +241,8 @@
             Client *ownerForProduct = [clientMethods getClientFromClientId:productSelected.client_id];
             
             self.labelPublishedAgo.text = @"Publicado por:";
-            self.imageOwner.image = [UIImage imageWithData:ownerForProduct.picture];
+            //self.imageOwner.image = [UIImage imageWithData:ownerForProduct.picture];
+            self.imageOwner.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:ownerForProduct]];
             self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",ownerForProduct.client_zone];
             self.labelOwnerPhones.text = ownerForProduct.phone1;
             
@@ -304,18 +292,14 @@
         
         // Load messsages related to the product
         _myDataMessages = [messageMethods getMessagesArrayForProduct:productSelected.product_id];
-        [self.tableMessages reloadData];
         
         _selectedMessage = [[Message alloc] init];
         
         if (_myDataMessages.count > 0)
         {
-            // Sort array to be sure new messages are on top
-            [_myDataMessages sortUsingComparator:^NSComparisonResult(id a, id b) {
-                NSDate *first = [(Message*)a datetime];
-                NSDate *second = [(Message*)b datetime];
-                return [first compare:second];
-            }];
+            _myDataMessages = [messageMethods sortMessagesArrayConsideringParents:_myDataMessages];
+         
+            [self.tableMessages reloadData];
             
             int lastRowNumber = [self.tableMessages numberOfRowsInSection:0] - 1;
             NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRowNumber inSection:0];
@@ -323,22 +307,26 @@
             
             _selectedMessage = [_myDataMessages lastObject];
         }
-
+        else
+        {
+            [self.tableMessages reloadData];
+        }
+        
         // Get opportunitie related to product
         _myDataOpportunities = [opportunityMethods getOpportunitiesFromProduct:productSelected.product_id];
         
-        // Sort array to be sure new opportunities are on top
-        [_myDataOpportunities sortUsingComparator:^NSComparisonResult(id a, id b) {
-            NSDate *first = [(Opportunity*)a created_time];
-            NSDate *second = [(Opportunity*)b created_time];
-            return [second compare:first];
-            //return [first compare:second];
-        }];
-
+        if (_myDataOpportunities.count > 0)
+        {
+            // Sort array to be sure new opportunities are on top
+            [_myDataOpportunities sortUsingComparator:^NSComparisonResult(id a, id b) {
+                NSDate *first = [(Opportunity*)a created_time];
+                NSDate *second = [(Opportunity*)b created_time];
+                return [second compare:first];
+            }];
+        }
         [self.tableOpportunities reloadData];
-        
-        self.buttonMessageToBuyer.enabled = NO;
 
+        self.buttonMessageToBuyer.enabled = NO;
     }
 }
 
@@ -381,8 +369,16 @@
     
     [_refreshControl endRefreshing];
     
-    [self.tableMessages reloadData];
+    // Sort array to be sure new messages are on top
+    _myDataMessages = [[[MessageModel alloc] init] sortMessagesArrayConsideringParents:_myDataMessages];
     
+    // Reload table
+    [UIView transitionWithView:self.tableMessages
+                      duration:0.5f
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^(void) {
+                        [self.tableMessages reloadData];
+                    } completion:NULL];
 }
 
 -(IBAction)relateToClient:(id)sender;
@@ -402,59 +398,9 @@
     
 }
 
--(IBAction)showPopoverClientPicker:(id)sender;
+- (IBAction)replyMessage:(id)sender
 {
-    ClientPickerViewController *clientPickerController = [[ClientPickerViewController alloc] initWithNibName:@"ClientPickerViewController" bundle:nil];
-    clientPickerController.delegate = self;
-    
-    self.clientPickerPopover = [[UIPopoverController alloc] initWithContentViewController:clientPickerController];
-    self.clientPickerPopover.popoverContentSize = CGSizeMake(350.0, 400.0);
-    [self.clientPickerPopover presentPopoverFromRect:[(UIButton *)sender frame]
-                                              inView:self.view
-                            permittedArrowDirections:UIPopoverArrowDirectionAny
-                                            animated:YES];
-}
-
--(void)clientSelectedfromClientPicker:(NSString *)clientIDSelected;
-{
-    // Dismiss the popover view
-    [self.clientPickerPopover dismissPopoverAnimated:YES];
-    
-    if ([_clientPickerOrigin isEqualToString:@"RELATE"])
-    {
-        // Update the product with the client selected (owner)
-        Product *productSelected = [[Product alloc] init];
-        productSelected = (Product *)_detailItem;
-        
-        productSelected.client_id = clientIDSelected;
-        
-        ProductModel *productMethods = [[ProductModel alloc] init];
-        [productMethods updateProduct:productSelected];
-
-    }
-    else if ([_clientPickerOrigin isEqualToString:@"NEW OPP"])
-    {
-        
-        _buyerSelected = clientIDSelected;
-        
-        NewOpportunityViewController *createOpportunityController = [[NewOpportunityViewController alloc] initWithNibName:@"NewOpportunityViewController" bundle:nil];
-        createOpportunityController.delegate = self;
-        
-        
-        self.createOpportunityPopover = [[UIPopoverController alloc] initWithContentViewController:createOpportunityController];
-        self.createOpportunityPopover.popoverContentSize = CGSizeMake(500.0, 300.0);
-        [self.createOpportunityPopover presentPopoverFromRect:[(UIButton *)_buttonOrigin frame]
-                                                       inView:self.view
-                                     permittedArrowDirections:UIPopoverArrowDirectionAny
-                                                     animated:YES];
-    }
-    
-    [self configureView];
-}
-
--(IBAction)showPopoverSendMessageBuyer:(id)sender;
-{
-    _templateTypeForPopover = @"C";
+    _templateTypeForPopover = @"P";
     
     SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
     sendMessageController.delegate = self;
@@ -468,7 +414,48 @@
                                            animated:YES];
 }
 
--(IBAction)showPopoverSendMessageOwner:(id)sender;
+- (IBAction)reviewNewMessages:(id)sender
+{
+    Product *productSelected = [[Product alloc] init];
+    productSelected = (Product *)_detailItem;
+    
+    NSString *url = [NSString stringWithFormat:@"%@/comments", productSelected.fb_photo_id];
+    
+    [self getFBPhotoComments:url forProduct:productSelected];
+    
+    [self.tableMessages reloadData];
+}
+
+-(IBAction)showPopoverClientPicker:(id)sender;
+{
+    ClientPickerViewController *clientPickerController = [[ClientPickerViewController alloc] initWithNibName:@"ClientPickerViewController" bundle:nil];
+    clientPickerController.delegate = self;
+    
+    self.clientPickerPopover = [[UIPopoverController alloc] initWithContentViewController:clientPickerController];
+    self.clientPickerPopover.popoverContentSize = CGSizeMake(350.0, 400.0);
+    [self.clientPickerPopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                              inView:self.view
+                            permittedArrowDirections:UIPopoverArrowDirectionAny
+                                            animated:YES];
+}
+
+- (IBAction)sendMessageBuyer:(id)sender
+{
+    _templateTypeForPopover = @"B";
+    
+    SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
+    sendMessageController.delegate = self;
+    
+    
+    self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(800.0, 500.0);
+    [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                             inView:self.view
+                           permittedArrowDirections:UIPopoverArrowDirectionAny
+                                           animated:YES];
+}
+
+- (IBAction)sendMessageOwner:(id)sender
 {
     _templateTypeForPopover = @"O";
     
@@ -505,6 +492,46 @@
     productSelected = (Product *)_detailItem;
     
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:productSelected.fb_link]];
+}
+
+
+#pragma mark - Delegate methods for ClientPicker
+
+-(void)clientSelectedfromClientPicker:(NSString *)clientIDSelected;
+{
+    // Dismiss the popover view
+    [self.clientPickerPopover dismissPopoverAnimated:YES];
+    
+    if ([_clientPickerOrigin isEqualToString:@"RELATE"])
+    {
+        // Update the product with the client selected (owner)
+        Product *productSelected = [[Product alloc] init];
+        productSelected = (Product *)_detailItem;
+        
+        productSelected.client_id = clientIDSelected;
+        
+        ProductModel *productMethods = [[ProductModel alloc] init];
+        [productMethods updateProduct:productSelected];
+        
+    }
+    else if ([_clientPickerOrigin isEqualToString:@"NEW OPP"])
+    {
+        
+        _buyerSelected = clientIDSelected;
+        
+        NewOpportunityViewController *createOpportunityController = [[NewOpportunityViewController alloc] initWithNibName:@"NewOpportunityViewController" bundle:nil];
+        createOpportunityController.delegate = self;
+        
+        
+        self.createOpportunityPopover = [[UIPopoverController alloc] initWithContentViewController:createOpportunityController];
+        self.createOpportunityPopover.popoverContentSize = CGSizeMake(500.0, 300.0);
+        [self.createOpportunityPopover presentPopoverFromRect:[(UIButton *)_buttonOrigin frame]
+                                                       inView:self.view
+                                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                                     animated:YES];
+    }
+    
+    [self configureView];
 }
 
 
@@ -567,8 +594,28 @@
 
 -(NSString*)getBuyerIdFromMessage;
 {
-    
-    return _selectedOpportunity.client_id;
+    if ([_templateTypeForPopover isEqualToString:@"P"])
+    {
+        if (_selectedMessage || [_selectedMessage.recipient isEqualToString:@"G"])
+        {
+            return _selectedMessage.client_id;
+        }
+        else
+        {
+            return @"";
+        }
+    }
+    else
+    {
+        if (_selectedOpportunity)
+        {
+            return _selectedOpportunity.client_id;
+        }
+        else
+        {
+            return @"";
+        }
+    }
 }
 
 -(NSString*)getOwnerIdFromMessage;
@@ -589,13 +636,13 @@
 
 -(NSString*)getMessageIdFromMessage;
 {
-    if (_selectedMessage.fb_msg_id == nil)
+    if (_selectedMessage.fb_msg_id)
     {
-        return @"";
+        return _selectedMessage.fb_msg_id;
     }
     else
     {
-        return _selectedMessage.fb_msg_id;
+        return @"";
     }
 }
 
@@ -667,7 +714,8 @@
         // Set client picture
         if ([myMessage.recipient isEqualToString:@"G"])
         {
-            clientImage.image = [UIImage imageWithData:clientFrom.picture];
+            //clientImage.image = [UIImage imageWithData:clientFrom.picture];
+            clientImage.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:clientFrom]];
         }
         else
         {
@@ -828,7 +876,8 @@
         Client *clientRelatedToOpportunity = [[[ClientModel alloc] init] getClientFromClientId:myOpportunity.client_id];
         
         // Set client data
-        clientImage.image = [UIImage imageWithData:clientRelatedToOpportunity.picture];
+        //clientImage.image = [UIImage imageWithData:clientRelatedToOpportunity.picture];
+        clientImage.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:clientRelatedToOpportunity]];
         if ([clientRelatedToOpportunity.status isEqualToString:@"V"])
         {
             clientName.text = [NSString stringWithFormat:@"    %@ %@", clientRelatedToOpportunity.name, clientRelatedToOpportunity.last_name];
@@ -945,6 +994,7 @@
             tempMessage.fb_msg_id = newMessage[@"id"];
             tempMessage.fb_from_id = newMessage[@"from"][@"id"];
             tempMessage.fb_from_name = newMessage[@"from"][@"name"];
+            tempMessage.parent_fb_msg_id = nil;
             tempMessage.message = newMessage[@"message"];
             
             tempMessage.fb_created_time = newMessage[@"created_time"];
@@ -1104,6 +1154,7 @@
             tempMessage.fb_msg_id = newMessage[@"id"];
             tempMessage.fb_from_id = newMessage[@"from"][@"id"];
             tempMessage.fb_from_name = newMessage[@"from"][@"name"];
+            tempMessage.parent_fb_msg_id = tmpMessageID;
             tempMessage.message = newMessage[@"message"];
             
             tempMessage.fb_created_time = newMessage[@"created_time"];
@@ -1192,18 +1243,6 @@
         newClient = [[Client alloc] init];
         newClient = (Client *)newClientsArray[i];
         
-        /*
-        if ([newClient.fb_client_id isEqualToString:_tmpSettings.fb_user_id] || [newClient.fb_client_id isEqualToString:_tmpSettings.fb_page_id]) {
-            // Garage Sale
-            
-            newClient.name = @"Garage";
-            newClient.last_name = @"Sale";
-            newClient.sex = @"F";
-            newClient.picture_link = @"";
-            newClient.picture = [NSData dataWithContentsOfFile:@"Garage Sale"];
-
-        }
-        */
         
         requestClientDetails = [[NSMutableString alloc] init];
         [requestClientDetails appendString:newClient.fb_client_id];
@@ -1211,39 +1250,44 @@
         
         NSLog(@"%@ - %@: %@", newClient.fb_client_id, newClient.name, requestClientDetails);
         
-        // Make FB request
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:requestClientDetails
-                                                                       parameters:nil];
-        
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+        if (![newClient.fb_client_id isEqualToString:_tmpSettings.fb_user_id] && ![newClient.fb_client_id isEqualToString:_tmpSettings.fb_page_id])
         {
-            if (!error) { // FB request was a success!
-                
-                newClient.name = result[@"first_name"];
-                newClient.last_name = result[@"last_name"];
-                if ([result[@"gender"] isEqualToString:@"male"])
-                {
-                    newClient.sex = @"M";
-                }
-                else
-                {
-                    newClient.sex = @"F";
-                }
-                newClient.picture_link = result[@"picture"][@"data"][@"url"];
-                newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
-                
-                [clientMethods updateClient:newClient];
-                
-                // Reload table to include new client details
-                [self.tableMessages reloadData];
-                
-            }
-            else {
-                // An error occurred, we need to handle the error
-                // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                NSLog(@"error makeFBRequestForClientsDetails: %@", error.description);
-            }
-        }];
+            // It's not Garage Sale!
+            
+            // Make FB request
+            FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:requestClientDetails
+                                                                           parameters:nil];
+            
+            [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+             {
+                 if (!error) { // FB request was a success!
+                     
+                     newClient.name = result[@"first_name"];
+                     newClient.last_name = result[@"last_name"];
+                     if ([result[@"gender"] isEqualToString:@"male"])
+                     {
+                         newClient.sex = @"M";
+                     }
+                     else
+                     {
+                         newClient.sex = @"F";
+                     }
+                     newClient.picture_link = result[@"picture"][@"data"][@"url"];
+                     //newClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
+                     
+                     [clientMethods updateClient:newClient];
+                     
+                     // Reload table to include new client details
+                     [self.tableMessages reloadData];
+                     
+                 }
+                 else {
+                     // An error occurred, we need to handle the error
+                     // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+                     NSLog(@"error makeFBRequestForClientsDetails: %@", error.description);
+                 }
+             }];
+        }
     }
 }
 
@@ -1257,23 +1301,6 @@
     
     // Update database
     [messageMethods addNewMessage:newMessage];
-    
-    // Sort array to be sure new messages are on top
-    
-    [_myDataMessages sortUsingComparator:^NSComparisonResult(id a, id b) {
-        NSDate *first = [(Message*)a datetime];
-        NSDate *second = [(Message*)b datetime];
-        return [first compare:second];
-    }];
-    
-    // Reload table
-    [UIView transitionWithView:self.tableMessages
-                      duration:0.5f
-                       options:UIViewAnimationOptionTransitionCrossDissolve
-                    animations:^(void) {
-                        [self.tableMessages reloadData];
-                    } completion:NULL];
-    
 }
 
 

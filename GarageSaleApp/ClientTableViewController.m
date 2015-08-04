@@ -219,7 +219,8 @@
     pictureCell.clipsToBounds = YES;
     
     // Set table cell labels to client data
-    pictureCell.image = [UIImage imageWithData:myClient.picture];
+    //pictureCell.image = [UIImage imageWithData:myClient.picture];
+    pictureCell.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:myClient]];
     nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
     zoneLabel.text = [NSString stringWithFormat:@"Vive en %@", myClient.client_zone];
     phoneLabel.text = myClient.phone1;

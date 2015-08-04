@@ -91,7 +91,8 @@
     // Set table cell labels to listing data
     
     cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
-    cell.imageView.image = [UIImage imageWithData:myClient.picture];
+    //cell.imageView.image = [UIImage imageWithData:myClient.picture];
+    cell.imageView.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:myClient]];
     
     return cell;
 }

@@ -23,7 +23,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *buttonOption1;
 @property (weak, nonatomic) IBOutlet UIButton *buttonOption2;
 @property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
-@property (weak, nonatomic) IBOutlet UIImageView *imageSold;
 @property (weak, nonatomic) IBOutlet UIImageView *imageClient;
 @property (weak, nonatomic) IBOutlet UIImageView *imageClientStatus;
 @property (weak, nonatomic) IBOutlet UIImageView *imageOwner;

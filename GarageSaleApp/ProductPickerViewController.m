@@ -38,6 +38,7 @@
     // Do any additional setup after loading the view from its nib.
     
     ProductModel *productMethods = [[ProductModel alloc] init];
+    ClientModel *clientMethods = [[ClientModel alloc] init];
     
     // Remember to set ViewControler as the delegate and datasource
     self.myTable.delegate = self;
@@ -58,8 +59,9 @@
     NSString *clientID = [self.delegate getRelatedOwnerfromProductPicker];
     if ([clientID length] >0)
     {
-        _relatedClient = [[[ClientModel alloc] init] getClientFromClientId:clientID];
-        self.imageClient.image = [UIImage imageWithData:_relatedClient.picture];
+        _relatedClient = [clientMethods getClientFromClientId:clientID];
+        //self.imageClient.image = [UIImage imageWithData:_relatedClient.picture];
+        self.imageClient.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_relatedClient]];
         self.labelClientName.text = [NSString stringWithFormat:@"%@ %@", _relatedClient.name, _relatedClient.last_name];
     }
     else
@@ -70,7 +72,7 @@
 
     // Multiple selection?
     _multipleSelection = [self.delegate allowMultipleSelectionfromProductPicker];
-    self.myTable.allowsMultipleSelection = YES;
+    self.myTable.allowsMultipleSelection = _multipleSelection;
     
     
     // Get the listing data
@@ -259,7 +261,8 @@
 
     // Set table cell labels to product data
     cell.textLabel.text = myProduct.name;
-    cell.imageView.image = [[UIImage imageWithData:myProduct.picture] makeThumbnailOfSize:CGSizeMake(40, 40)];
+    // cell.imageView.image = [[UIImage imageWithData:myProduct.picture] makeThumbnailOfSize:CGSizeMake(40, 40)];
+    cell.imageView.image = [[UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:myProduct]] makeThumbnailOfSize:CGSizeMake(40, 40)];
     
     return cell;
 }

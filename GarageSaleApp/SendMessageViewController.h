@@ -34,7 +34,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelOwnerName;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductName;
 @property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
-@property (weak, nonatomic) IBOutlet UIImageView *imageProductSold;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductDesc;
 
 @property (strong, nonatomic) IBOutlet UIButton *buttonSend;

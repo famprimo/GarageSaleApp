@@ -276,7 +276,6 @@
     UILabel *clientName = (UILabel*)[myCell.contentView viewWithTag:3];
     UILabel *opportunityStatus = (UILabel*)[myCell.contentView viewWithTag:4];
     UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:5];
-    UIImageView *productSoldImage = (UIImageView*)[myCell.contentView viewWithTag:6];
     UIImageView *clientImage = (UIImageView*)[myCell.contentView viewWithTag:7];
     UIImageView *clientStatus = (UIImageView*)[myCell.contentView viewWithTag:8];
     
@@ -287,13 +286,6 @@
     productImageFrame.size.width = 40;
     productImageFrame.size.height = 40;
     productImage.frame = productImageFrame;
-
-    CGRect productSoldImageFrame = productSoldImage.frame;
-    productSoldImageFrame.origin.x = 8;
-    productSoldImageFrame.origin.y = 24; //32
-    productSoldImageFrame.size.width = 40;
-    productSoldImageFrame.size.height = 40; //23
-    productSoldImage.frame = productSoldImageFrame;
 
     CGRect clientImageFrame = clientImage.frame;
     clientImageFrame.origin.x = 56;
@@ -319,18 +311,12 @@
     // Set product data
     
     productLabel.text = relatedProduct.name;
-    productImage.image = [UIImage imageWithData:relatedProduct.picture];
-    if ([relatedProduct.status isEqualToString:@"S"])
-    {
-        productSoldImage.image = [UIImage imageNamed:@"Sold"];
-    }
-    else
-    {
-        productSoldImage.image = [UIImage imageNamed:@"Blank"];
-    }
+    // productImage.image = [UIImage imageWithData:relatedProduct.picture];
+    productImage.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:relatedProduct]];
     
     // Set client data
-    clientImage.image = [UIImage imageWithData:clientRelatedToOpportunity.picture];
+    //clientImage.image = [UIImage imageWithData:clientRelatedToOpportunity.picture];
+    clientImage.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:clientRelatedToOpportunity]];
     if ([clientRelatedToOpportunity.status isEqualToString:@"V"])
     {
         clientName.text = [NSString stringWithFormat:@"    %@ %@", clientRelatedToOpportunity.name, clientRelatedToOpportunity.last_name];

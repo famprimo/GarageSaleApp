@@ -38,13 +38,6 @@
     imageProductFrame.size.height = 70;
     self.imageProduct.frame = imageProductFrame;
 
-    CGRect imageSoldFrame = self.imageSold.frame;
-    imageSoldFrame.origin.x = 13;
-    imageSoldFrame.origin.y = 100;
-    imageSoldFrame.size.width = 70;
-    imageSoldFrame.size.height = 40;
-    self.imageSold.frame = imageSoldFrame;
-    
     CGRect imageClientFrame = self.imageClient.frame;
     imageClientFrame.origin.x = 252;
     imageClientFrame.origin.y = 85;
@@ -59,15 +52,9 @@
     imageClientStatusFrame.size.height = 10;
     self.imageClientStatus.frame = imageClientStatusFrame;
 
-    self.imageProduct.image = [UIImage imageWithData:_relatedProduct.picture];
-    if ([_relatedProduct.status isEqualToString:@"S"])
-    {
-        self.imageSold.image = [UIImage imageNamed:@"Sold"];
-    }
-    else
-    {
-         self.imageSold.image = [UIImage imageNamed:@"Blank"];
-    }
+    // self.imageProduct.image = [UIImage imageWithData:_relatedProduct.picture];
+    self.imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:_relatedProduct]];
+    
     self.labelProductName.text = _relatedProduct.name;
     self.labelProductGSCode.text = _relatedProduct.codeGS;
     self.labelProductCurrency.text = _relatedProduct.currency;
@@ -75,7 +62,8 @@
     self.labelProductPrice.text = [NSString stringWithFormat:@"%@%@", _relatedProduct.currency, _relatedProduct.price];
     self.textOpportunityPrice.text = [NSString stringWithFormat:@"%@", _relatedProduct.price];
     
-    self.imageClient.image = [UIImage imageWithData:_clientBuyer.picture];
+    //self.imageClient.image = [UIImage imageWithData:_clientBuyer.picture];
+    self.imageClient.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:_clientBuyer]];
     
     if ([_clientBuyer.status isEqualToString:@"V"])
     {

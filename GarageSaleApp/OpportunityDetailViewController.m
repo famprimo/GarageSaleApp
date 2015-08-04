@@ -81,13 +81,6 @@
         imageProductFrame.size.width = 140;
         imageProductFrame.size.height = 140;
         self.imageProduct.frame = imageProductFrame;
-
-        CGRect imageProductSoldFrame = self.imageProductSold.frame;
-        imageProductSoldFrame.origin.x = 31;
-        imageProductSoldFrame.origin.y = 128;
-        imageProductSoldFrame.size.width = 140;
-        imageProductSoldFrame.size.height = 140;
-        self.imageProductSold.frame = imageProductSoldFrame;
         
         CGRect labelDescriptionFrame = self.labelDescription.frame;
         labelDescriptionFrame.origin.x = 186;
@@ -235,7 +228,9 @@
         
         // Set Product Data
         
-        self.imageProduct.image = [UIImage imageWithData:_selectedProduct.picture];
+        // self.imageProduct.image = [UIImage imageWithData:_selectedProduct.picture];
+        self.imageProduct.image = [UIImage imageWithData:[productMethods getProductPhotoFrom:_selectedProduct]];
+        
         self.labelProductName.text = _selectedProduct.name;
         if ([_selectedProduct.type isEqualToString:@"S"])
         {
@@ -257,13 +252,6 @@
         {   labelDescriptionFrame.size.height = 180;
             self.labelDescription.frame = labelDescriptionFrame; }
         
-        // Set sold image depending on product status
-        self.imageProductSold.image = [UIImage imageNamed:@"Blank"];
-        if ([_selectedProduct.status isEqualToString:@"S"])
-        {
-            self.imageProductSold.image = [UIImage imageNamed:@"Sold"];
-        }
-        
         // Set Owner Data
         
         if ([_selectedClientOwner.sex isEqualToString:@"M"])
@@ -279,7 +267,8 @@
         self.imageOwner.layer.cornerRadius = self.imageOwner.frame.size.width / 2;
         self.imageOwner.clipsToBounds = YES;
         
-        self.imageOwner.image = [UIImage imageWithData:_selectedClientOwner.picture];
+        //self.imageOwner.image = [UIImage imageWithData:_selectedClientOwner.picture];
+        self.imageOwner.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_selectedClientOwner]];
         self.labelOwnerZone.text = [NSString stringWithFormat:@"Vive en %@",_selectedClientOwner.client_zone];
         self.labelOwnerPhones.text = _selectedClientOwner.phone1;
         
@@ -320,7 +309,8 @@
         self.imageBuyer.layer.cornerRadius = self.imageBuyer.frame.size.width / 2;
         self.imageBuyer.clipsToBounds = YES;
         
-        self.imageBuyer.image = [UIImage imageWithData:_selectedClientBuyer.picture];
+        //self.imageBuyer.image = [UIImage imageWithData:_selectedClientBuyer.picture];
+        self.imageBuyer.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_selectedClientBuyer]];
         self.labelBuyerZone.text = [NSString stringWithFormat:@"Vive en %@",_selectedClientBuyer.client_zone];
         self.labelBuyerPhones.text = _selectedClientBuyer.phone1;
         
@@ -384,7 +374,7 @@
 
 - (IBAction)sendMessageToBuyer:(id)sender
 {
-    _templateTypeForPopover = @"C";
+    _templateTypeForPopover = @"B";
     
     SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
     sendMessageController.delegate = self;

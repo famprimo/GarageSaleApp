@@ -19,6 +19,7 @@
 - (NSString*)getNextProductID;
 - (BOOL)addNewProduct:(Product*)newProduct;
 - (BOOL)updateProduct:(Product*)productToUpdate;
+- (NSData*)getProductPhotoFrom:(Product*)productSelected;
 - (void)updateProduct:(Product*)productToUpdate withArray:(NSMutableArray*)arrayProducts;
 - (Client*)getClient:(Product*)productFound;
 - (NSMutableArray*)getOpportunitiesFromProduct:(Product*)productSelected;

@@ -33,6 +33,7 @@
     tempMessage.fb_msg_id = @"153344961539458_1378402423";
     tempMessage.fb_from_id = @"10203554768023190";
     tempMessage.fb_from_name = @"Mily de la Cruz";
+    tempMessage.parent_fb_msg_id = nil;
     tempMessage.message = @"Me interesa. Enviar datos al inbox";
     tempMessage.fb_created_time = @"2014-09-20T18:45:38+0000";
     tempMessage.fb_photo_id = @"XXXXX";
@@ -54,6 +55,7 @@
     tempMessage.fb_msg_id = @"1469889866608936_1408489028";
     tempMessage.fb_from_id = @"10152156045491377";
     tempMessage.fb_from_name = @"Amparo Gonzalez";
+    tempMessage.parent_fb_msg_id = nil;
     tempMessage.message = @"Cuales son las medidas?";
     tempMessage.fb_created_time = @"2015-01-20T18:45:38+0000";
     tempMessage.fb_photo_id = @"XXXXX";
@@ -75,6 +77,7 @@
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152156045491377";
     tempMessage.fb_from_name = @"Amparo Gonzalez";
+    tempMessage.parent_fb_msg_id = nil;
     tempMessage.message = @"Me gusta el perfume. Como lo consigo?";
     tempMessage.fb_created_time = @"2014-06-10T09:41:15+0000";
     tempMessage.fb_photo_id = @"XXXXX";
@@ -96,6 +99,7 @@
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152156045491377";
     tempMessage.fb_from_name = @"Amparo Gonzalez";
+    tempMessage.parent_fb_msg_id = nil;
     tempMessage.message = @"Amparo te envio los datos al inbox";
     tempMessage.fb_created_time = @"2014-07-10T09:41:15+0000";
     tempMessage.fb_photo_id = @"XXXXX";
@@ -117,6 +121,7 @@
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152779700000003";
     tempMessage.fb_from_name = @"Melisa Celi";
+    tempMessage.parent_fb_msg_id = nil;
     tempMessage.message = @"Melisa fuiste a ver el coche?";
     tempMessage.fb_created_time = @"2015-02-23T09:41:15+0000";
     tempMessage.fb_photo_id = @"XXXXX";
@@ -138,6 +143,7 @@
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152779700000003";
     tempMessage.fb_from_name = @"Melisa Celi";
+    tempMessage.parent_fb_msg_id = nil;
     tempMessage.message = @"Si fui pero no lo compre";
     tempMessage.fb_created_time = @"2015-02-24T09:41:15+0000";
     tempMessage.fb_photo_id = @"XXXXX";
@@ -159,6 +165,7 @@
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152779700000005";
     tempMessage.fb_from_name = @"Ivan Rosado";
+    tempMessage.parent_fb_msg_id = nil;
     tempMessage.message = @"Ok";
     tempMessage.fb_created_time = @"2015-02-20T10:45:15+0000";
     tempMessage.fb_photo_id = @"XXXXX";
@@ -180,6 +187,7 @@
     tempMessage.fb_msg_id = @"1469889866608936_143534523426";
     tempMessage.fb_from_id = @"10152779700000005";
     tempMessage.fb_from_name = @"Ivan Rosado";
+    tempMessage.parent_fb_msg_id = nil;
     tempMessage.message = @"Ivan te explico el sistema de GarageSale en el inbox";
     tempMessage.fb_created_time = @"2015-02-20T10:50:15+0000";
     tempMessage.fb_photo_id = @"XXXXX";
@@ -203,6 +211,7 @@
         tempMessage.fb_msg_id = @"1469889866608936_143534523426";
         tempMessage.fb_from_id = @"10152779700000005";
         tempMessage.fb_from_name = @"Ivan Rosado";
+        tempMessage.parent_fb_msg_id = nil;
         tempMessage.message = [NSString stringWithFormat:@"Mensaje de prueba #%i", i];
         tempMessage.fb_created_time = @"2015-02-19T09:41:15+0000";
         tempMessage.fb_photo_id = @"XXXXX";
@@ -372,6 +381,7 @@
     [coreDataObject setValue:newMessage.fb_msg_id forKey:@"fb_msg_id"];
     [coreDataObject setValue:newMessage.fb_from_id forKey:@"fb_from_id"];
     [coreDataObject setValue:newMessage.fb_from_name forKey:@"fb_from_name"];
+    [coreDataObject setValue:newMessage.parent_fb_msg_id forKey:@"parent_fb_msg_id"];
     [coreDataObject setValue:newMessage.message forKey:@"message"];
     [coreDataObject setValue:newMessage.fb_created_time forKey:@"fb_created_time"];
     [coreDataObject setValue:newMessage.datetime forKey:@"datetime"];
@@ -441,6 +451,7 @@
             [coreDataObject setValue:messageToUpdate.fb_msg_id forKey:@"fb_msg_id"];
             [coreDataObject setValue:messageToUpdate.fb_from_id forKey:@"fb_from_id"];
             [coreDataObject setValue:messageToUpdate.fb_from_name forKey:@"fb_from_name"];
+            [coreDataObject setValue:messageToUpdate.parent_fb_msg_id forKey:@"parent_fb_msg_id"];
             [coreDataObject setValue:messageToUpdate.message forKey:@"message"];
             [coreDataObject setValue:messageToUpdate.fb_created_time forKey:@"fb_created_time"];
             [coreDataObject setValue:messageToUpdate.datetime forKey:@"datetime"];
@@ -633,5 +644,58 @@
 
 }
 
+- (NSMutableArray*)sortMessagesArrayConsideringParents:(NSMutableArray*)messagesArray; // Order an array of messages considering parent messages
+{
+    // First, sort array by dates
+    [messagesArray sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Message*)a datetime];
+        NSDate *second = [(Message*)b datetime];
+        return [first compare:second];
+    }];
+    
+    Message *messageToReview = [[Message alloc] init];
+    Message *parentMessage = [[Message alloc] init];
+
+    for (int i=0; i<messagesArray.count; i++)
+    {
+        messageToReview = [[Message alloc] init];
+        messageToReview = (Message *)messagesArray[i];
+
+        if (messageToReview.parent_fb_msg_id)
+        {
+            // message has a parent! delete and insert next to its parent
+            [messagesArray removeObjectAtIndex:i];
+            BOOL found = NO;
+            
+            for (int x=0; x<messagesArray.count; x++)
+            {
+                parentMessage = [[Message alloc] init];
+                parentMessage = (Message *)messagesArray[x];
+                
+                if ([parentMessage.fb_msg_id isEqualToString:messageToReview.parent_fb_msg_id])
+                {
+                    if (x == messagesArray.count)
+                    {
+                        [messagesArray addObject:messageToReview];  // Insert object at the end of the array
+                    }
+                    else
+                    {
+                        [messagesArray insertObject:messageToReview atIndex:x+1];
+                    }
+                    found = YES;
+                    break;
+                }
+            }
+            
+            if (!found)
+            {
+                // Not found... insert in its original position
+                [messagesArray insertObject:messageToReview atIndex:i];
+            }
+        }
+    }
+
+    return messagesArray;
+}
 
 @end

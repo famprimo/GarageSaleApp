@@ -14,6 +14,7 @@
 @property (strong, nonatomic) NSString *fb_msg_id;
 @property (strong, nonatomic) NSString *fb_from_id;
 @property (strong, nonatomic) NSString *fb_from_name;
+@property (strong, nonatomic) NSString *parent_fb_msg_id;
 @property (strong, nonatomic) NSString *message;
 @property (strong, nonatomic) NSString *fb_created_time;
 @property (strong, nonatomic) NSDate *datetime;

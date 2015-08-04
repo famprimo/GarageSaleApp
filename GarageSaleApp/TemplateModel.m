@@ -33,7 +33,7 @@
     tempTemplate.title = @"Aviso comprador";
     tempTemplate.text = @"Hola #COMPRADOR. La dueña de es #DUENO y su teléfono es #D-TELEFONO. Coordina con #D-ELELLA cuando puedes ir a verlo, yo ya le avisé que #D-LALO vas a llamar. En caso lo llegues a comprar necesito que por favor me mandes un mensajito avisándome. Gracias. Saludos, Giuliana   #DESCRIPCION    #FBLINK";
 
-    tempTemplate.type = @"C";
+    tempTemplate.type = @"B";
     tempTemplate.updated_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempTemplate.agent_id = @"00001";
     
@@ -46,7 +46,7 @@
     tempTemplate.template_id = @"00002";
     tempTemplate.title = @"Sistema de trabajo";
     tempTemplate.text = @"Hola #COMPRADOR. Te cuento cuál es nuestro sistema de trabajo..... Para poder publicar tus cosas necesito que me mandes las fotos de cada cosa junto con el precio de venta, una pequeña descripción que incluya el estado en que se encuentra, tus teléfonos y distrito. La publicación es gratis y en caso se venda algo a través nuestro cobramos una comisión de 10% del precio de venta final y debe de estar incluido en el precio que nos das. Para qué la publicación sea aprobada los precios tienen que ser atractivos. Cuando una persona se interesa en un producto tuyo le damos tu teléfono por el inbox previa revisión de su perfil, por lo general son personas conocidas o referidas. Para el pago de la comisión tenemos una cuenta BCP donde puedes depositarnos o transferirnos. Si tienes alguna duda escríbeme. Saludos, Giuliana";
-    tempTemplate.type = @"C";
+    tempTemplate.type = @"B";
     tempTemplate.updated_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempTemplate.agent_id = @"00001";
     
@@ -58,7 +58,7 @@
     tempTemplate.template_id = @"00003";
     tempTemplate.title = @"Interés inicial";
     tempTemplate.text = @"Si está disponible. Para poder mandarte los datos al inbox necesito que por favor aceptes mi solicitud de amistad y me avises una vez que lo hagas :)";
-    tempTemplate.type = @"C";
+    tempTemplate.type = @"B";
     tempTemplate.updated_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempTemplate.agent_id = @"00001";
     
@@ -70,7 +70,7 @@
     tempTemplate.template_id = @"00004";
     tempTemplate.title = @"Confirmación de visita";
     tempTemplate.text = @"Hola #COMPRADOR. Cómo estás? Quería que por favor me cuentes si llegaste a ir por el #PRODUCTO. Espero tus comentarios. Gracias. Saludos, Giuliana";
-    tempTemplate.type = @"C";
+    tempTemplate.type = @"B";
     tempTemplate.updated_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempTemplate.agent_id = @"00001";
     
@@ -106,7 +106,7 @@
     tempTemplate.template_id = @"00007";
     tempTemplate.title = @"Venta de ropa";
     tempTemplate.text = @"Si es ropa, no cobramos comisión, pero cobramos por nuestros servicios el 5% del precio de venta y debe ser abonado en nuestra cuenta BCP antes de la publicación y es muy independiente de si se vende o no el producto";
-    tempTemplate.type = @"C";
+    tempTemplate.type = @"B";
     tempTemplate.updated_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempTemplate.agent_id = @"00001";
     
@@ -118,7 +118,7 @@
     tempTemplate.template_id = @"00008";
     tempTemplate.title = @"Sistema de aviso";
     tempTemplate.text = @"En este caso lo que hacemos es poner un aviso y en la descripción ponemos tu teléfono para que te contacten directamente. No cobramos comisión por venta, pero cobramos un monto de s/. 30 por nuestros servicios. Si te interesa avísame para pasarte nuestro número de cuenta BCP. Un beso, Giuliana";
-    tempTemplate.type = @"C";
+    tempTemplate.type = @"B";
     tempTemplate.updated_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempTemplate.agent_id = @"00001";
     

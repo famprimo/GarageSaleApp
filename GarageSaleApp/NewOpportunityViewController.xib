@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NewOpportunityViewController">
@@ -11,7 +11,6 @@
                 <outlet property="imageClient" destination="j6i-lg-ETK" id="b21-GC-R1j"/>
                 <outlet property="imageClientStatus" destination="zjG-8T-4Qk" id="YeO-wB-Iah"/>
                 <outlet property="imageProduct" destination="vit-7D-4vj" id="WgV-0a-9FP"/>
-                <outlet property="imageSold" destination="vjq-B0-4Lc" id="LVD-J6-vKC"/>
                 <outlet property="labelClientName" destination="rpA-hv-GUL" id="mSW-Hs-xIc"/>
                 <outlet property="labelProductCurrency" destination="MuO-aM-t44" id="izN-PA-7cd"/>
                 <outlet property="labelProductDesc" destination="olR-ut-3Hx" id="xyI-64-3pr"/>
@@ -30,10 +29,6 @@
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="vit-7D-4vj">
                     <rect key="frame" x="13" y="85" width="70" height="70"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="vjq-B0-4Lc">
-                    <rect key="frame" x="13" y="100" width="70" height="40"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="zjG-8T-4Qk">

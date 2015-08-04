@@ -80,7 +80,8 @@
     picBackgroundFrame.size.height = 300;
     self.picBackground.frame = picBackgroundFrame;
     
-    self.imageClient.image = [UIImage imageWithData:_clientToEdit.picture];
+    //self.imageClient.image = [UIImage imageWithData:_clientToEdit.picture];
+    self.imageClient.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:_clientToEdit]];
     self.labelClientName.text = [NSString stringWithFormat:@"%@ %@", _clientToEdit.name, _clientToEdit.last_name];
     self.labelClientCreationDate.text = [NSString stringWithFormat:@"Creado %@",[_clientToEdit.created_time formattedAsDateComplete]];
     

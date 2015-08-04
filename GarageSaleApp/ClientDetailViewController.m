@@ -10,6 +10,7 @@
 #import "Product.h"
 #import "ProductModel.h"
 #import "Client.h"
+#import "ClientModel.h"
 #import "NSDate+NVTimeAgo.h"
 
 
@@ -130,8 +131,9 @@
         
         // Client data
 
-        self.imageClient.image = [UIImage imageWithData:_selectedClient.picture];
-
+        //self.imageClient.image = [UIImage imageWithData:_selectedClient.picture];
+        self.imageClient.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:_selectedClient]];
+        
         if ([_selectedClient.status isEqualToString:@"V"])
         {
             self.labelClientName.text = [NSString stringWithFormat:@"    %@ %@", _selectedClient.name, _selectedClient.last_name];
@@ -281,7 +283,6 @@
     UILabel *labelProductName = (UILabel*)[myCell.contentView viewWithTag:1];
     UILabel *labelProductCreatedTime = (UILabel*)[myCell.contentView viewWithTag:2];
     UIImageView *imageProduct = (UIImageView*)[myCell.contentView viewWithTag:3];
-    UIImageView *imageProductSold = (UIImageView*)[myCell.contentView viewWithTag:4];
     
     CGRect imageProductFrame = imageProduct.frame;
     imageProductFrame.origin.x = 20;
@@ -289,13 +290,6 @@
     imageProductFrame.size.width = 40;
     imageProductFrame.size.height = 40;
     imageProduct.frame = imageProductFrame;
-    
-    CGRect imageProductSoldFrame = imageProductSold.frame;
-    imageProductSoldFrame.origin.x = 20;
-    imageProductSoldFrame.origin.y = 5;
-    imageProductSoldFrame.size.width = 40;
-    imageProductSoldFrame.size.height = 40;
-    imageProductSold.frame = imageProductSoldFrame;
     
     
     // Get the information to be shown
@@ -306,19 +300,10 @@
     labelProductName.text = myProduct.name;
     labelProductCreatedTime.text = [myProduct.created_time formattedAsTimeAgo];
     
-    imageProduct.image = [UIImage imageWithData:myProduct.picture];
-    
-    if ([myProduct.status isEqualToString:@"S"])
-    {
-        imageProductSold.image = [UIImage imageNamed:@"Sold"];
-    }
-    else
-    {
-        imageProductSold.image = [UIImage imageNamed:@"Blank"];
-    }
+    // imageProduct.image = [UIImage imageWithData:myProduct.picture];
+    imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:myProduct]];
     
     return myCell;
-
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

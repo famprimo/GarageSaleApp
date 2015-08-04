@@ -31,7 +31,7 @@
     self.tableTemplates.delegate = self;
     self.tableTemplates.dataSource = self;
 
-    _selectedType = @"C";
+    _selectedType = @"B";
     _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:_selectedType];
     _selectedTemplate = [[Template alloc] init];
     
@@ -94,7 +94,7 @@
 {
     if (self.segmentedControlType.selectedSegmentIndex == 0)
     {
-        _selectedType = @"C";
+        _selectedType = @"B";
     }
     else if (self.segmentedControlType.selectedSegmentIndex == 1)
     {
