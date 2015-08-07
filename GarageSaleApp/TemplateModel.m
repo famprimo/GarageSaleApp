@@ -159,7 +159,6 @@
     return templatesArray;
 }
 
-// IMPLEMENT PROTOCOL DELEGATE TO INFORM WHEN SYNC IS FINISHED!!!
 
 - (void)syncCoreDataWithParse;
 {
@@ -194,12 +193,21 @@
                     // Object is new! Add to CoreData;
                     [self addNewTemplateToCoreData:templateFromParse];
                 }
+                else if (![results isEqualToString:@"OK"])
+                {
+                    NSLog(@"Failed to update the Template object in CoreData");
+                    [self.delegate templatesSyncedWithCoreData:NO];
+                }
+                
+                // Send messages to delegates
+                [self.delegate templatesSyncedWithCoreData:YES];
             }
         }
         else
         {
             // Log details of the failure
             NSLog(@"Failed to retrieve the Template object from Parse. Error: %@ %@", error, [error userInfo]);
+            [self.delegate templatesSyncedWithCoreData:NO];
         }
     }];
 }

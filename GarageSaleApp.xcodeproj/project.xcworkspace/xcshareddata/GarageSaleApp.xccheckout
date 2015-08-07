@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>A45AB982-AF70-4A77-A1E9-4FB84FC8E2BF</string>
 	<key>IDESourceControlProjectName</key>
-	<string>GarageSaleApp</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>4A54DCC5F097B2E2C98B8506B487898766F4E490</key>
 		<string>https://github.com/famprimo/GarageSaleApp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>GarageSaleApp.xcodeproj</string>
+	<string>GarageSaleApp.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>4A54DCC5F097B2E2C98B8506B487898766F4E490</key>

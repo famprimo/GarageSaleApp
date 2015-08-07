@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TemplateModel.h"
 
-@interface SetupDetailViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface SetupDetailViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, TemplateModelDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableTemplates;
 @property (strong, nonatomic) IBOutlet UITextField *labelTemplateTitle;
@@ -22,6 +23,5 @@
 -(IBAction)saveTemplate:(id)sender;
 -(IBAction)newTemplate:(id)sender;
 -(IBAction)segmentedControlChange:(id)sender;
-
 
 @end

@@ -8,7 +8,6 @@
 
 #import "SetupDetailViewController.h"
 #import "Template.h"
-#import "TemplateModel.h"
 
 @interface SetupDetailViewController ()
 {
@@ -16,6 +15,7 @@
     NSMutableArray *_myDataTemplates;
     
     // /For the selections in the tables
+    TemplateModel *_templateMethods;
     Template *_selectedTemplate;
     NSString *_selectedType;
 }
@@ -23,16 +23,20 @@
 
 @implementation SetupDetailViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
     // Remember to set ViewControler as the delegate and datasource
     self.tableTemplates.delegate = self;
     self.tableTemplates.dataSource = self;
-
+    
+    _templateMethods = [[TemplateModel alloc] init];
+    _templateMethods.delegate = self;
+    
     _selectedType = @"B";
-    _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:_selectedType];
+    _myDataTemplates = [_templateMethods getTemplatesFromType:_selectedType];
     _selectedTemplate = [[Template alloc] init];
     
     CGRect imageTemplateIconFrame = self.imageTemplateIcon.frame;
@@ -41,10 +45,11 @@
     imageTemplateIconFrame.size.width = 50;
     imageTemplateIconFrame.size.height = 50;
     self.imageTemplateIcon.frame = imageTemplateIconFrame;
-
+    
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -54,40 +59,32 @@
 
 -(IBAction)saveTemplate:(id)sender;
 {
-    TemplateModel *templateMethods = [[TemplateModel alloc] init];
-
     _selectedTemplate.title = self.labelTemplateTitle.text;
     _selectedTemplate.text = self.labelTemplateText.text;
     _selectedTemplate.updated_time = [NSDate date];
     
-    [templateMethods updateTemplate:_selectedTemplate];
-
+    [_templateMethods updateTemplate:_selectedTemplate];
+    
     // Load data again
     _myDataTemplates = [[NSMutableArray alloc] init];
-    _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:_selectedType];
-
-    // [templateMethods updateTemplate:_selectedTemplate withArray:_myDataTemplates];
+    _myDataTemplates = [_templateMethods getTemplatesFromType:_selectedType];
     
     [self.tableTemplates reloadData];
-
 }
 
 -(IBAction)newTemplate:(id)sender;
 {
-    TemplateModel *templateMethods = [[TemplateModel alloc] init];
-    
     _selectedTemplate = [[Template alloc] init];
-    _selectedTemplate.template_id = [templateMethods getNextTemplateID];
+    _selectedTemplate.template_id = [_templateMethods getNextTemplateID];
     _selectedTemplate.title = @"Nuevo template";
     _selectedTemplate.text = @"";
     _selectedTemplate.type = _selectedType;
     _selectedTemplate.updated_time = [NSDate date];
     _selectedTemplate.agent_id = @"00001";
-
-    [templateMethods addNewTemplate:_selectedTemplate];
+    
+    [_templateMethods addNewTemplate:_selectedTemplate];
     [_myDataTemplates insertObject:_selectedTemplate atIndex:0];
     [self.tableTemplates reloadData];
-
 }
 
 -(IBAction)segmentedControlChange:(id)sender;
@@ -102,16 +99,49 @@
     }
     
     _myDataTemplates = [[NSMutableArray alloc] init];
-    _myDataTemplates = [[[TemplateModel alloc] init] getTemplatesFromType:_selectedType];
+    _myDataTemplates = [_templateMethods getTemplatesFromType:_selectedType];
     [self.tableTemplates reloadData];
 }
 
 - (IBAction)synchronizeTemplates:(id)sender
 {
     // Synchronize with Parse
-    
+    [_templateMethods syncCoreDataWithParse];
 }
 
+
+#pragma mark - TemplateMode delegate methods
+
+-(void)templatesSyncedWithCoreData:(BOOL)succeed
+{
+    [NSTimer scheduledTimerWithTimeInterval:0.5
+                                     target:self
+                                   selector:@selector(syncButtonColorNormal:)
+                                   userInfo:nil
+                                    repeats:NO];
+
+    if (succeed)
+    {
+        _myDataTemplates = [[NSMutableArray alloc] init];
+        _myDataTemplates = [_templateMethods getTemplatesFromType:_selectedType];
+        [self.tableTemplates reloadData];
+        
+        [[self.buttonSync layer] setBorderWidth:2.0f];
+        [[self.buttonSync layer] setBorderColor:[UIColor greenColor].CGColor];
+    }
+    else
+    {
+        [[self.buttonSync layer] setBorderWidth:2.0f];
+        [[self.buttonSync layer] setBorderColor:[UIColor redColor].CGColor];
+    }
+}
+
+-(void)syncButtonColorNormal:(NSTimer*)theTimer;
+{
+    [[self.buttonSync layer] setBorderWidth:0.0f];
+
+    // [[self.buttonSync layer] setBorderColor:[UIColor grayColor].CGColor];
+}
 
 #pragma mark - Table view data source
 
@@ -137,7 +167,6 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell" forIndexPath:indexPath];
     
     UILabel *labelTitle = (UILabel*)[cell.contentView viewWithTag:1];
-    // UILabel *labelType = (UILabel*)[cell.contentView viewWithTag:2];
 
     // Configure the cell...
     Template *myTemplate = _myDataTemplates[indexPath.row];
@@ -158,7 +187,6 @@
     self.labelTemplateTitle.text = _selectedTemplate.title;
     self.labelTemplateText.text = _selectedTemplate.text;
     self.labelTemplateText.editable = YES;
-    
 }
 
 

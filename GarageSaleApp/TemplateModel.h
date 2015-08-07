@@ -11,7 +11,17 @@
 #import "Client.h"
 #import "Product.h"
 
+
+@protocol TemplateModelDelegate
+
+-(void)templatesSyncedWithCoreData:(BOOL)succeed;
+
+@end
+
+
 @interface TemplateModel : NSObject <NSURLConnectionDataDelegate>
+
+@property (nonatomic, strong) id<TemplateModelDelegate> delegate;
 
 - (void)saveInitialDataforTemplates;
 - (NSMutableArray*)getTemplatesFromCoreData;
