@@ -85,6 +85,9 @@
 
 - (IBAction)createOpportunity:(id)sender
 {
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"yyyyMMdd"];
+
     // Create opportunity
     OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
     Opportunity *tempOpportunity = [[Opportunity alloc] init];
@@ -95,8 +98,8 @@
     tempOpportunity.initial_price = [NSNumber numberWithFloat:self.textOpportunityPrice.text.intValue];
     tempOpportunity.price_sold = tempOpportunity.initial_price;
     tempOpportunity.created_time = [NSDate date];
-    tempOpportunity.closedsold_time = nil;
-    tempOpportunity.paid_time = nil;
+    tempOpportunity.closedsold_time = [dateFormat dateFromString:@"20000101"];
+    tempOpportunity.paid_time = [dateFormat dateFromString:@"20000101"];
     tempOpportunity.status = @"O";
     tempOpportunity.notes = @"Notas";
     tempOpportunity.commision = [NSNumber numberWithFloat:(tempOpportunity.initial_price.floatValue * 0.1)];

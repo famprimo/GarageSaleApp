@@ -16,5 +16,6 @@
 @property (strong, nonatomic) NSString *type; // (C)lient (O)wner
 @property (strong, nonatomic) NSDate *updated_time;
 @property (strong, nonatomic) NSString *agent_id;
+@property (strong, nonatomic) NSDate *update_db;
 
 @end

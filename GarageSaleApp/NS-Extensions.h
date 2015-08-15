@@ -14,3 +14,5 @@
 @interface UIImage (PhoenixMaster)
 - (UIImage *) makeThumbnailOfSize:(CGSize)size;
 @end
+
+

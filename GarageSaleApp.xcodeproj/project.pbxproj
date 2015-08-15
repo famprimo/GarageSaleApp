@@ -60,6 +60,7 @@
 		C05C81581AC379EC0097EB42 /* EditClientViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C05C81561AC379EC0097EB42 /* EditClientViewController.xib */; };
 		C0666E4A1A44B39100B045A0 /* NewOpportunityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0666E481A44B39100B045A0 /* NewOpportunityViewController.m */; };
 		C0666E4B1A44B39100B045A0 /* NewOpportunityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */; };
+		C06881201B765B7700782F74 /* CommonMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = C068811F1B765B7700782F74 /* CommonMethods.m */; };
 		C069A40D1A84BD1F0059575E /* MessagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C069A40C1A84BD1F0059575E /* MessagesTableViewController.m */; };
 		C069A4131A84BD530059575E /* MessagesDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C069A4121A84BD530059575E /* MessagesDetailViewController.m */; };
 		C06CE37C1B02E4A800A2A10E /* EditOpportunityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06CE37A1B02E4A800A2A10E /* EditOpportunityViewController.m */; };
@@ -180,6 +181,8 @@
 		C0666E471A44B39100B045A0 /* NewOpportunityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewOpportunityViewController.h; sourceTree = "<group>"; };
 		C0666E481A44B39100B045A0 /* NewOpportunityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewOpportunityViewController.m; sourceTree = "<group>"; };
 		C0666E491A44B39100B045A0 /* NewOpportunityViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewOpportunityViewController.xib; sourceTree = "<group>"; };
+		C068811E1B765B7700782F74 /* CommonMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonMethods.h; sourceTree = "<group>"; };
+		C068811F1B765B7700782F74 /* CommonMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonMethods.m; sourceTree = "<group>"; };
 		C069A40B1A84BD1F0059575E /* MessagesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesTableViewController.h; sourceTree = "<group>"; };
 		C069A40C1A84BD1F0059575E /* MessagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesTableViewController.m; sourceTree = "<group>"; };
 		C069A4111A84BD530059575E /* MessagesDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesDetailViewController.h; sourceTree = "<group>"; };
@@ -352,7 +355,7 @@
 				C00ED11C19644B000045A65E /* About */,
 				C00ED11719644AAE0045A65E /* Reveal */,
 				C029BA621969D20400125C4F /* Custom Segues */,
-				C05C6A8219F1D56100BCF9BD /* Date Time Ago */,
+				C05C6A8219F1D56100BCF9BD /* Extensions */,
 				C00ED0E619644A5A0045A65E /* Supporting Files */,
 			);
 			path = GarageSaleApp;
@@ -498,15 +501,17 @@
 			name = "Opportunities Filter";
 			sourceTree = "<group>";
 		};
-		C05C6A8219F1D56100BCF9BD /* Date Time Ago */ = {
+		C05C6A8219F1D56100BCF9BD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				C05C6A8319F1D5B800BCF9BD /* NSDate+NVTimeAgo.h */,
 				C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */,
 				C08C47981AB3295400B29FCA /* NS-Extensions.h */,
 				C08C47991AB3295400B29FCA /* NS-Extensions.m */,
+				C068811E1B765B7700782F74 /* CommonMethods.h */,
+				C068811F1B765B7700782F74 /* CommonMethods.m */,
 			);
-			name = "Date Time Ago";
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		C05C81591AC37A8C0097EB42 /* Client Picker */ = {
@@ -736,6 +741,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0786C901B23977A00557488 /* SettingsModel.m in Sources */,
+				C06881201B765B7700782F74 /* CommonMethods.m in Sources */,
 				C02486F019646AA5005DCBE6 /* ClientTableViewController.m in Sources */,
 				C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */,
 				C0B81D721A7D4D5E008B6C1C /* EditProductViewController.m in Sources */,

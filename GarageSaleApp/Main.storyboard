@@ -1693,7 +1693,7 @@
                         </searchBar>
                         <prototypes>
                             <tableViewCell autoresizesSubviews="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CellOpp" rowHeight="80" id="WVY-gp-xFP">
-                                <rect key="frame" x="0.0" y="130" width="308" height="80"/>
+                                <rect key="frame" x="0.0" y="66" width="308" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WVY-gp-xFP" id="kOl-mI-Ne0">
                                     <rect key="frame" x="0.0" y="0.0" width="308" height="79"/>

@@ -10,7 +10,6 @@
 #import "ClientDetailViewController.h"
 #import "SWRevealViewController.h"
 #import "Client.h"
-#import "ClientModel.h"
 #import "AppDelegate.h"
 
 @interface ClientTableViewController ()
@@ -25,7 +24,9 @@
     
     // The product that is selected from the table
     Client *_selectedClient;
-    
+ 
+    // Objects Methods
+    ClientModel *_clientMethods;
 }
 @end
 
@@ -56,9 +57,6 @@
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
     
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newClient:)];
-    self.navigationItem.rightBarButtonItem = addButton;
-  
     self.detailViewController = (ClientDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
 
     // To have access to shared arrays from AppDelegate
@@ -67,18 +65,20 @@
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
+
+    // Initialize objects methods
+    _clientMethods = [[ClientModel alloc] init];
+    _clientMethods.delegate = self;
+
     // Get the data
-    _myDataClients = [[[ClientModel alloc] init] getClientArray];
+    _myDataClients = [_clientMethods getClientArray];
 
-    // Sort client array to be ordered alphabetically
+    // Sort array to be sure new clients are on top
     [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
-        NSString *first = [(Client*)a name];
-        NSString *second = [(Client*)b name];
-        //return [second compare:first];
-        return [first compare:second];
+        NSDate *first = [(Client*)a created_time];
+        NSDate *second = [(Client*)b created_time];
+        return [second compare:first];
     }];
-
     
     // Assign detail view with first item
     _selectedClient = [_myDataClients firstObject];
@@ -87,6 +87,11 @@
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
     
+    // Initialize the refresh control.
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.backgroundColor = [UIColor whiteColor];
+    self.refreshControl.tintColor = [UIColor grayColor];
+    [self.refreshControl addTarget:self action:@selector(refreshTableGesture:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)menuButtonClicked:(id)sender
@@ -94,11 +99,41 @@
     [self.revealViewController revealToggleAnimated:YES];
 }
 
+- (void)refreshTableGesture:(id)sender
+{
+    [_clientMethods syncCoreDataWithParse];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - Client Model delegate methods
+
+-(void)clientsSyncedWithCoreData:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        [self.refreshControl endRefreshing];
+
+        // Sort array to be sure new clients are on top
+        [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
+            NSDate *first = [(Client*)a created_time];
+            NSDate *second = [(Client*)b created_time];
+            return [second compare:first];
+        }];
+        
+        [self.tableView reloadData];
+    }
+}
+
+-(void)clientAddedOrUpdated:(BOOL)succeed;
+{
+    // Used when a client is updated
+}
+
 
 #pragma mark Content Filtering & UISearchDisplayController Delegate Methods
 
@@ -220,7 +255,7 @@
     
     // Set table cell labels to client data
     //pictureCell.image = [UIImage imageWithData:myClient.picture];
-    pictureCell.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:myClient]];
+    pictureCell.image = [UIImage imageWithData:[_clientMethods getClientPhotoFrom:myClient]];
     nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
     zoneLabel.text = [NSString stringWithFormat:@"Vive en %@", myClient.client_zone];
     phoneLabel.text = myClient.phone1;

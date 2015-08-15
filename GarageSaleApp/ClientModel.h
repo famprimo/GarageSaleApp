@@ -9,14 +9,24 @@
 #import <Foundation/Foundation.h>
 #import "Client.h"
 
+@protocol ClientModelDelegate
+
+-(void)clientsSyncedWithCoreData:(BOOL)succeed;
+-(void)clientAddedOrUpdated:(BOOL)succeed;
+
+@end
+
 @interface ClientModel : NSObject
+
+@property (nonatomic, strong) id<ClientModelDelegate> delegate;
 
 - (void)saveInitialDataforClients;
 - (NSMutableArray*)getClientsFromCoreData;
+- (void)syncCoreDataWithParse;
 - (NSMutableArray*)getClientArray;
 - (NSString*)getNextClientID;
-- (BOOL)addNewClient:(Client*)newClient;
-- (BOOL)updateClient:(Client*)clientToUpdate;
+- (void)addNewClient:(Client*)newClient;
+- (void)updateClient:(Client*)clientToUpdate;
 - (NSData*)getClientPhotoFrom:(Client*)clientSelected;
 - (NSString*)getClientIDfromFbId:(NSString*)clientFbIdToValidate;
 - (Client*)getClientFromClientId:(NSString*)clientIDtoSearch;

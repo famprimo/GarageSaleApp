@@ -9,8 +9,6 @@
 #import "ProductTableViewController.h"
 #import "ProductDetailViewController.h"
 #import "SWRevealViewController.h"
-#import "Product.h"
-#import "ProductModel.h"
 #import "Settings.h"
 #import "SettingsModel.h"
 #import "NSDate+NVTimeAgo.h"
@@ -30,10 +28,13 @@
 
     // Temp variables for user and page IDs
     Settings *_tmpSettings;
+    
+    // Objects Methods
+    ProductModel *_productMethods;
 }
 @end
 
-@implementation ProductTableViewController
+@implementation ProductTableViewController 
 
 @synthesize productSearchBar;
 
@@ -64,12 +65,15 @@
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    
+    // Initialize objects methods
+    _productMethods = [[ProductModel alloc] init];
+    _productMethods.delegate = self;
 
     // Get the data
-    _myData = [[[ProductModel alloc] init] getProductArray];
+    _myData = [_productMethods getProductArray];
     _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
 
-    
     // Sort array to be sure new products are on top
     [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
         NSDate *first = [(Product*)a updated_time];
@@ -90,7 +94,6 @@
     self.refreshControl.backgroundColor = [UIColor whiteColor];
     self.refreshControl.tintColor = [UIColor grayColor];
     [self.refreshControl addTarget:self action:@selector(refreshTableGesture:) forControlEvents:UIControlEventValueChanged];
-
 }
 
 - (void)menuButtonClicked:(id)sender
@@ -100,14 +103,46 @@
 
 - (void)refreshTableGesture:(id)sender
 {
-    [self makeFBRequestForPhotos];
-    
+    [_productMethods syncCoreDataWithParse];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark - Product Model delegate methods
+
+-(void)productsSyncedWithCoreData:(BOOL)succeed;
+{
+    [self makeFBRequestForPhotos];
+}
+
+-(void)productAddedOrUpdated:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        // Sort array to be sure new products are on top
+        [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
+            NSDate *first = [(Product*)a updated_time];
+            NSDate *second = [(Product*)b updated_time];
+            return [second compare:first];
+        }];
+        
+        // Reload table
+        [self.tableView reloadData];
+        
+        /*
+         [UIView transitionWithView:self.tableView
+         duration:0.5f
+         options:UIViewAnimationOptionTransitionCrossDissolve
+         animations:^(void) {
+         [self.tableView reloadData];
+         } completion:NULL];
+         */
+    }
 }
 
 
@@ -191,7 +226,6 @@
 }
 
 
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -239,7 +273,7 @@
     
     // Set table cell labels to listing data
     // productImage.image = [UIImage imageWithData:myProduct.picture];
-    productImage.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:myProduct]];
+    productImage.image = [UIImage imageWithData:[_productMethods getProductPhotoFrom:myProduct]];
     nameLabel.text = myProduct.name;
     codeLabel.text = myProduct.codeGS;
     dateLabel.text = [myProduct.created_time formattedAsTimeAgo];
@@ -349,8 +383,6 @@
 
 - (void) parseFBResultsRequestForPhotos:(id)result
 {
-    ProductModel *productMethods = [[ProductModel alloc] init];
-
     NSArray *photosArray = result[@"data"];
     
     // Get details and create array
@@ -361,12 +393,12 @@
         NSString *photoID = photosArray[i][@"id"];
         
         // Review if product exists
-        NSString *productID = [productMethods getProductIDfromFbPhotoId:photoID];
+        NSString *productID = [_productMethods getProductIDfromFbPhotoId:photoID];
         
-        if ([productID  isEqual: @"Not Found"])
+        if ([productID  isEqual: @"Not Found"] && !(photosArray[i][@"name"] == nil) && ![[_productMethods getTextThatFollows:@"GS" fromMessage:photosArray[i][@"name"]] isEqualToString:@"Not Found"])
         {
             // New product!
-            productID = [productMethods getNextProductID];
+            productID = [_productMethods getNextProductID];
             
             Product *newProduct = [[Product alloc] init];
             
@@ -378,11 +410,11 @@
             
             // Get name, currency, price, GS code and type from photo description
             
-            newProduct.name = [productMethods getProductNameFromFBPhotoDesc:newProduct.desc];
+            newProduct.name = [_productMethods getProductNameFromFBPhotoDesc:newProduct.desc];
             
             NSString *tmpText;
             
-            tmpText = [productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
+            tmpText = [_productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
             if (![tmpText isEqualToString:@"Not Found"])
             {
                 newProduct.codeGS = [NSString stringWithFormat:@"GSN%@", tmpText];
@@ -391,7 +423,7 @@
             }
             else
             {
-                tmpText = [productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
+                tmpText = [_productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
                 if (![tmpText isEqualToString:@"Not Found"])
                 {
                     newProduct.codeGS = [NSString stringWithFormat:@"GS%@", tmpText];
@@ -404,7 +436,7 @@
                 }
             }
             
-            tmpText = [productMethods getTextThatFollows:@"s/. " fromMessage:newProduct.desc];
+            tmpText = [_productMethods getTextThatFollows:@"s/. " fromMessage:newProduct.desc];
             if (![tmpText isEqualToString:@"Not Found"]) {
                 tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
                 newProduct.currency = @"S/.";
@@ -412,7 +444,7 @@
             }
             else
             {
-                tmpText = [productMethods getTextThatFollows:@"USD " fromMessage:newProduct.desc];
+                tmpText = [_productMethods getTextThatFollows:@"USD " fromMessage:newProduct.desc];
                 if (![tmpText isEqualToString:@"Not Found"]) {
                     tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
                     newProduct.currency = @"USD";
@@ -424,15 +456,15 @@
                 }
             }
             
-            
             NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
             [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
             newProduct.created_time = [formatFBdates dateFromString:photosArray[i][@"created_time"]];
             newProduct.updated_time = [formatFBdates dateFromString:photosArray[i][@"updated_time"]];
             newProduct.fb_updated_time = [formatFBdates dateFromString:photosArray[i][@"updated_time"]];
-            
+            newProduct.solddisabled_time = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
+            newProduct.last_promotion_time = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
+
             newProduct.picture_link = photosArray[i][@"picture"];
-            // newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
             newProduct.additional_pictures = @"";
             newProduct.status = @"N";
             newProduct.promotion_piority = @"2";
@@ -440,20 +472,16 @@
             newProduct.agent_id = @"00001";
             
             // Status... Sold?
-            tmpText = [productMethods getTextThatFollows:@"VENDID" fromMessage:newProduct.desc];
+            tmpText = [_productMethods getTextThatFollows:@"VENDID" fromMessage:newProduct.desc];
             if (![tmpText isEqualToString:@"Not Found"])
             {
                 newProduct.status = @"S";
             }
 
-            
-            // Insert new product to array and add row to table
-            [self addNewProduct:newProduct];
-            
+            // Add new product to DB
+            [_productMethods addNewProduct:newProduct];
         }
-        
     }
-
 }
 
 - (void)setFacebookPageID;
@@ -482,34 +510,6 @@
              }
          }];
     }
-}
-
-- (void) addNewProduct:(Product*)newProduct;
-{
-    ProductModel *productMethods = [[ProductModel alloc] init];
-    
-    // Insert message to table array
-    // [_myData insertObject:newProduct atIndex:0];  NO ES NECESARIO PUES ESTA REFERENCIADO
-    
-    // Sort array to be sure new products are on top
-    [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
-        NSDate *first = [(Product*)a updated_time];
-        NSDate *second = [(Product*)b updated_time];
-        return [second compare:first];
-        //return [first compare:second];
-    }];
-    
-    // Update database
-    [productMethods addNewProduct:newProduct];
-    
-    // Reload table
-    [UIView transitionWithView:self.tableView
-                      duration:0.5f
-                       options:UIViewAnimationOptionTransitionCrossDissolve
-                    animations:^(void) {
-                        [self.tableView reloadData];
-                    } completion:NULL];
-    
 }
 
 @end

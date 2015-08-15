@@ -38,6 +38,7 @@
         <attribute name="sex" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="update_db" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Messages" inverseName="client" inverseEntity="Messages" syncable="YES"/>
         <relationship name="opportunities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Opportunities" inverseName="client" inverseEntity="Opportunities" syncable="YES"/>
         <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Products" inverseName="client" inverseEntity="Products" syncable="YES"/>
@@ -75,6 +76,7 @@
         <attribute name="price_sold" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="product_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="update_db" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="client" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clients" inverseName="opportunities" inverseEntity="Clients" syncable="YES"/>
         <relationship name="product" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Products" inverseName="opportunities" inverseEntity="Products" syncable="YES"/>
     </entity>
@@ -103,18 +105,22 @@
         <attribute name="solddisabled_time" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="update_db" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="updated_time" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="client" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clients" inverseName="products" inverseEntity="Clients" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Messages" inverseName="product" inverseEntity="Messages" syncable="YES"/>
         <relationship name="opportunities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Opportunities" inverseName="product" inverseEntity="Opportunities" syncable="YES"/>
     </entity>
     <entity name="Settings" syncable="YES">
+        <attribute name="client_last_update" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="fb_page_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fb_page_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fb_page_token" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fb_user_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fb_user_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="initial_data_loaded" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="opportunity_last_update" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="product_last_update" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="template_last_update" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>
     <entity name="Templates" syncable="YES">
@@ -123,17 +129,18 @@
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="update_db" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="updated_time" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>
     <elements>
         <element name="Attachments" positionX="-603" positionY="207" width="128" height="180"/>
         <element name="ClientPhotos" positionX="-594" positionY="216" width="128" height="75"/>
-        <element name="Clients" positionX="-387" positionY="54" width="128" height="420"/>
+        <element name="Clients" positionX="-387" positionY="54" width="128" height="435"/>
         <element name="Messages" positionX="-209" positionY="324" width="128" height="315"/>
-        <element name="Opportunities" positionX="-569" positionY="72" width="128" height="253"/>
+        <element name="Opportunities" positionX="-569" positionY="72" width="128" height="270"/>
         <element name="ProductPhotos" positionX="-603" positionY="207" width="128" height="75"/>
-        <element name="Products" positionX="-810" positionY="198" width="128" height="405"/>
-        <element name="Settings" positionX="-603" positionY="207" width="128" height="150"/>
-        <element name="Templates" positionX="-209" positionY="81" width="128" height="135"/>
+        <element name="Products" positionX="-810" positionY="198" width="128" height="420"/>
+        <element name="Settings" positionX="-603" positionY="207" width="128" height="195"/>
+        <element name="Templates" positionX="-209" positionY="81" width="128" height="150"/>
     </elements>
 </model>

@@ -11,14 +11,24 @@
 #import "Product.h"
 #import "Opportunity.h"
 
+@protocol ProductModelDelegate
+
+-(void)productsSyncedWithCoreData:(BOOL)succeed;
+-(void)productAddedOrUpdated:(BOOL)succeed;
+
+@end
+
 @interface ProductModel : NSObject
+
+@property (nonatomic, strong) id<ProductModelDelegate> delegate;
 
 - (void)saveInitialDataforProducts;
 - (NSMutableArray*)getProductsFromCoreData;
+- (void)syncCoreDataWithParse;
 - (NSMutableArray*)getProductArray;
 - (NSString*)getNextProductID;
-- (BOOL)addNewProduct:(Product*)newProduct;
-- (BOOL)updateProduct:(Product*)productToUpdate;
+- (void)addNewProduct:(Product*)newProduct;
+- (void)updateProduct:(Product*)productToUpdate;
 - (NSData*)getProductPhotoFrom:(Product*)productSelected;
 - (void)updateProduct:(Product*)productToUpdate withArray:(NSMutableArray*)arrayProducts;
 - (Client*)getClient:(Product*)productFound;

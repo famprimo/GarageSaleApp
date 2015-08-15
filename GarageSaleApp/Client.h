@@ -26,12 +26,12 @@
 @property (strong, nonatomic) NSString *email;
 @property (strong, nonatomic) NSString *preference; // (E)mail (F)acebook
 @property (strong, nonatomic) NSString *picture_link;
-// @property (strong, nonatomic) NSData *picture;
 @property (strong, nonatomic) NSString *status; // (N)ew (U)pdated (V)erified (B)anned
 @property (strong, nonatomic) NSDate *created_time;
 @property (strong, nonatomic) NSDate *last_interacted_time;
 @property (strong, nonatomic) NSDate *last_inventory_time;
 @property (strong, nonatomic) NSString *notes;
 @property (strong, nonatomic) NSString *agent_id;
+@property (strong, nonatomic) NSDate *update_db;
 
 @end

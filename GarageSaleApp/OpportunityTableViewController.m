@@ -10,7 +10,6 @@
 #import "OpportunityDetailViewController.h"
 #import "SWRevealViewController.h"
 #import "Opportunity.h"
-#import "OpportunityModel.h"
 #import "Client.h"
 #import "ClientModel.h"
 #import "Product.h"
@@ -32,7 +31,11 @@
     
     // For Filter
     NSString *_filterSelected;
+    
+    // Objects Methods
+    OpportunityModel *_opportunityMethods;
 }
+
 // For Popover
 @property (nonatomic, strong) UIPopoverController *opportunitiesFilterPopover;
 
@@ -72,8 +75,12 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    // Initialize objects methods
+    _opportunityMethods = [[OpportunityModel alloc] init];
+    _opportunityMethods.delegate = self;
+
     // Get the opportunities data
-    _myData = [[[OpportunityModel alloc] init] getOpportunitiesArray];
+    _myData = [_opportunityMethods getOpportunitiesArray];
     
     _filterSelected = @"Activas";  // Default filter
     NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"status like[c] 'O' OR status like[c] 'S'"];
@@ -85,7 +92,6 @@
         NSDate *first = [(Opportunity*)a created_time];
         NSDate *second = [(Opportunity*)b created_time];
         return [second compare:first];
-        //return [first compare:second];
     }];
 
     // Assign detail view with first item
@@ -95,13 +101,21 @@
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    // Initialize the refresh control.
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.backgroundColor = [UIColor whiteColor];
+    self.refreshControl.tintColor = [UIColor grayColor];
+    [self.refreshControl addTarget:self action:@selector(refreshTableGesture:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)menuButtonClicked:(id)sender
 {
     [self.revealViewController revealToggleAnimated:YES];
+}
+
+- (void)refreshTableGesture:(id)sender
+{
+    [_opportunityMethods syncCoreDataWithParse];
 }
 
 - (void)setupButtonClicked:(id)sender
@@ -170,6 +184,31 @@
 }
 
 
+#pragma mark - Opportunity Model delegate methods
+
+-(void)opportunitiesSyncedWithCoreData:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        [self.refreshControl endRefreshing];
+        
+        // Sort array to be sure new opportunities are on top
+        [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
+            NSDate *first = [(Opportunity*)a created_time];
+            NSDate *second = [(Opportunity*)b created_time];
+            return [second compare:first];
+        }];
+        
+        [self.tableView reloadData];
+    }
+}
+
+-(void)opportunityAddedOrUpdated:(BOOL)succeed;
+{
+    // Used when an opportunity is updated
+}
+
+
 #pragma mark Content Filtering & UISearchDisplayController Delegate Methods
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
@@ -228,7 +267,6 @@
     // Return YES to cause the search result table view to be reloaded.
     return YES;
 }
-
 
 
 #pragma mark - Table view data source

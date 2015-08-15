@@ -25,12 +25,12 @@
 @property (strong, nonatomic) NSDate *fb_updated_time;
 @property (strong, nonatomic) NSString *type; // (S)ales (A)dvertising
 @property (strong, nonatomic) NSString *picture_link;
-// @property (strong, nonatomic) NSData *picture;
 @property (strong, nonatomic) NSString *additional_pictures;
 @property (strong, nonatomic) NSString *status; // (N)ew (U)pdated (S)old (D)isabled
 @property (strong, nonatomic) NSDate *last_promotion_time;
 @property (strong, nonatomic) NSString *promotion_piority; // 1,2,3 (default is 2)
 @property (strong, nonatomic) NSString *notes;
 @property (strong, nonatomic) NSString *agent_id;
+@property (strong, nonatomic) NSDate *update_db;
 
 @end

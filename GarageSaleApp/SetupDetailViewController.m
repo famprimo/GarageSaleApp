@@ -15,9 +15,11 @@
     NSMutableArray *_myDataTemplates;
     
     // /For the selections in the tables
-    TemplateModel *_templateMethods;
     Template *_selectedTemplate;
     NSString *_selectedType;
+
+    // Objects Methods
+    TemplateModel *_templateMethods;
 }
 @end
 
@@ -110,7 +112,7 @@
 }
 
 
-#pragma mark - TemplateMode delegate methods
+#pragma mark - Template Model delegate methods
 
 -(void)templatesSyncedWithCoreData:(BOOL)succeed
 {

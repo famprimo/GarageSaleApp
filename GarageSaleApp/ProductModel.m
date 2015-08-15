@@ -8,6 +8,9 @@
 
 #import "ProductModel.h"
 #import "AppDelegate.h"
+#import <Parse/Parse.h>
+#import "SettingsModel.h"
+#import "CommonMethods.h"
 
 
 @implementation ProductModel
@@ -40,12 +43,10 @@
     tempProduct.price = [NSNumber numberWithFloat:270.0];
     tempProduct.created_time = [dateFormat dateFromString:@"20140501"];
     tempProduct.updated_time = [dateFormat dateFromString:@"20140501"];
-    tempProduct.solddisabled_time = nil;
-    tempProduct.fb_updated_time = nil;
+    tempProduct.solddisabled_time = [dateFormat dateFromString:@"20000101"];
+    tempProduct.fb_updated_time = [dateFormat dateFromString:@"20000101"];
     tempProduct.type = @"S";
     tempProduct.picture_link = @"http://jiahome.co.uk/images/thumbnails/Traditional-Hardwood-Furniture.jpg";
-    //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-paper-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"S";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140501"];
@@ -69,12 +70,10 @@
     tempProduct.price = [NSNumber numberWithFloat:160.0];
     tempProduct.created_time = [dateFormat dateFromString:@"20140301"];
     tempProduct.updated_time = [dateFormat dateFromString:@"20140301"];
-    tempProduct.solddisabled_time = nil;
-    tempProduct.fb_updated_time = nil;
+    tempProduct.solddisabled_time = [dateFormat dateFromString:@"20000101"];
+    tempProduct.fb_updated_time = [dateFormat dateFromString:@"20000101"];
     tempProduct.type = @"S";
     tempProduct.picture_link = @"http://images-en.busytrade.com/240073800/Urban-Furniture.jpg";
-    //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-rock-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140301"];
@@ -98,12 +97,10 @@
     tempProduct.price = [NSNumber numberWithFloat:200.0];
     tempProduct.created_time = [dateFormat dateFromString:@"20140219"];
     tempProduct.updated_time = [dateFormat dateFromString:@"20140219"];
-    tempProduct.solddisabled_time = nil;
-    tempProduct.fb_updated_time = nil;
+    tempProduct.solddisabled_time = [dateFormat dateFromString:@"20000101"];
+    tempProduct.fb_updated_time = [dateFormat dateFromString:@"20000101"];
     tempProduct.type = @"S";
     tempProduct.picture_link = @"http://www.weaverfurnituresales.com/images/categories/12/palisade%20amish%20furniture.jpg";
-    //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/right-scissors-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140219"];
@@ -127,12 +124,10 @@
     tempProduct.price = [NSNumber numberWithFloat:1100.0];
     tempProduct.created_time = [dateFormat dateFromString:@"20140315"];
     tempProduct.updated_time = [dateFormat dateFromString:@"20140315"];
-    tempProduct.solddisabled_time = nil;
-    tempProduct.fb_updated_time = nil;
+    tempProduct.solddisabled_time = [dateFormat dateFromString:@"20000101"];
+    tempProduct.fb_updated_time = [dateFormat dateFromString:@"20000101"];
     tempProduct.type = @"S";
     tempProduct.picture_link = @"http://www.homeapplianceinfo.com/products/refrigerator/hotpoint_refrigerator/1.jpg";
-    //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/left-paper-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20140315"];
@@ -156,12 +151,10 @@
     tempProduct.price = [NSNumber numberWithFloat:0];
     tempProduct.created_time = [dateFormat dateFromString:@"20150115"];
     tempProduct.updated_time = [dateFormat dateFromString:@"20150115"];
-    tempProduct.solddisabled_time = nil;
-    tempProduct.fb_updated_time = nil;
+    tempProduct.solddisabled_time = [dateFormat dateFromString:@"20000101"];
+    tempProduct.fb_updated_time = [dateFormat dateFromString:@"20000101"];
     tempProduct.type = @"A";
     tempProduct.picture_link = @"http://www.couponsandfreebiesmom.com/wp-content/uploads/2011/01/kohls-clothes.jpg";
-    //tempProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempProduct.picture_link]];
-    //tempProduct.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/left-paper-128.png"];
     tempProduct.additional_pictures = @"";
     tempProduct.status = @"U";
     tempProduct.last_promotion_time = [dateFormat dateFromString:@"20150215"];
@@ -178,7 +171,7 @@
 {
     NSMutableArray *productsArray = [[NSMutableArray alloc] init];
     
-    // Fetch data from persistent data store
+    // Fetch data from Core Data
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Products"];
     productsArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
@@ -203,6 +196,74 @@
     mainDelegate.lastProductID = lastID;
     
     return productsArray;
+}
+
+- (void)syncCoreDataWithParse;
+{
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    // Get latest information from Parse
+    PFQuery *query = [PFQuery queryWithClassName:@"Product"];
+    [query whereKey:@"updatedAt" greaterThan:mainDelegate.sharedSettings.product_last_update];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error)
+        {
+            // The find from Parse succeeded
+            for (PFObject *parseObject in objects)
+            {
+                Product *productFromParse = [[Product alloc] init];
+                
+                productFromParse.product_id = [parseObject valueForKey:@"product_id"];
+                productFromParse.client_id = [parseObject valueForKey:@"client_id"];
+                productFromParse.codeGS = [parseObject valueForKey:@"codeGS"];
+                productFromParse.name = [parseObject valueForKey:@"name"];
+                productFromParse.desc = [parseObject valueForKey:@"desc"];
+                productFromParse.fb_photo_id = [parseObject valueForKey:@"fb_photo_id"];
+                productFromParse.fb_link = [parseObject valueForKey:@"fb_link"];
+                productFromParse.currency = [parseObject valueForKey:@"currency"];
+                productFromParse.price = [parseObject valueForKey:@"price"];
+                productFromParse.created_time = [parseObject valueForKey:@"created_time"];
+                productFromParse.updated_time = [parseObject valueForKey:@"updated_time"];
+                productFromParse.solddisabled_time = [parseObject valueForKey:@"solddisabled_time"];
+                productFromParse.fb_updated_time = [parseObject valueForKey:@"fb_updated_time"];
+                productFromParse.type = [parseObject valueForKey:@"type"];
+                productFromParse.picture_link = [parseObject valueForKey:@"picture_link"];
+                productFromParse.additional_pictures = [parseObject valueForKey:@"additional_pictures"];
+                productFromParse.status = [parseObject valueForKey:@"status"];
+                productFromParse.last_promotion_time = [parseObject valueForKey:@"last_promotion_time"];
+                productFromParse.promotion_piority = [parseObject valueForKey:@"promotion_piority"];
+                productFromParse.notes = [parseObject valueForKey:@"notes"];
+                productFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
+                productFromParse.update_db = [parseObject valueForKey:@"updatedAt"];
+                
+                // Update object in CoreData
+                NSString *results = [self updateProductToCoreData:productFromParse];
+                
+                if ([results isEqualToString:@"NOT FOUND"])
+                {
+                    // Object is new! Add to CoreData;
+                    [self addNewProductToCoreData:productFromParse];
+                }
+                else if (![results isEqualToString:@"OK"])
+                {
+                    NSLog(@"Failed to update the Product object in CoreData");
+                    [self.delegate productsSyncedWithCoreData:NO];
+                }
+             }
+            
+            // Send messages to delegates
+            [self.delegate productsSyncedWithCoreData:YES];
+       }
+        else
+        {
+            // Log details of the failure
+            NSLog(@"Failed to retrieve the Product object from Parse. Error: %@ %@", error, [error userInfo]);
+            [self.delegate productsSyncedWithCoreData:NO];
+        }
+    }];
 }
 
 - (NSMutableArray*)getProductArray; // Return an array with all products
@@ -237,11 +298,66 @@
     return nextID;
 }
 
-- (BOOL)addNewProduct:(Product*)newProduct;
+- (void)addNewProduct:(Product*)newProduct;
 {
-    BOOL updateSuccessful = YES;
+    CommonMethods *commonMethods = [[CommonMethods alloc] init];
     
-    // Save object in persistent data store
+    // Save object in Parse
+    PFObject *parseObject = [PFObject objectWithClassName:@"Product"];
+    
+    parseObject[@"product_id"] = [commonMethods stringNotNil:newProduct.product_id];
+    parseObject[@"client_id"] = [commonMethods stringNotNil:newProduct.client_id];
+    parseObject[@"codeGS"] = [commonMethods stringNotNil:newProduct.codeGS];
+    parseObject[@"name"] = [commonMethods stringNotNil:newProduct.name];
+    parseObject[@"desc"] = [commonMethods stringNotNil:newProduct.desc];
+    parseObject[@"fb_photo_id"] = [commonMethods stringNotNil:newProduct.fb_photo_id];
+    parseObject[@"fb_link"] = [commonMethods stringNotNil:newProduct.fb_link];
+    parseObject[@"currency"] = [commonMethods stringNotNil:newProduct.currency];
+    parseObject[@"price"] = [commonMethods numberNotNil:newProduct.price];
+    parseObject[@"created_time"] = [commonMethods dateNotNil:newProduct.created_time];
+    parseObject[@"updated_time"] = [commonMethods dateNotNil:newProduct.updated_time];
+    parseObject[@"solddisabled_time"] = [commonMethods dateNotNil:newProduct.solddisabled_time];
+    parseObject[@"fb_updated_time"] = [commonMethods dateNotNil:newProduct.fb_updated_time];
+    parseObject[@"type"] = [commonMethods stringNotNil:newProduct.type];
+    parseObject[@"picture_link"] = [commonMethods stringNotNil:newProduct.picture_link];
+    parseObject[@"additional_pictures"] = [commonMethods stringNotNil:newProduct.additional_pictures];
+    parseObject[@"status"] = [commonMethods stringNotNil:newProduct.status];
+    parseObject[@"last_promotion_time"] = [commonMethods dateNotNil:newProduct.last_promotion_time];
+    parseObject[@"promotion_piority"] = [commonMethods stringNotNil:newProduct.promotion_piority];
+    parseObject[@"notes"] = [commonMethods stringNotNil:newProduct.notes];
+    parseObject[@"agent_id"] = [commonMethods stringNotNil:newProduct.agent_id];
+
+    newProduct.update_db = [NSDate date]; // Set update time to DB to now
+    parseObject[@"update_db"] = newProduct.update_db;
+    
+    [parseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded)
+        {
+            // The object has been saved to Parse! ... Add to CoreData
+            
+            if ([self addNewProductToCoreData:newProduct])
+            {
+                [self.delegate productAddedOrUpdated:YES];
+            }
+            else
+            {
+                [self.delegate productAddedOrUpdated:NO];
+            }
+        }
+        else
+        {
+            // There was a problem, check error.description
+            NSLog(@"Can't Save Product in Parse! %@", error.description);
+            [self.delegate productAddedOrUpdated:NO];
+        }
+    }];
+}
+
+- (BOOL)addNewProductToCoreData:(Product *)newProduct
+{
+    BOOL updateSucceed = YES;
+    
+    // Save object in Core Data
     NSManagedObjectContext *context = [self managedObjectContext];
     NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"Products" inManagedObjectContext:context];
     
@@ -260,19 +376,19 @@
     [coreDataObject setValue:newProduct.fb_updated_time forKey:@"fb_updated_time"];
     [coreDataObject setValue:newProduct.type forKey:@"type"];
     [coreDataObject setValue:newProduct.picture_link forKey:@"picture_link"];
-    // [coreDataObject setValue:newProduct.picture forKey:@"picture"];
     [coreDataObject setValue:newProduct.additional_pictures forKey:@"additional_pictures"];
     [coreDataObject setValue:newProduct.status forKey:@"status"];
     [coreDataObject setValue:newProduct.last_promotion_time forKey:@"last_promotion_time"];
     [coreDataObject setValue:newProduct.promotion_piority forKey:@"promotion_piority"];
     [coreDataObject setValue:newProduct.notes forKey:@"notes"];
     [coreDataObject setValue:newProduct.agent_id forKey:@"agent_id"];
-    
+    [coreDataObject setValue:newProduct.update_db forKey:@"update_db"];
+
     NSError *error = nil;
-    // Save the object to persistent store
+    // Save the object to Core Data
     if (![context save:&error]) {
         NSLog(@"Can't Save Product! %@ %@", error, [error localizedDescription]);
-        updateSuccessful = NO;
+        updateSucceed = NO;
     }
     else // update successful!
     {
@@ -282,29 +398,88 @@
         
         [mainDelegate.sharedArrayProducts addObject:newProduct];
         
-        // Add photo to CoreData
-        NSData *picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
+        // Update last update time
+        [[[SettingsModel alloc] init] updateSettingsProductDataUptaded:newProduct.update_db];
         
-        NSManagedObjectContext *context = [self managedObjectContext];
-        NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"ProductPhotos" inManagedObjectContext:context];
-
-        [coreDataObject setValue:newProduct.product_id forKey:@"product_id"];
-        [coreDataObject setValue:picture forKey:@"picture"];
-        
-        NSError *error = nil;
-        // Save the object to persistent store
-        if (![context save:&error]) {
-            NSLog(@"Can't Save Product Photo! %@ %@", error, [error localizedDescription]);
-            updateSuccessful = NO;
+        // Update last product ID if needed
+        if ([newProduct.product_id intValue] > mainDelegate.lastProductID)
+        {
+            mainDelegate.lastProductID = [newProduct.product_id intValue];
         }
     }
     
-    return updateSuccessful;
+    return updateSucceed;
 }
 
-- (BOOL)updateProduct:(Product*)productToUpdate;
+- (void)updateProduct:(Product*)productToUpdate;
 {
-    BOOL updateSuccessful = YES;
+    // Update object in Parse
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Product"];
+    [query whereKey:@"product_id" equalTo:productToUpdate.product_id];
+    
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *parseObject, NSError *error) {
+        if (!parseObject)
+        {
+            NSLog(@"Failed to retrieve the Product object from Parse");
+            [self.delegate productAddedOrUpdated:NO];
+        }
+        else
+        {
+            // The find from Parse succeeded... Update values
+            parseObject[@"product_id"] = productToUpdate.product_id;
+            parseObject[@"client_id"] = productToUpdate.client_id;
+            parseObject[@"codeGS"] = productToUpdate.codeGS;
+            parseObject[@"name"] = productToUpdate.name;
+            parseObject[@"desc"] = productToUpdate.desc;
+            parseObject[@"fb_photo_id"] = productToUpdate.fb_photo_id;
+            parseObject[@"fb_link"] = productToUpdate.fb_link;
+            parseObject[@"currency"] = productToUpdate.currency;
+            parseObject[@"price"] = productToUpdate.price;
+            parseObject[@"created_time"] = productToUpdate.created_time;
+            parseObject[@"updated_time"] = productToUpdate.updated_time;
+            parseObject[@"solddisabled_time"] = productToUpdate.solddisabled_time;
+            parseObject[@"fb_updated_time"] = productToUpdate.fb_updated_time;
+            parseObject[@"type"] = productToUpdate.type;
+            parseObject[@"picture_link"] = productToUpdate.picture_link;
+            parseObject[@"additional_pictures"] = productToUpdate.additional_pictures;
+            parseObject[@"status"] = productToUpdate.status;
+            parseObject[@"last_promotion_time"] = productToUpdate.last_promotion_time;
+            parseObject[@"promotion_piority"] = productToUpdate.promotion_piority;
+            parseObject[@"notes"] = productToUpdate.notes;
+            parseObject[@"agent_id"] = productToUpdate.agent_id;
+
+            productToUpdate.update_db = [NSDate date]; // Set update time to DB to now
+            parseObject[@"update_db"] = productToUpdate.update_db;
+
+            [parseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded)
+                {
+                    // The object has been saved to Parse! ... Update CoreData
+                    
+                    if ([[self updateProductToCoreData:productToUpdate] isEqualToString:@"OK"])
+                    {
+                        [self.delegate productAddedOrUpdated:YES];
+                    }
+                    else
+                    {
+                        [self.delegate productAddedOrUpdated:NO];
+                    }
+                }
+                else
+                {
+                    // There was a problem, check error.description
+                    NSLog(@"Can't Save Product in Parse! %@", error.description);
+                    [self.delegate productAddedOrUpdated:NO];
+                }
+            }];
+        }
+    }];
+}
+
+- (NSString*)updateProductToCoreData:(Product*)productToUpdate;
+{
+    NSString *updateResults = @"OK";
 
     NSManagedObjectContext *context = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -322,14 +497,14 @@
     if (error) {
         NSLog(@"Unable to execute fetch request");
         NSLog(@"%@, %@", error, error.localizedDescription);
-        updateSuccessful = NO;
+        updateResults = @"ERROR";
     }
     else
     {
         if (result.count == 0)
         {
             NSLog(@"No records retrieved");
-            updateSuccessful = NO;
+            updateResults = @"NOT FOUND";
         }
         else
         {
@@ -351,19 +526,19 @@
             [coreDataObject setValue:productToUpdate.fb_updated_time forKey:@"fb_updated_time"];
             [coreDataObject setValue:productToUpdate.type forKey:@"type"];
             [coreDataObject setValue:productToUpdate.picture_link forKey:@"picture_link"];
-            // [coreDataObject setValue:productToUpdate.picture forKey:@"picture"];
             [coreDataObject setValue:productToUpdate.additional_pictures forKey:@"additional_pictures"];
             [coreDataObject setValue:productToUpdate.status forKey:@"status"];
             [coreDataObject setValue:productToUpdate.last_promotion_time forKey:@"last_promotion_time"];
             [coreDataObject setValue:productToUpdate.promotion_piority forKey:@"promotion_piority"];
             [coreDataObject setValue:productToUpdate.notes forKey:@"notes"];
             [coreDataObject setValue:productToUpdate.agent_id forKey:@"agent_id"];
+            [coreDataObject setValue:productToUpdate.update_db forKey:@"update_db"];
             
-            // Save object to persistent store
+            // Save object to Core Data
             if (![self.managedObjectContext save:&error]) {
                 NSLog(@"Unable to save managed object context.");
                 NSLog(@"%@, %@", error, error.localizedDescription);
-                updateSuccessful = NO;
+                updateResults = @"ERROR";
             }
             else // update successful!
             {
@@ -384,30 +559,13 @@
                         break;
                     }
                 }
-                
-                // Add photo to CoreData if changed 
-                if (![[coreDataObject valueForKey:@"picture_link"] isEqualToString: productToUpdate.picture_link])
-                {
-                    NSData *picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:productToUpdate.picture_link]];
-
-                    NSManagedObjectContext *context = [self managedObjectContext];
-                    NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"ProductPhotos" inManagedObjectContext:context];
-                    
-                    [coreDataObject setValue:productToUpdate.product_id forKey:@"product_id"];
-                    [coreDataObject setValue:picture forKey:@"picture"];
-                    
-                    NSError *error = nil;
-                    // Save the object to persistent store
-                    if (![context save:&error]) {
-                        NSLog(@"Can't Save Product Photo! %@ %@", error, [error localizedDescription]);
-                        updateSuccessful = NO;
-                    }
-                }
+                                
+                //Update last update time
+                [[[SettingsModel alloc] init] updateSettingsProductDataUptaded:productToUpdate.update_db];
             }
         }
     }
-    
-    return updateSuccessful;
+    return updateResults;
 }
 
 - (NSData*)getProductPhotoFrom:(Product*)productSelected;
@@ -437,8 +595,7 @@
     {
         if (result.count == 0)
         {
-            NSLog(@"No records retrieved");
-            fetchSuccessful = NO;
+             fetchSuccessful = NO;
         }
         else
         {
@@ -451,9 +608,31 @@
     
     if (!fetchSuccessful)
     {
-        // Generic Picture
+        // Use a Generic Picture
         productPhoto = UIImagePNGRepresentation([UIImage imageNamed:@"GenericProduct"]);
 
+        // Ask for photo in background
+        if (productSelected.picture_link)
+        {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSData *picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:productSelected.picture_link]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    // Save photo on Core Data
+                    NSManagedObjectContext *context = [self managedObjectContext];
+                    NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"ProductPhotos" inManagedObjectContext:context];
+                    
+                    [coreDataObject setValue:productSelected.product_id forKey:@"product_id"];
+                    [coreDataObject setValue:picture forKey:@"picture"];
+                    
+                    NSError *error = nil;
+                    // Save the object to Core Data
+                    if (![context save:&error]) {
+                        NSLog(@"Can't Save Product Photo! %@ %@", error, [error localizedDescription]);
+                    }
+                });
+            });
+        }
     }
     
     // Review if product is sold to update the picture
@@ -685,7 +864,6 @@
     
     return [productName stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
-
 
 - (UIImage*)mergeImage:(UIImage*)first withImage:(UIImage*)second
 {

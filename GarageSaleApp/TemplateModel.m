@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
 #import "SettingsModel.h"
+#import "CommonMethods.h"
 
 @implementation TemplateModel
 
@@ -132,7 +133,7 @@
 {
     NSMutableArray *templatesArray = [[NSMutableArray alloc] init];
     
-    // Fetch data from persistent data store
+    // Fetch data from Core Data
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Templates"];
     templatesArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
@@ -159,7 +160,6 @@
     return templatesArray;
 }
 
-
 - (void)syncCoreDataWithParse;
 {
     // To have access to shared arrays from AppDelegate
@@ -184,6 +184,7 @@
                 templateFromParse.type = [parseObject valueForKey:@"type"];
                 templateFromParse.updated_time = [parseObject valueForKey:@"updated_time"];
                 templateFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
+                templateFromParse.update_db = [parseObject valueForKey:@"updatedAt"];
                 
                 // Update object in CoreData
                 NSString *results = [self updateTemplateToCoreData:templateFromParse];
@@ -198,10 +199,10 @@
                     NSLog(@"Failed to update the Template object in CoreData");
                     [self.delegate templatesSyncedWithCoreData:NO];
                 }
-                
-                // Send messages to delegates
-                [self.delegate templatesSyncedWithCoreData:YES];
             }
+            
+            // Send messages to delegates
+            [self.delegate templatesSyncedWithCoreData:YES];
         }
         else
         {
@@ -249,20 +250,25 @@
 
 - (void)addNewTemplate:(Template*)newTemplate;
 {
+    CommonMethods *commonMethods = [[CommonMethods alloc] init];
+    
     // Save object in Parse
     PFObject *parseObject = [PFObject objectWithClassName:@"Template"];
     
-    parseObject[@"template_id"] = newTemplate.template_id;
-    parseObject[@"title"] = newTemplate.title;
-    parseObject[@"text"] = newTemplate.text;
-    parseObject[@"type"] = newTemplate.type;
-    parseObject[@"updated_time"] = newTemplate.updated_time;
-    parseObject[@"agent_id"] = newTemplate.agent_id;
+    parseObject[@"template_id"] = [commonMethods stringNotNil:newTemplate.template_id];
+    parseObject[@"title"] = [commonMethods stringNotNil:newTemplate.title];
+    parseObject[@"text"] = [commonMethods stringNotNil:newTemplate.text];
+    parseObject[@"type"] = [commonMethods stringNotNil:newTemplate.type];
+    parseObject[@"updated_time"] = [commonMethods dateNotNil:newTemplate.updated_time];
+    parseObject[@"agent_id"] = [commonMethods stringNotNil:newTemplate.agent_id];
     
     [parseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
             // The object has been saved to Parse! ... Add to CoreData
+            
+            newTemplate.update_db = [NSDate date]; // Set update time to DB to now
+            
             [self addNewTemplateToCoreData:newTemplate];
         }
         else
@@ -275,7 +281,7 @@
 
 - (void)addNewTemplateToCoreData:(Template *)newTemplate
 {
-    // Save object in persistent data store
+    // Save object in Core Data
     NSManagedObjectContext *context = [self managedObjectContext];
     NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"Templates" inManagedObjectContext:context];
     
@@ -285,9 +291,10 @@
     [coreDataObject setValue:newTemplate.type forKey:@"type"];
     [coreDataObject setValue:newTemplate.updated_time forKey:@"updated_time"];
     [coreDataObject setValue:newTemplate.agent_id forKey:@"agent_id"];
+    [coreDataObject setValue:newTemplate.update_db forKey:@"update_db"];
     
     NSError *error = nil;
-    // Save the object to persistent store
+    // Save the object to Core Data
     if (![context save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
@@ -300,7 +307,7 @@
         [mainDelegate.sharedArrayTemplates addObject:newTemplate];
         
         //Update last update time
-        [[[SettingsModel alloc] init] updateSettingsTemplateDataUptaded:newTemplate.updated_time];
+        [[[SettingsModel alloc] init] updateSettingsTemplateDataUptaded:newTemplate.update_db];
     }
 }
 
@@ -330,6 +337,9 @@
                 if (succeeded)
                 {
                     // The object has been saved to Parse! ... Update CoreData
+                    
+                    templateToUpdate.update_db = [NSDate date]; // Set update time to DB to now
+                    
                     [self updateTemplateToCoreData:templateToUpdate];
                 }
                 else
@@ -346,7 +356,7 @@
 {
     NSString *updateResults = @"OK";
     
-    // Update object in persistent data store
+    // Update object in Core Data
     NSManagedObjectContext *context = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
@@ -383,8 +393,9 @@
             [coreDataObject setValue:templateToUpdate.type forKey:@"type"];
             [coreDataObject setValue:templateToUpdate.updated_time forKey:@"updated_time"];
             [coreDataObject setValue:templateToUpdate.agent_id forKey:@"agent_id"];
+            [coreDataObject setValue:templateToUpdate.update_db forKey:@"update_db"];
             
-            // Save object to persistent store
+            // Save object to Core Data
             if (![self.managedObjectContext save:&error]) {
                 NSLog(@"Unable to save managed object context.");
                 NSLog(@"%@, %@", error, error.localizedDescription);
@@ -412,7 +423,7 @@
                 }
                 
                 //Update last update time
-                [[[SettingsModel alloc] init] updateSettingsTemplateDataUptaded:templateToUpdate.updated_time];
+                [[[SettingsModel alloc] init] updateSettingsTemplateDataUptaded:templateToUpdate.update_db];
             }
         }
     }
@@ -538,10 +549,7 @@
         {
             [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%@", relatedProduct.fb_link]];
         }
-
     }    
-    
-    
     
     return [NSString stringWithString:reviewedText];
 }

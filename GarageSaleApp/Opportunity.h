@@ -22,5 +22,6 @@
 @property (strong, nonatomic) NSString *notes;
 @property (strong, nonatomic) NSNumber *commision;
 @property (strong, nonatomic) NSString *agent_id;
+@property (strong, nonatomic) NSDate *update_db;
 
 @end

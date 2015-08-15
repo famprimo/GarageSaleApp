@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "Product.h"
+#import "ProductModel.h"
 
 @class ProductDetailViewController;
 
-@interface ProductTableViewController : UITableViewController <UISearchBarDelegate, UISearchDisplayDelegate>
+@interface ProductTableViewController : UITableViewController <UISearchBarDelegate, UISearchDisplayDelegate, ProductModelDelegate>
 
 @property (strong, nonatomic) ProductDetailViewController *detailViewController;
 @property IBOutlet UISearchBar *productSearchBar;

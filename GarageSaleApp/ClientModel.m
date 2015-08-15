@@ -8,6 +8,9 @@
 
 #import "ClientModel.h"
 #import "AppDelegate.h"
+#import <Parse/Parse.h>
+#import "SettingsModel.h"
+#import "CommonMethods.h"
 
 @implementation ClientModel
 
@@ -45,8 +48,6 @@
     tempClient.email = @"georghette@hotmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://www.mpibpc.mpg.de/9488052/profile_image.jpg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"U";
     tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
@@ -76,8 +77,6 @@
     tempClient.email = @"ngallardo@hotmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://www.cambridgewhoswho.com/Images/Site/ImageManager/cf582880-74cc-4262-91ef-f70964e21ed4.JPG";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"V";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
@@ -106,8 +105,6 @@
     tempClient.email = @"mceli@hotmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://www.modelscout.com/images/media_storage/1191/profile.jpg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"U";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
@@ -136,8 +133,6 @@
     tempClient.email = @"agonzalez@hotmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://cdn.niketalk.com/8/80/175x400px-LM-80a1f338_speaker_20120329160049.jpeg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"U";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
@@ -166,8 +161,6 @@
     tempClient.email = @"irosado@hotmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://www.changemakers.com/sites/default/files/imagecache/changeshops_profile_picture_large/pictures/picture-95545.jpg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"B";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
@@ -196,8 +189,6 @@
     tempClient.email = @"mdelacruz@gmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://www.cutechoice.com/celeb/Marilyn_Monroe/profile.jpg";
-    //tempClient.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:tempClient.picture_link]];
-    //tempClient.picture = [NSData dataWithContentsOfFile:@"/Users/famprimo/Downloads/Viking.png"];
     tempClient.status = @"V";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
@@ -214,7 +205,7 @@
 {
     NSMutableArray *clientsArray = [[NSMutableArray alloc] init];
 
-    // Fetch data from persistent data store
+    // Fetch data from Core Data
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Clients"];
     clientsArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
@@ -239,6 +230,75 @@
     mainDelegate.lastCientID = lastID;
     
     return clientsArray;
+}
+
+- (void)syncCoreDataWithParse;
+{
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    // Get latest information from Parse
+    PFQuery *query = [PFQuery queryWithClassName:@"Client"];
+    [query whereKey:@"updatedAt" greaterThan:mainDelegate.sharedSettings.client_last_update];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error)
+        {
+            // The find from Parse succeeded
+            for (PFObject *parseObject in objects)
+            {
+                Client *clientFromParse = [[Client alloc] init];
+                
+                clientFromParse.client_id = [parseObject valueForKey:@"client_id"];
+                clientFromParse.fb_client_id = [parseObject valueForKey:@"fb_client_id"];
+                clientFromParse.fb_inbox_id = [parseObject valueForKey:@"fb_inbox_id"];
+                clientFromParse.fb_page_message_id = [parseObject valueForKey:@"fb_page_message_id"];
+                clientFromParse.type = [parseObject valueForKey:@"type"];
+                clientFromParse.name = [parseObject valueForKey:@"name"];
+                clientFromParse.last_name = [parseObject valueForKey:@"last_name"];
+                clientFromParse.sex = [parseObject valueForKey:@"sex"];
+                clientFromParse.client_zone = [parseObject valueForKey:@"client_zone"];
+                clientFromParse.address = [parseObject valueForKey:@"address"];
+                clientFromParse.phone1 = [parseObject valueForKey:@"phone1"];
+                clientFromParse.phone2 = [parseObject valueForKey:@"phone2"];
+                clientFromParse.phone3 = [parseObject valueForKey:@"phone3"];
+                clientFromParse.email = [parseObject valueForKey:@"email"];
+                clientFromParse.preference = [parseObject valueForKey:@"preference"];
+                clientFromParse.picture_link = [parseObject valueForKey:@"picture_link"];
+                clientFromParse.status = [parseObject valueForKey:@"status"];
+                clientFromParse.created_time = [parseObject valueForKey:@"created_time"];
+                clientFromParse.last_interacted_time = [parseObject valueForKey:@"last_interacted_time"];
+                clientFromParse.last_inventory_time = [parseObject valueForKey:@"last_inventory_time"];
+                clientFromParse.notes = [parseObject valueForKey:@"notes"];
+                clientFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
+                clientFromParse.update_db = [parseObject valueForKey:@"update_db"];
+                
+                // Update object in CoreData
+                NSString *results = [self updateClientToCoreData:clientFromParse];
+                
+                if ([results isEqualToString:@"NOT FOUND"])
+                {
+                    // Object is new! Add to CoreData;
+                    [self addNewClientToCoreData:clientFromParse];
+                }
+                else if (![results isEqualToString:@"OK"])
+                {
+                    NSLog(@"Failed to update the Client object in CoreData");
+                    [self.delegate clientsSyncedWithCoreData:NO];
+                }
+            }
+            
+            // Send messages to delegates
+            [self.delegate clientsSyncedWithCoreData:YES];
+        }
+        else
+        {
+            // Log details of the failure
+            NSLog(@"Failed to retrieve the Client object from Parse. Error: %@ %@", error, [error userInfo]);
+            [self.delegate clientsSyncedWithCoreData:NO];
+        }
+    }];
 }
 
 - (NSMutableArray*)getClientArray; // Return an array with all clients
@@ -266,11 +326,67 @@
     return nextID;
 }
 
-- (BOOL)addNewClient:(Client*)newClient;
+- (void)addNewClient:(Client*)newClient;
 {
-    BOOL updateSuccessful = YES;
+    CommonMethods *commonMethods = [[CommonMethods alloc] init];
     
-    // Save object in persistent data store
+    // Save object in Parse
+    PFObject *parseObject = [PFObject objectWithClassName:@"Client"];
+    
+    parseObject[@"client_id"] = [commonMethods stringNotNil:newClient.client_id];
+    parseObject[@"fb_client_id"] = [commonMethods stringNotNil:newClient.fb_client_id];
+    parseObject[@"fb_inbox_id"] = [commonMethods stringNotNil:newClient.fb_inbox_id];
+    parseObject[@"fb_page_message_id"] = [commonMethods stringNotNil:newClient.fb_page_message_id];
+    parseObject[@"type"] = [commonMethods stringNotNil:newClient.type];
+    parseObject[@"name"] = [commonMethods stringNotNil:newClient.name];
+    parseObject[@"last_name"] = [commonMethods stringNotNil:newClient.last_name];
+    parseObject[@"sex"] = [commonMethods stringNotNil:newClient.sex];
+    parseObject[@"client_zone"] = [commonMethods stringNotNil:newClient.client_zone];
+    parseObject[@"address"] = [commonMethods stringNotNil:newClient.address];
+    parseObject[@"phone1"] = [commonMethods stringNotNil:newClient.phone1];
+    parseObject[@"phone2"] = [commonMethods stringNotNil:newClient.phone2];
+    parseObject[@"phone3"] = [commonMethods stringNotNil:newClient.phone3];
+    parseObject[@"email"] = [commonMethods stringNotNil:newClient.email];
+    parseObject[@"preference"] = [commonMethods stringNotNil:newClient.preference];
+    parseObject[@"picture_link"] = [commonMethods stringNotNil:newClient.picture_link];
+    parseObject[@"status"] = [commonMethods stringNotNil:newClient.status];
+    parseObject[@"created_time"] = [commonMethods dateNotNil:newClient.created_time];
+    parseObject[@"last_interacted_time"] = [commonMethods dateNotNil:newClient.last_interacted_time];
+    parseObject[@"last_inventory_time"] = [commonMethods dateNotNil:newClient.last_inventory_time];
+    parseObject[@"notes"] = [commonMethods stringNotNil:newClient.notes];
+    parseObject[@"agent_id"] = [commonMethods stringNotNil:newClient.agent_id];
+    
+    newClient.update_db = [NSDate date]; // Set update time to DB to now
+    parseObject[@"update_db"] = newClient.update_db;
+
+    [parseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded)
+        {
+            // The object has been saved to Parse! ... Add to CoreData
+            
+            if ([self addNewClientToCoreData:newClient])
+            {
+                [self.delegate clientAddedOrUpdated:YES];
+            }
+            else
+            {
+                [self.delegate clientAddedOrUpdated:NO];
+            }
+        }
+        else
+        {
+            // There was a problem, check error.description
+            NSLog(@"Can't Save Client in Parse! %@", error.description);
+            [self.delegate clientAddedOrUpdated:NO];
+        }
+    }];
+}
+
+- (BOOL)addNewClientToCoreData:(Client*)newClient;
+{
+    BOOL updateSucceed = YES;
+    
+    // Save object in Core Data
     NSManagedObjectContext *context = [self managedObjectContext];
     NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"Clients" inManagedObjectContext:context];
     
@@ -291,19 +407,19 @@
     [coreDataObject setValue:newClient.email forKey:@"email"];
     [coreDataObject setValue:newClient.preference forKey:@"preference"];
     [coreDataObject setValue:newClient.picture_link forKey:@"picture_link"];
-    //[coreDataObject setValue:newClient.picture forKey:@"picture"];
     [coreDataObject setValue:newClient.status forKey:@"status"];
     [coreDataObject setValue:newClient.created_time forKey:@"created_time"];
     [coreDataObject setValue:newClient.last_interacted_time forKey:@"last_interacted_time"];
     [coreDataObject setValue:newClient.last_inventory_time forKey:@"last_inventory_time"];
     [coreDataObject setValue:newClient.notes forKey:@"notes"];
     [coreDataObject setValue:newClient.agent_id forKey:@"agent_id"];
-    
+    [coreDataObject setValue:newClient.update_db forKey:@"update_db"];
+
     NSError *error = nil;
-    // Save the object to persistent store
+    // Save the object to Core Data
     if (![context save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        updateSuccessful = NO;
+        updateSucceed = NO;
     }
     else // update successful!
     {
@@ -313,33 +429,90 @@
         
         [mainDelegate.sharedArrayClients addObject:newClient];
         
-        // Add photo to CoreData
-        if (newClient.picture_link)
-        {
-            NSData *picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newClient.picture_link]];
-            
-            NSManagedObjectContext *context = [self managedObjectContext];
-            NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"ClientPhotos" inManagedObjectContext:context];
-            
-            [coreDataObject setValue:newClient.client_id forKey:@"client_id"];
-            [coreDataObject setValue:picture forKey:@"picture"];
-            
-            NSError *error = nil;
-            // Save the object to persistent store
-            if (![context save:&error]) {
-                NSLog(@"Can't Save Client Photo! %@ %@", error, [error localizedDescription]);
-                updateSuccessful = NO;
-            }
-        }
-    }
+        // Update last update time
+        [[[SettingsModel alloc] init] updateSettingsClientDataUptaded:newClient.update_db];
 
-    return updateSuccessful;
+        // Update last client ID if needed
+        if ([newClient.client_id intValue] > mainDelegate.lastCientID)
+        {
+            mainDelegate.lastCientID = [newClient.client_id intValue];
+        }
+
+    }
+    
+    return updateSucceed;
 }
 
-- (BOOL)updateClient:(Client*)clientToUpdate;
+- (void)updateClient:(Client*)clientToUpdate;
 {
-    BOOL updateSuccessful = YES;
+    // Update object in Parse
     
+    PFQuery *query = [PFQuery queryWithClassName:@"Client"];
+    [query whereKey:@"client_id" equalTo:clientToUpdate.client_id];
+    
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *parseObject, NSError *error) {
+        if (!parseObject)
+        {
+            NSLog(@"Failed to retrieve the Client object from Parse");
+            [self.delegate clientAddedOrUpdated:NO];
+        }
+        else
+        {
+            // The find from Parse succeeded... Update values
+            parseObject[@"fb_client_id"] = clientToUpdate.fb_client_id;
+            parseObject[@"fb_inbox_id"] = clientToUpdate.fb_inbox_id;
+            parseObject[@"fb_page_message_id"] = clientToUpdate.fb_page_message_id;
+            parseObject[@"type"] = clientToUpdate.type;
+            parseObject[@"name"] = clientToUpdate.name;
+            parseObject[@"last_name"] = clientToUpdate.last_name;
+            parseObject[@"sex"] = clientToUpdate.sex;
+            parseObject[@"client_zone"] = clientToUpdate.client_zone;
+            parseObject[@"address"] = clientToUpdate.address;
+            parseObject[@"phone1"] = clientToUpdate.phone1;
+            parseObject[@"phone2"] = clientToUpdate.phone2;
+            parseObject[@"phone3"] = clientToUpdate.phone3;
+            parseObject[@"email"] = clientToUpdate.email;
+            parseObject[@"preference"] = clientToUpdate.preference;
+            parseObject[@"picture_link"] = clientToUpdate.picture_link;
+            parseObject[@"status"] = clientToUpdate.status;
+            parseObject[@"created_time"] = clientToUpdate.created_time;
+            parseObject[@"last_interacted_time"] = clientToUpdate.last_interacted_time;
+            parseObject[@"last_inventory_time"] = clientToUpdate.last_inventory_time;
+            parseObject[@"notes"] = clientToUpdate.notes;
+            parseObject[@"agent_id"] = clientToUpdate.agent_id;
+            
+            clientToUpdate.update_db = [NSDate date]; // Set update time to DB to now
+            parseObject[@"update_db"] = clientToUpdate.update_db;
+            
+            [parseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded)
+                {
+                    // The object has been saved to Parse! ... Update CoreData
+                    
+                    if ([[self updateClientToCoreData:clientToUpdate] isEqualToString:@"OK"])
+                    {
+                        [self.delegate clientAddedOrUpdated:YES];
+                    }
+                    else
+                    {
+                        [self.delegate clientAddedOrUpdated:NO];
+                    }
+                }
+                else
+                {
+                    // There was a problem, check error.description
+                    NSLog(@"Can't Save Client in Parse! %@", error.description);
+                    [self.delegate clientAddedOrUpdated:NO];
+                }
+            }];
+        }
+    }];
+}
+
+- (NSString*)updateClientToCoreData:(Client*)clientToUpdate;
+{
+    NSString *updateResults = @"OK";
+
     NSManagedObjectContext *context = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
@@ -356,14 +529,14 @@
     if (error) {
         NSLog(@"Unable to execute fetch request");
         NSLog(@"%@, %@", error, error.localizedDescription);
-        updateSuccessful = NO;
+        updateResults = @"ERROR";
     }
     else
     {
         if (result.count == 0)
         {
             NSLog(@"No records retrieved");
-            updateSuccessful = NO;
+            updateResults = @"NOT FOUND";
         }
         else
         {
@@ -371,7 +544,6 @@
             NSManagedObject *coreDataObject = (NSManagedObject *)[result objectAtIndex:0];
 
             // Get original picture_link value
-            NSString *originalPictureLink = [coreDataObject valueForKey:@"picture_link"];
 
             [coreDataObject setValue:clientToUpdate.client_id forKey:@"client_id"];
             [coreDataObject setValue:clientToUpdate.fb_client_id forKey:@"fb_client_id"];
@@ -390,20 +562,20 @@
             [coreDataObject setValue:clientToUpdate.email forKey:@"email"];
             [coreDataObject setValue:clientToUpdate.preference forKey:@"preference"];
             [coreDataObject setValue:clientToUpdate.picture_link forKey:@"picture_link"];
-            //[coreDataObject setValue:clientToUpdate.picture forKey:@"picture"];
             [coreDataObject setValue:clientToUpdate.status forKey:@"status"];
             [coreDataObject setValue:clientToUpdate.created_time forKey:@"created_time"];
             [coreDataObject setValue:clientToUpdate.last_interacted_time forKey:@"last_interacted_time"];
             [coreDataObject setValue:clientToUpdate.last_inventory_time forKey:@"last_inventory_time"];
             [coreDataObject setValue:clientToUpdate.notes forKey:@"notes"];
             [coreDataObject setValue:clientToUpdate.agent_id forKey:@"agent_id"];
+            [coreDataObject setValue:clientToUpdate.update_db forKey:@"update_db"];
             
-            // Save object to persistent store
+            // Save object to Core Data
             if (![self.managedObjectContext save:&error]) {
                 NSLog(@"Unable to save managed object context.");
                 NSLog(@"%@, %@", error, error.localizedDescription);
-                updateSuccessful = NO;
-            }
+                updateResults = @"ERROR";
+           }
             else // update successful!
             {
                 // Replace object in Shared Array
@@ -424,29 +596,12 @@
                     }
                 }
                 
-                // Add photo to CoreData if changed
-                if (clientToUpdate.picture_link && ![originalPictureLink isEqualToString: clientToUpdate.picture_link])
-                {
-                    NSData *picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:clientToUpdate.picture_link]];
-                    
-                    NSManagedObjectContext *context = [self managedObjectContext];
-                    NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"ClientPhotos" inManagedObjectContext:context];
-                    
-                    [coreDataObject setValue:clientToUpdate.client_id forKey:@"client_id"];
-                    [coreDataObject setValue:picture forKey:@"picture"];
-                    
-                    NSError *error = nil;
-                    // Save the object to persistent store
-                    if (![context save:&error]) {
-                        NSLog(@"Can't Save Client Photo! %@ %@", error, [error localizedDescription]);
-                        updateSuccessful = NO;
-                    }
-                }
+                //Update last update time
+                [[[SettingsModel alloc] init] updateSettingsClientDataUptaded:clientToUpdate.update_db];
             }
         }
     }
-
-    return updateSuccessful;
+    return updateResults;
 }
 
 - (NSData*)getClientPhotoFrom:(Client*)clientSelected;
@@ -476,7 +631,6 @@
     {
         if (result.count == 0)
         {
-            NSLog(@"No records retrieved");
             fetchSuccessful = NO;
         }
         else
@@ -490,8 +644,31 @@
     
     if (!fetchSuccessful)
     {
-        // Generic Picture
+        // Use a generic Picture
         clientPhoto = UIImagePNGRepresentation([UIImage imageNamed:@"GenericClient"]);
+        
+        // Ask for photo in background
+        if (clientSelected.picture_link)
+        {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSData *picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:clientSelected.picture_link]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    // Save photo on Core Data
+                    NSManagedObjectContext *context = [self managedObjectContext];
+                    NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"ClientPhotos" inManagedObjectContext:context];
+                    
+                    [coreDataObject setValue:clientSelected.client_id forKey:@"client_id"];
+                    [coreDataObject setValue:picture forKey:@"picture"];
+                    
+                    NSError *error = nil;
+                    // Save the object to Core Data
+                    if (![context save:&error]) {
+                        NSLog(@"Can't Save Client Photo! %@ %@", error, [error localizedDescription]);
+                    }
+                });
+            });
+        }
     }
     
     return clientPhoto;

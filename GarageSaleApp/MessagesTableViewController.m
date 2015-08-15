@@ -444,7 +444,7 @@
 {
     [self makeFBRequestForNewNotifications];
     
-    [self makeFBRequestForNewInbox];
+    // [self makeFBRequestForNewInbox];
     
     [self makeFBRequestForPageMessages];
 }
@@ -580,7 +580,7 @@
                      // Review if product exists
                      NSString *productID = [productMethods getProductIDfromFbPhotoId:photoID];
                      
-                     if ([productID isEqual: @"Not Found"])
+                     if ([productID  isEqual: @"Not Found"] && !(photosArray[i][@"name"] == nil) && ![[productMethods getTextThatFollows:@"GS" fromMessage:photosArray[i][@"name"]] isEqualToString:@"Not Found"])
                      {
                          // New product!
                          productID = [productMethods getNextProductID];
@@ -646,9 +646,9 @@
                          newProduct.created_time = [formatFBdates dateFromString:result[photosArray[i]][@"created_time"]];
                          newProduct.updated_time = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
                          newProduct.fb_updated_time = [formatFBdates dateFromString:result[photosArray[i]][@"updated_time"]];
+                         newProduct.solddisabled_time = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
                          
                          newProduct.picture_link = result[photosArray[i]][@"picture"];
-                         // newProduct.picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:newProduct.picture_link]];
                          newProduct.additional_pictures = @"";
                          newProduct.status = @"N";
                          newProduct.promotion_piority = @"2";
@@ -1315,11 +1315,10 @@
         
         if (![tmpClient.fb_page_message_id isEqualToString:fbPageMessageID])
         {
-            // InboxID is differente... update with the actual
+            // InboxID is different... update with the actual
             tmpClient.fb_page_message_id = fbPageMessageID;
             [clientMethods updateClient:tmpClient];
         }
-
         
         NSArray *jsonMessagesArray = jsonArray[i][@"messages"][@"data"];
         

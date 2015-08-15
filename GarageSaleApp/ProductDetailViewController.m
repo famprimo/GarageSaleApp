@@ -44,6 +44,8 @@
     // Temp variables for user and page IDs
     Settings *_tmpSettings;
     
+    // Objects Methods
+    ProductModel *_productMethods;
 }
 
 // For Popover
@@ -80,6 +82,9 @@
     
     self.tableOpportunities.delegate = self;
     self.tableOpportunities.dataSource = self;
+    
+    // Initialize objects methods
+    _productMethods = [[ProductModel alloc] init];
 
     _messageRowHeight = 80;
     
@@ -186,7 +191,7 @@
 
         // Set data
         // self.imageProduct.image = [UIImage imageWithData:productSelected.picture];
-        self.imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:productSelected]];
+        self.imageProduct.image = [UIImage imageWithData:[_productMethods getProductPhotoFrom:productSelected]];
         
         self.labelProductName.text = productSelected.name;
         if ([productSelected.type isEqualToString:@"S"])
@@ -335,8 +340,6 @@
 
 - (IBAction)changeProductStatus:(id)sender
 {
-    ProductModel *productMethods = [[ProductModel alloc] init];
-    
     Product *productSelected = [[Product alloc] init];
     productSelected = (Product *)_detailItem;
 
@@ -352,7 +355,7 @@
     }
     
     // Update products
-    [productMethods updateProduct:productSelected];
+    [_productMethods updateProduct:productSelected];
     
     [self configureView];
     
@@ -510,8 +513,7 @@
         
         productSelected.client_id = clientIDSelected;
         
-        ProductModel *productMethods = [[ProductModel alloc] init];
-        [productMethods updateProduct:productSelected];
+        [_productMethods updateProduct:productSelected];
         
     }
     else if ([_clientPickerOrigin isEqualToString:@"NEW OPP"])
@@ -872,7 +874,6 @@
         // Get the information to be shown
         Opportunity *myOpportunity = _myDataOpportunities[indexPath.row];
         
-        // Product *relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:myOpportunity.product_id];
         Client *clientRelatedToOpportunity = [[[ClientModel alloc] init] getClientFromClientId:myOpportunity.client_id];
         
         // Set client data

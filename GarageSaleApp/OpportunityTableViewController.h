@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "OpportunitiesFilterTableViewController.h"
+#import "OpportunityModel.h"
 
 @class OpportunityDetailViewController;
 
-@interface OpportunityTableViewController : UITableViewController <UIActionSheetDelegate, OpportunitiesFilterViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
+@interface OpportunityTableViewController : UITableViewController <UIActionSheetDelegate, OpportunitiesFilterViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate, OpportunityModelDelegate>
 
 @property (strong, nonatomic) OpportunityDetailViewController *detailViewController;
 @property (weak, nonatomic) IBOutlet UISearchBar *opportunitySearchBar;

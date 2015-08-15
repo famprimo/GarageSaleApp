@@ -18,5 +18,8 @@
 - (BOOL)updateSettingsUser:(NSString*)userName withUserID:(NSString*)userID andPageID:(NSString*)pageID andPageName:(NSString*)pageName andPageTokenID:(NSString*)pageTokenID;
 - (BOOL)updateSettingsInitialDataSaved;
 - (BOOL)updateSettingsTemplateDataUptaded:(NSDate*)lastUpdateDate;
+- (BOOL)updateSettingsProductDataUptaded:(NSDate*)lastUpdateDate;
+- (BOOL)updateSettingsClientDataUptaded:(NSDate*)lastUpdateDate;
+- (BOOL)updateSettingsOpportunityDataUptaded:(NSDate*)lastUpdateDate;
 
 @end

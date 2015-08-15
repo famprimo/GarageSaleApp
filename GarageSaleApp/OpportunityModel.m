@@ -11,6 +11,9 @@
 #import "Product.h"
 #import "ProductModel.h"
 #import "AppDelegate.h"
+#import <Parse/Parse.h>
+#import "SettingsModel.h"
+#import "CommonMethods.h"
 
 @implementation OpportunityModel
 
@@ -37,8 +40,8 @@
     tempOpportunity.initial_price = [NSNumber numberWithFloat:290.0];
     tempOpportunity.price_sold = [NSNumber numberWithFloat:0];
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140501"];
-    tempOpportunity.closedsold_time = nil;
-    tempOpportunity.paid_time = nil;
+    tempOpportunity.closedsold_time = [dateFormat dateFromString:@"20000101"];
+    tempOpportunity.paid_time = [dateFormat dateFromString:@"20000101"];
     tempOpportunity.status = @"O";
     tempOpportunity.notes = @"Notas";
     tempOpportunity.commision = [NSNumber numberWithFloat:0];;
@@ -56,7 +59,7 @@
     tempOpportunity.price_sold = [NSNumber numberWithFloat:0];
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140530"];
     tempOpportunity.closedsold_time = [dateFormat dateFromString:@"20140620"];
-    tempOpportunity.paid_time = nil;
+    tempOpportunity.paid_time = [dateFormat dateFromString:@"20000101"];
     tempOpportunity.status = @"C";
     tempOpportunity.notes = @"Notas";
     tempOpportunity.commision = [NSNumber numberWithFloat:0];;
@@ -73,8 +76,8 @@
     tempOpportunity.initial_price = [NSNumber numberWithFloat:1100.0];
     tempOpportunity.price_sold = [NSNumber numberWithFloat:0];
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140302"];
-    tempOpportunity.closedsold_time = nil;
-    tempOpportunity.paid_time = nil;
+    tempOpportunity.closedsold_time = [dateFormat dateFromString:@"20000101"];
+    tempOpportunity.paid_time = [dateFormat dateFromString:@"20000101"];
     tempOpportunity.status = @"O";
     tempOpportunity.notes = @"Notas";
     tempOpportunity.commision = [NSNumber numberWithFloat:0];;
@@ -92,7 +95,7 @@
     tempOpportunity.price_sold = [NSNumber numberWithFloat:990000];
     tempOpportunity.created_time = [dateFormat dateFromString:@"20131201"];
     tempOpportunity.closedsold_time = [dateFormat dateFromString:@"20131220"];
-    tempOpportunity.paid_time = nil;
+    tempOpportunity.paid_time = [dateFormat dateFromString:@"20000101"];
     tempOpportunity.status = @"S";
     tempOpportunity.notes = @"Vendido por el dueno";
     tempOpportunity.commision = [NSNumber numberWithFloat:10000];
@@ -107,13 +110,13 @@
     tempOpportunity.product_id = @"0000002";
     tempOpportunity.client_id = @"00006";
     tempOpportunity.initial_price = [NSNumber numberWithFloat:250.0];
-    tempOpportunity.price_sold = 0;
+    tempOpportunity.price_sold = [NSNumber numberWithFloat:0];;
     tempOpportunity.created_time = [dateFormat dateFromString:@"20140601"];
     tempOpportunity.closedsold_time = [dateFormat dateFromString:@"20140603"];
     tempOpportunity.paid_time = [dateFormat dateFromString:@"20140610"];
     tempOpportunity.status = @"P";
     tempOpportunity.notes = @"Vendido";
-    tempOpportunity.commision = [NSNumber numberWithFloat:0];;
+    tempOpportunity.commision = [NSNumber numberWithFloat:0];
     tempOpportunity.agent_id = @"00001";
     
     // Add opportunity #5 to the array
@@ -125,7 +128,7 @@
 {
     NSMutableArray *opportunitiesArray = [[NSMutableArray alloc] init];
     
-    // Fetch data from persistent data store
+    // Fetch data from Core Data
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Opportunities"];
     opportunitiesArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
@@ -152,6 +155,65 @@
     return opportunitiesArray;
 }
 
+- (void)syncCoreDataWithParse;
+{
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    // Get latest information from Parse
+    PFQuery *query = [PFQuery queryWithClassName:@"Opportunity"];
+    [query whereKey:@"updatedAt" greaterThan:mainDelegate.sharedSettings.opportunity_last_update];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error)
+        {
+            // The find from Parse succeeded
+            for (PFObject *parseObject in objects)
+            {
+                Opportunity *opportunityFromParse = [[Opportunity alloc] init];
+                
+                opportunityFromParse.opportunity_id = [parseObject valueForKey:@"opportunity_id"];
+                opportunityFromParse.product_id = [parseObject valueForKey:@"product_id"];
+                opportunityFromParse.client_id = [parseObject valueForKey:@"client_id"];
+                opportunityFromParse.initial_price = [parseObject valueForKey:@"initial_price"];
+                opportunityFromParse.price_sold = [parseObject valueForKey:@"price_sold"];
+                opportunityFromParse.created_time = [parseObject valueForKey:@"created_time"];
+                opportunityFromParse.closedsold_time = [parseObject valueForKey:@"closedsold_time"];
+                opportunityFromParse.paid_time = [parseObject valueForKey:@"paid_time"];
+                opportunityFromParse.status = [parseObject valueForKey:@"status"];
+                opportunityFromParse.notes = [parseObject valueForKey:@"notes"];
+                opportunityFromParse.commision = [parseObject valueForKey:@"commision"];
+                opportunityFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
+                opportunityFromParse.update_db = [parseObject valueForKey:@"update_db"];
+                
+                // Update object in CoreData
+                NSString *results = [self updateOpportunityToCoreData:opportunityFromParse];
+                
+                if ([results isEqualToString:@"NOT FOUND"])
+                {
+                    // Object is new! Add to CoreData;
+                    [self addNewOpportunityToCoreData:opportunityFromParse];
+                }
+                else if (![results isEqualToString:@"OK"])
+                {
+                    NSLog(@"Failed to update the Opportunity object in CoreData");
+                    [self.delegate opportunitiesSyncedWithCoreData:NO];
+                }
+            }
+            
+            // Send messages to delegates
+            [self.delegate opportunitiesSyncedWithCoreData:YES];
+        }
+        else
+        {
+            // Log details of the failure
+            NSLog(@"Failed to retrieve the Opportunity object from Parse. Error: %@ %@", error, [error userInfo]);
+            [self.delegate opportunitiesSyncedWithCoreData:NO];
+        }
+    }];
+}
+
 - (NSMutableArray*)getOpportunitiesArray; // Return an array with data
 {
     NSMutableArray *opportunityArray = [[NSMutableArray alloc] init];
@@ -165,7 +227,6 @@
     return opportunityArray;
 }
 
-
 - (NSString*)getNextOpportunityID;
 {
     AppDelegate *mainDelegate;
@@ -177,11 +238,57 @@
     return nextID;
 }
 
-- (BOOL)addNewOpportunity:(Opportunity*)newOpportunity;
+- (void)addNewOpportunity:(Opportunity*)newOpportunity;
 {
-    BOOL updateSuccessful = YES;
+    CommonMethods *commonMethods = [[CommonMethods alloc] init];
     
-    // Save object in persistent data store
+    // Save object in Parse
+    PFObject *parseObject = [PFObject objectWithClassName:@"Opportunity"];
+    
+    parseObject[@"opportunity_id"] = [commonMethods stringNotNil:newOpportunity.opportunity_id];
+    parseObject[@"product_id"] = [commonMethods stringNotNil:newOpportunity.product_id];
+    parseObject[@"client_id"] = [commonMethods stringNotNil:newOpportunity.client_id];
+    parseObject[@"initial_price"] = [commonMethods numberNotNil:newOpportunity.initial_price];
+    parseObject[@"price_sold"] = [commonMethods numberNotNil:newOpportunity.price_sold];
+    parseObject[@"created_time"] = [commonMethods dateNotNil:newOpportunity.created_time];
+    parseObject[@"closedsold_time"] = [commonMethods dateNotNil:newOpportunity.closedsold_time];
+    parseObject[@"paid_time"] = [commonMethods dateNotNil:newOpportunity.paid_time];
+    parseObject[@"status"] = [commonMethods stringNotNil:newOpportunity.status];
+    parseObject[@"notes"] = [commonMethods stringNotNil:newOpportunity.notes];
+    parseObject[@"commision"] = [commonMethods numberNotNil:newOpportunity.commision];
+    parseObject[@"agent_id"] = [commonMethods stringNotNil:newOpportunity.agent_id];
+
+    newOpportunity.update_db = [NSDate date]; // Set update time to DB to now
+    parseObject[@"update_db"] = newOpportunity.update_db;
+    
+    [parseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded)
+        {
+            // The object has been saved to Parse! ... Add to CoreData
+            
+            if ([self addNewOpportunityToCoreData:newOpportunity])
+            {
+                [self.delegate opportunityAddedOrUpdated:YES];
+            }
+            else
+            {
+                [self.delegate opportunityAddedOrUpdated:NO];
+            }
+        }
+        else
+        {
+            // There was a problem, check error.description
+            NSLog(@"Can't Save Opportunity in Parse! %@", error.description);
+            [self.delegate opportunityAddedOrUpdated:NO];
+        }
+    }];
+}
+
+- (BOOL)addNewOpportunityToCoreData:(Opportunity*)newOpportunity;
+{
+    BOOL updateSucceed = YES;
+    
+    // Save object in Core Data
     NSManagedObjectContext *context = [self managedObjectContext];
     NSManagedObject *coreDataObject = [NSEntityDescription insertNewObjectForEntityForName:@"Opportunities" inManagedObjectContext:context];
     
@@ -197,12 +304,13 @@
     [coreDataObject setValue:newOpportunity.notes forKey:@"notes"];
     [coreDataObject setValue:newOpportunity.commision forKey:@"commision"];
     [coreDataObject setValue:newOpportunity.agent_id forKey:@"agent_id"];
+    [coreDataObject setValue:newOpportunity.update_db forKey:@"update_db"];
     
     NSError *error = nil;
-    // Save the object to persistent store
+    // Save the object to Core Data
     if (![context save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        updateSuccessful = NO;
+        updateSucceed = NO;
     }
     else // update successful!
     {
@@ -211,15 +319,81 @@
         mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         [mainDelegate.sharedArrayOpportunities addObject:newOpportunity];
+        
+        // Update last update time
+        [[[SettingsModel alloc] init] updateSettingsOpportunityDataUptaded:newOpportunity.update_db];
+        
+        // Update last opportunity ID if needed
+        if ([newOpportunity.opportunity_id intValue] > mainDelegate.lastOpportunityID)
+        {
+            mainDelegate.lastOpportunityID = [newOpportunity.opportunity_id intValue];
+        }
     }
     
-    return updateSuccessful;
+    return updateSucceed;
 }
 
-- (BOOL)updateOpportunity:(Opportunity*)opportunityToUpdate;
+- (void)updateOpportunity:(Opportunity*)opportunityToUpdate;
 {
-    BOOL updateSuccessful = YES;
+    // Update object in Parse
     
+    PFQuery *query = [PFQuery queryWithClassName:@"Opportunity"];
+    [query whereKey:@"opportunity_id" equalTo:opportunityToUpdate.opportunity_id];
+    
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *parseObject, NSError *error) {
+        if (!parseObject)
+        {
+            NSLog(@"Failed to retrieve the Opportunity object from Parse");
+            [self.delegate opportunityAddedOrUpdated:NO];
+        }
+        else
+        {
+            // The find from Parse succeeded... Update values
+            parseObject[@"opportunity_id"] = opportunityToUpdate.opportunity_id;
+            parseObject[@"product_id"] = opportunityToUpdate.product_id;
+            parseObject[@"client_id"] = opportunityToUpdate.client_id;
+            parseObject[@"initial_price"] = opportunityToUpdate.initial_price;
+            parseObject[@"price_sold"] = opportunityToUpdate.price_sold;
+            parseObject[@"created_time"] = opportunityToUpdate.created_time;
+            parseObject[@"closedsold_time"] = opportunityToUpdate.closedsold_time;
+            parseObject[@"paid_time"] = opportunityToUpdate.paid_time;
+            parseObject[@"status"] = opportunityToUpdate.status;
+            parseObject[@"notes"] = opportunityToUpdate.notes;
+            parseObject[@"commision"] = opportunityToUpdate.commision;
+            parseObject[@"agent_id"] = opportunityToUpdate.agent_id;
+
+            opportunityToUpdate.update_db = [NSDate date]; // Set update time to DB to now
+            parseObject[@"update_db"] = opportunityToUpdate.update_db;
+            
+            [parseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded)
+                {
+                    // The object has been saved to Parse! ... Update CoreData
+                    
+                    if ([[self updateOpportunityToCoreData:opportunityToUpdate] isEqualToString:@"OK"])
+                    {
+                        [self.delegate opportunityAddedOrUpdated:YES];
+                    }
+                    else
+                    {
+                        [self.delegate opportunityAddedOrUpdated:NO];
+                    }
+                }
+                else
+                {
+                    // There was a problem, check error.description
+                    NSLog(@"Can't Save Opportunity in Parse! %@", error.description);
+                    [self.delegate opportunityAddedOrUpdated:NO];
+                }
+            }];
+        }
+    }];
+}
+
+- (NSString*)updateOpportunityToCoreData:(Opportunity*)opportunityToUpdate;
+{
+    NSString *updateResults = @"OK";
+
     NSManagedObjectContext *context = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
@@ -236,14 +410,14 @@
     if (error) {
         NSLog(@"Unable to execute fetch request");
         NSLog(@"%@, %@", error, error.localizedDescription);
-        updateSuccessful = NO;
+        updateResults = @"ERROR";
     }
     else
     {
         if (result.count == 0)
         {
             NSLog(@"No records retrieved");
-            updateSuccessful = NO;
+            updateResults = @"NOT FOUND";
         }
         else
         {
@@ -262,12 +436,13 @@
             [coreDataObject setValue:opportunityToUpdate.notes forKey:@"notes"];
             [coreDataObject setValue:opportunityToUpdate.commision forKey:@"commision"];
             [coreDataObject setValue:opportunityToUpdate.agent_id forKey:@"agent_id"];
+            [coreDataObject setValue:opportunityToUpdate.update_db forKey:@"update_db"];
             
-            // Save object to persistent store
+            // Save object to Core Data
             if (![self.managedObjectContext save:&error]) {
                 NSLog(@"Unable to save managed object context.");
                 NSLog(@"%@, %@", error, error.localizedDescription);
-                updateSuccessful = NO;
+                updateResults = @"ERROR";
             }
             else // update successful!
             {
@@ -289,12 +464,13 @@
                         break;
                     }
                 }
-                
+
+                //Update last update time
+                [[[SettingsModel alloc] init] updateSettingsOpportunityDataUptaded:opportunityToUpdate.update_db];
             }
         }
     }
-    
-    return updateSuccessful;
+    return updateResults;
 }
 
 - (NSMutableArray*)getOpportunitiesFromProduct:(NSString*)productFromID;
@@ -371,7 +547,6 @@
     
     return clientFound;
 }
-
 
 - (Client*)getOwner:(Opportunity*)opportunitySelected;
 {
