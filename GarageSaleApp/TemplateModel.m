@@ -438,13 +438,13 @@
     if ([clientBuyer.client_id length] > 0)
     {
         keyRange = [reviewedText rangeOfString:@"#COMPRADOR"];
-        if (keyRange.location != NSNotFound)
+        if ((keyRange.location != NSNotFound) && (clientBuyer.name != nil))
         {
             [reviewedText replaceCharactersInRange:keyRange withString:clientBuyer.name];
         }
         
         keyRange = [reviewedText rangeOfString:@"#C-TELEFONO"];
-        if (keyRange.location != NSNotFound)
+        if ((keyRange.location != NSNotFound) && (clientBuyer.phone1 != nil))
         {
             [reviewedText replaceCharactersInRange:keyRange withString:clientBuyer.phone1];
         }
@@ -479,19 +479,19 @@
     if ([clientOwner.client_id length] > 0)
     {
         keyRange = [reviewedText rangeOfString:@"#DUENO"];
-        if (keyRange.location != NSNotFound)
+        if ((keyRange.location != NSNotFound) && (clientOwner.name != nil))
         {
             [reviewedText replaceCharactersInRange:keyRange withString:clientOwner.name];
         }
         
         keyRange = [reviewedText rangeOfString:@"#D-TELEFONO"];
-        if (keyRange.location != NSNotFound)
+        if ((keyRange.location != NSNotFound) && (clientOwner.phone1 != nil))
         {
             [reviewedText replaceCharactersInRange:keyRange withString:clientOwner.phone1];
         }
         
         keyRange = [reviewedText rangeOfString:@"#D-ZONA"];
-        if (keyRange.location != NSNotFound)
+        if ((keyRange.location != NSNotFound) && (clientOwner.client_zone != nil))
         {
             [reviewedText replaceCharactersInRange:keyRange withString:clientOwner.client_zone];
         }
@@ -527,25 +527,25 @@
     if ([relatedProduct.product_id length] > 0)
     {
         keyRange = [reviewedText rangeOfString:@"#PRODUCTO"];
-        if (keyRange.location != NSNotFound)
+        if ((keyRange.location != NSNotFound) && (relatedProduct.name != nil))
         {
             [reviewedText replaceCharactersInRange:keyRange withString:relatedProduct.name];
         }
         
         keyRange = [reviewedText rangeOfString:@"#PRECIO"];
-        if (keyRange.location != NSNotFound)
+        if ((keyRange.location != NSNotFound) && (relatedProduct.price != nil))
         {
             [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%@", relatedProduct.price]];
         }
 
         keyRange = [reviewedText rangeOfString:@"#DESCRIPCION"];
-        if (keyRange.location != NSNotFound)
+        if ((keyRange.location != NSNotFound) && (relatedProduct.desc != nil))
         {
             [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%@", relatedProduct.desc]];
         }
 
         keyRange = [reviewedText rangeOfString:@"#FBLINK"];
-        if (keyRange.location != NSNotFound)
+        if ((keyRange.location != NSNotFound) && (relatedProduct.fb_link != nil))
         {
             [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%@", relatedProduct.fb_link]];
         }
@@ -556,7 +556,7 @@
 
 
 #pragma mark -  Methods for shorte URL taken from http://www.warewoof.com/goo-gl-url-shortener-in-ios/
-
+/*
 -(void)shortenMapUrl:(NSString*)originalURL
 {
     
@@ -594,5 +594,5 @@
     
     NSLog(@"Returned URL: %@", shortenedURL);
 }
-
+*/
 @end

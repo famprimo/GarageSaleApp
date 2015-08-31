@@ -84,20 +84,20 @@
         // Setting frames for all pictures
         CGRect imageClientFrame = self.imageClient.frame;
         imageClientFrame.origin.x = 33;
-        imageClientFrame.origin.y = 28;
+        imageClientFrame.origin.y = 71;
         imageClientFrame.size.width = 140;
         imageClientFrame.size.height = 140;
         self.imageClient.frame = imageClientFrame;
         
         CGRect imageClientStatusFrame = self.imageClientStatus.frame;
-        imageClientStatusFrame.origin.x = 207;
-        imageClientStatusFrame.origin.y = 31;
+        imageClientStatusFrame.origin.x = 59;
+        imageClientStatusFrame.origin.y = 34;
         imageClientStatusFrame.size.width = 15;
         imageClientStatusFrame.size.height = 15;
         self.imageClientStatus.frame = imageClientStatusFrame;
 
         CGRect imageClientSexFrame = self.imageClientSex.frame;
-        imageClientSexFrame.origin.x = 181;
+        imageClientSexFrame.origin.x = 33;
         imageClientSexFrame.origin.y = 29;
         imageClientSexFrame.size.width = 20;
         imageClientSexFrame.size.height = 20;
@@ -105,21 +105,21 @@
 
         CGRect picClientZoneFrame = self.picClientZone.frame;
         picClientZoneFrame.origin.x = 40;
-        picClientZoneFrame.origin.y = 226;
+        picClientZoneFrame.origin.y = 272;
         picClientZoneFrame.size.width = 15;
         picClientZoneFrame.size.height = 15;
         self.picClientZone.frame = picClientZoneFrame;
         
         CGRect picClientPhoneFrame = self.picClientPhone.frame;
         picClientPhoneFrame.origin.x = 40;
-        picClientPhoneFrame.origin.y = 254;
+        picClientPhoneFrame.origin.y = 304;
         picClientPhoneFrame.size.width = 15;
         picClientPhoneFrame.size.height = 15;
         self.picClientPhone.frame = picClientPhoneFrame;
         
         CGRect picClientEmailFrame = self.picClientEmail.frame;
         picClientEmailFrame.origin.x = 40;
-        picClientEmailFrame.origin.y = 282;
+        picClientEmailFrame.origin.y = 337;
         picClientEmailFrame.size.width = 15;
         picClientEmailFrame.size.height = 15;
         self.picClientEmail.frame = picClientEmailFrame;
@@ -160,9 +160,7 @@
         self.labelCreatedTime.text = [NSString stringWithFormat:@"Creado: %@", [_selectedClient.created_time formattedAsDateComplete]];
         self.labelLastInteractionTime.text = [NSString stringWithFormat:@"Última interacción: %@", [_selectedClient.last_interacted_time formattedAsTimeAgo]];
         self.labelClientLastInventaryTime.text = [NSString stringWithFormat:@"Último inventario %@", [_selectedClient.last_inventory_time formattedAsTimeAgo]];
-        self.labelClientFBCode.text = _selectedClient.fb_client_id;
-        
-        
+                
         // Load products from the client
         _myDataProducts = [[[ProductModel alloc] init] getProductsFromClientId:_selectedClient.client_id];
         
@@ -196,7 +194,7 @@
     
     
     self.editClientPopover = [[UIPopoverController alloc] initWithContentViewController:editClientController];
-    self.editClientPopover.popoverContentSize = CGSizeMake(800, 400);
+    self.editClientPopover.popoverContentSize = CGSizeMake(800, 300);
     [self.editClientPopover presentPopoverFromRect:[(UIButton *)sender frame]
                                                inView:self.view
                              permittedArrowDirections:UIPopoverArrowDirectionAny

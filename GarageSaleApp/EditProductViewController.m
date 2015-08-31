@@ -46,7 +46,15 @@
     self.textDesc.text = _productToEdit.desc;
     // self.textPublishedPrice.text = [NSString stringWithFormat:@"%.f", _productToEdit.price];
     self.textPublishedPrice.text = [NSString stringWithFormat:@"%@", _productToEdit.price];
-    self.textNotes.text = _productToEdit.notes;
+    
+    if ([_productToEdit.notes isEqualToString:@""])
+    {
+        self.textNotes.text = @"Ingrese aqui las notas";
+    }
+    else
+    {
+        self.textNotes.text = _productToEdit.notes;
+    }
     
     if ([_productToEdit.type isEqualToString:@"S"])
     {

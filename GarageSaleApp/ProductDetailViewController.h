@@ -12,11 +12,17 @@
 #import "NewOpportunityViewController.h"
 #import "EditProductViewController.h"
 
+@protocol ProductDetailViewControllerDelegate
+
+-(void)productUpdated;
+
+@end
 
 
 @interface ProductDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, EditProductViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) id detailItem;
+@property (nonatomic, strong) id<ProductDetailViewControllerDelegate> delegate;
 
 @property (weak, nonatomic) IBOutlet UIButton *buttonChangeProductStatus;
 @property (weak, nonatomic) IBOutlet UIButton *buttonSeeInFacebook;

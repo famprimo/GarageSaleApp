@@ -21,5 +21,7 @@
 - (BOOL)updateSettingsProductDataUptaded:(NSDate*)lastUpdateDate;
 - (BOOL)updateSettingsClientDataUptaded:(NSDate*)lastUpdateDate;
 - (BOOL)updateSettingsOpportunityDataUptaded:(NSDate*)lastUpdateDate;
+- (NSDate*)getSinceDate;
+- (BOOL)updateSinceDate:(NSString*)sinceDate;
 
 @end

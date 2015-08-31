@@ -7,12 +7,8 @@
 //
 
 #import "MessagesSinceTableViewController.h"
-
-@interface MessagesSinceTableViewController ()
-{
-    NSDate *_dateSince;
-}
-@end
+#import "Settings.h"
+#import "SettingsModel.h"
 
 @implementation MessagesSinceTableViewController
 
@@ -24,23 +20,22 @@
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
-    _dateSince = [self.delegate getCurrentSinceDate];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    NSTimeInterval secondsSince = -(int)[_dateSince timeIntervalSinceDate:[NSDate date]];
+    Settings *currentSettings = [[[SettingsModel alloc] init] getSharedSettings];
+    
     int optionSelected = 3;
-    if (secondsSince < 60*60*24*5)
+    if ([currentSettings.since_date isEqualToString:@"1D"])
     {
         optionSelected = 0;
     }
-    else if (secondsSince < 60*60*24*20)
+    else if ([currentSettings.since_date isEqualToString:@"1S"])
     {
         optionSelected = 1;
     }
-    else if (secondsSince < 60*60*24*30*3)
+    else if ([currentSettings.since_date isEqualToString:@"1M"])
     {
         optionSelected = 2;
     }
@@ -100,24 +95,28 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
+    NSString *updateSinceDate;
+    
     if (indexPath.row == 0)
     {
-        _dateSince = [NSDate dateWithTimeInterval:-60*60*24*1 sinceDate:[NSDate date]];
+        updateSinceDate = @"1D";
     }
     else if (indexPath.row == 1)
     {
-        _dateSince = [NSDate dateWithTimeInterval:-60*60*24*7 sinceDate:[NSDate date]];
+        updateSinceDate = @"1S";
     }
     else if (indexPath.row == 2)
     {
-        _dateSince = [NSDate dateWithTimeInterval:-60*60*24*30 sinceDate:[NSDate date]];
+        updateSinceDate = @"1M";
     }
     else
     {
-        _dateSince = [NSDate dateWithTimeInterval:-60*60*24*30*6 sinceDate:[NSDate date]];
+        updateSinceDate = @"6M";
     }
     
-    [self.delegate sinceDateSelected:_dateSince];
+    [[[SettingsModel alloc] init] updateSinceDate:updateSinceDate];
+    
+    [self.delegate sinceDateSelected];
 }
 
 @end

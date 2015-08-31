@@ -16,12 +16,19 @@
 #import "NewOpportunityViewController.h"
 #import "EditClientViewController.h"
 
-
 // Popover help  http://www.appcoda.com/uiactionsheet-uipopovercontroller-tutorial/
+
+@protocol MessagesDetailViewControllerDelegate
+
+-(void)messagesUpdated;
+
+@end
+
 
 @interface MessagesDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, ProductPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, EditClientViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) id detailItem;
+@property (nonatomic, strong) id<MessagesDetailViewControllerDelegate> delegate;
 
 @property (weak, nonatomic) IBOutlet UIButton *buttonReply;
 @property (weak, nonatomic) IBOutlet UIButton *buttonMessageToRelatedClient;

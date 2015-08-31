@@ -134,58 +134,58 @@
         // Setting frames for all pictures
         CGRect productImageFrame = self.imageProduct.frame;
         productImageFrame.origin.x = 15;
-        productImageFrame.origin.y = 90;
+        productImageFrame.origin.y = 106;
         productImageFrame.size.width = 180;
         productImageFrame.size.height = 180;
         self.imageProduct.frame = productImageFrame;
         
         CGRect imageOwnerFrame = self.imageOwner.frame;
         imageOwnerFrame.origin.x = 410;
-        imageOwnerFrame.origin.y = 90;
+        imageOwnerFrame.origin.y = 106;
         imageOwnerFrame.size.width = 70;
         imageOwnerFrame.size.height = 70;
         self.imageOwner.frame = imageOwnerFrame;
         
         CGRect imageOwnerStatusFrame = self.imageOwnerStatus.frame;
         imageOwnerStatusFrame.origin.x = 489;
-        imageOwnerStatusFrame.origin.y = 96;
+        imageOwnerStatusFrame.origin.y = 109;
         imageOwnerStatusFrame.size.width = 10;
         imageOwnerStatusFrame.size.height = 10;
         self.imageOwnerStatus.frame = imageOwnerStatusFrame;
         
         CGRect picOwnerPhoneFrame = self.picOwnerPhone.frame;
         picOwnerPhoneFrame.origin.x = 487;
-        picOwnerPhoneFrame.origin.y = 117;
+        picOwnerPhoneFrame.origin.y = 130;
         picOwnerPhoneFrame.size.width = 15;
         picOwnerPhoneFrame.size.height = 15;
         self.picOwnerPhone.frame = picOwnerPhoneFrame;
 
         CGRect picOwnerZoneFrame = self.picOwnerZone.frame;
         picOwnerZoneFrame.origin.x = 487;
-        picOwnerZoneFrame.origin.y = 145;
+        picOwnerZoneFrame.origin.y = 158;
         picOwnerZoneFrame.size.width = 15;
         picOwnerZoneFrame.size.height = 15;
         self.picOwnerZone.frame = picOwnerZoneFrame;
 
         CGRect labelDescriptionFrame = self.labelDescription.frame;
         labelDescriptionFrame.origin.x = 205;
-        labelDescriptionFrame.origin.y = 90;
-        labelDescriptionFrame.size.width = 176;
-        labelDescriptionFrame.size.height = 180;
+        labelDescriptionFrame.origin.y = 120;
+        labelDescriptionFrame.size.width = 190;
+        labelDescriptionFrame.size.height = 195;
         self.labelDescription.frame = labelDescriptionFrame;
 
         CGRect labelNotesFrame = self.labelNotes.frame;
         labelNotesFrame.origin.x = 410;
-        labelNotesFrame.origin.y = 239;
-        labelNotesFrame.size.width = 280;
-        labelNotesFrame.size.height = 60;
+        labelNotesFrame.origin.y = 242;
+        labelNotesFrame.size.width = 164;
+        labelNotesFrame.size.height = 75;
         self.labelNotes.frame = labelNotesFrame;
 
         CGRect labelOwnerAddressFrame = self.labelOwnerAddress.frame;
         labelOwnerAddressFrame.origin.x = 489;
-        labelOwnerAddressFrame.origin.y = 165;
+        labelOwnerAddressFrame.origin.y = 177;
         labelOwnerAddressFrame.size.width = 201;
-        labelOwnerAddressFrame.size.height = 52;
+        labelOwnerAddressFrame.size.height = 51;
         self.labelOwnerAddress.frame = labelOwnerAddressFrame;
 
 
@@ -220,8 +220,8 @@
         [self.labelDescription sizeToFit];
 
         labelDescriptionFrame = self.labelDescription.frame;
-        if (labelDescriptionFrame.size.height > 180)
-        {   labelDescriptionFrame.size.height = 180;
+        if (labelDescriptionFrame.size.height > 195)
+        {   labelDescriptionFrame.size.height = 195;
             self.labelDescription.frame = labelDescriptionFrame; }
 
         self.labelNotes.text = productSelected.notes;
@@ -229,8 +229,8 @@
         [self.labelNotes sizeToFit];
 
         labelNotesFrame = self.labelNotes.frame;
-        if (labelNotesFrame.size.height > 60)
-        {   labelNotesFrame.size.height = 60;
+        if (labelNotesFrame.size.height > 75)
+        {   labelNotesFrame.size.height = 75;
             self.labelNotes.frame = labelNotesFrame; }
 
         // Make owners picture rounded
@@ -257,8 +257,8 @@
             [self.labelOwnerAddress sizeToFit];
             
             labelOwnerAddressFrame = self.labelOwnerAddress.frame;
-            if (labelOwnerAddressFrame.size.height > 52)
-            {   labelOwnerAddressFrame.size.height = 52;
+            if (labelOwnerAddressFrame.size.height > 51)
+            {   labelOwnerAddressFrame.size.height = 51;
                 self.labelOwnerAddress.frame = labelOwnerAddressFrame; }
 
             // Owner name and status
@@ -358,7 +358,7 @@
     [_productMethods updateProduct:productSelected];
     
     [self configureView];
-    
+    [self.delegate productUpdated];
 }
 
 - (IBAction)getPreviousMessages:(id)sender
@@ -481,7 +481,7 @@
     editProductController.delegate = self;
     
     self.editProductPopover = [[UIPopoverController alloc] initWithContentViewController:editProductController];
-    self.editProductPopover.popoverContentSize = CGSizeMake(800, 400);
+    self.editProductPopover.popoverContentSize = CGSizeMake(800, 300);
     [self.editProductPopover presentPopoverFromRect:[(UIButton *)sender frame]
                                             inView:self.view
                           permittedArrowDirections:UIPopoverArrowDirectionAny
@@ -584,6 +584,7 @@
     [self.editProductPopover dismissPopoverAnimated:YES];
     
     [self configureView];
+    [self.delegate productUpdated];
 }
 
 

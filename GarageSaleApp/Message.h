@@ -23,7 +23,7 @@
 @property (strong, nonatomic) NSString *client_id;
 @property (strong, nonatomic) NSString *attachments; // (Y)es (N)o
 @property (strong, nonatomic) NSString *agent_id;
-@property (strong, nonatomic) NSString *status; // (N)ew (R)ead (D)one
+@property (strong, nonatomic) NSString *status; // (N)ew (R)ead
 @property (strong, nonatomic) NSString *type; // (P)hoto comment (I)nbox for user (M)essage to page
 @property (strong, nonatomic) NSString *recipient; // (G)arageSale (C)lient
 

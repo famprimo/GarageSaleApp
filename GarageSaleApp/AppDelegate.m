@@ -60,31 +60,48 @@
 
     // Load Shared Arrays with Data
     
-    sharedSettings = [[[SettingsModel alloc] init] getSettingsFromCoreData];
+    ClientModel *clientMethods = [[ClientModel alloc] init];
+    ProductModel *productMethods = [[ProductModel alloc] init];
+    OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
+    MessageModel *messagesMethods = [[MessageModel alloc] init];
+    AttachmentModel *attachmentMethods = [[AttachmentModel alloc] init];
+    TemplateModel *templateMethods = [[TemplateModel alloc] init];
+    SettingsModel *settingsMethods = [[SettingsModel alloc] init];
+    
+    sharedSettings = [settingsMethods getSettingsFromCoreData];
 
     if (!sharedSettings)
     {
-        [[[SettingsModel alloc] init] saveInitialDataforSettings];
+        [settingsMethods saveInitialDataforSettings];
     }
     
     if ([[[[SettingsModel alloc] init] getSharedSettings].initial_data_loaded isEqualToString:@"N"])
     {
-        [[[ClientModel alloc] init] saveInitialDataforClients];
-        [[[ProductModel alloc] init] saveInitialDataforProducts];
-        [[[OpportunityModel alloc] init] saveInitialDataforOpportunities];
-        [[[MessageModel alloc] init] saveInitialDataforMessages];
-        [[[AttachmentModel alloc] init] saveInitialDataforAttachments];
-        [[[TemplateModel alloc] init] saveInitialDataforTemplates];
+        // Load initial data
+        [clientMethods saveInitialDataforClients];
+        [productMethods saveInitialDataforProducts];
+        [opportunityMethods saveInitialDataforOpportunities];
+        [messagesMethods saveInitialDataforMessages];
+        [attachmentMethods saveInitialDataforAttachments];
+        [templateMethods saveInitialDataforTemplates];
         
-        [[[SettingsModel alloc] init] updateSettingsInitialDataSaved];
+        [settingsMethods updateSettingsInitialDataSaved];
     }
     
-    sharedArrayClients = [[[ClientModel alloc] init] getClientsFromCoreData];
-    sharedArrayProducts = [[[ProductModel alloc] init] getProductsFromCoreData];
-    sharedArrayOpportunities = [[[OpportunityModel alloc] init] getOpportunitiesFromCoreData];
-    sharedArrayMessages = [[[MessageModel alloc] init] getMessagesFromCoreData];
-    sharedArrayAttachments = [[[AttachmentModel alloc] init] getAttachmentsFromCoreData];
-    sharedArrayTemplates = [[[TemplateModel alloc] init] getTemplatesFromCoreData];
+    
+    // Sync Parse with Core Data
+    [clientMethods syncCoreDataWithParse];
+    [productMethods syncCoreDataWithParse];
+    [opportunityMethods syncCoreDataWithParse];
+    [templateMethods syncCoreDataWithParse];
+    
+    // Get data from Core Data
+    sharedArrayClients = [clientMethods getClientsFromCoreData];
+    sharedArrayProducts = [productMethods getProductsFromCoreData];
+    sharedArrayOpportunities = [opportunityMethods getOpportunitiesFromCoreData];
+    sharedArrayMessages = [messagesMethods getMessagesFromCoreData];
+    sharedArrayAttachments = [attachmentMethods getAttachmentsFromCoreData];
+    sharedArrayTemplates = [templateMethods getTemplatesFromCoreData];
     
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                     didFinishLaunchingWithOptions:launchOptions];

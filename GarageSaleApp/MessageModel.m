@@ -63,7 +63,7 @@
     tempMessage.client_id = @"00004";
     tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"D";
+    tempMessage.status = @"R";
     tempMessage.type = @"I";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-05-10T16:41:15+0000"];
     tempMessage.recipient = @"G";
@@ -85,7 +85,7 @@
     tempMessage.client_id = @"00004";
     tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"D";
+    tempMessage.status = @"R";
     tempMessage.type = @"P";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-06-10T09:41:15+0000"];
     tempMessage.recipient = @"G";
@@ -107,7 +107,7 @@
     tempMessage.client_id = @"00004";
     tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"D";
+    tempMessage.status = @"R";
     tempMessage.type = @"P";
     tempMessage.datetime = [formatFBdates dateFromString:@"2014-07-10T09:41:15+0000"];
     tempMessage.recipient = @"C";
@@ -129,7 +129,7 @@
     tempMessage.client_id = @"00003";
     tempMessage.attachments = @"N";
     tempMessage.agent_id = @"00001";
-    tempMessage.status = @"D";
+    tempMessage.status = @"R";
     tempMessage.type = @"I";
     tempMessage.datetime = [formatFBdates dateFromString:@"2015-02-23T09:41:15+0000"];
     tempMessage.recipient = @"C";
@@ -615,7 +615,7 @@
     return messageToReview;
 }
 
-- (int)numberOfMessagesNotReplied; // Method that returns the total number of messages not replied yet
+- (int)numberOfNewMessages; // Method that returns the total number of messages not replied yet
 {
     int numberOfMessages = 0;
     

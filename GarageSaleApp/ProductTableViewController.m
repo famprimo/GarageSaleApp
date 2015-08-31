@@ -7,7 +7,6 @@
 //
 
 #import "ProductTableViewController.h"
-#import "ProductDetailViewController.h"
 #import "SWRevealViewController.h"
 #import "Settings.h"
 #import "SettingsModel.h"
@@ -53,14 +52,12 @@
     
     // For the reveal menu to work
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
-
-    // Add title and menu button
-    self.navigationItem.title = @"Productos";
     
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
     
     self.detailViewController = (ProductDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
+    self.detailViewController.delegate = self;
     
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
@@ -73,6 +70,9 @@
     // Get the data
     _myData = [_productMethods getProductArray];
     _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
+
+    // Add title
+    [self updateTableTitle];
 
     // Sort array to be sure new products are on top
     [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
@@ -96,6 +96,23 @@
     [self.refreshControl addTarget:self action:@selector(refreshTableGesture:) forControlEvents:UIControlEventValueChanged];
 }
 
+- (void)updateTableTitle
+{
+    NSString *tableTitle = [[NSString alloc] init];
+    
+    int newObjects = [_productMethods numberOfNewProducts];
+    
+    if (newObjects == 0)
+    {
+        tableTitle = @"Productos";
+    }
+    else
+    {
+        tableTitle = [NSString stringWithFormat:@"Productos (%i)", newObjects];
+    }
+    self.navigationItem.title = tableTitle;
+}
+
 - (void)menuButtonClicked:(id)sender
 {
     [self.revealViewController revealToggleAnimated:YES];
@@ -113,7 +130,7 @@
 }
 
 
-#pragma mark - Product Model delegate methods
+#pragma mark - ProductModel delegate methods
 
 -(void)productsSyncedWithCoreData:(BOOL)succeed;
 {
@@ -143,6 +160,15 @@
          } completion:NULL];
          */
     }
+}
+
+
+#pragma mark - Detail View Controller delegate methods
+
+-(void)productUpdated;
+{
+    [self updateTableTitle];
+    [self.tableView reloadData];
 }
 
 

@@ -43,9 +43,9 @@
     
     CGRect imageTemplateIconFrame = self.imageTemplateIcon.frame;
     imageTemplateIconFrame.origin.x = 23;
-    imageTemplateIconFrame.origin.y = 86;
-    imageTemplateIconFrame.size.width = 50;
-    imageTemplateIconFrame.size.height = 50;
+    imageTemplateIconFrame.origin.y = 22;
+    imageTemplateIconFrame.size.width = 40;
+    imageTemplateIconFrame.size.height = 40;
     self.imageTemplateIcon.frame = imageTemplateIconFrame;
     
 }

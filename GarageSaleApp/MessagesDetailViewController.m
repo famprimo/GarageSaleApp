@@ -41,6 +41,8 @@
     
     UIRefreshControl *_refreshControl;
     
+    NSTimer *_readTimer;
+    
     // Temp variables for user and page IDs
     Settings *_tmpSettings;
 }
@@ -59,6 +61,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view.
     
     // Remember to set ViewControler as the delegate and datasource
@@ -78,7 +81,6 @@
     _refreshControl = [[UIRefreshControl alloc] init];
     [_refreshControl addTarget:self action:@selector(getPreviousMessages:) forControlEvents:UIControlEventValueChanged];
     [self.tableMessages addSubview:_refreshControl];
-
 }
 
 - (void)didReceiveMemoryWarning {
@@ -96,6 +98,18 @@
         
         // Update the view
         [self configureView];
+        
+        // Set a timer for update messages to read
+        
+        if (_readTimer)
+        {
+            [_readTimer invalidate];
+        }
+        _readTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
+                                         target:self
+                                       selector:@selector(updateMessagesToRead:)
+                                       userInfo:nil
+                                        repeats:NO];
     }
 }
 
@@ -435,6 +449,24 @@
 
 #pragma mark - Managing button actions
 
+- (IBAction)updateMessagesToRead:(id)sender
+{
+    Message *tmpMessage = [[Message alloc] init];
+    
+    for (int i=0; i<_myDataMessages.count; i=i+1)
+    {
+        tmpMessage = (Message*)_myDataMessages[i];
+        
+        if ([tmpMessage.status isEqualToString:@"N"])
+        {
+            tmpMessage.status = @"R";
+            [[[MessageModel alloc] init] updateMessage:tmpMessage];
+        }
+    }
+    
+    [self.delegate messagesUpdated];
+}
+
 - (IBAction)getPreviousMessages:(id)sender
 {
     NSString *url;
@@ -568,7 +600,7 @@
     editClientController.delegate = self;
     
     self.editClientPopover = [[UIPopoverController alloc] initWithContentViewController:editClientController];
-    self.editClientPopover.popoverContentSize = CGSizeMake(800, 400);
+    self.editClientPopover.popoverContentSize = CGSizeMake(800, 300);
     [self.editClientPopover presentPopoverFromRect:[(UIButton *)sender frame]
                                             inView:self.view
                           permittedArrowDirections:UIPopoverArrowDirectionAny
@@ -650,7 +682,10 @@
     // Reload messages to show the new one
     [self getPreviousMessages:nil];
     
-    // Go to last messages
+    // Mark all messages as read
+    [self updateMessagesToRead:nil];
+    
+    // Go to last message
     [self.tableMessages scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.tableMessages numberOfRowsInSection:0]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     
     _selectedMessage = [_myDataMessages lastObject];
@@ -1262,7 +1297,6 @@
             
         }
     }
-    
 }
 
 - (void) getFBPageMessagesComments:(NSString *)url withClientID:(NSString *)fromClientID;
@@ -1306,7 +1340,7 @@
     
     Client *tmpClient = [clientMethods getClientFromClientId:fromClientID];
     NSString *fbInboxID = tmpClient.fb_inbox_id;
-    NSString *fbPageMessageID = tmpClient.fb_page_message_id;
+    // NSString *fbPageMessageID = tmpClient.fb_page_message_id;
     NSString *fbIDfromInbox = tmpClient.fb_client_id;
     NSString *fbNamefromInbox = [NSString stringWithFormat:@"%@ %@", tmpClient.name, tmpClient.last_name];
     

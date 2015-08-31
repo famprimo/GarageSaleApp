@@ -53,6 +53,7 @@
 		C04E745B1A43D2B300F52E33 /* SendMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C04E74591A43D2B300F52E33 /* SendMessageViewController.m */; };
 		C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */; };
 		C05377801A41BA2A00EAAE76 /* TemplateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C053777F1A41BA2A00EAAE76 /* TemplateModel.m */; };
+		C053A2991B7FE439004794BE /* FacebookMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = C053A2981B7FE439004794BE /* FacebookMethods.m */; };
 		C05B17091B0C146F0006820F /* OpportunitiesFilterTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05B17071B0C146F0006820F /* OpportunitiesFilterTableViewController.m */; };
 		C05B170A1B0C146F0006820F /* OpportunitiesFilterTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C05B17081B0C146F0006820F /* OpportunitiesFilterTableViewController.xib */; };
 		C05C6A8519F1D5B900BCF9BD /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */; };
@@ -170,6 +171,8 @@
 		C04E745A1A43D2B300F52E33 /* SendMessageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendMessageViewController.xib; sourceTree = "<group>"; };
 		C053777E1A41BA2A00EAAE76 /* TemplateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateModel.h; sourceTree = "<group>"; };
 		C053777F1A41BA2A00EAAE76 /* TemplateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateModel.m; sourceTree = "<group>"; };
+		C053A2971B7FE439004794BE /* FacebookMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookMethods.h; sourceTree = "<group>"; };
+		C053A2981B7FE439004794BE /* FacebookMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacebookMethods.m; sourceTree = "<group>"; };
 		C05B17061B0C146F0006820F /* OpportunitiesFilterTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpportunitiesFilterTableViewController.h; sourceTree = "<group>"; };
 		C05B17071B0C146F0006820F /* OpportunitiesFilterTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpportunitiesFilterTableViewController.m; sourceTree = "<group>"; };
 		C05B17081B0C146F0006820F /* OpportunitiesFilterTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OpportunitiesFilterTableViewController.xib; sourceTree = "<group>"; };
@@ -345,6 +348,7 @@
 				C00ED0F719644A5A0045A65E /* Images.xcassets */,
 				C0292AEA1A5E20EB00283E71 /* Popovers */,
 				C008BA2E19C3CAB3008616E4 /* Message */,
+				C05C6A8219F1D56100BCF9BD /* Extensions */,
 				C083CF531B50C57C005273ED /* Attachment */,
 				C00ED11819644AB70045A65E /* Product */,
 				C00ED11A19644AE00045A65E /* Client */,
@@ -355,7 +359,6 @@
 				C00ED11C19644B000045A65E /* About */,
 				C00ED11719644AAE0045A65E /* Reveal */,
 				C029BA621969D20400125C4F /* Custom Segues */,
-				C05C6A8219F1D56100BCF9BD /* Extensions */,
 				C00ED0E619644A5A0045A65E /* Supporting Files */,
 			);
 			path = GarageSaleApp;
@@ -504,6 +507,8 @@
 		C05C6A8219F1D56100BCF9BD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C053A2971B7FE439004794BE /* FacebookMethods.h */,
+				C053A2981B7FE439004794BE /* FacebookMethods.m */,
 				C05C6A8319F1D5B800BCF9BD /* NSDate+NVTimeAgo.h */,
 				C05C6A8419F1D5B900BCF9BD /* NSDate+NVTimeAgo.m */,
 				C08C47981AB3295400B29FCA /* NS-Extensions.h */,
@@ -768,6 +773,7 @@
 				C083CF5E1B50C7F8005273ED /* Attachment.m in Sources */,
 				C0666E4A1A44B39100B045A0 /* NewOpportunityViewController.m in Sources */,
 				C019F94019D88944009528EE /* MessageModel.m in Sources */,
+				C053A2991B7FE439004794BE /* FacebookMethods.m in Sources */,
 				C083CF5A1B50C5BA005273ED /* AttachmentModel.m in Sources */,
 				C00ED12319644B4F0045A65E /* MenuItem.m in Sources */,
 				C0815E1A19644C4D0021A153 /* ProductModel.m in Sources */,

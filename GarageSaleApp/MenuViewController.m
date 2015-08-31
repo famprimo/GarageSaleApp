@@ -79,8 +79,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark Table View Delegate Methods
 
+#pragma mark Table View Delegate Methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -106,8 +106,12 @@
     UILabel *menuItemTitle = (UILabel *)[menuCell viewWithTag:1];
     UIImageView *iconImageView = (UIImageView *)[menuCell viewWithTag:2];
     
-    // UIImageView *picMenu = [[UIImageView alloc] initWithImage:[UIImage imageNamed:item.menuIcon]];
-    // iconImageView = picMenu;
+    CGRect iconImageViewFrame = iconImageView.frame;
+    iconImageViewFrame.origin.x = 20;
+    iconImageViewFrame.origin.y = 17;
+    iconImageViewFrame.size.width = 45;
+    iconImageViewFrame.size.height = 45;
+    iconImageView.frame = iconImageViewFrame;
     
     // Set menu item text and icon
     menuItemTitle.text = item.menuTitle;

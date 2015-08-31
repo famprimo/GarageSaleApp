@@ -7,22 +7,20 @@
 //
 
 #import "MessagesTableViewController.h"
-#import "MessagesDetailViewController.h"
 #import "SWRevealViewController.h"
 #import "Settings.h"
 #import "SettingsModel.h"
 #import "Message.h"
 #import "MessageModel.h"
 #import "Client.h"
-#import "ClientModel.h"
 #import "Product.h"
-#import "ProductModel.h"
 #import "Attachment.h"
 #import "AttachmentModel.h"
 #import "NSDate+NVTimeAgo.h"
 #import "NS-Extensions.h"
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKLoginKit/FBSDKLoginKit.h>
+
+// #import <FBSDKCoreKit/FBSDKCoreKit.h>
+// #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 @interface MessagesTableViewController ()
 {
@@ -35,11 +33,18 @@
     // The message that is selected from the table
     Client *_selectedClientBox;
  
+    // For managing the since date
     NSDate *_messagesSinceDate;
     
     // Temp variables for user and page IDs
     Settings *_tmpSettings;
+    
+    // Objects for delegate methods
+    ClientModel *_clientMethods;
+    ProductModel *_productMethods;
+    FacebookMethods *_facebookMethods;
 }
+
 // For Popover
 @property (nonatomic, strong) UIPopoverController *messagesSincePopover;
 
@@ -67,28 +72,34 @@
     // For the reveal menu to work
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     
-    // Add title and menu button
-    self.navigationItem.title = [self updateTableTitle];
-    
-    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
-    self.navigationItem.leftBarButtonItem = menuButton;
-
-    UIBarButtonItem *menuButtonSetup = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"Setup"] makeThumbnailOfSize:CGSizeMake(20, 20)] style:UIBarButtonItemStylePlain target:self action:@selector(setupButtonClicked:)];
-    menuButtonSetup.width = 40;
-    self.navigationItem.rightBarButtonItem = menuButtonSetup;
-
     self.detailViewController = (MessagesDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
-    
+    self.detailViewController.delegate = self;
+
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    // Initialize objects methods
+    _facebookMethods = [[FacebookMethods alloc] init];
+    _facebookMethods.delegate = self;
+    
+    _clientMethods = [[ClientModel alloc] init];
+    _clientMethods.delegate = self;
+    
+    _productMethods = [[ProductModel alloc] init];
+    _productMethods.delegate = self;
+    
     // Get the data
-    _myDataClients = [[[ClientModel alloc] init] getClientArray];
+    _myDataClients = [_clientMethods getClientArray];
     _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
     
-    // Define the Since date for a week ago
-    _messagesSinceDate = [NSDate dateWithTimeInterval:-60*60*24*1 sinceDate:[NSDate date]];
+    // Add title and menu button
+    [self updateTableTitle];
+    
+    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
+    self.navigationItem.leftBarButtonItem = menuButton;
+    
+    [self defineSetupButtonImage];
     
     // Sort array to be sure new messages are on top
     [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
@@ -112,7 +123,32 @@
     
 }
 
-     
+- (void)defineSetupButtonImage;
+{
+    UIBarButtonItem *menuButtonSetup;
+    Settings *currentSettings = [[[SettingsModel alloc] init] getSharedSettings];
+    
+    if ([currentSettings.since_date isEqualToString:@"1D"])
+    {
+        menuButtonSetup = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"MsgSince1D"] makeThumbnailOfSize:CGSizeMake(20, 20)] style:UIBarButtonItemStylePlain target:self action:@selector(setupButtonClicked:)];
+    }
+    else if ([currentSettings.since_date isEqualToString:@"1S"])
+    {
+        menuButtonSetup = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"MsgSince1S"] makeThumbnailOfSize:CGSizeMake(20, 20)] style:UIBarButtonItemStylePlain target:self action:@selector(setupButtonClicked:)];
+    }
+    else if ([currentSettings.since_date isEqualToString:@"1M"])
+    {
+        menuButtonSetup = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"MsgSince1M"] makeThumbnailOfSize:CGSizeMake(20, 20)] style:UIBarButtonItemStylePlain target:self action:@selector(setupButtonClicked:)];
+    }
+    else
+    {
+        menuButtonSetup = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"MsgSince6M"] makeThumbnailOfSize:CGSizeMake(20, 20)] style:UIBarButtonItemStylePlain target:self action:@selector(setupButtonClicked:)];
+    }
+    
+    menuButtonSetup.width = 40;
+    self.navigationItem.rightBarButtonItem = menuButtonSetup;
+}
+
 - (void)menuButtonClicked:(id)sender
 {
     [self.revealViewController revealToggleAnimated:YES];
@@ -130,34 +166,20 @@
     
 }
 
-
--(NSDate*)getCurrentSinceDate;
-{
-    return _messagesSinceDate;
-}
-
--(void)sinceDateSelected:(NSDate *)selectedSinceDate;
-{
-    // Dismiss the popover view
-    [self.messagesSincePopover dismissPopoverAnimated:NO];
-
-    _messagesSinceDate = selectedSinceDate;
-}
-
 - (void)refreshTableGesture:(id)sender
 {
-    // Make all Facebook requests
+    // Refresh table... First sync Clients
     
-    [self makeFBrequests];
+    [_clientMethods syncCoreDataWithParse];
 }
 
-- (NSString*)updateTableTitle
+- (void)updateTableTitle
 {
     NSString *tableTitle = [[NSString alloc] init];
     
     MessageModel *messageMethods = [[MessageModel alloc] init];
     
-    int numberOfMessagesToDisplay = [messageMethods numberOfMessagesNotReplied];
+    int numberOfMessagesToDisplay = [messageMethods numberOfNewMessages];
     
     if (numberOfMessagesToDisplay == 0)
     {
@@ -167,13 +189,35 @@
     {
         tableTitle = [NSString stringWithFormat:@"Mensajes (%i)", numberOfMessagesToDisplay];
     }
-    return tableTitle;
+    
+    self.navigationItem.title = tableTitle;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark - Detail View Controller delegate methods
+
+-(void)messagesUpdated;
+{
+    [self updateTableTitle];
+    [self.tableView reloadData];
+}
+
+
+#pragma mark MessageSinceViewController delegate methods
+
+-(void)sinceDateSelected;
+{
+    // Change button icon
+    [self defineSetupButtonImage];
+    
+    // Dismiss the popover view
+    [self.messagesSincePopover dismissPopoverAnimated:NO];
 }
 
 
@@ -270,10 +314,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    ProductModel *productMethods = [[ProductModel alloc] init];
     Product *productRelatedToMessage = [[Product alloc] init];
-    
     MessageModel *messageMethods = [[MessageModel alloc] init];
     Message *lastMessageFromClient = [[Message alloc] init];
     
@@ -297,7 +338,6 @@
     UILabel *datetimeLabel = (UILabel*)[myCell.contentView viewWithTag:4];
     UIImageView *productImage = (UIImageView*)[myCell.contentView viewWithTag:5];
     UILabel *messageLabel = (UILabel*)[myCell.contentView viewWithTag:6];
-    UIImageView *repliedImage = (UIImageView*)[myCell.contentView viewWithTag:7];
     
     // Position all images and message frames
     CGRect clientImageFrame = clientImage.frame;
@@ -321,13 +361,6 @@
     productImageFrame.size.height = 30;
     productImage.frame = productImageFrame;
 
-    CGRect repliedImageFrame = repliedImage.frame;
-    repliedImageFrame.origin.x = 40;
-    repliedImageFrame.origin.y = 60;
-    repliedImageFrame.size.width = 15;
-    repliedImageFrame.size.height = 15;
-    repliedImage.frame = repliedImageFrame;
-    
     CGRect messageLabelFrame = messageLabel.frame;
     messageLabelFrame.origin.x = 63;
     messageLabelFrame.size.width = 245;
@@ -336,7 +369,7 @@
     
     // Client image, name and status
     //clientImage.image = [UIImage imageWithData:myClient.picture];
-    clientImage.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:myClient]];
+    clientImage.image = [UIImage imageWithData:[_clientMethods getClientPhotoFrom:myClient]];
     clientImage.layer.cornerRadius = clientImage.frame.size.width / 2;
     clientImage.clipsToBounds = YES;
 
@@ -360,37 +393,30 @@
         messageLabel.frame = messageLabelFrame;
         messageLabel.text = @"No hay mensajes";
         datetimeLabel.text = [myClient.last_interacted_time formattedAsTimeAgo];
-        repliedImage.image = [UIImage imageNamed:@"Blank"];
         nameLabel.textColor = [UIColor blackColor];
         nameLabel.font = [UIFont systemFontOfSize:12];
     }
     else
     {
         CGRect messageLabelFrame = messageLabel.frame;
-        if ([lastMessageFromClient.status isEqualToString:@"D"]) {
-            repliedImage.image = [UIImage imageNamed:@"Replied"];
+        if ([lastMessageFromClient.status isEqualToString:@"R"])
+        {
+            // Last messages read
             nameLabel.textColor = [UIColor blackColor];
             nameLabel.font = [UIFont systemFontOfSize:12];
         }
-        else if ([lastMessageFromClient.status isEqualToString:@"N"])
+        else  // @"N"
         {
-            repliedImage.image = [UIImage imageNamed:@"Blank"];
+            // Last messasge unread
             nameLabel.textColor = [UIColor blueColor];
             nameLabel.font = [UIFont boldSystemFontOfSize:12];
-        }
-        else
-        {
-            repliedImage.image = [UIImage imageNamed:@"Blank"];
-            nameLabel.textColor = [UIColor blackColor];
-            nameLabel.font = [UIFont systemFontOfSize:12];
         }
         
         if ([lastMessageFromClient.type isEqualToString:@"P"])
         {
             productImage.hidden = NO;
-            productRelatedToMessage = [productMethods getProductFromProductId:lastMessageFromClient.product_id];
-            // productImage.image = [UIImage imageWithData:productRelatedToMessage.picture];
-            productImage.image = [UIImage imageWithData:[productMethods getProductPhotoFrom:productRelatedToMessage]];
+            productRelatedToMessage = [_productMethods getProductFromProductId:lastMessageFromClient.product_id];
+            productImage.image = [UIImage imageWithData:[_productMethods getProductPhotoFrom:productRelatedToMessage]];
             messageLabelFrame.origin.x = 96;
             messageLabelFrame.size.width = 212;
             messageLabel.frame = messageLabelFrame;
@@ -438,6 +464,117 @@
 }
 
 
+#pragma mark - ClientModel delegate methods
+
+-(void)clientsSyncedWithCoreData:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        // Clients synced, now sync products
+        
+        [_productMethods syncCoreDataWithParse];
+    }
+    else
+    {
+        [self.refreshControl endRefreshing];
+    }
+}
+
+-(void)clientAddedOrUpdated:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+
+#pragma mark - ProductModel delegate methods
+
+-(void)productsSyncedWithCoreData:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        // Clients and product synced so call FB methods
+        
+        _messagesSinceDate = [[[SettingsModel alloc] init] getSinceDate];
+        
+        [_facebookMethods initializeMethods];
+        
+        [_facebookMethods getFBPageNotifications:_messagesSinceDate];
+    }
+    else
+    {
+        [self.refreshControl endRefreshing];
+        [self.tableView reloadData];
+        [self updateTableTitle];
+    }
+}
+
+-(void)productAddedOrUpdated:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+
+#pragma mark - FacebookMethods delegate methods
+
+-(void)finishedGettingFBpageNotifications:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        [_facebookMethods getFBPageMessages:_messagesSinceDate];
+    }
+    else
+    {
+        [self.refreshControl endRefreshing];
+        [self.tableView reloadData];
+        [self updateTableTitle];
+    }
+}
+
+-(void)finishedGettingFBInbox:(BOOL)succeed;
+{
+    // No Inbox asked!
+}
+
+-(void)finishedGettingFBPageMessages:(BOOL)succeed;
+{
+    // It doesn't matter if succeed as it might have inserted new clients from PageNotifications
+    
+    [_facebookMethods insertNewClientsFound];
+}
+
+-(void)finishedInsertingNewClientsFound:(BOOL)succeed;
+{
+    [self.refreshControl endRefreshing];
+    
+    // Reload table to make sure all clients (chats) are included
+    
+    _myDataClients = [_clientMethods getClientArray];
+    
+    // Sort array to be sure new messages are on top
+    [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Client*)a last_interacted_time];
+        NSDate *second = [(Client*)b last_interacted_time];
+        return [second compare:first];
+    }];
+    
+    // Reload table
+    [UIView transitionWithView:self.tableView
+                      duration:0.5f
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^(void) {
+                        [self.tableView reloadData];
+                    } completion:NULL];
+
+    [self updateTableTitle];
+}
+
+-(void)newMessageAddedFromFB:(Message*)messageAdded;
+{
+    // EVALUATE IF NEEDED!!!!!
+}
+
+
+/*
 #pragma mark - Contact with Facebook
 
 - (void) makeFBrequests;
@@ -1066,17 +1203,6 @@
         NSArray *jsonMessagesArray = jsonArray[i][@"comments"][@"data"];
 
         [self parseFBInboxComments:jsonMessagesArray withClientID:fromClientID];
-        
-        /*
-        // Review if there are more comments from this chat
-        
-        NSString *next = jsonArray[i][@"comments"][@"paging"][@"next"];
-        
-        if (next && jsonMessagesArray.count>=25)
-        {
-            [self getFBInboxComments:[next substringFromIndex:32] withClientID:fromClientID];
-        }
-        */
     }
     
     // Get details for each new client found
@@ -1324,16 +1450,6 @@
         
         [self parseFBPageMessagesComments:jsonMessagesArray withClientID:fromClientID];
         
-        /*
-         // Review if there are more comments from this chat
-         
-         NSString *next = jsonArray[i][@"messages"][@"paging"][@"next"];
-         
-         if (next && jsonMessagesArray.count>=25)
-         {
-         [self getFBPageMessagesComments:[next substringFromIndex:32] withClientID:fromClientID];
-         }
-         */
     }
     
     // Get details for each new client found
@@ -1386,7 +1502,7 @@
     
     Client *tmpClient = [clientMethods getClientFromClientId:fromClientID];
     NSString *fbInboxID = tmpClient.fb_inbox_id;
-    NSString *fbPageMessageID = tmpClient.fb_page_message_id;
+    // NSString *fbPageMessageID = tmpClient.fb_page_message_id;
     NSString *fbIDfromInbox = tmpClient.fb_client_id;
     NSString *fbNamefromInbox = [NSString stringWithFormat:@"%@ %@", tmpClient.name, tmpClient.last_name];
     
@@ -1562,7 +1678,6 @@
     }
 }
 
-
 - (void) addNewMessage:(Message*)newMessage;
 {
     MessageModel *messageMethods = [[MessageModel alloc] init];
@@ -1617,5 +1732,7 @@
                     } completion:NULL];
     
 }
+
+*/
 
 @end

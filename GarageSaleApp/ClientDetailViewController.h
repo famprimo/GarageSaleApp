@@ -32,7 +32,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *picClientZone;
 @property (weak, nonatomic) IBOutlet UIImageView *picClientPhone;
 @property (weak, nonatomic) IBOutlet UIImageView *picClientEmail;
-@property (weak, nonatomic) IBOutlet UILabel *labelClientFBCode;
 
 @property (weak, nonatomic) IBOutlet UIButton *buttonEdit;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRelateProducts;

@@ -8,10 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "MessagesSinceTableViewController.h"
+#import "FacebookMethods.h"
+#import "ProductModel.h"
+#import "ClientModel.h"
+#import "MessagesDetailViewController.h"
 
 @class MessagesDetailViewController;
 
-@interface MessagesTableViewController : UITableViewController <UIActionSheetDelegate, MessagesSinceViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
+@interface MessagesTableViewController : UITableViewController <UIActionSheetDelegate, MessagesSinceViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate, FacebookMethodsDelegate, ProductModelDelegate, ClientModelDelegate>
 
 @property (strong, nonatomic) MessagesDetailViewController *detailViewController;
 @property IBOutlet UISearchBar *clientSearchBar;

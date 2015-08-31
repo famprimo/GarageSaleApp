@@ -788,19 +788,19 @@
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    Product *productToReview = [[Product alloc] init];
+    Product *productFound = [[Product alloc] init];
     
     for (int i=0; i<mainDelegate.sharedArrayProducts.count; i=i+1)
     {
-        productToReview = [[Product alloc] init];
-        productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
+        Product *productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
         
         if ([productToReview.product_id isEqual:productIDtoSearch])
         {
+            productFound = productToReview;
             break;
         }
     }
-    return productToReview;
+    return productFound;
 }
 
 - (NSString*)getTextThatFollows:(NSString*)textToSearch fromMessage:(NSString*)messageText; // Search a text and returns the numbers that follows the text
@@ -865,6 +865,30 @@
     return [productName stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
+- (int)numberOfNewProducts;
+{
+    int newProducts = 0;
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Product *productToReview = [[Product alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayProducts.count; i=i+1)
+    {
+        productToReview = [[Product alloc] init];
+        productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
+        
+        if ([productToReview.status isEqual:@"N"])
+        {
+            newProducts = newProducts + 1;
+        }
+    }
+
+    return newProducts;
+}
+
 - (UIImage*)mergeImage:(UIImage*)first withImage:(UIImage*)second
 {
     // get size of the first image
@@ -897,5 +921,6 @@
     
     return newImage;
 }
+
 
 @end

@@ -32,52 +32,52 @@
     self.imageClient.frame = imageClientFrame;
     
     CGRect picMaleFrame = self.picMale.frame;
-    picMaleFrame.origin.x = 134;
-    picMaleFrame.origin.y = 208;
+    picMaleFrame.origin.x = 120;
+    picMaleFrame.origin.y = 181;
     picMaleFrame.size.width = 20;
     picMaleFrame.size.height = 20;
     self.picMale.frame = picMaleFrame;
 
     CGRect picFemaleFrame = self.picFemale.frame;
-    picFemaleFrame.origin.x = 364;
-    picFemaleFrame.origin.y = 208;
+    picFemaleFrame.origin.x = 351;
+    picFemaleFrame.origin.y = 181;
     picFemaleFrame.size.width = 20;
     picFemaleFrame.size.height = 20;
     self.picFemale.frame = picFemaleFrame;
 
     CGRect picEmailFrame = self.picEmail.frame;
-    picEmailFrame.origin.x = 134;
-    picEmailFrame.origin.y = 260;
+    picEmailFrame.origin.x = 481;
+    picEmailFrame.origin.y = 106;
     picEmailFrame.size.width = 20;
     picEmailFrame.size.height = 20;
     self.picEmail.frame = picEmailFrame;
 
     CGRect picPhone1Frame = self.picPhone1.frame;
-    picPhone1Frame.origin.x = 134;
-    picPhone1Frame.origin.y = 305;
+    picPhone1Frame.origin.x = 120;
+    picPhone1Frame.origin.y = 219;
     picPhone1Frame.size.width = 20;
     picPhone1Frame.size.height = 20;
     self.picPhone1.frame = picPhone1Frame;
 
     CGRect picPhone2Frame = self.picPhone2.frame;
-    picPhone2Frame.origin.x = 134;
-    picPhone2Frame.origin.y = 346;
+    picPhone2Frame.origin.x = 120;
+    picPhone2Frame.origin.y = 257;
     picPhone2Frame.size.width = 20;
     picPhone2Frame.size.height = 20;
     self.picPhone2.frame = picPhone2Frame;
 
     CGRect picZoneFrame = self.picZone.frame;
-    picZoneFrame.origin.x = 520;
-    picZoneFrame.origin.y = 165;
+    picZoneFrame.origin.x = 481;
+    picZoneFrame.origin.y = 144;
     picZoneFrame.size.width = 20;
     picZoneFrame.size.height = 20;
     self.picZone.frame = picZoneFrame;
     
     CGRect picBackgroundFrame = self.picBackground.frame;
     picBackgroundFrame.origin.x = 0;
-    picBackgroundFrame.origin.y = 100;
+    picBackgroundFrame.origin.y = 93;
     picBackgroundFrame.size.width = 800;
-    picBackgroundFrame.size.height = 300;
+    picBackgroundFrame.size.height = 223;
     self.picBackground.frame = picBackgroundFrame;
     
     //self.imageClient.image = [UIImage imageWithData:_clientToEdit.picture];

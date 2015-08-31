@@ -708,19 +708,19 @@
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    Client *clientToReview = [[Client alloc] init];
+    Client *clientFound = [[Client alloc] init];
     
     for (int i=0; i<mainDelegate.sharedArrayClients.count; i=i+1)
     {
-        clientToReview = [[Client alloc] init];
-        clientToReview = (Client *)mainDelegate.sharedArrayClients[i];
+        Client *clientToReview = (Client *)mainDelegate.sharedArrayClients[i];
         
         if ([clientToReview.client_id isEqual:clientIDtoSearch])
         {
+            clientFound = clientToReview;
             break;
         }
     }
-    return clientToReview;
+    return clientFound;
 }
 
 @end

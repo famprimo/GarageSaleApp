@@ -10,8 +10,7 @@
 
 @protocol MessagesSinceViewControllerDelegate
 
--(NSDate*)getCurrentSinceDate;
--(void)sinceDateSelected:(NSDate *)selectedSinceDate;
+-(void)sinceDateSelected;
 
 @end
 
