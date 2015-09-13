@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "ClientModel.h"
+#import "EditClientViewController.h"
+#import "ClientDetailViewController.h"
+
 
 @class ClientDetailViewController;
 
-@interface ClientTableViewController : UITableViewController <UISearchBarDelegate, UISearchDisplayDelegate, ClientModelDelegate>
+@interface ClientTableViewController : UITableViewController <UIActionSheetDelegate, EditClientViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate, ClientModelDelegate, ClientDetailViewControllerDelegate>
 
 @property (strong, nonatomic) ClientDetailViewController *detailViewController;
 @property IBOutlet UISearchBar *clientSearchBar;

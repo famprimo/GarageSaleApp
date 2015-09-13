@@ -7,12 +7,12 @@
 //
 
 #import "EditClientViewController.h"
-#import "ClientModel.h"
 #import "NSDate+NVTimeAgo.h"
 
 @interface EditClientViewController ()
 {
     Client *_clientToEdit;
+    ClientModel *_clientMethods;
 }
 @end
 
@@ -21,6 +21,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    // Initialize objects methods
+    _clientMethods = [[ClientModel alloc] init];
+    _clientMethods.delegate = self;
     
     _clientToEdit = [self.delegate getClientforEdit];
     
@@ -123,8 +127,6 @@
 - (IBAction)saveClientEdits:(id)sender
 {
     // Create opportunity
-    ClientModel *clientMethods = [[ClientModel alloc] init];
-    
     _clientToEdit.name = self.textName.text;
     _clientToEdit.last_name = self.textLastName.text;
     _clientToEdit.email = self.textEmail.text;
@@ -152,12 +154,25 @@
         _clientToEdit.status = @"U";
     }
     
-    [clientMethods updateClient:_clientToEdit];
-    
-    [self.delegate clientEdited:_clientToEdit];
-    
+    [_clientMethods updateClient:_clientToEdit];
 }
 
+
+
+#pragma mark methods for OpportunityModel
+
+-(void)clientsSyncedWithCoreData:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)clientAddedOrUpdated:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        [self.delegate clientEdited:_clientToEdit];
+    }
+}
 
 
 @end

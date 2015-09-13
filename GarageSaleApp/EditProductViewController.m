@@ -7,12 +7,12 @@
 //
 
 #import "EditProductViewController.h"
-#import "ProductModel.h"
 #import "NSDate+NVTimeAgo.h"
 
 @interface EditProductViewController ()
 {
     Product *_productToEdit;
+    ProductModel *_productMethods;
 }
 @end
 
@@ -22,6 +22,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
 
+    // Initialize objects methods
+    _productMethods = [[ProductModel alloc] init];
+    _productMethods.delegate = self;
+    
     _productToEdit = [self.delegate getProductforEdit];
     
     CGRect imageProductFrame = self.imageProduct.frame;
@@ -84,8 +88,6 @@
 - (IBAction)saveProductEdits:(id)sender
 {
     // Create opportunity
-    ProductModel *productMethods = [[ProductModel alloc] init];
-    
     _productToEdit.name = self.textName.text;
     _productToEdit.codeGS = self.textGScode.text;
     _productToEdit.desc = self.textDesc.text;
@@ -116,12 +118,27 @@
         _productToEdit.status = @"U";
     }
     
-    [productMethods updateProduct:_productToEdit];
-    
-    // SI HAY CAMBIOS DE DESCRIPCION CAMBIAR EN FACEBOOK!
-    
-    [self.delegate productEdited:_productToEdit];
-    
+    [_productMethods updateProduct:_productToEdit];
+}
+
+
+
+
+#pragma mark methods for OpportunityModel
+
+-(void)productsSyncedWithCoreData:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)productAddedOrUpdated:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        // SI HAY CAMBIOS DE DESCRIPCION CAMBIAR EN FACEBOOK!
+        
+        [self.delegate productEdited:_productToEdit];
+    }
 }
 
 @end

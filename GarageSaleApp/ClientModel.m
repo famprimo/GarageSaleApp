@@ -607,38 +607,37 @@
 - (NSData*)getClientPhotoFrom:(Client*)clientSelected;
 {
     NSData *clientPhoto;
-    BOOL fetchSuccessful = YES;
+    BOOL fetchSuccessful = NO;
     
-    NSManagedObjectContext *context = [self managedObjectContext];
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ClientPhotos" inManagedObjectContext:context];
-    [fetchRequest setEntity:entity];
-    
-    // Create Predicate
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"client_id", clientSelected.client_id];
-    [fetchRequest setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    
-    if (error) {
-        NSLog(@"Unable to execute fetch request");
-        NSLog(@"%@, %@", error, error.localizedDescription);
-        fetchSuccessful = NO;
-    }
-    else
+    if (![clientSelected.picture_link isEqualToString:@""])
     {
-        if (result.count == 0)
-        {
-            fetchSuccessful = NO;
+        NSManagedObjectContext *context = [self managedObjectContext];
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"ClientPhotos" inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+        
+        // Create Predicate
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"client_id", clientSelected.client_id];
+        [fetchRequest setPredicate:predicate];
+        
+        NSError *error = nil;
+        NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        
+        if (error) {
+            NSLog(@"Unable to execute fetch request");
+            NSLog(@"%@, %@", error, error.localizedDescription);
         }
         else
         {
-            NSManagedObject *coreDataObject = (NSManagedObject *)[result objectAtIndex:0];
-            
-            // Get data for picture
-            clientPhoto = [coreDataObject valueForKey:@"picture"];
+            if (result.count > 0)
+            {
+                fetchSuccessful = YES;
+                NSManagedObject *coreDataObject = (NSManagedObject *)[result objectAtIndex:0];
+                
+                // Get data for picture
+                clientPhoto = [coreDataObject valueForKey:@"picture"];
+            }
         }
     }
     
@@ -648,7 +647,7 @@
         clientPhoto = UIImagePNGRepresentation([UIImage imageNamed:@"GenericClient"]);
         
         // Ask for photo in background
-        if (clientSelected.picture_link)
+        if (clientSelected.picture_link && ![clientSelected.picture_link isEqualToString:@""])
         {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 NSData *picture = [NSData dataWithContentsOfURL:[NSURL URLWithString:clientSelected.picture_link]];

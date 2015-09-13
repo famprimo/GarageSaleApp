@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Client.h"
+#import "ClientModel.h"
 
 @protocol EditClientViewControllerDelegate
 
@@ -16,7 +17,7 @@
 
 @end
 
-@interface EditClientViewController : UIViewController
+@interface EditClientViewController : UIViewController <ClientModelDelegate>
 
 @property (nonatomic, strong) id<EditClientViewControllerDelegate> delegate;
 

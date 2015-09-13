@@ -11,6 +11,7 @@
 #import "SendMessageViewController.h"
 #import "NewOpportunityViewController.h"
 #import "EditProductViewController.h"
+#import "FacebookMethods.h"
 
 @protocol ProductDetailViewControllerDelegate
 
@@ -19,7 +20,7 @@
 @end
 
 
-@interface ProductDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, EditProductViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface ProductDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, EditProductViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, FacebookMethodsDelegate>
 
 @property (strong, nonatomic) id detailItem;
 @property (nonatomic, strong) id<ProductDetailViewControllerDelegate> delegate;

@@ -25,7 +25,7 @@
 @end
 
 
-@interface MessagesDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, ProductPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, EditClientViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface MessagesDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, ProductPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, EditClientViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, FacebookMethodsDelegate>
 
 @property (strong, nonatomic) id detailItem;
 @property (nonatomic, strong) id<MessagesDetailViewControllerDelegate> delegate;

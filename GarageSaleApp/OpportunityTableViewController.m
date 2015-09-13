@@ -70,6 +70,7 @@
     self.navigationItem.rightBarButtonItem = menuButtonSetup;
     
     self.detailViewController = (OpportunityDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
+    self.detailViewController.delegate = self;
     
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
@@ -181,6 +182,14 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark - Detail View Controller delegate methods
+
+-(void)opportunityUpdated;
+{
+    [self.tableView reloadData];
 }
 
 

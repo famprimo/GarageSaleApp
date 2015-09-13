@@ -24,7 +24,8 @@
 - (NSString*)getCommentID:(NSString*)facebookLink; // Search for 'comment_id=' on a Facebook link to get _id
 - (NSString*)getMessagesIDs:(NSMutableArray*)messagesArray; // Method that returns the IDs of all the Messages in the array sent
 - (Message*)getMessageFromMessageId:(NSString*)messageIDtoSearch;
-- (int)numberOfNewMessages; // Method that returns the total number of messages not replied yet
+- (int)numberOfUnreadMessages; // Method that returns the total number of unread messages
+- (int)numberOfUnreadMessagesForClient:(NSString*)clientFromID; // Method that returns the total number of unread messages for a client
 - (BOOL)updateMessage:(Message*)messageToUpdate; // Update a message
 - (NSMutableArray*)sortMessagesArrayConsideringParents:(NSMutableArray*)messagesArray; // Order an array of messages considering parent messages
 

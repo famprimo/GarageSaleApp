@@ -615,7 +615,7 @@
     return messageToReview;
 }
 
-- (int)numberOfNewMessages; // Method that returns the total number of messages not replied yet
+- (int)numberOfUnreadMessages; // Method that returns the total number of unread messages
 {
     int numberOfMessages = 0;
     
@@ -641,7 +641,31 @@
     }
     
     return numberOfMessages;
+}
 
+- (int)numberOfUnreadMessagesForClient:(NSString*)clientFromID; // Method that returns the total number of unread messages for a client
+{
+    int numberOfMessages = 0;
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Message *messageToReview = [[Message alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    {
+        messageToReview = [[Message alloc] init];
+        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
+        
+        if ([messageToReview.status isEqualToString:@"N"] && [messageToReview.client_id isEqualToString:clientFromID])
+        {
+            // Unread
+            numberOfMessages = numberOfMessages + 1;
+        }
+    }
+    
+    return numberOfMessages;
 }
 
 - (NSMutableArray*)sortMessagesArrayConsideringParents:(NSMutableArray*)messagesArray; // Order an array of messages considering parent messages

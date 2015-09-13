@@ -401,6 +401,7 @@
     [self.editOpportunityPopover dismissPopoverAnimated:YES];
     
     [self configureView];
+    [self.delegate opportunityUpdated];
 }
 
 

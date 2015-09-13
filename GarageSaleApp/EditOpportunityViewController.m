@@ -20,6 +20,8 @@
     Client *_clientBuyer;
     Product *_relatedProduct;
     Client *_clientOwner;
+    
+    OpportunityModel *_opportunityMethods;
 }
 @end
 
@@ -29,6 +31,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    // Initialize objects methods
+    _opportunityMethods = [[OpportunityModel alloc] init];
+    _opportunityMethods.delegate = self;
+
     ClientModel *clientMethods = [[ClientModel alloc] init];
     ProductModel *productMethods = [[ProductModel alloc] init];
 
@@ -169,7 +175,6 @@
     }
     
     [opportunityMethods updateOpportunity:_opportunityToEdit];
-    [self.delegate opportunityEdited:_opportunityToEdit];
 }
 
 
@@ -213,7 +218,6 @@
     }
 
     [opportunityMethods updateOpportunity:_opportunityToEdit];
-    [self.delegate opportunityEdited:_opportunityToEdit];
 }
 
 - (IBAction)priceEdited:(id)sender
@@ -223,5 +227,21 @@
     self.textOpportunityCommision.text = [NSString stringWithFormat:@"%f", (self.textOpportunityPrice.text.intValue * 0.1)];
 }
 
+
+
+#pragma mark methods for OpportunityModel
+
+-(void)opportunitiesSyncedWithCoreData:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)opportunityAddedOrUpdated:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        [self.delegate opportunityEdited:_opportunityToEdit];
+    }
+}
 
 @end

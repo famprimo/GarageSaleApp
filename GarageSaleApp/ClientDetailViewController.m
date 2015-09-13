@@ -20,13 +20,14 @@
     NSMutableArray *_myDataProducts;
     
     Client *_selectedClient;
+    
+    id _combineButtonId;
 }
 
 // For Popover
 @property (nonatomic, strong) UIPopoverController *productPickerPopover;
+@property (nonatomic, strong) UIPopoverController *clientPickerPopover;
 @property (nonatomic, strong) UIPopoverController *editClientPopover;
-
-// @property (nonatomic, strong) UIPopoverController *sendMessagePopover;
 
 @end
 
@@ -202,6 +203,30 @@
 
 }
 
+- (IBAction)combineProducts:(id)sender
+{
+    _combineButtonId = sender;
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cuidado" message:@"Esta acción combinará todos los mensajes y productos del cliente seleccionado con el cliente actual. ¿Estas seguro? " delegate:self cancelButtonTitle:@"Continuar" otherButtonTitles:@"Cancelar", nil];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0)
+    {
+        ClientPickerViewController *clientPickerController = [[ClientPickerViewController alloc] initWithNibName:@"ClientPickerViewController" bundle:nil];
+        clientPickerController.delegate = self;
+        
+        self.clientPickerPopover = [[UIPopoverController alloc] initWithContentViewController:clientPickerController];
+        self.clientPickerPopover.popoverContentSize = CGSizeMake(350.0, 400.0);
+        [self.clientPickerPopover presentPopoverFromRect:[(UIButton *)_combineButtonId frame]
+                                                  inView:self.view
+                                permittedArrowDirections:UIPopoverArrowDirectionAny
+                                                animated:YES];
+    }
+}
+
 
 #pragma mark - Delegate methods for ProductPicker
 
@@ -238,6 +263,16 @@
 }
 
 
+#pragma mark - Delegate methods for ClientPicker
+
+-(void)clientSelectedfromClientPicker:(NSString *)clientIDSelected;
+{
+    // Dismiss the popover view
+    [self.clientPickerPopover dismissPopoverAnimated:YES];
+    
+}
+
+
 #pragma mark - Delegate methods for EditClient
 
 -(Client *)getClientforEdit;
@@ -251,6 +286,7 @@
     [self.editClientPopover dismissPopoverAnimated:YES];
 
     [self configureView];
+    [self.delegate clientUpdated];
 }
 
 

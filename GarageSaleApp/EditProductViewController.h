@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "Product.h"
+#import "ProductModel.h"
+
 
 @protocol EditProductViewControllerDelegate
 
@@ -16,7 +18,7 @@
 
 @end
 
-@interface EditProductViewController : UIViewController
+@interface EditProductViewController : UIViewController <ProductModelDelegate>
 
 @property (nonatomic, strong) id<EditProductViewControllerDelegate> delegate;
 

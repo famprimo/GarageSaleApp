@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OpportunityModel.h"
 
 
 @protocol NewOpportunityViewControllerDelegate
@@ -17,7 +18,7 @@
 
 @end
 
-@interface NewOpportunityViewController : UIViewController
+@interface NewOpportunityViewController : UIViewController <OpportunityModelDelegate>
 
 @property (nonatomic, strong) id<NewOpportunityViewControllerDelegate> delegate;
 

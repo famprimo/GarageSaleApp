@@ -24,10 +24,17 @@
     
     // The product that is selected from the table
     Client *_selectedClient;
+    Client *_newClient;
  
     // Objects Methods
     ClientModel *_clientMethods;
+    
+    UIBarButtonItem *_menuButtonNew;
 }
+
+// For Popover
+@property (nonatomic, strong) UIPopoverController *editClientPopover;
+
 @end
 
 @implementation ClientTableViewController
@@ -57,11 +64,12 @@
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
     
-    self.detailViewController = (ClientDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
+    _menuButtonNew = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newClient:)];
+    self.navigationItem.rightBarButtonItem = _menuButtonNew;
 
-    // To have access to shared arrays from AppDelegate
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
+    self.detailViewController = (ClientDetailViewController *)[self.splitViewController.viewControllers objectAtIndex:1];
+    self.detailViewController.delegate = self;
+
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -99,6 +107,39 @@
     [self.revealViewController revealToggleAnimated:YES];
 }
 
+- (void)newClient:(id)sender
+{
+    NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+    [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+
+    _newClient = [[Client alloc] init];
+    
+    _newClient.client_id = [_clientMethods getNextClientID];
+    _newClient.fb_client_id = @"N/A";
+    _newClient.fb_inbox_id = @"";
+    _newClient.fb_page_message_id = @"";
+    _newClient.type = @"O";
+    _newClient.name = @"Nombre";
+    _newClient.last_name = @"Apellido";
+    _newClient.sex = @"F";
+    _newClient.client_zone = @"Surco";
+    _newClient.address = @"";
+    _newClient.phone1 = @"";
+    _newClient.phone2 = @"";
+    _newClient.phone3 = @"";
+    _newClient.email = @"";
+    _newClient.preference = @"F";
+    _newClient.picture_link = @"";
+    _newClient.status = @"N";
+    _newClient.created_time = [NSDate date];
+    _newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
+    _newClient.last_interacted_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
+    _newClient.notes = @"Notas";
+    _newClient.agent_id = @"00001";
+    
+    [_clientMethods addNewClient:_newClient];
+}
+
 - (void)refreshTableGesture:(id)sender
 {
     [_clientMethods syncCoreDataWithParse];
@@ -109,6 +150,15 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - Detail View Controller delegate methods
+
+-(void)clientUpdated;
+{
+    [self.tableView reloadData];
+}
+
 
 #pragma mark - Client Model delegate methods
 
@@ -131,7 +181,46 @@
 
 -(void)clientAddedOrUpdated:(BOOL)succeed;
 {
-    // Used when a client is updated
+    // New client was added to the DB
+    
+    EditClientViewController *editClientController = [[EditClientViewController alloc] initWithNibName:@"EditClientViewController" bundle:nil];
+    editClientController.delegate = self;
+    
+    
+    self.editClientPopover = [[UIPopoverController alloc] initWithContentViewController:editClientController];
+    self.editClientPopover.popoverContentSize = CGSizeMake(800, 300);
+    [self.editClientPopover presentPopoverFromBarButtonItem:_menuButtonNew permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+}
+
+#pragma mark - Delegate methods for EditClient
+
+-(Client *)getClientforEdit;
+{
+    return _newClient;
+}
+
+-(void)clientEdited:(Client *)editedClient;
+{
+    // Dismiss the popover view
+    [self.editClientPopover dismissPopoverAnimated:YES];
+    
+    // Reload the data
+    _myDataClients = [[NSMutableArray alloc] init];
+    _myDataClients = [_clientMethods getClientArray];
+    
+    // Sort array to be sure new clients are on top
+    [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Client*)a created_time];
+        NSDate *second = [(Client*)b created_time];
+        return [second compare:first];
+    }];
+    
+    [self.tableView reloadData];
+
+    // Assign detail view with first item
+    _selectedClient = [_myDataClients firstObject];
+    [self.detailViewController setDetailItem:_selectedClient];
 }
 
 
@@ -244,22 +333,49 @@
     }
     
     // Get references to images and labels of cell
-    UIImageView *pictureCell = (UIImageView*)[myCell.contentView viewWithTag:1];
+    UIImageView *clientImage = (UIImageView*)[myCell.contentView viewWithTag:1];
     UILabel *nameLabel = (UILabel*)[myCell.contentView viewWithTag:2];
     UILabel *zoneLabel = (UILabel*)[myCell.contentView viewWithTag:3];
     UILabel *phoneLabel = (UILabel*)[myCell.contentView viewWithTag:4];
+    UIImageView *verifiedImage = (UIImageView*)[myCell.contentView viewWithTag:5];
+    
+    // Position all images and message frames
+    CGRect clientImageFrame = clientImage.frame;
+    clientImageFrame.origin.x = 8;
+    clientImageFrame.origin.y = 5;
+    clientImageFrame.size.width = 70;
+    clientImageFrame.size.height = 70;
+    clientImage.frame = clientImageFrame;
+
+    CGRect verifiedImageFrame = verifiedImage.frame;
+    verifiedImageFrame.origin.x = 86;
+    verifiedImageFrame.origin.y = 10;
+    verifiedImageFrame.size.width = 10;
+    verifiedImageFrame.size.height = 10;
+    verifiedImage.frame = verifiedImageFrame;
+
     
     // Make client picture rounded
-    pictureCell.layer.cornerRadius = pictureCell.frame.size.width / 2;
-    pictureCell.clipsToBounds = YES;
+    clientImage.layer.cornerRadius = clientImage.frame.size.width / 2;
+    clientImage.clipsToBounds = YES;
     
     // Set table cell labels to client data
     //pictureCell.image = [UIImage imageWithData:myClient.picture];
-    pictureCell.image = [UIImage imageWithData:[_clientMethods getClientPhotoFrom:myClient]];
-    nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
+    clientImage.image = [UIImage imageWithData:[_clientMethods getClientPhotoFrom:myClient]];
     zoneLabel.text = [NSString stringWithFormat:@"Vive en %@", myClient.client_zone];
     phoneLabel.text = myClient.phone1;
     
+    if ([myClient.status isEqualToString:@"V"])
+    {
+        nameLabel.text = [NSString stringWithFormat:@"    %@ %@", myClient.name, myClient.last_name];
+        verifiedImage.image = [UIImage imageNamed:@"Verified"];
+    }
+    else
+    {
+        nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
+        verifiedImage.image = [UIImage imageNamed:@"Blank"];
+    }
+
     return myCell;
 }
 

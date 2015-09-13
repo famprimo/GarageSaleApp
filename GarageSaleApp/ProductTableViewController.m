@@ -30,6 +30,7 @@
     
     // Objects Methods
     ProductModel *_productMethods;
+    FacebookMethods *_facebookMethods;
 }
 @end
 
@@ -66,7 +67,10 @@
     // Initialize objects methods
     _productMethods = [[ProductModel alloc] init];
     _productMethods.delegate = self;
-
+    
+    _facebookMethods = [[FacebookMethods alloc] init];
+    _facebookMethods.delegate = self;
+    
     // Get the data
     _myData = [_productMethods getProductArray];
     _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
@@ -134,7 +138,20 @@
 
 -(void)productsSyncedWithCoreData:(BOOL)succeed;
 {
-    [self makeFBRequestForPhotos];
+    if (succeed)
+    {
+        // Product synced so call FB methods
+        
+        [_facebookMethods initializeMethods];
+        
+        [_facebookMethods getFBPhotos];
+    }
+    else
+    {
+        [self.refreshControl endRefreshing];
+        [self.tableView reloadData];
+        [self updateTableTitle];
+    }
 }
 
 -(void)productAddedOrUpdated:(BOOL)succeed;
@@ -343,199 +360,65 @@
 }
 
 
-#pragma mark - Contact with Facebook
+#pragma mark - FacebookMethods delegate methods
 
-- (void) makeFBRequestForPhotos;
+-(void)finishedGettingFBPhotos:(BOOL)succeed;
 {
+    [self.refreshControl endRefreshing];
 
-    if (![_tmpSettings.fb_page_id isEqualToString:@""])
+    if (succeed)
     {
-        NSString *url = [NSString stringWithFormat:@"%@/photos/uploaded?fields=created_time,id,link,updated_time,picture,name&limit=100", _tmpSettings.fb_page_id];;
-        
-        [self getFBPhotos:url];
-    }
-    else
-    {
-        [self setFacebookPageID];
-        
-        _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
-    }
-}
-
-- (void) getFBPhotos:(NSString*)url;
-{
-    // Make FB request
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url
-                                                                   parameters:nil];
-    
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
-    {
-        if (!error) { // FB request was a success!
-            
-            if (result[@"data"]) {   // There is FB data!
+        // Reload table to make sure all products are included
+        _myData = [_productMethods getProductArray];
                 
-                [self parseFBResultsRequestForPhotos:result];
-                
-                // Review is there is a next page
-                // skip the beginning of the url https://graph.facebook.com/
-                
-                NSString *next = result[@"paging"][@"next"];
-                if (next)
-                {
-                    [self getFBPhotos:[next substringFromIndex:32]];
-                }
-                else
-                {
-                    [self.refreshControl endRefreshing];
-                }
-                
-            }
-            else
-            {
-                [self.refreshControl endRefreshing];
-            }
-        }
-        else {
-            // An error occurred, we need to handle the error
-            // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-            NSLog(@"error getFBPhotos: %@", error.description);
-            
-            [self.refreshControl endRefreshing];
-        }
-
-    }];
-
-}
-
-- (void) parseFBResultsRequestForPhotos:(id)result
-{
-    NSArray *photosArray = result[@"data"];
-    
-    // Get details and create array
-    for (int i=0; i<photosArray.count; i=i+1)
-    {
+        // Sort array to be sure new products are on top
+        [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
+            NSDate *first = [(Product*)a updated_time];
+            NSDate *second = [(Product*)b updated_time];
+            return [second compare:first];
+            //return [first compare:second];
+        }];
         
-        // Review each photo
-        NSString *photoID = photosArray[i][@"id"];
+        // Reload table
+        [UIView transitionWithView:self.tableView
+                          duration:0.5f
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^(void) {
+                            [self.tableView reloadData];
+                        } completion:NULL];
         
-        // Review if product exists
-        NSString *productID = [_productMethods getProductIDfromFbPhotoId:photoID];
-        
-        if ([productID  isEqual: @"Not Found"] && !(photosArray[i][@"name"] == nil) && ![[_productMethods getTextThatFollows:@"GS" fromMessage:photosArray[i][@"name"]] isEqualToString:@"Not Found"])
-        {
-            // New product!
-            productID = [_productMethods getNextProductID];
-            
-            Product *newProduct = [[Product alloc] init];
-            
-            newProduct.product_id = productID;
-            newProduct.client_id = @"";
-            newProduct.desc = photosArray[i][@"name"];
-            newProduct.fb_photo_id = photoID;
-            newProduct.fb_link = photosArray[i][@"link"];
-            
-            // Get name, currency, price, GS code and type from photo description
-            
-            newProduct.name = [_productMethods getProductNameFromFBPhotoDesc:newProduct.desc];
-            
-            NSString *tmpText;
-            
-            tmpText = [_productMethods getTextThatFollows:@"GSN" fromMessage:newProduct.desc];
-            if (![tmpText isEqualToString:@"Not Found"])
-            {
-                newProduct.codeGS = [NSString stringWithFormat:@"GSN%@", tmpText];
-                newProduct.type = @"A";
-                
-            }
-            else
-            {
-                tmpText = [_productMethods getTextThatFollows:@"GS" fromMessage:newProduct.desc];
-                if (![tmpText isEqualToString:@"Not Found"])
-                {
-                    newProduct.codeGS = [NSString stringWithFormat:@"GS%@", tmpText];
-                    newProduct.type = @"S";
-                }
-                else
-                {
-                    newProduct.codeGS = @"None";
-                    newProduct.type = @"A";
-                }
-            }
-            
-            tmpText = [_productMethods getTextThatFollows:@"s/. " fromMessage:newProduct.desc];
-            if (![tmpText isEqualToString:@"Not Found"]) {
-                tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
-                newProduct.currency = @"S/.";
-                newProduct.price = [NSNumber numberWithFloat:[tmpText integerValue]];
-            }
-            else
-            {
-                tmpText = [_productMethods getTextThatFollows:@"USD " fromMessage:newProduct.desc];
-                if (![tmpText isEqualToString:@"Not Found"]) {
-                    tmpText = [tmpText stringByReplacingOccurrencesOfString:@"," withString:@""];
-                    newProduct.currency = @"USD";
-                    newProduct.price = [NSNumber numberWithFloat:[tmpText integerValue]];
-                }
-                else {
-                    newProduct.currency = @"S/.";
-                    newProduct.price = 0;
-                }
-            }
-            
-            NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
-            [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-            newProduct.created_time = [formatFBdates dateFromString:photosArray[i][@"created_time"]];
-            newProduct.updated_time = [formatFBdates dateFromString:photosArray[i][@"updated_time"]];
-            newProduct.fb_updated_time = [formatFBdates dateFromString:photosArray[i][@"updated_time"]];
-            newProduct.solddisabled_time = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
-            newProduct.last_promotion_time = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
-
-            newProduct.picture_link = photosArray[i][@"picture"];
-            newProduct.additional_pictures = @"";
-            newProduct.status = @"N";
-            newProduct.promotion_piority = @"2";
-            newProduct.notes = @"";
-            newProduct.agent_id = @"00001";
-            
-            // Status... Sold?
-            tmpText = [_productMethods getTextThatFollows:@"VENDID" fromMessage:newProduct.desc];
-            if (![tmpText isEqualToString:@"Not Found"])
-            {
-                newProduct.status = @"S";
-            }
-
-            // Add new product to DB
-            [_productMethods addNewProduct:newProduct];
-        }
+        [self updateTableTitle];
     }
 }
 
-- (void)setFacebookPageID;
+-(void)newMessageAddedFromFB:(Message*)messageAdded;
 {
-    if ([FBSDKAccessToken currentAccessToken])
-    {
-        NSString *url = @"me?fields=id,name,accounts";
-        
-        // Prepare for FB request
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
-        
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
-         {
-             if (!error) {  // FB request was a success!
-                 
-                 NSString *userID = result[@"id"];
-                 NSString *userName = result[@"name"];
-                 NSString *pageID = result[@"accounts"][@"data"][0][@"id"];
-                 NSString *pageName = result[@"accounts"][@"data"][0][@"name"];
-                 NSString *pageToken = result[@"accounts"][@"data"][0][@"access_token"];
-                 
-                 if (![[[SettingsModel alloc] init] updateSettingsUser:userName withUserID:userID andPageID:pageID andPageName:pageName andPageTokenID:pageToken]) {
-                     NSLog(@"Error updating settings");
-                 }
-                 
-             }
-         }];
-    }
+    // No need to implement
+}
+
+-(void)finishedGettingFBpageNotifications:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBInbox:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBPageMessages:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedInsertingNewClientsFound:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBPhotoComments:(BOOL)succeed;
+{
+    // No need to implement
 }
 
 @end

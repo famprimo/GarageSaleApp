@@ -46,6 +46,7 @@
     
     // Objects Methods
     ProductModel *_productMethods;
+    FacebookMethods *_facebookMethods;
 }
 
 // For Popover
@@ -85,7 +86,10 @@
     
     // Initialize objects methods
     _productMethods = [[ProductModel alloc] init];
-
+    
+    _facebookMethods = [[FacebookMethods alloc] init];
+    _facebookMethods.delegate = self;
+    
     _messageRowHeight = 80;
     
     _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
@@ -190,7 +194,6 @@
 
 
         // Set data
-        // self.imageProduct.image = [UIImage imageWithData:productSelected.picture];
         self.imageProduct.image = [UIImage imageWithData:[_productMethods getProductPhotoFrom:productSelected]];
         
         self.labelProductName.text = productSelected.name;
@@ -366,22 +369,9 @@
     Product *productSelected = [[Product alloc] init];
     productSelected = (Product *)_detailItem;
 
-    NSString *url = [NSString stringWithFormat:@"%@/comments", productSelected.fb_photo_id];
-    
-    [self getFBPhotoComments:url forProduct:productSelected];
-    
-    [_refreshControl endRefreshing];
-    
-    // Sort array to be sure new messages are on top
-    _myDataMessages = [[[MessageModel alloc] init] sortMessagesArrayConsideringParents:_myDataMessages];
-    
-    // Reload table
-    [UIView transitionWithView:self.tableMessages
-                      duration:0.5f
-                       options:UIViewAnimationOptionTransitionCrossDissolve
-                    animations:^(void) {
-                        [self.tableMessages reloadData];
-                    } completion:NULL];
+    [_facebookMethods initializeMethods];
+
+    [_facebookMethods getFBPhotoCommentsforProduct:productSelected];
 }
 
 -(IBAction)relateToClient:(id)sender;
@@ -422,11 +412,9 @@
     Product *productSelected = [[Product alloc] init];
     productSelected = (Product *)_detailItem;
     
-    NSString *url = [NSString stringWithFormat:@"%@/comments", productSelected.fb_photo_id];
-    
-    [self getFBPhotoComments:url forProduct:productSelected];
-    
-    [self.tableMessages reloadData];
+    [_facebookMethods initializeMethods];
+
+    [_facebookMethods getFBPhotoCommentsforProduct:productSelected];
 }
 
 -(IBAction)showPopoverClientPicker:(id)sender;
@@ -494,7 +482,10 @@
     Product *productSelected = [[Product alloc] init];
     productSelected = (Product *)_detailItem;
     
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:productSelected.fb_link]];
+    if (productSelected.fb_link && ![productSelected.fb_link isEqualToString:@""])
+    {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:productSelected.fb_link]];
+    }
 }
 
 
@@ -648,7 +639,6 @@
         return @"";
     }
 }
-
 
 -(void)messageSent:(NSString*)postType; // postType = (P)hoto (I)nbox (M)essage
 {
@@ -932,6 +922,79 @@
 }
 
 
+#pragma mark - FacebookMethods delegate methods
+
+-(void)finishedGettingFBPhotoComments:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        [_facebookMethods insertNewClientsFound];
+    }
+    else
+    {
+        [_refreshControl endRefreshing];
+    }
+}
+
+-(void)finishedInsertingNewClientsFound:(BOOL)succeed;
+{
+    [_refreshControl endRefreshing];
+    
+    MessageModel *messageMethods = [[MessageModel alloc] init];
+    Product *productSelected = [[Product alloc] init];
+    productSelected = (Product *)_detailItem;
+    
+    _myDataMessages = [messageMethods getMessagesArrayForProduct:productSelected.product_id];
+    
+    _myDataMessages = [messageMethods sortMessagesArrayConsideringParents:_myDataMessages];
+
+    _selectedMessage = [[Message alloc] init];
+
+    // Reload table
+    [UIView transitionWithView:self.tableMessages
+                      duration:0.5f
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^(void) {
+                        [self.tableMessages reloadData];
+                    } completion:NULL];
+
+    if (_myDataMessages.count > 0)
+    {
+        int lastRowNumber = [self.tableMessages numberOfRowsInSection:0] - 1;
+        NSIndexPath* ip = [NSIndexPath indexPathForRow:lastRowNumber inSection:0];
+        [self.tableMessages scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        
+        _selectedMessage = [_myDataMessages lastObject];
+    }
+}
+
+
+-(void)newMessageAddedFromFB:(Message*)messageAdded;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBpageNotifications:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBInbox:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBPageMessages:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBPhotos:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+/*
 #pragma mark - Contact with Facebook
 
 - (void) getFBPhotoComments:url forProduct:(Product *)forProduct;
@@ -1304,6 +1367,6 @@
     // Update database
     [messageMethods addNewMessage:newMessage];
 }
-
+*/
 
 @end

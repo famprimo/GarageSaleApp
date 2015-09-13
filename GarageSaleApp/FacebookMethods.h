@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "Message.h"
+#import "Client.h"
+#import "Product.h"
 
 @protocol FacebookMethodsDelegate
 
@@ -16,6 +18,8 @@
 -(void)finishedGettingFBInbox:(BOOL)succeed;
 -(void)finishedGettingFBPageMessages:(BOOL)succeed;
 -(void)finishedInsertingNewClientsFound:(BOOL)succeed;
+-(void)finishedGettingFBPhotos:(BOOL)succeed;
+-(void)finishedGettingFBPhotoComments:(BOOL)succeed;
 
 @end
 
@@ -27,7 +31,11 @@
 - (void)setFBPageID;
 - (void)getFBPageNotifications:(NSDate*)sinceDate;
 - (void)getFBInbox:(NSDate*)sinceDate;
+- (void)getFBInboxForClient:(Client*)clientInbox sinceDate:(NSDate*)sinceDate;
 - (void)getFBPageMessages:(NSDate*)sinceDate;
+- (void)getFBPageMessagesForClient:(Client*)clientInbox;
 - (void)insertNewClientsFound;
+- (void)getFBPhotos;
+- (void)getFBPhotoCommentsforProduct:(Product*)forProduct;
 
 @end

@@ -12,13 +12,14 @@
 #import "Product.h"
 #import "ProductModel.h"
 #import "Opportunity.h"
-#import "OpportunityModel.h"
 
 
 @interface NewOpportunityViewController ()
 {
     Client *_clientBuyer;
     Product *_relatedProduct;
+    
+    OpportunityModel *_opportunityMethods;
 }
 @end
 
@@ -27,6 +28,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    // Initialize objects methods
+    _opportunityMethods = [[OpportunityModel alloc] init];
+    _opportunityMethods.delegate = self;
     
     _clientBuyer = [[[ClientModel alloc] init] getClientFromClientId:[self.delegate getBuyerIdForOpportunity]];
     _relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:[self.delegate getProductIdForOpportunity]];
@@ -89,10 +94,9 @@
     [dateFormat setDateFormat:@"yyyyMMdd"];
 
     // Create opportunity
-    OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
     Opportunity *tempOpportunity = [[Opportunity alloc] init];
     
-    tempOpportunity.opportunity_id = [opportunityMethods getNextOpportunityID];
+    tempOpportunity.opportunity_id = [_opportunityMethods getNextOpportunityID];
     tempOpportunity.product_id = _relatedProduct.product_id;
     tempOpportunity.client_id = _clientBuyer.client_id;
     tempOpportunity.initial_price = [NSNumber numberWithFloat:self.textOpportunityPrice.text.intValue];
@@ -105,11 +109,23 @@
     tempOpportunity.commision = [NSNumber numberWithFloat:(tempOpportunity.initial_price.floatValue * 0.1)];
     tempOpportunity.agent_id = @"00001";
 
-    [opportunityMethods addNewOpportunity:tempOpportunity];
-    
-    [self.delegate opportunityCreated];
-
+    [_opportunityMethods addNewOpportunity:tempOpportunity];
 }
 
+
+#pragma mark methods for OpportunityModel
+
+-(void)opportunitiesSyncedWithCoreData:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)opportunityAddedOrUpdated:(BOOL)succeed;
+{
+    if (succeed)
+    {
+        [self.delegate opportunityCreated];
+    }
+}
 
 @end

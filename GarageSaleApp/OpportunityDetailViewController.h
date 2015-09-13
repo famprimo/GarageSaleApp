@@ -11,9 +11,17 @@
 #import "SendMessageViewController.h"
 #import "EditOpportunityViewController.h"
 
+@protocol OpportunityDetailViewControllerDelegate
+
+-(void)opportunityUpdated;
+
+@end
+
+
 @interface OpportunityDetailViewController : UIViewController <UIActionSheetDelegate, SendMessageViewControllerDelegate, EditOpportunityViewControllerDelegate>
 
 @property (strong, nonatomic) id detailItem;
+@property (nonatomic, strong) id<OpportunityDetailViewControllerDelegate> delegate;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductName;
