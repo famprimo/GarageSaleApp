@@ -22,7 +22,6 @@
 @property (strong, nonatomic) NSString *address;
 @property (strong, nonatomic) NSString *phone1;
 @property (strong, nonatomic) NSString *phone2;
-@property (strong, nonatomic) NSString *phone3;
 @property (strong, nonatomic) NSString *email;
 @property (strong, nonatomic) NSString *preference; // (E)mail (F)acebook
 @property (strong, nonatomic) NSString *picture_link;

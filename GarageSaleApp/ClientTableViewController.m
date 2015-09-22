@@ -81,11 +81,11 @@
     // Get the data
     _myDataClients = [_clientMethods getClientArray];
 
-    // Sort array to be sure new clients are on top
+    // Sort array in alphabetic order
     [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
-        NSDate *first = [(Client*)a created_time];
-        NSDate *second = [(Client*)b created_time];
-        return [second compare:first];
+        NSString *first = [(Client*)a name];
+        NSString *second = [(Client*)b name];
+        return [first compare:second];
     }];
     
     // Assign detail view with first item
@@ -126,15 +126,14 @@
     _newClient.address = @"";
     _newClient.phone1 = @"";
     _newClient.phone2 = @"";
-    _newClient.phone3 = @"";
     _newClient.email = @"";
     _newClient.preference = @"F";
     _newClient.picture_link = @"";
     _newClient.status = @"N";
     _newClient.created_time = [NSDate date];
-    _newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
     _newClient.last_interacted_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
-    _newClient.notes = @"Notas";
+    _newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
+    _newClient.notes = @"";
     _newClient.agent_id = @"00001";
     
     [_clientMethods addNewClient:_newClient];
@@ -168,11 +167,11 @@
     {
         [self.refreshControl endRefreshing];
 
-        // Sort array to be sure new clients are on top
+        // Sort array in alphabetic order
         [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
-            NSDate *first = [(Client*)a created_time];
-            NSDate *second = [(Client*)b created_time];
-            return [second compare:first];
+            NSString *first = [(Client*)a name];
+            NSString *second = [(Client*)b name];
+            return [first compare:second];
         }];
         
         [self.tableView reloadData];
@@ -209,11 +208,11 @@
     _myDataClients = [[NSMutableArray alloc] init];
     _myDataClients = [_clientMethods getClientArray];
     
-    // Sort array to be sure new clients are on top
+    // Sort array in alphabetic order
     [_myDataClients sortUsingComparator:^NSComparisonResult(id a, id b) {
-        NSDate *first = [(Client*)a created_time];
-        NSDate *second = [(Client*)b created_time];
-        return [second compare:first];
+        NSString *first = [(Client*)a name];
+        NSString *second = [(Client*)b name];
+        return [first compare:second];
     }];
     
     [self.tableView reloadData];
@@ -362,8 +361,28 @@
     // Set table cell labels to client data
     //pictureCell.image = [UIImage imageWithData:myClient.picture];
     clientImage.image = [UIImage imageWithData:[_clientMethods getClientPhotoFrom:myClient]];
-    zoneLabel.text = [NSString stringWithFormat:@"Vive en %@", myClient.client_zone];
-    phoneLabel.text = myClient.phone1;
+    
+    if (myClient.client_zone == nil || [myClient.client_zone isEqualToString:@""])
+    {
+        zoneLabel.text = @"Sin zona";
+        zoneLabel.textColor = [UIColor grayColor];
+    }
+    else
+    {
+        zoneLabel.text = [NSString stringWithFormat:@"Vive en %@", myClient.client_zone];
+        zoneLabel.textColor = [UIColor blackColor];
+    }
+    
+    if (myClient.phone1 == nil || [myClient.phone1 isEqualToString:@""])
+    {
+        phoneLabel.text = @"Sin telefono";
+        phoneLabel.textColor = [UIColor grayColor];
+    }
+    else
+    {
+        phoneLabel.text = myClient.phone1;
+        phoneLabel.textColor = [UIColor blackColor];
+    }
     
     if ([myClient.status isEqualToString:@"V"])
     {

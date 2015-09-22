@@ -373,11 +373,22 @@
                 newClient.fb_page_message_id = @"";
                 newClient.type = @"F";
                 newClient.name = tempMessage.fb_from_name; // TEMPORAL
+                newClient.last_name = @"Apellido";
+                newClient.sex = @"F";
+                newClient.client_zone = @"Surco";
+                newClient.address = @"";
+                newClient.phone1 = @"";
+                newClient.phone2 = @"";
+                newClient.email = @"";
                 newClient.preference = @"F";
+                newClient.picture_link = @"";
                 newClient.status = @"N";
                 newClient.created_time = [NSDate date];
-                newClient.last_interacted_time = tempMessage.datetime;
-                
+                newClient.last_interacted_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
+                newClient.last_inventory_time = newClient.last_interacted_time;
+                newClient.notes = @"";
+                newClient.agent_id = @"00001";
+
                 [_newClientsArray addObject:newClient];
             }
             else
@@ -557,10 +568,22 @@
                     newClient.fb_page_message_id = @"";
                     newClient.type = @"F";
                     newClient.name = tempMessage.fb_from_name; // TEMPORAL
+                    newClient.last_name = @"Apellido";
+                    newClient.sex = @"F";
+                    newClient.client_zone = @"Surco";
+                    newClient.address = @"";
+                    newClient.phone1 = @"";
+                    newClient.phone2 = @"";
+                    newClient.email = @"";
                     newClient.preference = @"F";
+                    newClient.picture_link = @"";
                     newClient.status = @"N";
                     newClient.created_time = [NSDate date];
                     newClient.last_interacted_time = tempMessage.datetime;
+                    newClient.last_inventory_time = newClient.last_interacted_time;
+                    newClient.notes = @"";
+                    newClient.agent_id = @"00001";
+
                     
                     [_newClientsArray addObject:newClient];
                 }
@@ -798,6 +821,7 @@
                          tempProduct.updated_time = [formatFBdates dateFromString:result[_photosArray[i]][@"updated_time"]];
                          tempProduct.fb_updated_time = [formatFBdates dateFromString:result[_photosArray[i]][@"updated_time"]];
                          tempProduct.solddisabled_time = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
+                         tempProduct.last_promotion_time = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
                          
                          tempProduct.picture_link = result[_photosArray[i]][@"picture"];
                          tempProduct.additional_pictures = @"";
@@ -1003,14 +1027,26 @@
             newClient.fb_page_message_id =  @"";
             newClient.type = @"F";
             newClient.name = fbNamefromInbox; // TEMPORAL
+            newClient.last_name = @"Apellido";
+            newClient.sex = @"F";
+            newClient.client_zone = @"Surco";
+            newClient.address = @"";
+            newClient.phone1 = @"";
+            newClient.phone2 = @"";
+            newClient.email = @"";
             newClient.preference = @"F";
+            newClient.picture_link = @"";
             newClient.status = @"N";
             newClient.created_time = [NSDate date];
-            
+ 
             NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
             [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
             newClient.last_interacted_time = [formatFBdates dateFromString:jsonArray[i][@"updated_time"]];;
-            
+ 
+            newClient.last_inventory_time = newClient.last_interacted_time;
+            newClient.notes = @"";
+            newClient.agent_id = @"00001";
+
             [_newClientsArray addObject:newClient];
         }
         

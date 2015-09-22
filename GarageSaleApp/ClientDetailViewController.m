@@ -155,8 +155,38 @@
             self.imageClientSex.image = [UIImage imageNamed:@"Female"];
         }
 
-        self.labelClientZone.text = _selectedClient.client_zone;
-        self.labelClientPhones.text = [NSString stringWithFormat:@"%@ %@ %@", _selectedClient.phone1, _selectedClient.phone2, _selectedClient.phone3];
+        if (_selectedClient.client_zone == nil || [_selectedClient.client_zone isEqualToString:@""])
+        {
+            self.labelClientZone.text = @"No tiene zona registrada";
+        }
+        else
+        {
+            self.labelClientZone.text = [NSString stringWithFormat:@"Vive en %@", _selectedClient.client_zone];
+        }
+        
+        if (_selectedClient.phone1 == nil || [_selectedClient.phone1 isEqualToString:@""])
+        {
+            if (_selectedClient.phone2 == nil || [_selectedClient.phone2 isEqualToString:@""])
+            {
+                self.labelClientPhones.text = @"No tiene telefonos registrado";
+            }
+            else
+            {
+                self.labelClientPhones.text = _selectedClient.phone2;
+            }
+        }
+        else
+        {
+            if (_selectedClient.phone2 == nil || [_selectedClient.phone2 isEqualToString:@""])
+            {
+                self.labelClientPhones.text = _selectedClient.phone1;
+            }
+            else
+            {
+                self.labelClientPhones.text = [NSString stringWithFormat:@"%@, %@", _selectedClient.phone1, _selectedClient.phone2];
+            }
+        }
+        
         self.labelClientEmail.text = _selectedClient.email;
         self.labelCreatedTime.text = [NSString stringWithFormat:@"Creado: %@", [_selectedClient.created_time formattedAsDateComplete]];
         self.labelLastInteractionTime.text = [NSString stringWithFormat:@"Última interacción: %@", [_selectedClient.last_interacted_time formattedAsTimeAgo]];
@@ -166,8 +196,6 @@
         _myDataProducts = [[[ProductModel alloc] init] getProductsFromClientId:_selectedClient.client_id];
         
         [self.tableProducts reloadData];
-        
-
     }
 }
 

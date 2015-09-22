@@ -563,6 +563,8 @@
     
     // Reload table to make sure all clients (chats) are included
     
+    _myDataClients = [[NSMutableArray alloc] init];
+    
     _myDataClients = [_clientMethods getClientArray];
     
     // Sort array to be sure new messages are on top

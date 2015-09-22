@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C0002E851B70400100155C3F /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0002E831B70400100155C3F /* Bolts.framework */; };
-		C0002E861B70400100155C3F /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0002E841B70400100155C3F /* Parse.framework */; };
 		C0002E881B70408B00155C3F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0002E871B70408B00155C3F /* AudioToolbox.framework */; };
 		C0002E8A1B70409100155C3F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0002E891B70409100155C3F /* CFNetwork.framework */; };
 		C0002E8C1B7040A000155C3F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0002E8B1B7040A000155C3F /* CoreLocation.framework */; };
@@ -88,6 +86,8 @@
 		C0CF9C7E1B0966E700C14157 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0CF9C7B1B0966E700C14157 /* FBSDKCoreKit.framework */; };
 		C0CF9C7F1B0966E700C14157 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0CF9C7C1B0966E700C14157 /* FBSDKLoginKit.framework */; };
 		C0CF9C821B09696700C14157 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0CF9C811B09696700C14157 /* FBSDKShareKit.framework */; };
+		C0F1810F1BAF55D7005084FC /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0F1810D1BAF55D7005084FC /* Bolts.framework */; settings = {ASSET_TAGS = (); }; };
+		C0F181101BAF55D7005084FC /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0F1810E1BAF55D7005084FC /* Parse.framework */; settings = {ASSET_TAGS = (); }; };
 		C0FA5D691AF1DC1D00B2B535 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0FA5D681AF1DC1D00B2B535 /* CoreData.framework */; };
 		C0FA5D6C1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C0FA5D6A1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
@@ -103,8 +103,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C0002E831B70400100155C3F /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
-		C0002E841B70400100155C3F /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		C0002E871B70408B00155C3F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C0002E891B70409100155C3F /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		C0002E8B1B7040A000155C3F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -231,6 +229,8 @@
 		C0CF9C7B1B0966E700C14157 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C0CF9C7C1B0966E700C14157 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		C0CF9C811B09696700C14157 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
+		C0F1810D1BAF55D7005084FC /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		C0F1810E1BAF55D7005084FC /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		C0FA5D681AF1DC1D00B2B535 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C0FA5D6B1AF1DFF100B2B535 /* GarageSaleModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GarageSaleModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -241,6 +241,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0002E9C1B70430700155C3F /* Social.framework in Frameworks */,
+				C0F1810F1BAF55D7005084FC /* Bolts.framework in Frameworks */,
 				C0002E9A1B7042FE00155C3F /* Accounts.framework in Frameworks */,
 				C0002E981B7040D000155C3F /* libsqlite3.dylib in Frameworks */,
 				C0002E961B7040C600155C3F /* libz.dylib in Frameworks */,
@@ -253,13 +254,12 @@
 				C0002E8A1B70409100155C3F /* CFNetwork.framework in Frameworks */,
 				C0002E881B70408B00155C3F /* AudioToolbox.framework in Frameworks */,
 				C0CF9C821B09696700C14157 /* FBSDKShareKit.framework in Frameworks */,
-				C0002E861B70400100155C3F /* Parse.framework in Frameworks */,
+				C0F181101BAF55D7005084FC /* Parse.framework in Frameworks */,
 				C0CF9C7E1B0966E700C14157 /* FBSDKCoreKit.framework in Frameworks */,
 				C0FA5D691AF1DC1D00B2B535 /* CoreData.framework in Frameworks */,
 				C0CF9C7F1B0966E700C14157 /* FBSDKLoginKit.framework in Frameworks */,
 				C00ED0E419644A5A0045A65E /* UIKit.framework in Frameworks */,
 				C00ED0E019644A5A0045A65E /* Foundation.framework in Frameworks */,
-				C0002E851B70400100155C3F /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,6 +313,8 @@
 		C00ED0DE19644A5A0045A65E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C0F1810D1BAF55D7005084FC /* Bolts.framework */,
+				C0F1810E1BAF55D7005084FC /* Parse.framework */,
 				C0002E9B1B70430700155C3F /* Social.framework */,
 				C0002E991B7042FE00155C3F /* Accounts.framework */,
 				C0002E971B7040D000155C3F /* libsqlite3.dylib */,
@@ -324,8 +326,6 @@
 				C0002E8B1B7040A000155C3F /* CoreLocation.framework */,
 				C0002E891B70409100155C3F /* CFNetwork.framework */,
 				C0002E871B70408B00155C3F /* AudioToolbox.framework */,
-				C0002E831B70400100155C3F /* Bolts.framework */,
-				C0002E841B70400100155C3F /* Parse.framework */,
 				C0CF9C7B1B0966E700C14157 /* FBSDKCoreKit.framework */,
 				C0CF9C811B09696700C14157 /* FBSDKShareKit.framework */,
 				C0CF9C7C1B0966E700C14157 /* FBSDKLoginKit.framework */,
@@ -680,7 +680,7 @@
 		C00ED0D419644A5A0045A65E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Federico Amprimo";
 				TargetAttributes = {
 					C00ED0DB19644A5A0045A65E = {
@@ -850,6 +850,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -864,7 +865,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -897,7 +898,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -920,6 +921,7 @@
 				GCC_PREFIX_HEADER = "GarageSaleApp/GarageSaleApp-Prefix.pch";
 				INFOPLIST_FILE = "GarageSaleApp/GarageSaleApp-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "Livi.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -942,6 +944,7 @@
 				GCC_PREFIX_HEADER = "GarageSaleApp/GarageSaleApp-Prefix.pch";
 				INFOPLIST_FILE = "GarageSaleApp/GarageSaleApp-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "Livi.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -964,6 +967,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "GarageSaleAppTests/GarageSaleAppTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "Livi.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -982,6 +986,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GarageSaleApp/GarageSaleApp-Prefix.pch";
 				INFOPLIST_FILE = "GarageSaleAppTests/GarageSaleAppTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "Livi.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;

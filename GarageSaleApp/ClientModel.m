@@ -44,7 +44,6 @@
     tempClient.address = @"Camino Real 234 Dpto 102";
     tempClient.phone1 = @"98-133-1313";
     tempClient.phone2 = @"443-2414";
-    tempClient.phone3 = @"";
     tempClient.email = @"georghette@hotmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://www.mpibpc.mpg.de/9488052/profile_image.jpg";
@@ -73,7 +72,6 @@
     tempClient.address = @"Av. Benavides 3213";
     tempClient.phone1 = @"97-123-5113";
     tempClient.phone2 = @"225-1515";
-    tempClient.phone3 = @"";
     tempClient.email = @"ngallardo@hotmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://www.cambridgewhoswho.com/Images/Site/ImageManager/cf582880-74cc-4262-91ef-f70964e21ed4.JPG";
@@ -101,7 +99,6 @@
     tempClient.address = @"Av. Pardo 413";
     tempClient.phone1 = @"98-233-5113";
     tempClient.phone2 = @"444-1515";
-    tempClient.phone3 = @"";
     tempClient.email = @"mceli@hotmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://www.modelscout.com/images/media_storage/1191/profile.jpg";
@@ -129,7 +126,6 @@
     tempClient.address = @"Barcelona 433";
     tempClient.phone1 = @"97-233-1513";
     tempClient.phone2 = @"222-1515";
-    tempClient.phone3 = @"";
     tempClient.email = @"agonzalez@hotmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://cdn.niketalk.com/8/80/175x400px-LM-80a1f338_speaker_20120329160049.jpeg";
@@ -157,7 +153,6 @@
     tempClient.address = @"La Mar 414";
     tempClient.phone1 = @"98-589-4819";
     tempClient.phone2 = @"445-2566";
-    tempClient.phone3 = @"";
     tempClient.email = @"irosado@hotmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://www.changemakers.com/sites/default/files/imagecache/changeshops_profile_picture_large/pictures/picture-95545.jpg";
@@ -185,7 +180,6 @@
     tempClient.address = @"La Castellana 2342";
     tempClient.phone1 = @"99-144-1515";
     tempClient.phone2 = @"725-2666";
-    tempClient.phone3 = @"";
     tempClient.email = @"mdelacruz@gmail.com";
     tempClient.preference = @"F";
     tempClient.picture_link = @"http://www.cutechoice.com/celeb/Marilyn_Monroe/profile.jpg";
@@ -262,7 +256,6 @@
                 clientFromParse.address = [parseObject valueForKey:@"address"];
                 clientFromParse.phone1 = [parseObject valueForKey:@"phone1"];
                 clientFromParse.phone2 = [parseObject valueForKey:@"phone2"];
-                clientFromParse.phone3 = [parseObject valueForKey:@"phone3"];
                 clientFromParse.email = [parseObject valueForKey:@"email"];
                 clientFromParse.preference = [parseObject valueForKey:@"preference"];
                 clientFromParse.picture_link = [parseObject valueForKey:@"picture_link"];
@@ -345,7 +338,6 @@
     parseObject[@"address"] = [commonMethods stringNotNil:newClient.address];
     parseObject[@"phone1"] = [commonMethods stringNotNil:newClient.phone1];
     parseObject[@"phone2"] = [commonMethods stringNotNil:newClient.phone2];
-    parseObject[@"phone3"] = [commonMethods stringNotNil:newClient.phone3];
     parseObject[@"email"] = [commonMethods stringNotNil:newClient.email];
     parseObject[@"preference"] = [commonMethods stringNotNil:newClient.preference];
     parseObject[@"picture_link"] = [commonMethods stringNotNil:newClient.picture_link];
@@ -403,7 +395,6 @@
     [coreDataObject setValue:newClient.client_id forKey:@"client_id"];
     [coreDataObject setValue:newClient.phone1 forKey:@"phone1"];
     [coreDataObject setValue:newClient.phone2 forKey:@"phone2"];
-    [coreDataObject setValue:newClient.phone3 forKey:@"phone3"];
     [coreDataObject setValue:newClient.email forKey:@"email"];
     [coreDataObject setValue:newClient.preference forKey:@"preference"];
     [coreDataObject setValue:newClient.picture_link forKey:@"picture_link"];
@@ -470,7 +461,6 @@
             parseObject[@"address"] = clientToUpdate.address;
             parseObject[@"phone1"] = clientToUpdate.phone1;
             parseObject[@"phone2"] = clientToUpdate.phone2;
-            parseObject[@"phone3"] = clientToUpdate.phone3;
             parseObject[@"email"] = clientToUpdate.email;
             parseObject[@"preference"] = clientToUpdate.preference;
             parseObject[@"picture_link"] = clientToUpdate.picture_link;
@@ -558,7 +548,6 @@
             [coreDataObject setValue:clientToUpdate.client_id forKey:@"client_id"];
             [coreDataObject setValue:clientToUpdate.phone1 forKey:@"phone1"];
             [coreDataObject setValue:clientToUpdate.phone2 forKey:@"phone2"];
-            [coreDataObject setValue:clientToUpdate.phone3 forKey:@"phone3"];
             [coreDataObject setValue:clientToUpdate.email forKey:@"email"];
             [coreDataObject setValue:clientToUpdate.preference forKey:@"preference"];
             [coreDataObject setValue:clientToUpdate.picture_link forKey:@"picture_link"];

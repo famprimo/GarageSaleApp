@@ -115,7 +115,7 @@
         {
             [_readTimer invalidate];
         }
-        _readTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
+        _readTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
                                          target:self
                                        selector:@selector(updateMessagesToRead:)
                                        userInfo:nil
@@ -184,7 +184,38 @@
             self.imageClientStatus.image = [UIImage imageNamed:@"Blank"];
         }
         
-        self.labelClientPhone.text = [NSString stringWithFormat:@"%@ %@ %@", _selectedClient.phone1, _selectedClient.phone2, _selectedClient.phone3];
+        if (_selectedClient.phone1 == nil || [_selectedClient.phone1 isEqualToString:@""])
+        {
+            if (_selectedClient.phone2 == nil || [_selectedClient.phone2 isEqualToString:@""])
+            {
+                self.labelClientPhone.text = @"No tiene telefonos registrado";
+            }
+            else
+            {
+                self.labelClientPhone.text = _selectedClient.phone2;
+            }
+        }
+        else
+        {
+            if (_selectedClient.phone2 == nil || [_selectedClient.phone2 isEqualToString:@""])
+            {
+                self.labelClientPhone.text = _selectedClient.phone1;
+            }
+            else
+            {
+                self.labelClientPhone.text = [NSString stringWithFormat:@"%@, %@", _selectedClient.phone1, _selectedClient.phone2];
+            }
+        }
+        
+        if (_selectedClient.client_zone == nil || [_selectedClient.client_zone isEqualToString:@""])
+        {
+            self.labelClientDetails.text = @"No tiene zona registrada";
+        }
+        else
+        {
+            self.labelClientDetails.text = [NSString stringWithFormat:@"Vive en %@", _selectedClient.client_zone];
+        }
+
         self.imageClient.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:_selectedClient]];
         self.labelOpportunitiesRelated.text = [NSString stringWithFormat:@"Oportunidades relacionadas a %@ %@:", _selectedClient.name, _selectedClient.last_name];
 
@@ -410,7 +441,7 @@
             self.imageClient2.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_relatedClient]];
             self.labelClient2Zone.text = [NSString stringWithFormat:@"Vive en %@",_relatedClient.client_zone];
             self.labelClient2Address.text = _relatedClient.address;
-            self.labelClient2Phones.text = [NSString stringWithFormat:@"%@ %@ %@", _relatedClient.phone1, _relatedClient.phone2, _relatedClient.phone3];
+            self.labelClient2Phones.text = [NSString stringWithFormat:@"%@ %@", _relatedClient.phone1, _relatedClient.phone2];
             self.buttonRelateToOwner.hidden = YES;
             
             // Owner name and status
@@ -968,6 +999,11 @@
             int imagePosX = 0;
             int imagePosY = 0;
             int direction = 1;
+            
+            if (![myMessage.message isEqualToString:@""])
+            {
+                initialPosY = messageLabel.frame.size.height + 10;
+            }
             
             if ([myMessage.recipient isEqualToString:@"G"])
             {
