@@ -1324,6 +1324,7 @@
             newClient.preference = @"F";
             newClient.status = @"N";
             newClient.created_time = [NSDate date];
+            newClient.agent_id = @"00001";
             
             NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
             [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000

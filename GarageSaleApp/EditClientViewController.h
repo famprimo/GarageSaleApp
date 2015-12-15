@@ -41,6 +41,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *textZone;
 @property (weak, nonatomic) IBOutlet UITextView *textAddress;
 @property (weak, nonatomic) IBOutlet UITextView *textNotes;
+@property (weak, nonatomic) IBOutlet UITextField *textCodeGS;
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *tabSex;
 @property (weak, nonatomic) IBOutlet UISwitch *switchStatus;

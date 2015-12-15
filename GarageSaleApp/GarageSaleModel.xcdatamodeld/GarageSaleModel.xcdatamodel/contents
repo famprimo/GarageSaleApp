@@ -20,6 +20,7 @@
         <attribute name="agent_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="client_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="client_zone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="codeGS" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="created_time" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fb_client_id" optional="YES" attributeType="String" syncable="YES"/>
@@ -125,7 +126,7 @@
     <elements>
         <element name="Attachments" positionX="-515" positionY="450" width="128" height="180"/>
         <element name="ClientPhotos" positionX="-693" positionY="99" width="128" height="75"/>
-        <element name="Clients" positionX="-387" positionY="54" width="128" height="375"/>
+        <element name="Clients" positionX="-387" positionY="54" width="128" height="390"/>
         <element name="Messages" positionX="-209" positionY="324" width="128" height="285"/>
         <element name="Opportunities" positionX="-542" positionY="75" width="128" height="240"/>
         <element name="ProductPhotos" positionX="-828" positionY="90" width="128" height="75"/>

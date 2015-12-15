@@ -215,25 +215,18 @@
 
 - (NSMutableArray*)getTemplatesFromType:(NSString*)templateType;
 {
-    NSMutableArray *templateArray = [[NSMutableArray alloc] init];
+    NSMutableArray *templatesArray = [[NSMutableArray alloc] init];
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    // Fetch data from Core Data
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Templates"];
     
-    Template *templateToReview = [[Template alloc] init];
+    NSPredicate *predicateFetch = [NSPredicate predicateWithFormat:@"type like[c] %@", templateType];
+    [fetchRequest setPredicate:predicateFetch];
     
-    for (int i=0; i<mainDelegate.sharedArrayTemplates.count; i=i+1)
-    {
-        templateToReview = [[Template alloc] init];
-        templateToReview = (Template *)mainDelegate.sharedArrayTemplates[i];
-        
-        if ([templateToReview.type isEqual:templateType])
-        {
-            [templateArray addObject:templateToReview];
-        }
-    }
-    return templateArray;
+    templatesArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    
+    return templatesArray;
 }
 
 - (NSString*)getNextTemplateID;
@@ -303,8 +296,6 @@
         // To have access to shared arrays from AppDelegate
         AppDelegate *mainDelegate;
         mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        [mainDelegate.sharedArrayTemplates addObject:newTemplate];
         
         //Update last update time
         [[[SettingsModel alloc] init] updateSettingsTemplateDataUptaded:newTemplate.update_db];
@@ -403,25 +394,6 @@
             }
             else // update successful!
             {
-                // To have access to shared arrays from AppDelegate
-                AppDelegate *mainDelegate;
-                mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                
-                // Replace object in Shared Array
-                Template *templateToReview = [[Template alloc] init];
-                
-                for (int i=0; i<mainDelegate.sharedArrayTemplates.count; i=i+1)
-                {
-                    templateToReview = [[Template alloc] init];
-                    templateToReview = (Template *)mainDelegate.sharedArrayTemplates[i];
-                    
-                    if ([templateToReview.template_id isEqual:templateToUpdate.template_id])
-                    {
-                        [mainDelegate.sharedArrayTemplates replaceObjectAtIndex:i withObject:templateToUpdate];
-                        break;
-                    }
-                }
-                
                 //Update last update time
                 [[[SettingsModel alloc] init] updateSettingsTemplateDataUptaded:templateToUpdate.update_db];
             }

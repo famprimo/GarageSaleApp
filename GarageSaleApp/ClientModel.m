@@ -248,6 +248,7 @@
                 clientFromParse.fb_client_id = [parseObject valueForKey:@"fb_client_id"];
                 clientFromParse.fb_inbox_id = [parseObject valueForKey:@"fb_inbox_id"];
                 clientFromParse.fb_page_message_id = [parseObject valueForKey:@"fb_page_message_id"];
+                clientFromParse.codeGS = [parseObject valueForKey:@"codeGS"];
                 clientFromParse.type = [parseObject valueForKey:@"type"];
                 clientFromParse.name = [parseObject valueForKey:@"name"];
                 clientFromParse.last_name = [parseObject valueForKey:@"last_name"];
@@ -330,6 +331,7 @@
     parseObject[@"fb_client_id"] = [commonMethods stringNotNil:newClient.fb_client_id];
     parseObject[@"fb_inbox_id"] = [commonMethods stringNotNil:newClient.fb_inbox_id];
     parseObject[@"fb_page_message_id"] = [commonMethods stringNotNil:newClient.fb_page_message_id];
+    parseObject[@"codeGS"] = [commonMethods stringNotNil:newClient.codeGS];
     parseObject[@"type"] = [commonMethods stringNotNil:newClient.type];
     parseObject[@"name"] = [commonMethods stringNotNil:newClient.name];
     parseObject[@"last_name"] = [commonMethods stringNotNil:newClient.last_name];
@@ -386,6 +388,7 @@
     [coreDataObject setValue:newClient.fb_client_id forKey:@"fb_client_id"];
     [coreDataObject setValue:newClient.fb_inbox_id forKey:@"fb_inbox_id"];
     [coreDataObject setValue:newClient.fb_page_message_id forKey:@"fb_page_message_id"];
+    [coreDataObject setValue:newClient.codeGS forKey:@"codeGS"];
     [coreDataObject setValue:newClient.type forKey:@"type"];
     [coreDataObject setValue:newClient.name forKey:@"name"];
     [coreDataObject setValue:newClient.last_name forKey:@"last_name"];
@@ -453,6 +456,7 @@
             parseObject[@"fb_client_id"] = clientToUpdate.fb_client_id;
             parseObject[@"fb_inbox_id"] = clientToUpdate.fb_inbox_id;
             parseObject[@"fb_page_message_id"] = clientToUpdate.fb_page_message_id;
+            parseObject[@"codeGS"] = clientToUpdate.codeGS;
             parseObject[@"type"] = clientToUpdate.type;
             parseObject[@"name"] = clientToUpdate.name;
             parseObject[@"last_name"] = clientToUpdate.last_name;
@@ -539,6 +543,7 @@
             [coreDataObject setValue:clientToUpdate.fb_client_id forKey:@"fb_client_id"];
             [coreDataObject setValue:clientToUpdate.fb_inbox_id forKey:@"fb_inbox_id"];
             [coreDataObject setValue:clientToUpdate.fb_page_message_id forKey:@"fb_page_message_id"];
+            [coreDataObject setValue:clientToUpdate.codeGS forKey:@"codeGS"];
             [coreDataObject setValue:clientToUpdate.type forKey:@"type"];
             [coreDataObject setValue:clientToUpdate.name forKey:@"name"];
             [coreDataObject setValue:clientToUpdate.last_name forKey:@"last_name"];

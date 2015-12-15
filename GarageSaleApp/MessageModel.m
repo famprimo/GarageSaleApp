@@ -242,63 +242,19 @@
     return messagesArray;
 }
 
-- (NSMutableArray*)getMessagesArray; // Return an array with all messages
-{
-    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
-    
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
-    messagesArray = mainDelegate.sharedArrayMessages;
-    
-    return messagesArray;
-}
-
-- (NSMutableArray*)getMessagesArrayFromClients; // Return an array will all messages with recibien "GarageSale"
-{
-    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
-    
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    Message *messageToReview = [[Message alloc] init];
-    
-    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
-    {
-        messageToReview = [[Message alloc] init];
-        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
-        
-        // Add only the messages that have as recipient "GarageSale"
-        if ([messageToReview.recipient isEqual:@"G"])
-        {
-            [messagesArray addObject:messageToReview];
-        }
-    }
-    return messagesArray;
-}
-
 - (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID; // Return an array with all messages from a client
 {
     NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
+   
+    // Fetch data from Core Data
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Messages"];
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    NSPredicate *predicateFetch = [NSPredicate predicateWithFormat:@"client_id like[c] %@", clientFromID];
+    [fetchRequest setPredicate:predicateFetch];
     
-    Message *messageToReview = [[Message alloc] init];
-    
-    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
-    {
-        messageToReview = [[Message alloc] init];
-        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
-        
-        if ([messageToReview.client_id isEqual:clientFromID])
-        {
-            [messagesArray addObject:messageToReview];
-        }
-    }
+    messagesArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
+
     return messagesArray;
 }
 
@@ -306,45 +262,36 @@
 {
     NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    // Fetch data from Core Data
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Messages"];
     
-    Message *messageToReview = [[Message alloc] init];
+    NSPredicate *predicateFetch = [NSPredicate predicateWithFormat:@"product_id like[c] %@", productForID];
+    [fetchRequest setPredicate:predicateFetch];
     
-    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
-    {
-        messageToReview = [[Message alloc] init];
-        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
-        
-        if ([messageToReview.product_id isEqual:productForID])
-        {
-            [messagesArray addObject:messageToReview];
-        }
-    }
+    messagesArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    
     return messagesArray;
 }
 
 - (Message*)getLastMessageFromClient:(NSString*)clientFromID; // Return the last message for a specific client
 {
+    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
     Message *lastMessage;
-
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
     Message *messageToReview = [[Message alloc] init];
     int indexLastMessage = 0;
     BOOL lastMessageExists = NO;
     
+    messagesArray = [self getMessagesArrayFromClient:clientFromID];
+
     NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
     [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
     NSDate *lastMessageDate = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
     
-    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    for (int i=0; i<messagesArray.count; i=i+1)
     {
         messageToReview = [[Message alloc] init];
-        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
+        messageToReview = (Message *)messagesArray[i];
         
         if ([messageToReview.client_id isEqual:clientFromID])
         {
@@ -352,14 +299,13 @@
                 lastMessageDate = messageToReview.datetime;
                 indexLastMessage = i;
                 lastMessageExists = YES;
-                
             }
         }
     }
 
     if (lastMessageExists)
     {
-        lastMessage = (Message *)mainDelegate.sharedArrayMessages[indexLastMessage];
+        lastMessage = (Message *)messagesArray[indexLastMessage];
     }
     else
     {
@@ -400,17 +346,8 @@
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         updateSuccessful = NO;
     }
-    else // update successful!
-    {
-        // To have access to shared arrays from AppDelegate
-        AppDelegate *mainDelegate;
-        mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        [mainDelegate.sharedArrayMessages addObject:newMessage];
-    }
-        
+    
     return updateSuccessful;
-
 }
 
 - (BOOL)updateMessage:(Message*)messageToUpdate; // Update a message
@@ -470,28 +407,7 @@
                 NSLog(@"%@, %@", error, error.localizedDescription);
                 updateSuccessful = NO;
             }
-            else // update successful!
-            {
-                // To have access to shared arrays from AppDelegate
-                AppDelegate *mainDelegate;
-                mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                
-                // Replace object in Shared Array
-                Message *messageToReview = [[Message alloc] init];
-                
-                for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
-                {
-                    messageToReview = [[Message alloc] init];
-                    messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
-                    
-                    if ([messageToReview.fb_msg_id isEqual:messageToUpdate.fb_msg_id])
-                    {
-                        [mainDelegate.sharedArrayMessages replaceObjectAtIndex:i withObject:messageToUpdate];
-                        break;
-                    }
-                }
-            }
-        }
+         }
     }
     
     return updateSuccessful;
@@ -501,23 +417,37 @@
 {
     BOOL exists = NO;
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
-    Message *messageToReview = [[Message alloc] init];
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
-    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Messages" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    // Create Predicate
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"fb_msg_id", messageIDToValidate];
+    [fetchRequest setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if (error) {
+        NSLog(@"Unable to execute fetch request");
+        NSLog(@"%@, %@", error, error.localizedDescription);
+        exists = NO;
+    }
+    else
     {
-        messageToReview = [[Message alloc] init];
-        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
-        
-        if ([messageToReview.fb_msg_id isEqual:messageIDToValidate])
+        if (result.count == 0)
+        {
+            NSLog(@"No records retrieved");
+            exists = NO;
+        }
+        else
         {
             exists = YES;
-            break;
         }
     }
+
     return exists;
 }
 
@@ -596,76 +526,71 @@
 
 - (Message*)getMessageFromMessageId:(NSString*)messageIDtoSearch;
 {
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    Message *messageFound = [[Message alloc] init];
     
-    Message *messageToReview = [[Message alloc] init];
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
-    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Messages" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    // Create Predicate
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"fb_msg_id", messageIDtoSearch];
+    [fetchRequest setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if (error) {
+        NSLog(@"Unable to execute fetch request");
+        NSLog(@"%@, %@", error, error.localizedDescription);
+    }
+    else
     {
-        messageToReview = [[Message alloc] init];
-        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
-        
-        if ([messageToReview.fb_msg_id isEqual:messageIDtoSearch])
+        if (result.count == 0)
         {
-            break;
+            NSLog(@"No records retrieved");
+        }
+        else
+        {
+            // Message found!
+            messageFound = (Message *)[result objectAtIndex:0];
         }
     }
-    return messageToReview;
+    
+    return messageFound;
 }
 
 - (int)numberOfUnreadMessages; // Method that returns the total number of unread messages
 {
-    int numberOfMessages = 0;
+    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    // Fetch data from Core Data
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Messages"];
     
-    Message *messageToReview = [[Message alloc] init];
+    NSPredicate *predicateFetch = [NSPredicate predicateWithFormat:@"status == 'N'"];
+    [fetchRequest setPredicate:predicateFetch];
     
-    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
-    {
-        messageToReview = [[Message alloc] init];
-        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
-        
-        if ([messageToReview.status isEqualToString:@"R"])
-        {
-                // Do not need to count
-        }
-        else
-        {
-            numberOfMessages = numberOfMessages + 1;
-        }
-    }
+    messagesArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
     
-    return numberOfMessages;
+    return messagesArray.count;
 }
 
 - (int)numberOfUnreadMessagesForClient:(NSString*)clientFromID; // Method that returns the total number of unread messages for a client
 {
-    int numberOfMessages = 0;
+    NSMutableArray *messagesArray = [[NSMutableArray alloc] init];
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    // Fetch data from Core Data
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Messages"];
     
-    Message *messageToReview = [[Message alloc] init];
+    NSPredicate *predicateFetch = [NSPredicate predicateWithFormat:@"(status == 'N') AND (client_id == %@)", clientFromID];
+    [fetchRequest setPredicate:predicateFetch];
     
-    for (int i=0; i<mainDelegate.sharedArrayMessages.count; i=i+1)
-    {
-        messageToReview = [[Message alloc] init];
-        messageToReview = (Message *)mainDelegate.sharedArrayMessages[i];
-        
-        if ([messageToReview.status isEqualToString:@"N"] && [messageToReview.client_id isEqualToString:clientFromID])
-        {
-            // Unread
-            numberOfMessages = numberOfMessages + 1;
-        }
-    }
+    messagesArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
     
-    return numberOfMessages;
+    return messagesArray.count;
 }
 
 - (NSMutableArray*)sortMessagesArrayConsideringParents:(NSMutableArray*)messagesArray; // Order an array of messages considering parent messages

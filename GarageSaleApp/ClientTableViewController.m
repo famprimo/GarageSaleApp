@@ -337,6 +337,7 @@
     UILabel *zoneLabel = (UILabel*)[myCell.contentView viewWithTag:3];
     UILabel *phoneLabel = (UILabel*)[myCell.contentView viewWithTag:4];
     UIImageView *verifiedImage = (UIImageView*)[myCell.contentView viewWithTag:5];
+    UILabel *codeGSLabel = (UILabel*)[myCell.contentView viewWithTag:6];
     
     // Position all images and message frames
     CGRect clientImageFrame = clientImage.frame;
@@ -383,6 +384,18 @@
         phoneLabel.text = myClient.phone1;
         phoneLabel.textColor = [UIColor blackColor];
     }
+    
+    if (myClient.codeGS == nil || [myClient.codeGS isEqualToString:@""])
+    {
+        codeGSLabel.text = @"Sin código GS";
+        codeGSLabel.textColor = [UIColor grayColor];
+    }
+    else
+    {
+        codeGSLabel.text = myClient.codeGS;
+        codeGSLabel.textColor = [UIColor blackColor];
+    }
+
     
     if ([myClient.status isEqualToString:@"V"])
     {

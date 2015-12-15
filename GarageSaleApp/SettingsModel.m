@@ -24,6 +24,9 @@
 
 - (void)saveInitialDataforSettings;
 {
+    NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+    [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+    
     Settings *tempSettings = [[Settings alloc] init];
     tempSettings.fb_user_id = @"";
     tempSettings.fb_user_name = @"";
@@ -31,10 +34,17 @@
     tempSettings.fb_page_name = @"";
     tempSettings.fb_page_token = @"";
     tempSettings.initial_data_loaded = @"N";
+    
+    tempSettings.template_last_update = [formatFBdates dateFromString:@"2000-01-01T16:41:15+0000"];
+    tempSettings.product_last_update = [formatFBdates dateFromString:@"2000-01-01T16:41:15+0000"];
+    tempSettings.client_last_update = [formatFBdates dateFromString:@"2000-01-01T16:41:15+0000"];
+    tempSettings.opportunity_last_update = [formatFBdates dateFromString:@"2000-01-01T16:41:15+0000"];
+    /*
     tempSettings.template_last_update = [NSDate date];
     tempSettings.product_last_update = [NSDate date];
     tempSettings.client_last_update = [NSDate date];
     tempSettings.opportunity_last_update = [NSDate date];
+    */
     tempSettings.since_date = @"6M";
     
     [self addSettings:tempSettings];

@@ -40,19 +40,6 @@
     return attachmentsArray;
 }
 
-- (NSMutableArray*)getAttachmentsArray;
-{
-    NSMutableArray *attachmentsArray = [[NSMutableArray alloc] init];
-    
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    attachmentsArray = mainDelegate.sharedArrayAttachments;
-    
-    return attachmentsArray;
-}
-
 - (BOOL)addNewAttachment:(Attachment*)newAttachment;
 {
     BOOL updateSuccessful = YES;
@@ -76,14 +63,6 @@
     if (![context save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         updateSuccessful = NO;
-    }
-    else // update successful!
-    {
-        // To have access to shared arrays from AppDelegate
-        AppDelegate *mainDelegate;
-        mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        [mainDelegate.sharedArrayAttachments addObject:newAttachment];
     }
     
     return updateSuccessful;
@@ -140,27 +119,6 @@
                 NSLog(@"%@, %@", error, error.localizedDescription);
                 updateSuccessful = NO;
             }
-            else // update successful!
-            {
-                // To have access to shared arrays from AppDelegate
-                AppDelegate *mainDelegate;
-                mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                
-                // Replace object in Shared Array
-                Attachment *attachmentToReview = [[Attachment alloc] init];
-                
-                for (int i=0; i<mainDelegate.sharedArrayAttachments.count; i=i+1)
-                {
-                    attachmentToReview = [[Attachment alloc] init];
-                    attachmentToReview = (Attachment *)mainDelegate.sharedArrayAttachments[i];
-                    
-                    if ([attachmentToReview.fb_attachment_id isEqual:attachmentToUpdate.fb_attachment_id])
-                    {
-                        [mainDelegate.sharedArrayAttachments replaceObjectAtIndex:i withObject:attachmentToUpdate];
-                        break;
-                    }
-                }
-            }
         }
     }
     
@@ -171,18 +129,14 @@
 {
     NSMutableArray *attachmentsArray = [[NSMutableArray alloc] init];
     
-    // To have access to shared arrays from AppDelegate
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    // Fetch data from persistent data store
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Attachments"];
     
-    for (int i = 0; i < mainDelegate.sharedArrayAttachments.count; i++)
-    {
-        Attachment *attachmentTemp = [mainDelegate.sharedArrayAttachments objectAtIndex: i];
-        if ([attachmentTemp.fb_msg_id isEqualToString:messageIDtoSearch])
-        {
-            [attachmentsArray addObject:attachmentTemp];
-        }
-    }
+    NSPredicate *predicateFetch = [NSPredicate predicateWithFormat:@"fb_msg_id == %@", messageIDtoSearch];
+    [fetchRequest setPredicate:predicateFetch];
+    
+    attachmentsArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
     
     return attachmentsArray;
 }

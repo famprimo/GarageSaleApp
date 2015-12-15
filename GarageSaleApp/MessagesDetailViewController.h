@@ -25,7 +25,7 @@
 @end
 
 
-@interface MessagesDetailViewController : UIViewController <UIActionSheetDelegate, ClientPickerViewControllerDelegate, ProductPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, EditClientViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, FacebookMethodsDelegate>
+@interface MessagesDetailViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, ClientPickerViewControllerDelegate, ProductPickerViewControllerDelegate, SendMessageViewControllerDelegate, NewOpportunityViewControllerDelegate, EditClientViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, FacebookMethodsDelegate>
 
 @property (strong, nonatomic) id detailItem;
 @property (nonatomic, strong) id<MessagesDetailViewControllerDelegate> delegate;
@@ -36,6 +36,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *buttonRelateToOwner;
 @property (weak, nonatomic) IBOutlet UIButton *buttonSeeInFacebook;
 @property (weak, nonatomic) IBOutlet UIButton *buttonReviewNewMessages;
+@property (weak, nonatomic) IBOutlet UIButton *buttonSavePhotos;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageClient;
 @property (weak, nonatomic) IBOutlet UIImageView *imageClientStatus;
@@ -43,6 +44,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelClientDetails;
 @property (weak, nonatomic) IBOutlet UIImageView *picClientPhone;
 @property (weak, nonatomic) IBOutlet UILabel *labelClientPhone;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientCodeGS;
 
 
 @property (weak, nonatomic) IBOutlet UITableView *tableMessages;

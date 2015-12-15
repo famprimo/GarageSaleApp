@@ -97,6 +97,7 @@
     self.textZone.text = _clientToEdit.client_zone;
     self.textAddress.text = _clientToEdit.address;
     self.textNotes.text = _clientToEdit.notes;
+    self.textCodeGS.text = _clientToEdit.codeGS;
     
     if ([_clientToEdit.sex isEqualToString:@"M"])
     {
@@ -135,6 +136,7 @@
     _clientToEdit.client_zone =  self.textZone.text;
     _clientToEdit.address = self.textAddress.text;
     _clientToEdit.notes = self.textNotes.text;
+    _clientToEdit.codeGS = self.textCodeGS.text;
     
     if (self.tabSex.selectedSegmentIndex == 0)
     {

@@ -13,7 +13,6 @@
 
 - (void)saveInitialDataforAttachments;
 - (NSMutableArray*)getAttachmentsFromCoreData;
-- (NSMutableArray*)getAttachmentsArray;
 - (BOOL)addNewAttachment:(Attachment*)newAttachment;
 - (BOOL)updateAttachment:(Attachment*)AttachmentToUpdate;
 - (NSMutableArray*)getAttachmentsForFBMessageId:(NSString*)messageIDtoSearch;

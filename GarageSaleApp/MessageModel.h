@@ -13,8 +13,6 @@
 
 - (void)saveInitialDataforMessages;
 - (NSMutableArray*)getMessagesFromCoreData; // Return an array with all messages
-- (NSMutableArray*)getMessagesArray; // Return an array with all messages
-- (NSMutableArray*)getMessagesArrayFromClients; // Return an array will all messages with recipient "GarageSale"
 - (NSMutableArray*)getMessagesArrayFromClient:(NSString*)clientFromID; // Return an array with all messages from a client
 - (NSMutableArray*)getMessagesArrayForProduct:(NSString*)productForID; // Return an array with all messages for a product
 - (Message*)getLastMessageFromClient:(NSString*)clientFromID; // Return the last message for a specific client

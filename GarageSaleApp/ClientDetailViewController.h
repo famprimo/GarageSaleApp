@@ -36,6 +36,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelClientPhones;
 @property (weak, nonatomic) IBOutlet UILabel *labelClientEmail;
 @property (weak, nonatomic) IBOutlet UILabel *labelClientLastInventaryTime;
+@property (weak, nonatomic) IBOutlet UILabel *labelClientCodeGS;
+
 @property (weak, nonatomic) IBOutlet UIImageView *picClientZone;
 @property (weak, nonatomic) IBOutlet UIImageView *picClientPhone;
 @property (weak, nonatomic) IBOutlet UIImageView *picClientEmail;

@@ -25,9 +25,6 @@
 @synthesize sharedArrayProducts;
 @synthesize sharedArrayClients;
 @synthesize sharedArrayOpportunities;
-@synthesize sharedArrayMessages;
-@synthesize sharedArrayAttachments;
-@synthesize sharedArrayTemplates;
 @synthesize lastProductID;
 @synthesize lastCientID;
 @synthesize lastOpportunityID;
@@ -74,8 +71,10 @@
     {
         [settingsMethods saveInitialDataforSettings];
     }
-    
-    if ([[[[SettingsModel alloc] init] getSharedSettings].initial_data_loaded isEqualToString:@"N"])
+
+    /* CHANGE: Syncronize with Parse only
+
+    if ([[settingsMethods getSharedSettings].initial_data_loaded isEqualToString:@"N"])
     {
         // Load initial data
         [clientMethods saveInitialDataforClients];
@@ -84,11 +83,11 @@
         [messagesMethods saveInitialDataforMessages];
         [attachmentMethods saveInitialDataforAttachments];
         [templateMethods saveInitialDataforTemplates];
-        
+     
         [settingsMethods updateSettingsInitialDataSaved];
     }
-    
-    
+    */
+
     // Sync Parse with Core Data
     [clientMethods syncCoreDataWithParse];
     [productMethods syncCoreDataWithParse];
@@ -99,9 +98,6 @@
     sharedArrayClients = [clientMethods getClientsFromCoreData];
     sharedArrayProducts = [productMethods getProductsFromCoreData];
     sharedArrayOpportunities = [opportunityMethods getOpportunitiesFromCoreData];
-    sharedArrayMessages = [messagesMethods getMessagesFromCoreData];
-    sharedArrayAttachments = [attachmentMethods getAttachmentsFromCoreData];
-    sharedArrayTemplates = [templateMethods getTemplatesFromCoreData];
     
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                     didFinishLaunchingWithOptions:launchOptions];

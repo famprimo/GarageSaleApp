@@ -157,22 +157,26 @@
 
         if (_selectedClient.client_zone == nil || [_selectedClient.client_zone isEqualToString:@""])
         {
-            self.labelClientZone.text = @"No tiene zona registrada";
+            self.labelClientZone.text = @"Sin zona registrada";
+            self.labelClientZone.textColor = [UIColor grayColor];
         }
         else
         {
             self.labelClientZone.text = [NSString stringWithFormat:@"Vive en %@", _selectedClient.client_zone];
+            self.labelClientZone.textColor = [UIColor blackColor];
         }
         
         if (_selectedClient.phone1 == nil || [_selectedClient.phone1 isEqualToString:@""])
         {
             if (_selectedClient.phone2 == nil || [_selectedClient.phone2 isEqualToString:@""])
             {
-                self.labelClientPhones.text = @"No tiene telefonos registrado";
+                self.labelClientPhones.text = @"Sin telefonos registrados";
+                self.labelClientPhones.textColor = [UIColor grayColor];
             }
             else
             {
                 self.labelClientPhones.text = _selectedClient.phone2;
+                self.labelClientPhones.textColor = [UIColor blackColor];
             }
         }
         else
@@ -185,8 +189,20 @@
             {
                 self.labelClientPhones.text = [NSString stringWithFormat:@"%@, %@", _selectedClient.phone1, _selectedClient.phone2];
             }
+            self.labelClientPhones.textColor = [UIColor blackColor];
         }
         
+        if (_selectedClient.codeGS == nil || [_selectedClient.codeGS isEqualToString:@""])
+        {
+            self.labelClientCodeGS.text = @"Sin código GS";
+            self.labelClientCodeGS.textColor = [UIColor grayColor];
+        }
+        else
+        {
+            self.labelClientCodeGS.text = _selectedClient.codeGS;
+            self.labelClientCodeGS.textColor = [UIColor blackColor];
+        }
+
         self.labelClientEmail.text = _selectedClient.email;
         self.labelCreatedTime.text = [NSString stringWithFormat:@"Creado: %@", [_selectedClient.created_time formattedAsDateComplete]];
         self.labelLastInteractionTime.text = [NSString stringWithFormat:@"Última interacción: %@", [_selectedClient.last_interacted_time formattedAsTimeAgo]];

@@ -188,7 +188,7 @@
         {
             if (_selectedClient.phone2 == nil || [_selectedClient.phone2 isEqualToString:@""])
             {
-                self.labelClientPhone.text = @"No tiene telefonos registrado";
+                self.labelClientPhone.text = @"Sin telefonos";
             }
             else
             {
@@ -209,11 +209,20 @@
         
         if (_selectedClient.client_zone == nil || [_selectedClient.client_zone isEqualToString:@""])
         {
-            self.labelClientDetails.text = @"No tiene zona registrada";
+            self.labelClientDetails.text = @"Sin zona registrada";
         }
         else
         {
             self.labelClientDetails.text = [NSString stringWithFormat:@"Vive en %@", _selectedClient.client_zone];
+        }
+
+        if (_selectedClient.codeGS == nil || [_selectedClient.codeGS isEqualToString:@""])
+        {
+            self.labelClientCodeGS.text = @"Sin código GS";
+        }
+        else
+        {
+            self.labelClientCodeGS.text = _selectedClient.codeGS;
         }
 
         self.imageClient.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:_selectedClient]];
@@ -629,6 +638,53 @@
 {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:_selectedProduct.fb_link]];
 
+}
+
+- (IBAction)savePhotos:(id)sender
+{
+    if (_selectedMessage)
+    {
+        
+        if ([_selectedMessage.attachments isEqualToString:@"Y"])
+        {
+            
+            UIAlertView *validateSavePhotos = [[UIAlertView alloc]
+                                       initWithTitle:@"Guardar Fotos"
+                                       message:@"¿Quieres grabar las fotos en el carrete?"
+                                       delegate:self
+                                       cancelButtonTitle:@"Si"
+                                       otherButtonTitles:@"No",nil];
+            
+            [validateSavePhotos show];
+        }
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 0)
+    {
+        NSLog(@"Ok Button is clicked");
+
+        AttachmentModel *attachmentMethods = [[AttachmentModel alloc] init];
+        Attachment *tempAttachment;
+        UIImage *imagePhoto;
+        
+        NSMutableArray *attachmentsArray = [attachmentMethods getAttachmentsForFBMessageId:_selectedMessage.fb_msg_id];
+        
+        for (int i = 0; i < attachmentsArray.count; i++)
+        {
+            tempAttachment = [[Attachment alloc] init];
+            tempAttachment = attachmentsArray[i];
+            
+            imagePhoto = [UIImage imageWithData:tempAttachment.picture];
+            UIImageWriteToSavedPhotosAlbum(imagePhoto, nil, nil, nil);
+        }
+    }
+    else if(buttonIndex == 1)
+    {
+        NSLog(@"Cancel Button is clicked");
+    }
 }
 
 
