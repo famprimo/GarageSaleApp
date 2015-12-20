@@ -163,6 +163,7 @@
     
     // Get latest information from Parse
     PFQuery *query = [PFQuery queryWithClassName:@"Opportunity"];
+    [query setLimit: 1000];
     [query whereKey:@"updatedAt" greaterThan:mainDelegate.sharedSettings.opportunity_last_update];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

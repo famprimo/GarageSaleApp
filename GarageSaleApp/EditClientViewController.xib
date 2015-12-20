@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditClientViewController">
             <connections>
+                <outlet property="buttonNextCodeGS" destination="EBC-pp-Lc6" id="JW5-yU-qV9"/>
                 <outlet property="buttonSave" destination="WHe-Ew-wgy" id="BY6-DG-77c"/>
                 <outlet property="imageClient" destination="zUw-HI-wTJ" id="45G-ne-Nmp"/>
                 <outlet property="labelClientCreationDate" destination="fdD-mW-qMY" id="mxf-7D-raw"/>
@@ -105,19 +106,13 @@
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fecha de creacion" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fdD-mW-qMY">
-                    <rect key="frame" x="106" y="59" width="249" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                    <nil key="highlightedColor"/>
-                </label>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KZ4-7g-FGw">
-                    <rect key="frame" x="120" y="101" width="251" height="30"/>
+                    <rect key="frame" x="107" y="101" width="264" height="30"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="G8X-h8-q15">
-                    <rect key="frame" x="120" y="139" width="251" height="30"/>
+                    <rect key="frame" x="107" y="139" width="264" height="30"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
@@ -172,11 +167,6 @@
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Código GS:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CSt-Bc-Ijg">
-                    <rect key="frame" x="379" y="59" width="80" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                    <nil key="highlightedColor"/>
-                </label>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Phone" translatesAutoresizingMaskIntoConstraints="NO" id="ZRU-av-jIG">
                     <rect key="frame" x="120" y="257" width="20" height="20"/>
                 </imageView>
@@ -194,10 +184,26 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="LdV-h1-Le7">
-                    <rect key="frame" x="481" y="55" width="123" height="30"/>
+                    <rect key="frame" x="106" y="51" width="187" height="30"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EBC-pp-Lc6">
+                    <rect key="frame" x="306" y="44" width="65" height="44"/>
+                    <color key="backgroundColor" white="0.66666666669999997" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
+                    <state key="normal" title="Código">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="getNextCodeGS:" destination="-1" eventType="touchUpInside" id="6pt-Ju-gqq"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fecha de creacion" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fdD-mW-qMY">
+                    <rect key="frame" x="421" y="55" width="201" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

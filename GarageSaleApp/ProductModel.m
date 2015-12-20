@@ -206,6 +206,7 @@
     
     // Get latest information from Parse
     PFQuery *query = [PFQuery queryWithClassName:@"Product"];
+    [query setLimit: 1000];
     [query whereKey:@"updatedAt" greaterThan:mainDelegate.sharedSettings.product_last_update];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -922,5 +923,73 @@
     return newImage;
 }
 
+- (void)updateProductsWithCodeGS:(NSString*)codeGSToFind withClientID:(NSString*)clientIDtoUse;
+{
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Product *productToReview = [[Product alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayProducts.count; i=i+1)
+    {
+        productToReview = [[Product alloc] init];
+        productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
+        
+        NSString *productCodeGS = [productToReview.codeGS stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        if ([codeGSToFind containsString:productCodeGS])
+        {
+             // Update Product!
+            productToReview.client_id = clientIDtoUse;
+            
+            [self updateProduct:productToReview];
+        }
+    }
+}
+
+- (NSString*)getNextCodeGS;
+{
+    int maxCodeGS = 0;
+
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+    for (int i = 0; i < mainDelegate.sharedArrayProducts.count; i++)
+    {
+        Product *productTemp = [mainDelegate.sharedArrayProducts objectAtIndex: i];
+        
+        int productCodeGS = [[self getTextThatFollows:@"GS" fromMessage:productTemp.codeGS] intValue];
+        
+        if (maxCodeGS < productCodeGS)
+        {
+            maxCodeGS = productCodeGS;
+        }
+    }
+    
+    maxCodeGS = maxCodeGS + 1;
+    
+    NSString *nextID = [NSString stringWithFormat:@"00000000%d", maxCodeGS];
+    if (maxCodeGS < 10000)
+    {
+        nextID = [nextID substringFromIndex:[nextID length] - 4];
+    }
+    else if (maxCodeGS < 100000)
+    {
+        nextID = [nextID substringFromIndex:[nextID length] - 5];
+    }
+    else if (maxCodeGS < 1000000)
+    {
+        nextID = [nextID substringFromIndex:[nextID length] - 6];
+    }
+    else if (maxCodeGS < 10000000)
+    {
+        nextID = [nextID substringFromIndex:[nextID length] - 7];
+    }
+    nextID = [NSString stringWithFormat:@"GS%@", nextID];;
+    
+    return nextID;
+}
 
 @end

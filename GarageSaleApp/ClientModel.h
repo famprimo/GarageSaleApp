@@ -25,6 +25,7 @@
 - (void)syncCoreDataWithParse;
 - (NSMutableArray*)getClientArray;
 - (NSString*)getNextClientID;
+- (NSString*)getClientIDfromCodeGS:(NSString*)codeGSToFind;
 - (void)addNewClient:(Client*)newClient;
 - (void)updateClient:(Client*)clientToUpdate;
 - (NSData*)getClientPhotoFrom:(Client*)clientSelected;

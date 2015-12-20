@@ -366,7 +366,7 @@
     if (myClient.client_zone == nil || [myClient.client_zone isEqualToString:@""])
     {
         zoneLabel.text = @"Sin zona";
-        zoneLabel.textColor = [UIColor grayColor];
+        zoneLabel.textColor = [UIColor lightGrayColor];
     }
     else
     {
@@ -377,7 +377,7 @@
     if (myClient.phone1 == nil || [myClient.phone1 isEqualToString:@""])
     {
         phoneLabel.text = @"Sin telefono";
-        phoneLabel.textColor = [UIColor grayColor];
+        phoneLabel.textColor = [UIColor lightGrayColor];
     }
     else
     {
@@ -388,7 +388,7 @@
     if (myClient.codeGS == nil || [myClient.codeGS isEqualToString:@""])
     {
         codeGSLabel.text = @"Sin código GS";
-        codeGSLabel.textColor = [UIColor grayColor];
+        codeGSLabel.textColor = [UIColor lightGrayColor];
     }
     else
     {

@@ -8,11 +8,13 @@
 
 #import "EditClientViewController.h"
 #import "NSDate+NVTimeAgo.h"
+#import "ProductModel.h"
 
 @interface EditClientViewController ()
 {
     Client *_clientToEdit;
     ClientModel *_clientMethods;
+    ProductModel *_productMethods;
 }
 @end
 
@@ -25,7 +27,9 @@
     // Initialize objects methods
     _clientMethods = [[ClientModel alloc] init];
     _clientMethods.delegate = self;
-    
+
+    _productMethods = [[ProductModel alloc] init];
+
     _clientToEdit = [self.delegate getClientforEdit];
     
     CGRect imageClientFrame = self.imageClient.frame;
@@ -127,6 +131,13 @@
 
 - (IBAction)saveClientEdits:(id)sender
 {
+    // Review if there was a change in code GS
+    BOOL GSCodeUpdated = NO;
+    if (![_clientToEdit.codeGS isEqualToString:self.textCodeGS.text])
+    {
+        GSCodeUpdated = YES;
+    }
+    
     // Create opportunity
     _clientToEdit.name = self.textName.text;
     _clientToEdit.last_name = self.textLastName.text;
@@ -157,8 +168,17 @@
     }
     
     [_clientMethods updateClient:_clientToEdit];
+
+    if (GSCodeUpdated)
+    {
+        [_productMethods updateProductsWithCodeGS:_clientToEdit.codeGS withClientID:_clientToEdit.client_id];
+    }
 }
 
+- (IBAction)getNextCodeGS:(id)sender
+{
+    self.textCodeGS.text = [_productMethods getNextCodeGS];
+}
 
 
 #pragma mark methods for OpportunityModel

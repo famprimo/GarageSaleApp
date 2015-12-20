@@ -234,6 +234,7 @@
     
     // Get latest information from Parse
     PFQuery *query = [PFQuery queryWithClassName:@"Client"];
+    [query setLimit: 1000];
     [query whereKey:@"updatedAt" greaterThan:mainDelegate.sharedSettings.client_last_update];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -318,6 +319,32 @@
     nextID = [nextID substringFromIndex:[nextID length] - 7];
     
     return nextID;
+}
+
+- (NSString*)getClientIDfromCodeGS:(NSString*)codeGSToFind;
+{
+    // Review an array of Messages to check if a given Message ID exists
+    
+    NSString *clientID = @"Not Found";
+    
+    // To have access to shared arrays from AppDelegate
+    AppDelegate *mainDelegate;
+    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    Client *clientToReview = [[Client alloc] init];
+    
+    for (int i=0; i<mainDelegate.sharedArrayClients.count; i=i+1)
+    {
+        clientToReview = [[Client alloc] init];
+        clientToReview = (Client *)mainDelegate.sharedArrayClients[i];
+        
+        if ([clientToReview.codeGS containsString:codeGSToFind])
+        {
+            clientID = clientToReview.client_id;
+            break;
+        }
+    }
+    return clientID;
 }
 
 - (void)addNewClient:(Client*)newClient;
