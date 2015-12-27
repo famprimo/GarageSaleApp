@@ -12,6 +12,15 @@
 #import "SettingsModel.h"
 #import "CommonMethods.h"
 
+@interface ClientModel ()
+{
+    // Data for temp objects
+    NSMutableArray *allObjects;
+    NSUInteger skipValue;
+    NSUInteger limitValue;
+}
+@end
+
 @implementation ClientModel
 
 - (NSManagedObjectContext *)managedObjectContext
@@ -51,7 +60,8 @@
     tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
-    
+    tempClient.replied = @"Y";
+    tempClient.last_msg_id = @"";
     tempClient.notes = @"XXXX";
     tempClient.agent_id = @"00001";
     
@@ -81,7 +91,9 @@
     tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
-    
+    tempClient.replied = @"Y";
+    tempClient.last_msg_id = @"";
+
     // Add client #2 to the array
     [self addNewClient:tempClient];
     
@@ -108,7 +120,9 @@
     tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
-    
+    tempClient.replied = @"Y";
+    tempClient.last_msg_id = @"";
+
     // Add client #3 to the array
     [self addNewClient:tempClient];
     
@@ -135,7 +149,9 @@
     tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_interacted_time = [formatFBdates dateFromString:@"2015-01-20T18:45:38+0000"];
-    
+    tempClient.replied = @"Y";
+    tempClient.last_msg_id = @"";
+
     // Add client #4 to the array
     [self addNewClient:tempClient];
     
@@ -162,7 +178,9 @@
     tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
-    
+    tempClient.replied = @"Y";
+    tempClient.last_msg_id = @"";
+
     // Add client #5 to the array
     [self addNewClient:tempClient];
     
@@ -189,7 +207,9 @@
     tempClient.created_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_inventory_time = [formatFBdates dateFromString:@"2014-05-01T10:00:00+0000"];
     tempClient.last_interacted_time = [formatFBdates dateFromString:@"2014-09-20T18:45:38+0000"];
-    
+    tempClient.replied = @"Y";
+    tempClient.last_msg_id = @"";
+
     // Add client #6 to the array
     [self addNewClient:tempClient];
     
@@ -228,64 +248,41 @@
 
 - (void)syncCoreDataWithParse;
 {
+    allObjects = [[NSMutableArray alloc] init];
+    limitValue = 1000;
+    skipValue = 0;
+
+    [self recursiveSyncCoreDataWithParse];
+}
+
+- (void)recursiveSyncCoreDataWithParse;
+{
     // To have access to shared arrays from AppDelegate
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
+
     // Get latest information from Parse
     PFQuery *query = [PFQuery queryWithClassName:@"Client"];
-    [query setLimit: 1000];
+    [query setLimit: limitValue];
+    [query setSkip: skipValue];
     [query whereKey:@"updatedAt" greaterThan:mainDelegate.sharedSettings.client_last_update];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
             // The find from Parse succeeded
-            for (PFObject *parseObject in objects)
+            [allObjects addObjectsFromArray:objects];
+            if (objects.count >= limitValue)
             {
-                Client *clientFromParse = [[Client alloc] init];
-                
-                clientFromParse.client_id = [parseObject valueForKey:@"client_id"];
-                clientFromParse.fb_client_id = [parseObject valueForKey:@"fb_client_id"];
-                clientFromParse.fb_inbox_id = [parseObject valueForKey:@"fb_inbox_id"];
-                clientFromParse.fb_page_message_id = [parseObject valueForKey:@"fb_page_message_id"];
-                clientFromParse.codeGS = [parseObject valueForKey:@"codeGS"];
-                clientFromParse.type = [parseObject valueForKey:@"type"];
-                clientFromParse.name = [parseObject valueForKey:@"name"];
-                clientFromParse.last_name = [parseObject valueForKey:@"last_name"];
-                clientFromParse.sex = [parseObject valueForKey:@"sex"];
-                clientFromParse.client_zone = [parseObject valueForKey:@"client_zone"];
-                clientFromParse.address = [parseObject valueForKey:@"address"];
-                clientFromParse.phone1 = [parseObject valueForKey:@"phone1"];
-                clientFromParse.phone2 = [parseObject valueForKey:@"phone2"];
-                clientFromParse.email = [parseObject valueForKey:@"email"];
-                clientFromParse.preference = [parseObject valueForKey:@"preference"];
-                clientFromParse.picture_link = [parseObject valueForKey:@"picture_link"];
-                clientFromParse.status = [parseObject valueForKey:@"status"];
-                clientFromParse.created_time = [parseObject valueForKey:@"created_time"];
-                clientFromParse.last_interacted_time = [parseObject valueForKey:@"last_interacted_time"];
-                clientFromParse.last_inventory_time = [parseObject valueForKey:@"last_inventory_time"];
-                clientFromParse.notes = [parseObject valueForKey:@"notes"];
-                clientFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
-                clientFromParse.update_db = [parseObject valueForKey:@"update_db"];
-                
-                // Update object in CoreData
-                NSString *results = [self updateClientToCoreData:clientFromParse];
-                
-                if ([results isEqualToString:@"NOT FOUND"])
-                {
-                    // Object is new! Add to CoreData;
-                    [self addNewClientToCoreData:clientFromParse];
-                }
-                else if (![results isEqualToString:@"OK"])
-                {
-                    NSLog(@"Failed to update the Client object in CoreData");
-                    [self.delegate clientsSyncedWithCoreData:NO];
-                }
+                // There might be more objects in the table. Update the skip value and execute the query again.
+                skipValue = skipValue + limitValue;
+                [self recursiveSyncCoreDataWithParse];
             }
-            
-            // Send messages to delegates
-            [self.delegate clientsSyncedWithCoreData:YES];
+            else
+            {
+                // There are no more objects in the tables. Process it!
+                [self processSyncCoreDataWithParse];
+            }
         }
         else
         {
@@ -294,6 +291,57 @@
             [self.delegate clientsSyncedWithCoreData:NO];
         }
     }];
+}
+
+- (void)processSyncCoreDataWithParse;
+{
+    for (PFObject *parseObject in allObjects)
+    {
+        Client *clientFromParse = [[Client alloc] init];
+        
+        clientFromParse.client_id = [parseObject valueForKey:@"client_id"];
+        clientFromParse.fb_client_id = [parseObject valueForKey:@"fb_client_id"];
+        clientFromParse.fb_inbox_id = [parseObject valueForKey:@"fb_inbox_id"];
+        clientFromParse.fb_page_message_id = [parseObject valueForKey:@"fb_page_message_id"];
+        clientFromParse.codeGS = [parseObject valueForKey:@"codeGS"];
+        clientFromParse.type = [parseObject valueForKey:@"type"];
+        clientFromParse.name = [parseObject valueForKey:@"name"];
+        clientFromParse.last_name = [parseObject valueForKey:@"last_name"];
+        clientFromParse.sex = [parseObject valueForKey:@"sex"];
+        clientFromParse.client_zone = [parseObject valueForKey:@"client_zone"];
+        clientFromParse.address = [parseObject valueForKey:@"address"];
+        clientFromParse.phone1 = [parseObject valueForKey:@"phone1"];
+        clientFromParse.phone2 = [parseObject valueForKey:@"phone2"];
+        clientFromParse.email = [parseObject valueForKey:@"email"];
+        clientFromParse.preference = [parseObject valueForKey:@"preference"];
+        clientFromParse.picture_link = [parseObject valueForKey:@"picture_link"];
+        clientFromParse.status = [parseObject valueForKey:@"status"];
+        clientFromParse.created_time = [parseObject valueForKey:@"created_time"];
+        clientFromParse.last_interacted_time = [parseObject valueForKey:@"last_interacted_time"];
+        clientFromParse.replied = [parseObject valueForKey:@"replied"];
+        clientFromParse.last_msg_id = [parseObject valueForKey:@"last_msg_id"];
+        clientFromParse.last_inventory_time = [parseObject valueForKey:@"last_inventory_time"];
+        clientFromParse.notes = [parseObject valueForKey:@"notes"];
+        clientFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
+        clientFromParse.update_db = [parseObject valueForKey:@"update_db"];
+        
+        // Update object in CoreData
+        NSString *results = [self updateClientToCoreData:clientFromParse];
+        
+        if ([results isEqualToString:@"NOT FOUND"])
+        {
+            // Object is new! Add to CoreData;
+            [self addNewClientToCoreData:clientFromParse];
+        }
+        else if (![results isEqualToString:@"OK"])
+        {
+            NSLog(@"Failed to update the Client object in CoreData");
+            [self.delegate clientsSyncedWithCoreData:NO];
+        }
+    }
+    
+    // Send messages to delegates
+    [self.delegate clientsSyncedWithCoreData:YES];
 }
 
 - (NSMutableArray*)getClientArray; // Return an array with all clients
@@ -373,6 +421,8 @@
     parseObject[@"status"] = [commonMethods stringNotNil:newClient.status];
     parseObject[@"created_time"] = [commonMethods dateNotNil:newClient.created_time];
     parseObject[@"last_interacted_time"] = [commonMethods dateNotNil:newClient.last_interacted_time];
+    parseObject[@"replied"] = [commonMethods stringNotNil:newClient.replied];
+    parseObject[@"last_msg_id"] = [commonMethods stringNotNil:newClient.last_msg_id];
     parseObject[@"last_inventory_time"] = [commonMethods dateNotNil:newClient.last_inventory_time];
     parseObject[@"notes"] = [commonMethods stringNotNil:newClient.notes];
     parseObject[@"agent_id"] = [commonMethods stringNotNil:newClient.agent_id];
@@ -431,11 +481,13 @@
     [coreDataObject setValue:newClient.status forKey:@"status"];
     [coreDataObject setValue:newClient.created_time forKey:@"created_time"];
     [coreDataObject setValue:newClient.last_interacted_time forKey:@"last_interacted_time"];
+    [coreDataObject setValue:newClient.replied forKey:@"replied"];
+    [coreDataObject setValue:newClient.last_msg_id forKey:@"last_msg_id"];
     [coreDataObject setValue:newClient.last_inventory_time forKey:@"last_inventory_time"];
     [coreDataObject setValue:newClient.notes forKey:@"notes"];
     [coreDataObject setValue:newClient.agent_id forKey:@"agent_id"];
     [coreDataObject setValue:newClient.update_db forKey:@"update_db"];
-
+    
     NSError *error = nil;
     // Save the object to Core Data
     if (![context save:&error]) {
@@ -498,6 +550,8 @@
             parseObject[@"status"] = clientToUpdate.status;
             parseObject[@"created_time"] = clientToUpdate.created_time;
             parseObject[@"last_interacted_time"] = clientToUpdate.last_interacted_time;
+            parseObject[@"replied"] = clientToUpdate.replied;
+            parseObject[@"last_msg_id"] = clientToUpdate.last_msg_id;
             parseObject[@"last_inventory_time"] = clientToUpdate.last_inventory_time;
             parseObject[@"notes"] = clientToUpdate.notes;
             parseObject[@"agent_id"] = clientToUpdate.agent_id;
@@ -586,6 +640,8 @@
             [coreDataObject setValue:clientToUpdate.status forKey:@"status"];
             [coreDataObject setValue:clientToUpdate.created_time forKey:@"created_time"];
             [coreDataObject setValue:clientToUpdate.last_interacted_time forKey:@"last_interacted_time"];
+            [coreDataObject setValue:clientToUpdate.replied forKey:@"replied"];
+            [coreDataObject setValue:clientToUpdate.last_msg_id forKey:@"last_msg_id"];
             [coreDataObject setValue:clientToUpdate.last_inventory_time forKey:@"last_inventory_time"];
             [coreDataObject setValue:clientToUpdate.notes forKey:@"notes"];
             [coreDataObject setValue:clientToUpdate.agent_id forKey:@"agent_id"];

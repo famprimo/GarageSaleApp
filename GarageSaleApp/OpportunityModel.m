@@ -15,6 +15,15 @@
 #import "SettingsModel.h"
 #import "CommonMethods.h"
 
+@interface OpportunityModel ()
+{
+    // Data for temp objects
+    NSMutableArray *allObjects;
+    NSUInteger skipValue;
+    NSUInteger limitValue;
+}
+@end
+
 @implementation OpportunityModel
 
 - (NSManagedObjectContext *)managedObjectContext
@@ -157,54 +166,41 @@
 
 - (void)syncCoreDataWithParse;
 {
+    allObjects = [[NSMutableArray alloc] init];
+    limitValue = 1000;
+    skipValue = 0;
+    
+    [self recursiveSyncCoreDataWithParse];
+}
+
+- (void)recursiveSyncCoreDataWithParse;
+{
     // To have access to shared arrays from AppDelegate
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     // Get latest information from Parse
     PFQuery *query = [PFQuery queryWithClassName:@"Opportunity"];
-    [query setLimit: 1000];
+    [query setLimit: limitValue];
+    [query setSkip: skipValue];
     [query whereKey:@"updatedAt" greaterThan:mainDelegate.sharedSettings.opportunity_last_update];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
             // The find from Parse succeeded
-            for (PFObject *parseObject in objects)
+            [allObjects addObjectsFromArray:objects];
+            if (objects.count >= limitValue)
             {
-                Opportunity *opportunityFromParse = [[Opportunity alloc] init];
-                
-                opportunityFromParse.opportunity_id = [parseObject valueForKey:@"opportunity_id"];
-                opportunityFromParse.product_id = [parseObject valueForKey:@"product_id"];
-                opportunityFromParse.client_id = [parseObject valueForKey:@"client_id"];
-                opportunityFromParse.initial_price = [parseObject valueForKey:@"initial_price"];
-                opportunityFromParse.price_sold = [parseObject valueForKey:@"price_sold"];
-                opportunityFromParse.created_time = [parseObject valueForKey:@"created_time"];
-                opportunityFromParse.closedsold_time = [parseObject valueForKey:@"closedsold_time"];
-                opportunityFromParse.paid_time = [parseObject valueForKey:@"paid_time"];
-                opportunityFromParse.status = [parseObject valueForKey:@"status"];
-                opportunityFromParse.notes = [parseObject valueForKey:@"notes"];
-                opportunityFromParse.commision = [parseObject valueForKey:@"commision"];
-                opportunityFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
-                opportunityFromParse.update_db = [parseObject valueForKey:@"update_db"];
-                
-                // Update object in CoreData
-                NSString *results = [self updateOpportunityToCoreData:opportunityFromParse];
-                
-                if ([results isEqualToString:@"NOT FOUND"])
-                {
-                    // Object is new! Add to CoreData;
-                    [self addNewOpportunityToCoreData:opportunityFromParse];
-                }
-                else if (![results isEqualToString:@"OK"])
-                {
-                    NSLog(@"Failed to update the Opportunity object in CoreData");
-                    [self.delegate opportunitiesSyncedWithCoreData:NO];
-                }
+                // There might be more objects in the table. Update the skip value and execute the query again.
+                skipValue = skipValue + limitValue;
+                [self recursiveSyncCoreDataWithParse];
             }
-            
-            // Send messages to delegates
-            [self.delegate opportunitiesSyncedWithCoreData:YES];
+            else
+            {
+                // There are no more objects in the tables. Process it!
+                [self processSyncCoreDataWithParse];
+            }
         }
         else
         {
@@ -213,6 +209,45 @@
             [self.delegate opportunitiesSyncedWithCoreData:NO];
         }
     }];
+}
+
+- (void)processSyncCoreDataWithParse;
+{
+    for (PFObject *parseObject in allObjects)
+    {
+        Opportunity *opportunityFromParse = [[Opportunity alloc] init];
+        
+        opportunityFromParse.opportunity_id = [parseObject valueForKey:@"opportunity_id"];
+        opportunityFromParse.product_id = [parseObject valueForKey:@"product_id"];
+        opportunityFromParse.client_id = [parseObject valueForKey:@"client_id"];
+        opportunityFromParse.initial_price = [parseObject valueForKey:@"initial_price"];
+        opportunityFromParse.price_sold = [parseObject valueForKey:@"price_sold"];
+        opportunityFromParse.created_time = [parseObject valueForKey:@"created_time"];
+        opportunityFromParse.closedsold_time = [parseObject valueForKey:@"closedsold_time"];
+        opportunityFromParse.paid_time = [parseObject valueForKey:@"paid_time"];
+        opportunityFromParse.status = [parseObject valueForKey:@"status"];
+        opportunityFromParse.notes = [parseObject valueForKey:@"notes"];
+        opportunityFromParse.commision = [parseObject valueForKey:@"commision"];
+        opportunityFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
+        opportunityFromParse.update_db = [parseObject valueForKey:@"update_db"];
+        
+        // Update object in CoreData
+        NSString *results = [self updateOpportunityToCoreData:opportunityFromParse];
+        
+        if ([results isEqualToString:@"NOT FOUND"])
+        {
+            // Object is new! Add to CoreData;
+            [self addNewOpportunityToCoreData:opportunityFromParse];
+        }
+        else if (![results isEqualToString:@"OK"])
+        {
+            NSLog(@"Failed to update the Opportunity object in CoreData");
+            [self.delegate opportunitiesSyncedWithCoreData:NO];
+        }
+    }
+    
+    // Send messages to delegates
+    [self.delegate opportunitiesSyncedWithCoreData:YES];
 }
 
 - (NSMutableArray*)getOpportunitiesArray; // Return an array with data

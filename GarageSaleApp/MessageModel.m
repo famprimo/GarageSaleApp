@@ -550,6 +550,7 @@
         if (result.count == 0)
         {
             NSLog(@"No records retrieved");
+            messageFound = nil;
         }
         else
         {

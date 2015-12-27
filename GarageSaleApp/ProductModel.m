@@ -12,6 +12,14 @@
 #import "SettingsModel.h"
 #import "CommonMethods.h"
 
+@interface ProductModel ()
+{
+    // Data for temp objects
+    NSMutableArray *allObjects;
+    NSUInteger skipValue;
+    NSUInteger limitValue;
+}
+@end
 
 @implementation ProductModel
 
@@ -200,64 +208,42 @@
 
 - (void)syncCoreDataWithParse;
 {
+    allObjects = [[NSMutableArray alloc] init];
+    limitValue = 1000;
+    skipValue = 0;
+    
+    [self recursiveSyncCoreDataWithParse];
+}
+
+- (void)recursiveSyncCoreDataWithParse;
+{
     // To have access to shared arrays from AppDelegate
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     // Get latest information from Parse
     PFQuery *query = [PFQuery queryWithClassName:@"Product"];
-    [query setLimit: 1000];
+    [query setLimit: limitValue];
+    [query setSkip: skipValue];
     [query whereKey:@"updatedAt" greaterThan:mainDelegate.sharedSettings.product_last_update];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
             // The find from Parse succeeded
-            for (PFObject *parseObject in objects)
+            [allObjects addObjectsFromArray:objects];
+            if (objects.count >= limitValue)
             {
-                Product *productFromParse = [[Product alloc] init];
-                
-                productFromParse.product_id = [parseObject valueForKey:@"product_id"];
-                productFromParse.client_id = [parseObject valueForKey:@"client_id"];
-                productFromParse.codeGS = [parseObject valueForKey:@"codeGS"];
-                productFromParse.name = [parseObject valueForKey:@"name"];
-                productFromParse.desc = [parseObject valueForKey:@"desc"];
-                productFromParse.fb_photo_id = [parseObject valueForKey:@"fb_photo_id"];
-                productFromParse.fb_link = [parseObject valueForKey:@"fb_link"];
-                productFromParse.currency = [parseObject valueForKey:@"currency"];
-                productFromParse.price = [parseObject valueForKey:@"price"];
-                productFromParse.created_time = [parseObject valueForKey:@"created_time"];
-                productFromParse.updated_time = [parseObject valueForKey:@"updated_time"];
-                productFromParse.solddisabled_time = [parseObject valueForKey:@"solddisabled_time"];
-                productFromParse.fb_updated_time = [parseObject valueForKey:@"fb_updated_time"];
-                productFromParse.type = [parseObject valueForKey:@"type"];
-                productFromParse.picture_link = [parseObject valueForKey:@"picture_link"];
-                productFromParse.additional_pictures = [parseObject valueForKey:@"additional_pictures"];
-                productFromParse.status = [parseObject valueForKey:@"status"];
-                productFromParse.last_promotion_time = [parseObject valueForKey:@"last_promotion_time"];
-                productFromParse.promotion_piority = [parseObject valueForKey:@"promotion_piority"];
-                productFromParse.notes = [parseObject valueForKey:@"notes"];
-                productFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
-                productFromParse.update_db = [parseObject valueForKey:@"updatedAt"];
-                
-                // Update object in CoreData
-                NSString *results = [self updateProductToCoreData:productFromParse];
-                
-                if ([results isEqualToString:@"NOT FOUND"])
-                {
-                    // Object is new! Add to CoreData;
-                    [self addNewProductToCoreData:productFromParse];
-                }
-                else if (![results isEqualToString:@"OK"])
-                {
-                    NSLog(@"Failed to update the Product object in CoreData");
-                    [self.delegate productsSyncedWithCoreData:NO];
-                }
-             }
-            
-            // Send messages to delegates
-            [self.delegate productsSyncedWithCoreData:YES];
-       }
+                // There might be more objects in the table. Update the skip value and execute the query again.
+                skipValue = skipValue + limitValue;
+                [self recursiveSyncCoreDataWithParse];
+            }
+            else
+            {
+                // There are no more objects in the tables. Process it!
+                [self processSyncCoreDataWithParse];
+            }
+        }
         else
         {
             // Log details of the failure
@@ -265,6 +251,54 @@
             [self.delegate productsSyncedWithCoreData:NO];
         }
     }];
+}
+
+- (void)processSyncCoreDataWithParse;
+{
+    for (PFObject *parseObject in allObjects)
+    {
+        Product *productFromParse = [[Product alloc] init];
+        
+        productFromParse.product_id = [parseObject valueForKey:@"product_id"];
+        productFromParse.client_id = [parseObject valueForKey:@"client_id"];
+        productFromParse.codeGS = [parseObject valueForKey:@"codeGS"];
+        productFromParse.name = [parseObject valueForKey:@"name"];
+        productFromParse.desc = [parseObject valueForKey:@"desc"];
+        productFromParse.fb_photo_id = [parseObject valueForKey:@"fb_photo_id"];
+        productFromParse.fb_link = [parseObject valueForKey:@"fb_link"];
+        productFromParse.currency = [parseObject valueForKey:@"currency"];
+        productFromParse.price = [parseObject valueForKey:@"price"];
+        productFromParse.created_time = [parseObject valueForKey:@"created_time"];
+        productFromParse.updated_time = [parseObject valueForKey:@"updated_time"];
+        productFromParse.solddisabled_time = [parseObject valueForKey:@"solddisabled_time"];
+        productFromParse.fb_updated_time = [parseObject valueForKey:@"fb_updated_time"];
+        productFromParse.type = [parseObject valueForKey:@"type"];
+        productFromParse.picture_link = [parseObject valueForKey:@"picture_link"];
+        productFromParse.additional_pictures = [parseObject valueForKey:@"additional_pictures"];
+        productFromParse.status = [parseObject valueForKey:@"status"];
+        productFromParse.last_promotion_time = [parseObject valueForKey:@"last_promotion_time"];
+        productFromParse.promotion_piority = [parseObject valueForKey:@"promotion_piority"];
+        productFromParse.notes = [parseObject valueForKey:@"notes"];
+        productFromParse.agent_id = [parseObject valueForKey:@"agent_id"];
+        productFromParse.update_db = [parseObject valueForKey:@"updatedAt"];
+        
+        // Update object in CoreData
+        NSString *results = [self updateProductToCoreData:productFromParse];
+        
+        if ([results isEqualToString:@"NOT FOUND"])
+        {
+            // Object is new! Add to CoreData;
+            [self addNewProductToCoreData:productFromParse];
+        }
+        else if (![results isEqualToString:@"OK"])
+        {
+            NSLog(@"Failed to update the Product object in CoreData");
+            [self.delegate productsSyncedWithCoreData:NO];
+        }
+    }
+    
+    // Send messages to delegates
+    [self.delegate productsSyncedWithCoreData:YES];
 }
 
 - (NSMutableArray*)getProductArray; // Return an array with all products

@@ -28,6 +28,7 @@
         <attribute name="fb_page_message_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="last_interacted_time" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="last_inventory_time" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="last_msg_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="last_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
@@ -35,6 +36,7 @@
         <attribute name="phone2" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="picture_link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="preference" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="replied" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sex" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
@@ -126,7 +128,7 @@
     <elements>
         <element name="Attachments" positionX="-515" positionY="450" width="128" height="180"/>
         <element name="ClientPhotos" positionX="-693" positionY="99" width="128" height="75"/>
-        <element name="Clients" positionX="-387" positionY="54" width="128" height="390"/>
+        <element name="Clients" positionX="-387" positionY="54" width="128" height="420"/>
         <element name="Messages" positionX="-209" positionY="324" width="128" height="285"/>
         <element name="Opportunities" positionX="-542" positionY="75" width="128" height="240"/>
         <element name="ProductPhotos" positionX="-828" positionY="90" width="128" height="75"/>

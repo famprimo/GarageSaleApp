@@ -58,9 +58,6 @@
     // For the reveal menu to work
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 
-    // Add title and menu button
-    self.navigationItem.title = @"Clientes";
-    
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
     
@@ -87,6 +84,9 @@
         NSString *second = [(Client*)b name];
         return [first compare:second];
     }];
+    
+    // Add title and menu button
+    [self updateTableTitle];
     
     // Assign detail view with first item
     _selectedClient = [_myDataClients firstObject];
@@ -132,6 +132,8 @@
     _newClient.status = @"N";
     _newClient.created_time = [NSDate date];
     _newClient.last_interacted_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
+    _newClient.replied = @"Y";
+    _newClient.last_msg_id = @"";
     _newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
     _newClient.notes = @"";
     _newClient.agent_id = @"00001";
@@ -143,6 +145,26 @@
 {
     [_clientMethods syncCoreDataWithParse];
 }
+
+- (void)updateTableTitle
+{
+    NSString *tableTitle = [[NSString alloc] init];
+    
+    
+    int numberofClients = _myDataClients.count;
+    
+    if (numberofClients == 0)
+    {
+        tableTitle = @"Clientes";
+    }
+    else
+    {
+        tableTitle = [NSString stringWithFormat:@"Clientes (%i)", numberofClients];
+    }
+    
+    self.navigationItem.title = tableTitle;
+}
+
 
 - (void)didReceiveMemoryWarning
 {

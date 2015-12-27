@@ -389,28 +389,44 @@
         verifiedImage.image = [UIImage imageNamed:@"Blank"];
     }
     
+    if ([myClient.replied isEqualToString:@"Y"])
+    {
+        myCell.backgroundColor = [UIColor clearColor];
+    }
+    else
+    {
+        myCell.backgroundColor = [UIColor colorWithRed:231/255.0f green:240/255.0f blue:250/255.0f alpha:1.0f];
+    }
+
     // Message info
-    lastMessageFromClient = [messageMethods getLastMessageFromClient:myClient.client_id];
+    lastMessageFromClient = [messageMethods getMessageFromMessageId:myClient.last_msg_id];
     
     if (lastMessageFromClient == nil)
     {
         productImage.hidden = YES;
         messageLabel.frame = messageLabelFrame;
-        messageLabel.text = @"No hay mensajes";
         datetimeLabel.text = [myClient.last_interacted_time formattedAsTimeAgo];
-        nameLabel.textColor = [UIColor blackColor];
-        nameLabel.font = [UIFont systemFontOfSize:12];
         unreadMessages.hidden = YES;
+        if ([myClient.replied isEqualToString:@"Y"])
+        {
+            messageLabel.text = @"No hay mensajes";
+            nameLabel.textColor = [UIColor blackColor];
+            nameLabel.font = [UIFont systemFontOfSize:12];
+        }
+        else
+        {
+            messageLabel.text = @"No se han cargado los mensajes";
+            nameLabel.textColor = [UIColor blueColor];
+            nameLabel.font = [UIFont systemFontOfSize:12];
+        }
     }
     else
     {
         CGRect messageLabelFrame = messageLabel.frame;
         int numberOfUnreadMessages = [messageMethods numberOfUnreadMessagesForClient:myClient.client_id];
         
-        //if ([lastMessageFromClient.status isEqualToString:@"R"])
         if (numberOfUnreadMessages == 0)
         {
-            // No unread messages
             nameLabel.textColor = [UIColor blackColor];
             nameLabel.font = [UIFont systemFontOfSize:12];
             unreadMessages.hidden = YES;
@@ -419,7 +435,8 @@
         {
             // There are unread messages
             nameLabel.textColor = [UIColor blueColor];
-            nameLabel.font = [UIFont boldSystemFontOfSize:12];
+            nameLabel.font = [UIFont systemFontOfSize:12];
+
             unreadMessages.hidden = NO;
             unreadMessages.text = [NSString stringWithFormat:@" %i ", numberOfUnreadMessages];
             [unreadMessages sizeToFit];

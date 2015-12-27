@@ -60,8 +60,6 @@
     ClientModel *clientMethods = [[ClientModel alloc] init];
     ProductModel *productMethods = [[ProductModel alloc] init];
     OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
-    MessageModel *messagesMethods = [[MessageModel alloc] init];
-    AttachmentModel *attachmentMethods = [[AttachmentModel alloc] init];
     TemplateModel *templateMethods = [[TemplateModel alloc] init];
     SettingsModel *settingsMethods = [[SettingsModel alloc] init];
     

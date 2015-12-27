@@ -58,8 +58,8 @@
         NSString *url = @"me?fields=id,name,accounts";
         
         // Prepare for FB request
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
-        
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
+
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
          {
              if (!error) {  // FB request was a success!
@@ -103,7 +103,7 @@
 - (void)makeFBRequestForPhotos:(NSString*)url;
 {
     // Make FB request
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
     
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
      {
@@ -148,39 +148,49 @@
     {
         
         // Review each photo
-        NSString *photoID = photosArray[i][@"id"];
-        
+        Product *tempProduct = [[Product alloc] init];
+        tempProduct =  [self parseFBPhotoName:photosArray[i]];
+
         // Review if product exists
+        NSString *photoID = tempProduct.fb_photo_id;
         NSString *productID = [productMethods getProductIDfromFbPhotoId:photoID];
-        
-        if ([productID  isEqual: @"Not Found"] && !(photosArray[i][@"name"] == nil) && ![[productMethods getTextThatFollows:@"GS" fromMessage:photosArray[i][@"name"]] isEqualToString:@"Not Found"])
+
+        if ([productID isEqualToString: @"Not Found"] && !(tempProduct.desc == nil) && ![[productMethods getTextThatFollows:@"GS" fromMessage:tempProduct.desc] isEqualToString:@"Not Found"])
         {
             // New product!
-            Product *newProduct = [[Product alloc] init];
-
-            productID = [productMethods getNextProductID];
-            newProduct = [self parseFBPhotoName:photosArray[i]];
+            tempProduct.product_id = [productMethods getNextProductID];
             
-            newProduct.product_id = productID;
+            // Review if the GSCode is from an existing client
+            NSString *codeGS = [[[ClientModel alloc] init] getClientIDfromCodeGS:tempProduct.codeGS];
             
+            if (![codeGS isEqualToString:@"Not Found"]) {
+                tempProduct.codeGS = codeGS;
+            }
             
             // Add new product to DB
-            [productMethods addNewProduct:newProduct];
+            [productMethods addNewProduct:tempProduct];
         }
-        else
+        else if (![productID isEqualToString:@"Not Found"] && !(tempProduct.desc == nil))
         {
             // Existing product. Review if there were changes
             
             Product *existingProduct = [[Product alloc] init];
             existingProduct = [productMethods getProductFromProductId:productID];
             
-            NSDate *photoUpdatedTime = [formatFBdates dateFromString:photosArray[i][@"updated_time"]];
-
-            if (photoUpdatedTime != existingProduct.fb_updated_time)
+            if (![tempProduct.desc isEqualToString:existingProduct.desc])
             {
-                // Review changes !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // There were changes! Update basic data
+                existingProduct.desc = tempProduct.desc;
+                existingProduct.price = tempProduct.price;
+                existingProduct.fb_updated_time = tempProduct.fb_updated_time;
+                if ([tempProduct.status isEqualToString:@"S"])
+                {
+                    existingProduct.status = @"S";
+                }
+                
+                // Update DB
+                [productMethods updateProduct:existingProduct];
             }
-            
         }
     }
 }
@@ -193,7 +203,16 @@
     tempProduct.client_id = @"";
     tempProduct.desc = results[@"name"];
     tempProduct.fb_photo_id = results[@"id"];
+    
     tempProduct.fb_link = results[@"link"];
+    if (![tempProduct.fb_link isEqualToString:@""])
+    {
+        // Get a short link
+        NSString *longURL = [tempProduct.fb_link stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+        NSString *apiEndpoint = [NSString stringWithFormat:@"http://tinyurl.com/api-create.php?url=%@", longURL];
+        NSString *shortURL = [NSString stringWithContentsOfURL:[NSURL URLWithString:apiEndpoint] encoding:NSASCIIStringEncoding error:nil];
+        tempProduct.fb_link = shortURL;
+    }
     
     // Get name, currency, price, GS code and type from photo description
     
@@ -309,7 +328,7 @@
 
 - (void)makeFBRequestforPhotoComments:(NSString *)url forProduct:(Product *)forProduct;
 {
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
     
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
      {
@@ -394,7 +413,7 @@
             {
                 // Is a message from GarageSale!
                 tempMessage.recipient = @"C";
-                tempMessage.status = @"D";
+                tempMessage.status = @"R";
             }
             else
             {
@@ -409,6 +428,9 @@
             {
                 // New client!
                 tempMessage.client_id = [self getNextClientID];;
+                
+                NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+                [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
                 
                 Client *newClient = [[Client alloc] init];
                 
@@ -429,25 +451,46 @@
                 newClient.picture_link = @"";
                 newClient.status = @"N";
                 newClient.created_time = [NSDate date];
-                newClient.last_interacted_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
-                newClient.last_inventory_time = newClient.last_interacted_time;
+                newClient.last_interacted_time = tempMessage.datetime;
+                newClient.replied = @"N";
+                newClient.last_msg_id = tempMessage.fb_msg_id;
+                newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
                 newClient.notes = @"";
                 newClient.agent_id = @"00001";
+                
+                if ([tempMessage.recipient isEqualToString:@"C"])
+                {
+                    // Message from GaragaSale... client has been already replied!
+                    newClient.replied = @"Y";
+                }
 
                 [_newClientsArray addObject:newClient];
             }
             else
             {
-                // The client already exists
-                tempClient = [self getClientFromClientId:fromClientID];
+                // The client already exists... But only review dates if client is not GS
                 
-                tempMessage.client_id = tempClient.client_id;
-                tempMessage.fb_inbox_id = tempClient.fb_inbox_id;
-                
-                if (tempMessage.datetime > tempClient.last_interacted_time)
+                if ([tempMessage.recipient isEqualToString:@"G"])
                 {
-                    tempClient.last_interacted_time = tempMessage.datetime;
-                    [self updateClient:tempClient];
+                    tempClient = [self getClientFromClientId:fromClientID];
+                    
+                    tempMessage.client_id = tempClient.client_id;
+                    tempMessage.fb_inbox_id = tempClient.fb_inbox_id;
+                    
+                    if ([tempMessage.datetime compare:tempClient.last_interacted_time] == NSOrderedDescending) // Compare if (tempMessage.datetime > tempClient.last_interacted_time)
+                    {
+                        tempClient.last_interacted_time = tempMessage.datetime;
+                        tempClient.last_msg_id = tempMessage.fb_msg_id;
+                        tempClient.replied = @"N";
+                        
+                        if ([tempMessage.recipient isEqualToString:@"C"])
+                        {
+                            // Message from GaragaSale... client has been already replied!
+                            tempClient.replied = @"Y";
+                        }
+                        
+                        [self updateClient:tempClient];
+                    }
                 }
             }
             
@@ -457,7 +500,6 @@
             [self.delegate newMessageAddedFromFB:tempMessage];
         }
     }
-    
 }
 
 - (void)makeFBRequestForSubComments:(NSString*)fromMethod;
@@ -488,7 +530,8 @@
 - (void)getFBPhotoSubComments:(NSString*)url fromMethod:(NSString*)fromMethod isLastOne:(BOOL)isLastOne;
 {
     // Make FB request
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
+
     
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
      {
@@ -590,21 +633,36 @@
                 tempMessage.recipient = @"C";
                 tempMessage.client_id = fromClientID;
                 tempMessage.fb_inbox_id = fromClientID;
-                tempMessage.status = @"D";
+                tempMessage.status = @"R";
+                
+                // Review interacted time for client
+                Client *tempClient = [self getClientFromClientId:fromClientID];
+                
+                if ([tempMessage.datetime compare:tempClient.last_interacted_time] == NSOrderedDescending) // Compare if (tempMessage.datetime > tempClient.last_interacted_time)
+                {
+                    tempClient.last_interacted_time = tempMessage.datetime;
+                    tempClient.last_msg_id = tempMessage.fb_msg_id;
+                    tempClient.replied = @"Y";
+                    
+                    [self updateClient:tempClient];
+                }
             }
             else
             {
                 tempMessage.recipient = @"G";
                 tempMessage.status = @"N";
                 
-                // Review if client exists
-                fromClientID = [self getClientIDfromFbId:tempMessage.fb_from_id];
+                // Review if client from sub comment exists
+                NSString *fromClientIDFromSubComment = [self getClientIDfromFbId:tempMessage.fb_from_id];
                 
-                if ([fromClientID  isEqual: @"Not Found"])
+                if ([fromClientIDFromSubComment isEqual: @"Not Found"])
                 {
                     // New client!
                     tempMessage.client_id = [self getNextClientID];;
                     
+                    NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+                    [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+
                     Client *newClient = [[Client alloc] init];
                     
                     newClient.client_id = tempMessage.client_id;
@@ -625,24 +683,28 @@
                     newClient.status = @"N";
                     newClient.created_time = [NSDate date];
                     newClient.last_interacted_time = tempMessage.datetime;
-                    newClient.last_inventory_time = newClient.last_interacted_time;
+                    newClient.replied = @"N";
+                    newClient.last_msg_id = tempMessage.fb_msg_id;
+                    newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
                     newClient.notes = @"";
                     newClient.agent_id = @"00001";
-
                     
                     [_newClientsArray addObject:newClient];
                 }
                 else
                 {
-                    // The client already exists
-                    Client *tempClient = [self getClientFromClientId:fromClientID];
+                    // The client from sub comment already exists
+                    Client *tempClient = [self getClientFromClientId:fromClientIDFromSubComment];
                     
                     tempMessage.client_id = tempClient.client_id;
                     tempMessage.fb_inbox_id = tempClient.fb_inbox_id;
                     
-                    if (tempMessage.datetime > tempClient.last_interacted_time)
+                    if ([tempMessage.datetime compare:tempClient.last_interacted_time] == NSOrderedDescending) // Compare if (tempMessage.datetime > tempClient.last_interacted_time)
                     {
                         tempClient.last_interacted_time = tempMessage.datetime;
+                        tempClient.last_msg_id = tempMessage.fb_msg_id;
+                        tempClient.replied = @"N";
+                        
                         [self updateClient:tempClient];
                     }
                 }
@@ -721,7 +783,6 @@
                              }
                          }
                      }
-                     
                  }
                  
                  // Review is there is a next page
@@ -744,7 +805,6 @@
                          [self.delegate finishedGettingFBpageNotifications:YES];
                      }
                  }
-
               }
              else
              {
@@ -784,8 +844,8 @@
     if ([FBSDKAccessToken currentAccessToken])
     {
         // Prepare for FB request
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:requestPhotosList parameters:nil];
-        
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:requestPhotosList parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
+
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
          {
              if (!error) { // FB request was a success!
@@ -925,8 +985,8 @@
 
 - (void)makeFBRequestForNewInbox:(NSString*)url;
 {
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
-    
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
+
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
      {
          if (!error) {  // FB request was a success!
@@ -960,7 +1020,7 @@
 
 - (void)parseFBInbox:(id)result;
 {
-    Client *tmpClient;
+    Client *tempClient;
     
     if (_newClientsArray == nil)
     {
@@ -1020,9 +1080,12 @@
  
             NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
             [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-            newClient.last_interacted_time = [formatFBdates dateFromString:jsonArray[i][@"updated_time"]];;
- 
-            newClient.last_inventory_time = newClient.last_interacted_time;
+            
+            newClient.last_interacted_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
+            newClient.replied = @"Y";
+            newClient.last_msg_id = @"";
+
+            newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
             newClient.notes = @"";
             newClient.agent_id = @"00001";
 
@@ -1030,14 +1093,14 @@
         }
         
         // Review if inboxID is updated
-        tmpClient = [[Client alloc] init];
-        tmpClient = [self getClientFromClientId:fromClientID];
+        tempClient = [[Client alloc] init];
+        tempClient = [self getClientFromClientId:fromClientID];
         
-        if (![tmpClient.fb_inbox_id isEqualToString:fbInboxID])
+        if (![tempClient.fb_inbox_id isEqualToString:fbInboxID])
         {
             // InboxID is differente... update with the actual
-            tmpClient.fb_inbox_id = fbInboxID;
-            [self updateClient:tmpClient];
+            tempClient.fb_inbox_id = fbInboxID;
+            [self updateClient:tempClient];
         }
         
         NSArray *jsonMessagesArray = jsonArray[i][@"comments"][@"data"];
@@ -1079,7 +1142,7 @@
 
 - (void)getFBInboxComments:(NSString *)url withClientID:(NSString *)fromClientID;
 {
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil];
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
     
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
      {
@@ -1117,10 +1180,10 @@
 {
     MessageModel *messageMethods = [[MessageModel alloc] init];
     
-    Client *tmpClient = [self getClientFromClientId:fromClientID];
-    NSString *fbInboxID = tmpClient.fb_inbox_id;
-    NSString *fbIDfromInbox = tmpClient.fb_client_id;
-    NSString *fbNamefromInbox = [NSString stringWithFormat:@"%@ %@", tmpClient.name, tmpClient.last_name];
+    Client *tempClient = [self getClientFromClientId:fromClientID];
+    NSString *fbInboxID = tempClient.fb_inbox_id;
+    NSString *fbIDfromInbox = tempClient.fb_client_id;
+    NSString *fbNamefromInbox = [NSString stringWithFormat:@"%@ %@", tempClient.name, tempClient.last_name];
     
     // Add all messages from this conversation
     
@@ -1128,6 +1191,8 @@
     [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
 
     NSDate *lastMessageDate = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
+    NSString *lastMessageId = @"";
+    NSString *lastMessageRecipient = @"";
     
     for (int i=0; i<jsonMessagesArray.count; i=i+1)
     {
@@ -1152,7 +1217,6 @@
             tempMessage.product_id = nil;
             tempMessage.attachments = @"N";
             tempMessage.agent_id = @"00001";
-            tempMessage.status = @"N";
             tempMessage.type = @"I";
             
             NSLog(@"%@ : %@", tempMessage.fb_from_name, [FBSDKProfile currentProfile].name);
@@ -1163,16 +1227,22 @@
                 tempMessage.recipient = @"C";
                 tempMessage.fb_from_id = fbIDfromInbox;
                 tempMessage.fb_from_name = fbNamefromInbox;
+                tempMessage.status = @"R";
             }
             else
-            { tempMessage.recipient = @"G";}
+            {
+                tempMessage.recipient = @"G";
+                tempMessage.status = @"N";
+            }
             
             tempMessage.client_id = fromClientID;
             
             // Save last date
-            if (tempMessage.datetime > lastMessageDate)
+            if ([tempMessage.datetime compare:lastMessageDate] == NSOrderedDescending) // Compare if (tempMessage.datetime > lastMessageDate)
             {
                 lastMessageDate = tempMessage.datetime;
+                lastMessageId = tempMessage.fb_msg_id;
+                lastMessageRecipient = tempMessage.recipient;
             }
             
             // Add new message and inform delegate
@@ -1183,10 +1253,20 @@
     }
     
     // Review if last message date is newer than last interacted date
-    if (lastMessageDate > tmpClient.last_interacted_time)
+    
+    if ([lastMessageDate compare:tempClient.last_interacted_time] == NSOrderedDescending) // Compare if (lastMessageDate > tempClient.last_interacted_time)
     {
-        tmpClient.last_interacted_time = lastMessageDate;
-        [self updateClient:tmpClient];
+        tempClient.last_interacted_time = lastMessageDate;
+        tempClient.last_msg_id = lastMessageId;
+        tempClient.replied = @"N";
+        
+        if ([lastMessageRecipient isEqualToString:@"C"])
+        {
+            // Message from GaragaSale... client has been already replied!
+            tempClient.replied = @"Y";
+        }
+
+        [self updateClient:tempClient];
     }
 }
 
@@ -1218,7 +1298,6 @@
     if ([[FBSDKAccessToken currentAccessToken] hasGranted:@"manage_pages"])
     {
         // Prepare for FB request
-        
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
         
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
@@ -1253,7 +1332,7 @@
 
 - (void)parseFBPageMessages:(id)result;
 {
-    Client *tmpClient;
+    Client *tempClient;
     
     if (_newClientsArray == nil)
     {
@@ -1267,7 +1346,6 @@
     // Review each chat
     
     NSArray *jsonArray = result[@"data"];
-    
     
     for (int i=0; i<jsonArray.count; i=i+1)
     {
@@ -1307,20 +1385,26 @@
             
             NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
             [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
-            newClient.last_interacted_time = [formatFBdates dateFromString:jsonArray[i][@"updated_time"]];;
+            
+            newClient.last_interacted_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
+            newClient.replied = @"Y";
+            newClient.last_msg_id = @"";
+
+            newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
+            newClient.notes = @"";
             
             [_newClientsArray addObject:newClient];
         }
         
         // Review if pageMessageID is updated
-        tmpClient = [[Client alloc] init];
-        tmpClient = [self getClientFromClientId:fromClientID];
+        tempClient = [[Client alloc] init];
+        tempClient = [self getClientFromClientId:fromClientID];
         
-        if (![tmpClient.fb_page_message_id isEqualToString:fbPageMessageID])
+        if (![tempClient.fb_page_message_id isEqualToString:fbPageMessageID])
         {
             // InboxID is different... update with the actual
-            tmpClient.fb_page_message_id = fbPageMessageID;
-            [self updateClient:tmpClient];
+            tempClient.fb_page_message_id = fbPageMessageID;
+            [self updateClient:tempClient];
         }
         
         NSArray *jsonMessagesArray = jsonArray[i][@"messages"][@"data"];
@@ -1342,7 +1426,6 @@
 
 - (void)getFBPageMessagesForClient:(Client*)clientInbox;
 {
-    
     if ((_tmpSettings!= nil) && ![_tmpSettings.fb_page_id isEqualToString:@""])
     {
         NSString *url = [NSString stringWithFormat:@"%@/messages", clientInbox.fb_page_message_id];
@@ -1399,10 +1482,10 @@
 {
     MessageModel *messageMethods = [[MessageModel alloc] init];
     
-    Client *tmpClient = [self getClientFromClientId:fromClientID];
-    NSString *fbInboxID = tmpClient.fb_inbox_id;
-    NSString *fbIDfromInbox = tmpClient.fb_client_id;
-    NSString *fbNamefromInbox = [NSString stringWithFormat:@"%@ %@", tmpClient.name, tmpClient.last_name];
+    Client *tempClient = [self getClientFromClientId:fromClientID];
+    NSString *fbInboxID = tempClient.fb_inbox_id;
+    NSString *fbIDfromInbox = tempClient.fb_client_id;
+    NSString *fbNamefromInbox = [NSString stringWithFormat:@"%@ %@", tempClient.name, tempClient.last_name];
     
     // Add all messages from this conversation
     
@@ -1410,6 +1493,8 @@
     [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
     
     NSDate *lastMessageDate = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
+    NSString *lastMessageId = @"";
+    NSString *lastMessageRecipient = @"";
     
     for (int i=0; i<jsonMessagesArray.count; i=i+1)
     {
@@ -1439,7 +1524,6 @@
             else { tempMessage.attachments = @"N"; }
             
             tempMessage.agent_id = @"00001";
-            tempMessage.status = @"N";
             tempMessage.type = @"M"; // Page message!
             
             NSLog(@"%@ : %@", tempMessage.fb_from_name, [FBSDKProfile currentProfile].name);
@@ -1450,16 +1534,22 @@
                 tempMessage.recipient = @"C";
                 tempMessage.fb_from_id = fbIDfromInbox;
                 tempMessage.fb_from_name = fbNamefromInbox;
+                tempMessage.status = @"R";
             }
             else
-            { tempMessage.recipient = @"G";}
+            {
+                tempMessage.recipient = @"G";
+                tempMessage.status = @"N";
+            }
             
             tempMessage.client_id = fromClientID;
             
             // Save last date
-            if (tempMessage.datetime > lastMessageDate)
+            if ([tempMessage.datetime compare:lastMessageDate] == NSOrderedDescending) // Compare if (tempMessage.datetime > lastMessageDate)
             {
                 lastMessageDate = tempMessage.datetime;
+                lastMessageId = tempMessage.fb_msg_id;
+                lastMessageRecipient =tempMessage.recipient;
             }
             
             // Add new message and inform delegate
@@ -1477,10 +1567,19 @@
     }
     
     // Review if last message date is newer than last interacted date
-    if (lastMessageDate > tmpClient.last_interacted_time)
+    if ([lastMessageDate compare:tempClient.last_interacted_time] == NSOrderedDescending) // Compare if (lastMessageDate > tempClient.last_interacted_time)
     {
-        tmpClient.last_interacted_time = lastMessageDate;
-        [self updateClient:tmpClient];
+        tempClient.last_interacted_time = lastMessageDate;
+        tempClient.last_msg_id = lastMessageId;
+        tempClient.replied = @"N";
+        
+        if ([lastMessageRecipient isEqualToString:@"C"])
+        {
+            // Message from GaragaSale... client has been already replied!
+            tempClient.replied = @"Y";
+        }
+
+        [self updateClient:tempClient];
     }
 }
 
@@ -1509,7 +1608,6 @@
         [attachmentMethods addNewAttachment:tempAttachment];
     }
 }
-
 
 
 #pragma mark methods related to clients
@@ -1660,7 +1758,7 @@
                 NSLog(@"%@ - %@: %@", newClient.fb_client_id, newClient.name, requestClientDetails);
                 
                 // Make FB request
-                FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:requestClientDetails parameters:nil];
+                FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:requestClientDetails parameters:nil tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"GET"];
                 
                 [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
                  {

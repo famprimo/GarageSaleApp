@@ -115,7 +115,7 @@
         {
             [_readTimer invalidate];
         }
-        _readTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
+        _readTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
                                          target:self
                                        selector:@selector(updateMessagesToRead:)
                                        userInfo:nil
