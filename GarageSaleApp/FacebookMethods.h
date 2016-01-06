@@ -20,6 +20,8 @@
 -(void)finishedInsertingNewClientsFound:(BOOL)succeed;
 -(void)finishedGettingFBPhotos:(BOOL)succeed;
 -(void)finishedGettingFBPhotoComments:(BOOL)succeed;
+-(void)finishedSendingFBPageMessage:(BOOL)succeed;
+-(void)finishedSendingFBPhotoMessage:(BOOL)succeed;
 
 @end
 
@@ -37,5 +39,7 @@
 - (void)insertNewClientsFound;
 - (void)getFBPhotos;
 - (void)getFBPhotoCommentsforProduct:(Product*)forProduct;
+- (void)sendFBPageMessage:(NSString*)messageText forPageMessageID:(NSString*)pageMessageID;
+- (void)sendFBPhotoMessage:(NSString*)messageText forMessageRootID:(NSString*)messageRootID;
 
 @end

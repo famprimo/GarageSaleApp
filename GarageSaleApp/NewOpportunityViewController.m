@@ -20,6 +20,7 @@
     Product *_relatedProduct;
     
     OpportunityModel *_opportunityMethods;
+    UIActivityIndicatorView *_indicator;
 }
 @end
 
@@ -90,6 +91,13 @@
 
 - (IBAction)createOpportunity:(id)sender
 {
+    // Set spinner
+    _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _indicator.center = CGPointMake((self.view.bounds.size.width / 2) , (self.view.bounds.size.height / 2));
+    
+    [self.view addSubview:_indicator];
+    [_indicator startAnimating];
+    
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"yyyyMMdd"];
 
@@ -122,6 +130,9 @@
 
 -(void)opportunityAddedOrUpdated:(BOOL)succeed;
 {
+    // Stop spinner
+    [_indicator stopAnimating];
+    
     if (succeed)
     {
         [self.delegate opportunityCreated];

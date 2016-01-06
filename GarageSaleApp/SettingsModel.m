@@ -39,13 +39,8 @@
     tempSettings.product_last_update = [formatFBdates dateFromString:@"2000-01-01T16:41:15+0000"];
     tempSettings.client_last_update = [formatFBdates dateFromString:@"2000-01-01T16:41:15+0000"];
     tempSettings.opportunity_last_update = [formatFBdates dateFromString:@"2000-01-01T16:41:15+0000"];
-    /*
-    tempSettings.template_last_update = [NSDate date];
-    tempSettings.product_last_update = [NSDate date];
-    tempSettings.client_last_update = [NSDate date];
-    tempSettings.opportunity_last_update = [NSDate date];
-    */
-    tempSettings.since_date = @"6M";
+    tempSettings.messages_read_since = [formatFBdates dateFromString:@"2015-10-01T01:01:01+0000"];
+    tempSettings.since_date = @"1S";
     
     [self addSettings:tempSettings];
 }
@@ -99,6 +94,7 @@
     [coreDataObject setValue:newSettings.product_last_update forKey:@"product_last_update"];
     [coreDataObject setValue:newSettings.client_last_update forKey:@"client_last_update"];
     [coreDataObject setValue:newSettings.opportunity_last_update forKey:@"opportunity_last_update"];
+    [coreDataObject setValue:newSettings.messages_read_since forKey:@"messages_read_since"];
     [coreDataObject setValue:newSettings.since_date forKey:@"since_date"];
     
     NSError *error = nil;
@@ -122,6 +118,7 @@
         mainDelegate.sharedSettings.product_last_update = newSettings.product_last_update;
         mainDelegate.sharedSettings.client_last_update = newSettings.client_last_update;
         mainDelegate.sharedSettings.opportunity_last_update = newSettings.opportunity_last_update;
+        mainDelegate.sharedSettings.messages_read_since = newSettings.messages_read_since;
         mainDelegate.sharedSettings.since_date = newSettings.since_date;
     }
     
@@ -473,9 +470,9 @@
     {
         dateSince = [NSDate dateWithTimeInterval:-60*60*24*30*6 sinceDate:[NSDate date]];
     }
-    else
+    else // 1 year
     {
-        dateSince = [NSDate dateWithTimeInterval:-60*60*24*1 sinceDate:[NSDate date]];
+        dateSince = [NSDate dateWithTimeInterval:-60*60*24*365 sinceDate:[NSDate date]];
     }
     
     return dateSince;

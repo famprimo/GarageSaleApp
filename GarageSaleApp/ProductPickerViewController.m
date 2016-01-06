@@ -74,7 +74,6 @@
     _multipleSelection = [self.delegate allowMultipleSelectionfromProductPicker];
     self.myTable.allowsMultipleSelection = _multipleSelection;
     
-    
     // Get the listing data
     _productsArray = productMethods.getProductArray;
     _selectedProductsArray = [[NSMutableArray alloc] init];
@@ -303,7 +302,6 @@
             break;
         }
     }
-    
 }
 
 

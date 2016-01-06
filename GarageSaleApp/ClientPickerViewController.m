@@ -53,13 +53,12 @@
 
 #pragma mark - Actions
 
--(IBAction)selectClient:(id)sender;
+- (IBAction)selectClient:(id)sender
 {
     if (_selectedClient)
     {
         [self.delegate clientSelectedfromClientPicker:_selectedClient.client_id];
     }
-    
 }
 
 

@@ -1,16 +1,20 @@
 //
-//  MessagesSinceTableViewController.m
+//  ProductsFilterTableViewController.m
 //  GarageSaleApp
 //
-//  Created by Federico Amprimo on 28/03/15.
-//  Copyright (c) 2015 Federico Amprimo. All rights reserved.
+//  Created by Federico Amprimo on 03/01/16.
+//  Copyright © 2016 Federico Amprimo. All rights reserved.
 //
 
-#import "MessagesSinceTableViewController.h"
-#import "Settings.h"
-#import "SettingsModel.h"
+#import "ProductsFilterTableViewController.h"
 
-@implementation MessagesSinceTableViewController
+@interface ProductsFilterTableViewController ()
+{
+    NSString *_optionSelected;
+}
+@end
+
+@implementation ProductsFilterTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -20,33 +24,21 @@
     // Remember to set ViewControler as the delegate and datasource
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    
+    _optionSelected = [self.delegate getCurrentFilter];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    Settings *currentSettings = [[[SettingsModel alloc] init] getSharedSettings];
+    int optionSelected = 2; // @"Todas"
     
-    int optionSelected = 0;
-    
-    if ([currentSettings.since_date isEqualToString:@"1D"])
+    if ([_optionSelected isEqualToString:@"Activos"])
     {
         optionSelected = 0;
     }
-    else if ([currentSettings.since_date isEqualToString:@"1S"])
+    else if ([_optionSelected isEqualToString:@"Nuevos"])
     {
         optionSelected = 1;
-    }
-    else if ([currentSettings.since_date isEqualToString:@"1M"])
-    {
-        optionSelected = 2;
-    }
-    else if ([currentSettings.since_date isEqualToString:@"6M"])
-    {
-        optionSelected = 3;
-    }
-    else // 1Y
-    {
-        optionSelected = 4;
     }
     
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:optionSelected inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
@@ -68,9 +60,13 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 5;
+    return 3;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 40.0;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -79,27 +75,19 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-
+    
     // Configure the cell...
     if (indexPath.row == 0)
     {
-        cell.textLabel.text = @"Hace 1 día";
+        cell.textLabel.text = @"Activos";
     }
     else if (indexPath.row == 1)
     {
-        cell.textLabel.text = @"Hace 1 semana";
-    }
-    else if (indexPath.row == 2)
-    {
-        cell.textLabel.text = @"Hace 1 mes";
-    }
-    else if (indexPath.row == 3)
-    {
-        cell.textLabel.text = @"Hace 6 meses";
+        cell.textLabel.text = @"Solo Nuevos";
     }
     else
     {
-        cell.textLabel.text = @"Hace 1 año";
+        cell.textLabel.text = @"Todos";
     }
     return cell;
 }
@@ -107,34 +95,22 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *updateSinceDate;
-    
     if (indexPath.row == 0)
     {
-        updateSinceDate = @"1D";
+        _optionSelected = @"Activos";
     }
     else if (indexPath.row == 1)
     {
-        updateSinceDate = @"1S";
-    }
-    else if (indexPath.row == 2)
-    {
-        updateSinceDate = @"1M";
-    }
-    else if (indexPath.row == 3)
-    {
-        updateSinceDate = @"6M";
+        _optionSelected = @"Nuevos";
     }
     else
     {
-        updateSinceDate = @"1Y";
+        _optionSelected = @"Todos";
     }
     
-    [[[SettingsModel alloc] init] updateSinceDate:updateSinceDate];
-    
-    [self.delegate sinceDateSelected];
+    [self.delegate filterSet:_optionSelected];
 }
 
 @end

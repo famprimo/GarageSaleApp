@@ -372,7 +372,8 @@
 - (void)updateOpportunity:(Opportunity*)opportunityToUpdate;
 {
     // Update object in Parse
-    
+    CommonMethods *commonMethods = [[CommonMethods alloc] init];
+
     PFQuery *query = [PFQuery queryWithClassName:@"Opportunity"];
     [query whereKey:@"opportunity_id" equalTo:opportunityToUpdate.opportunity_id];
     
@@ -385,18 +386,18 @@
         else
         {
             // The find from Parse succeeded... Update values
-            parseObject[@"opportunity_id"] = opportunityToUpdate.opportunity_id;
-            parseObject[@"product_id"] = opportunityToUpdate.product_id;
-            parseObject[@"client_id"] = opportunityToUpdate.client_id;
-            parseObject[@"initial_price"] = opportunityToUpdate.initial_price;
-            parseObject[@"price_sold"] = opportunityToUpdate.price_sold;
-            parseObject[@"created_time"] = opportunityToUpdate.created_time;
-            parseObject[@"closedsold_time"] = opportunityToUpdate.closedsold_time;
-            parseObject[@"paid_time"] = opportunityToUpdate.paid_time;
-            parseObject[@"status"] = opportunityToUpdate.status;
-            parseObject[@"notes"] = opportunityToUpdate.notes;
-            parseObject[@"commision"] = opportunityToUpdate.commision;
-            parseObject[@"agent_id"] = opportunityToUpdate.agent_id;
+            parseObject[@"opportunity_id"] = [commonMethods stringNotNil:opportunityToUpdate.opportunity_id];
+            parseObject[@"product_id"] = [commonMethods stringNotNil:opportunityToUpdate.product_id];
+            parseObject[@"client_id"] = [commonMethods stringNotNil:opportunityToUpdate.client_id];
+            parseObject[@"initial_price"] = [commonMethods numberNotNil:opportunityToUpdate.initial_price];
+            parseObject[@"price_sold"] = [commonMethods numberNotNil:opportunityToUpdate.price_sold];
+            parseObject[@"created_time"] = [commonMethods dateNotNil:opportunityToUpdate.created_time];
+            parseObject[@"closedsold_time"] = [commonMethods dateNotNil:opportunityToUpdate.closedsold_time];
+            parseObject[@"paid_time"] = [commonMethods dateNotNil:opportunityToUpdate.paid_time];
+            parseObject[@"status"] = [commonMethods stringNotNil:opportunityToUpdate.status];
+            parseObject[@"notes"] = [commonMethods stringNotNil:opportunityToUpdate.notes];
+            parseObject[@"commision"] = [commonMethods numberNotNil:opportunityToUpdate.commision];
+            parseObject[@"agent_id"] = [commonMethods stringNotNil:opportunityToUpdate.agent_id];
 
             opportunityToUpdate.update_db = [NSDate date]; // Set update time to DB to now
             parseObject[@"update_db"] = opportunityToUpdate.update_db;
@@ -616,7 +617,6 @@
     }
     
     return ownerFound;
-
 }
 
 @end

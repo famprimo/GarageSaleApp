@@ -15,6 +15,7 @@
     Client *_clientToEdit;
     ClientModel *_clientMethods;
     ProductModel *_productMethods;
+    UIActivityIndicatorView *_indicator;
 }
 @end
 
@@ -131,14 +132,21 @@
 
 - (IBAction)saveClientEdits:(id)sender
 {
+    // Set spinner
+    _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _indicator.center = CGPointMake((self.view.bounds.size.width / 2) , (self.view.bounds.size.height / 2));
+    
+    [self.view addSubview:_indicator];
+    [_indicator startAnimating];
+    
+
     // Review if there was a change in code GS
-    BOOL GSCodeUpdated = NO;
     if (![_clientToEdit.codeGS isEqualToString:self.textCodeGS.text])
     {
-        GSCodeUpdated = YES;
+        [_productMethods updateProductsWithCodeGS:self.textCodeGS.text withClientID:_clientToEdit.client_id];
     }
-    
-    // Create opportunity
+
+    // Save changes
     _clientToEdit.name = self.textName.text;
     _clientToEdit.last_name = self.textLastName.text;
     _clientToEdit.email = self.textEmail.text;
@@ -168,11 +176,6 @@
     }
     
     [_clientMethods updateClient:_clientToEdit];
-
-    if (GSCodeUpdated)
-    {
-        [_productMethods updateProductsWithCodeGS:_clientToEdit.codeGS withClientID:_clientToEdit.client_id];
-    }
 }
 
 - (IBAction)getNextCodeGS:(id)sender
@@ -190,6 +193,9 @@
 
 -(void)clientAddedOrUpdated:(BOOL)succeed;
 {
+    // Stop spinner
+    [_indicator stopAnimating];
+    
     if (succeed)
     {
         [self.delegate clientEdited:_clientToEdit];

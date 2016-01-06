@@ -53,6 +53,7 @@
     tempProduct.updated_time = [dateFormat dateFromString:@"20140501"];
     tempProduct.solddisabled_time = [dateFormat dateFromString:@"20000101"];
     tempProduct.fb_updated_time = [dateFormat dateFromString:@"20000101"];
+    tempProduct.last_inventory_time = tempProduct.created_time;
     tempProduct.type = @"S";
     tempProduct.picture_link = @"http://jiahome.co.uk/images/thumbnails/Traditional-Hardwood-Furniture.jpg";
     tempProduct.additional_pictures = @"";
@@ -80,6 +81,7 @@
     tempProduct.updated_time = [dateFormat dateFromString:@"20140301"];
     tempProduct.solddisabled_time = [dateFormat dateFromString:@"20000101"];
     tempProduct.fb_updated_time = [dateFormat dateFromString:@"20000101"];
+    tempProduct.last_inventory_time = tempProduct.created_time;
     tempProduct.type = @"S";
     tempProduct.picture_link = @"http://images-en.busytrade.com/240073800/Urban-Furniture.jpg";
     tempProduct.additional_pictures = @"";
@@ -107,6 +109,7 @@
     tempProduct.updated_time = [dateFormat dateFromString:@"20140219"];
     tempProduct.solddisabled_time = [dateFormat dateFromString:@"20000101"];
     tempProduct.fb_updated_time = [dateFormat dateFromString:@"20000101"];
+    tempProduct.last_inventory_time = tempProduct.created_time;
     tempProduct.type = @"S";
     tempProduct.picture_link = @"http://www.weaverfurnituresales.com/images/categories/12/palisade%20amish%20furniture.jpg";
     tempProduct.additional_pictures = @"";
@@ -134,6 +137,7 @@
     tempProduct.updated_time = [dateFormat dateFromString:@"20140315"];
     tempProduct.solddisabled_time = [dateFormat dateFromString:@"20000101"];
     tempProduct.fb_updated_time = [dateFormat dateFromString:@"20000101"];
+    tempProduct.last_inventory_time = tempProduct.created_time;
     tempProduct.type = @"S";
     tempProduct.picture_link = @"http://www.homeapplianceinfo.com/products/refrigerator/hotpoint_refrigerator/1.jpg";
     tempProduct.additional_pictures = @"";
@@ -161,6 +165,7 @@
     tempProduct.updated_time = [dateFormat dateFromString:@"20150115"];
     tempProduct.solddisabled_time = [dateFormat dateFromString:@"20000101"];
     tempProduct.fb_updated_time = [dateFormat dateFromString:@"20000101"];
+    tempProduct.last_inventory_time = tempProduct.created_time;
     tempProduct.type = @"A";
     tempProduct.picture_link = @"http://www.couponsandfreebiesmom.com/wp-content/uploads/2011/01/kohls-clothes.jpg";
     tempProduct.additional_pictures = @"";
@@ -272,6 +277,7 @@
         productFromParse.updated_time = [parseObject valueForKey:@"updated_time"];
         productFromParse.solddisabled_time = [parseObject valueForKey:@"solddisabled_time"];
         productFromParse.fb_updated_time = [parseObject valueForKey:@"fb_updated_time"];
+        productFromParse.last_inventory_time = [parseObject valueForKey:@"last_inventory_time"];
         productFromParse.type = [parseObject valueForKey:@"type"];
         productFromParse.picture_link = [parseObject valueForKey:@"picture_link"];
         productFromParse.additional_pictures = [parseObject valueForKey:@"additional_pictures"];
@@ -353,6 +359,7 @@
     parseObject[@"updated_time"] = [commonMethods dateNotNil:newProduct.updated_time];
     parseObject[@"solddisabled_time"] = [commonMethods dateNotNil:newProduct.solddisabled_time];
     parseObject[@"fb_updated_time"] = [commonMethods dateNotNil:newProduct.fb_updated_time];
+    parseObject[@"last_inventory_time"] = [commonMethods dateNotNil:newProduct.last_inventory_time];
     parseObject[@"type"] = [commonMethods stringNotNil:newProduct.type];
     parseObject[@"picture_link"] = [commonMethods stringNotNil:newProduct.picture_link];
     parseObject[@"additional_pictures"] = [commonMethods stringNotNil:newProduct.additional_pictures];
@@ -409,6 +416,7 @@
     [coreDataObject setValue:newProduct.updated_time forKey:@"updated_time"];
     [coreDataObject setValue:newProduct.solddisabled_time forKey:@"solddisabled_time"];
     [coreDataObject setValue:newProduct.fb_updated_time forKey:@"fb_updated_time"];
+    [coreDataObject setValue:newProduct.last_inventory_time forKey:@"last_inventory_time"];
     [coreDataObject setValue:newProduct.type forKey:@"type"];
     [coreDataObject setValue:newProduct.picture_link forKey:@"picture_link"];
     [coreDataObject setValue:newProduct.additional_pictures forKey:@"additional_pictures"];
@@ -449,6 +457,7 @@
 - (void)updateProduct:(Product*)productToUpdate;
 {
     // Update object in Parse
+    CommonMethods *commonMethods = [[CommonMethods alloc] init];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Product"];
     [query whereKey:@"product_id" equalTo:productToUpdate.product_id];
@@ -462,27 +471,28 @@
         else
         {
             // The find from Parse succeeded... Update values
-            parseObject[@"product_id"] = productToUpdate.product_id;
-            parseObject[@"client_id"] = productToUpdate.client_id;
-            parseObject[@"codeGS"] = productToUpdate.codeGS;
-            parseObject[@"name"] = productToUpdate.name;
-            parseObject[@"desc"] = productToUpdate.desc;
-            parseObject[@"fb_photo_id"] = productToUpdate.fb_photo_id;
-            parseObject[@"fb_link"] = productToUpdate.fb_link;
-            parseObject[@"currency"] = productToUpdate.currency;
-            parseObject[@"price"] = productToUpdate.price;
-            parseObject[@"created_time"] = productToUpdate.created_time;
-            parseObject[@"updated_time"] = productToUpdate.updated_time;
-            parseObject[@"solddisabled_time"] = productToUpdate.solddisabled_time;
-            parseObject[@"fb_updated_time"] = productToUpdate.fb_updated_time;
-            parseObject[@"type"] = productToUpdate.type;
-            parseObject[@"picture_link"] = productToUpdate.picture_link;
-            parseObject[@"additional_pictures"] = productToUpdate.additional_pictures;
-            parseObject[@"status"] = productToUpdate.status;
-            parseObject[@"last_promotion_time"] = productToUpdate.last_promotion_time;
-            parseObject[@"promotion_piority"] = productToUpdate.promotion_piority;
-            parseObject[@"notes"] = productToUpdate.notes;
-            parseObject[@"agent_id"] = productToUpdate.agent_id;
+            parseObject[@"product_id"] = [commonMethods stringNotNil:productToUpdate.product_id];
+            parseObject[@"client_id"] = [commonMethods stringNotNil:productToUpdate.client_id];
+            parseObject[@"codeGS"] = [commonMethods stringNotNil:productToUpdate.codeGS];
+            parseObject[@"name"] = [commonMethods stringNotNil:productToUpdate.name];
+            parseObject[@"desc"] = [commonMethods stringNotNil:productToUpdate.desc];
+            parseObject[@"fb_photo_id"] = [commonMethods stringNotNil:productToUpdate.fb_photo_id];
+            parseObject[@"fb_link"] = [commonMethods stringNotNil:productToUpdate.fb_link];
+            parseObject[@"currency"] = [commonMethods stringNotNil:productToUpdate.currency];
+            parseObject[@"price"] = [commonMethods numberNotNil:productToUpdate.price];
+            parseObject[@"created_time"] = [commonMethods dateNotNil:productToUpdate.created_time];
+            parseObject[@"updated_time"] = [commonMethods dateNotNil:productToUpdate.updated_time];
+            parseObject[@"solddisabled_time"] = [commonMethods dateNotNil:productToUpdate.solddisabled_time];
+            parseObject[@"fb_updated_time"] = [commonMethods dateNotNil:productToUpdate.fb_updated_time];
+            parseObject[@"last_inventory_time"] = [commonMethods dateNotNil:productToUpdate.last_inventory_time];
+            parseObject[@"type"] = [commonMethods stringNotNil:productToUpdate.type];
+            parseObject[@"picture_link"] = [commonMethods stringNotNil:productToUpdate.picture_link];
+            parseObject[@"additional_pictures"] = [commonMethods stringNotNil:productToUpdate.additional_pictures];
+            parseObject[@"status"] = [commonMethods stringNotNil:productToUpdate.status];
+            parseObject[@"last_promotion_time"] = [commonMethods dateNotNil:productToUpdate.last_promotion_time];
+            parseObject[@"promotion_piority"] = [commonMethods stringNotNil:productToUpdate.promotion_piority];
+            parseObject[@"notes"] = [commonMethods stringNotNil:productToUpdate.notes];
+            parseObject[@"agent_id"] = [commonMethods stringNotNil:productToUpdate.agent_id];
 
             productToUpdate.update_db = [NSDate date]; // Set update time to DB to now
             parseObject[@"update_db"] = productToUpdate.update_db;
@@ -559,6 +569,7 @@
             [coreDataObject setValue:productToUpdate.updated_time forKey:@"updated_time"];
             [coreDataObject setValue:productToUpdate.solddisabled_time forKey:@"solddisabled_time"];
             [coreDataObject setValue:productToUpdate.fb_updated_time forKey:@"fb_updated_time"];
+            [coreDataObject setValue:productToUpdate.last_inventory_time forKey:@"last_inventory_time"];
             [coreDataObject setValue:productToUpdate.type forKey:@"type"];
             [coreDataObject setValue:productToUpdate.picture_link forKey:@"picture_link"];
             [coreDataObject setValue:productToUpdate.additional_pictures forKey:@"additional_pictures"];
@@ -900,7 +911,7 @@
     return [productName stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-- (int)numberOfNewProducts;
+- (int)numberOfActiveProducts;
 {
     int newProducts = 0;
     
@@ -915,7 +926,7 @@
         productToReview = [[Product alloc] init];
         productToReview = (Product *)mainDelegate.sharedArrayProducts[i];
         
-        if ([productToReview.status isEqual:@"N"])
+        if ([productToReview.status isEqual:@"N"] || [productToReview.status isEqual:@"U"])
         {
             newProducts = newProducts + 1;
         }
@@ -957,8 +968,13 @@
     return newImage;
 }
 
-- (void)updateProductsWithCodeGS:(NSString*)codeGSToFind withClientID:(NSString*)clientIDtoUse;
+- (NSDate*)updateProductsWithCodeGS:(NSString*)codeGSToFind withClientID:(NSString*)clientIDtoUse;
 {
+    NSDateFormatter *formatFBdates = [[NSDateFormatter alloc] init];
+    [formatFBdates setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];    // 2014-09-27T16:41:15+0000
+    
+    NSDate *lastCreatedTime = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
+
     // To have access to shared arrays from AppDelegate
     AppDelegate *mainDelegate;
     mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -978,8 +994,15 @@
             productToReview.client_id = clientIDtoUse;
             
             [self updateProduct:productToReview];
+            
+            if ([productToReview.created_time compare:lastCreatedTime] == NSOrderedDescending) // Compare if (productToReview.created_time > lastCreatedTime)
+            {
+                lastCreatedTime = productToReview.created_time;
+            }
         }
     }
+    
+    return lastCreatedTime;
 }
 
 - (NSString*)getNextCodeGS;

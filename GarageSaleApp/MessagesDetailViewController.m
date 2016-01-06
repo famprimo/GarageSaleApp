@@ -139,43 +139,57 @@
         
         // Setting frames for all pictures
         CGRect imageClientFrame = self.imageClient.frame;
-        imageClientFrame.origin.x = 16;
-        imageClientFrame.origin.y = 25;
-        imageClientFrame.size.width = 70;
-        imageClientFrame.size.height = 70;
+        imageClientFrame.origin.x = 15;
+        imageClientFrame.origin.y = 61;
+        imageClientFrame.size.width = 60;
+        imageClientFrame.size.height = 60;
         self.imageClient.frame = imageClientFrame;
         
         CGRect imageClientStatusFrame = self.imageClientStatus.frame;
-        imageClientStatusFrame.origin.x = 94;
-        imageClientStatusFrame.origin.y = 31;
-        imageClientStatusFrame.size.width = 10;
-        imageClientStatusFrame.size.height = 10;
+        imageClientStatusFrame.origin.x = 20;
+        imageClientStatusFrame.origin.y = 29;
+        imageClientStatusFrame.size.width = 15;
+        imageClientStatusFrame.size.height = 15;
         self.imageClientStatus.frame = imageClientStatusFrame;
         
         CGRect picClientPhoneFrame = self.picClientPhone.frame;
-        picClientPhoneFrame.origin.x = 94;
-        picClientPhoneFrame.origin.y = 77;
+        picClientPhoneFrame.origin.x = 83;
+        picClientPhoneFrame.origin.y = 107;
         picClientPhoneFrame.size.width = 15;
         picClientPhoneFrame.size.height = 15;
         self.picClientPhone.frame = picClientPhoneFrame;
         
         CGRect picProductBackgroundFrame = self.picProductBackground.frame;
         picProductBackgroundFrame.origin.x = 390;
-        picProductBackgroundFrame.origin.y = 0;
+        picProductBackgroundFrame.origin.y = 20;
         picProductBackgroundFrame.size.width = 315;
         picProductBackgroundFrame.size.height = 765;
         self.picProductBackground.frame = picProductBackgroundFrame;
 
+        CGRect picClientBackgroundFrame = self.picClientBackground.frame;
+        picClientBackgroundFrame.origin.x = 0;
+        picClientBackgroundFrame.origin.y = 20;
+        picClientBackgroundFrame.size.width = 400;
+        picClientBackgroundFrame.size.height = 112;
+        self.picClientBackground.frame = picClientBackgroundFrame;
+
+        CGRect picButtonsBackgroundFrame = self.picButtonsBackground.frame;
+        picButtonsBackgroundFrame.origin.x = 0;
+        picButtonsBackgroundFrame.origin.y = 695;
+        picButtonsBackgroundFrame.size.width = 400;
+        picButtonsBackgroundFrame.size.height = 110;
+        self.picButtonsBackground.frame = picButtonsBackgroundFrame;
+
         self.picProductBackground.image = [UIImage imageNamed:@"Blank"];
 
         // Make clients picture rounded
-        self.imageClient.layer.cornerRadius = self.imageClient.frame.size.width / 2;
-        self.imageClient.clipsToBounds = YES;
+        // self.imageClient.layer.cornerRadius = self.imageClient.frame.size.width / 2;
+        // self.imageClient.clipsToBounds = YES;
         
         // Client name and status
         if ([_selectedClient.status isEqualToString:@"V"])
         {
-            self.labelClientName.text = [NSString stringWithFormat:@"    %@ %@", _selectedClient.name, _selectedClient.last_name];
+            self.labelClientName.text = [NSString stringWithFormat:@"      %@ %@", _selectedClient.name, _selectedClient.last_name];
             self.imageClientStatus.image = [UIImage imageNamed:@"Verified"];
         }
         else
@@ -225,6 +239,15 @@
             self.labelClientCodeGS.text = _selectedClient.codeGS;
         }
 
+        if ([_selectedClient.replied isEqualToString:@"Y"])
+        {
+            self.buttonUpdateReply.backgroundColor = [UIColor grayColor];
+        }
+        else
+        {
+            self.buttonUpdateReply.backgroundColor = [UIColor blueColor];
+        }
+        
         self.imageClient.image = [UIImage imageWithData:[[[ClientModel alloc] init] getClientPhotoFrom:_selectedClient]];
         self.labelOpportunitiesRelated.text = [NSString stringWithFormat:@"Oportunidades relacionadas a %@ %@:", _selectedClient.name, _selectedClient.last_name];
 
@@ -312,14 +335,14 @@
     
     CGRect picClient2ZoneFrame = self.picClient2Zone.frame;
     picClient2ZoneFrame.origin.x = 476;
-    picClient2ZoneFrame.origin.y = 650;
+    picClient2ZoneFrame.origin.y = 627;
     picClient2ZoneFrame.size.width = 15;
     picClient2ZoneFrame.size.height = 15;
     self.picClient2Zone.frame = picClient2ZoneFrame;
     
     CGRect picClient2PhoneFrame = self.picClient2Phone.frame;
     picClient2PhoneFrame.origin.x = 476;
-    picClient2PhoneFrame.origin.y = 673;
+    picClient2PhoneFrame.origin.y = 653;
     picClient2PhoneFrame.size.width = 15;
     picClient2PhoneFrame.size.height = 15;
     self.picClient2Phone.frame = picClient2PhoneFrame;
@@ -369,7 +392,7 @@
         self.labelClient2Title.text = @"";
         self.labelClient2Name.text = @"";
         self.labelClient2Zone.text = @"";
-        self.labelClient2Address.text = @"";
+        self.labelClient2Notes.text = @"";
         self.labelClient2Phones.text = @"";
         self.buttonRelateToOwner.hidden = YES;
         self.buttonSeeInFacebook.hidden = YES;
@@ -393,7 +416,8 @@
         self.labelProductDetails.text = _selectedProduct.desc;
         self.labelProductDetails.numberOfLines = 0;
         [self.labelProductDetails sizeToFit];
-        
+        self.LabelProductRelated.text = @"Producto relacionado:";
+
         CGRect labelProductDetailsFrame = self.labelProductDetails.frame;
         if (labelProductDetailsFrame.size.height > 82)
         {   labelProductDetailsFrame.size.height = 82;
@@ -445,11 +469,10 @@
                 }
             }
             
-            self.LabelProductRelated.text = @"Producto relacionado:";
             //self.imageClient2.image = [UIImage imageWithData:_relatedClient.picture];
             self.imageClient2.image = [UIImage imageWithData:[clientMethods getClientPhotoFrom:_relatedClient]];
             self.labelClient2Zone.text = [NSString stringWithFormat:@"Vive en %@",_relatedClient.client_zone];
-            self.labelClient2Address.text = _relatedClient.address;
+            self.labelClient2Notes.text = _relatedClient.notes;
             self.labelClient2Phones.text = [NSString stringWithFormat:@"%@ %@", _relatedClient.phone1, _relatedClient.phone2];
             self.buttonRelateToOwner.hidden = YES;
             
@@ -477,7 +500,7 @@
             self.labelClient2Name.text = @"";
             self.imageClient2Status.image = [UIImage imageNamed:@"Blank"];
             self.labelClient2Zone.text = @"";
-            self.labelClient2Address.text = @"";
+            self.labelClient2Notes.text = @"";
             self.labelClient2Phones.text = @"";
             self.buttonRelateToOwner.hidden = NO;
             self.buttonSeeInFacebook.hidden = NO;
@@ -489,13 +512,42 @@
         
         // Hide button to relate to product
         self.buttonRelateToProduct.hidden = YES;
-        
     }
-
 }
 
 
 #pragma mark - Managing button actions
+
+
+- (IBAction)updateReplied:(id)sender
+{
+    if ([_selectedClient.replied isEqualToString:@"Y"])
+    {
+        _selectedClient.replied = @"N";
+    }
+    else // @"Y"
+    {
+        _selectedClient.replied = @"Y";
+        
+        Message *tmpMessage = [[Message alloc] init];
+        
+        for (int i=0; i<_myDataMessages.count; i=i+1)
+        {
+            tmpMessage = (Message*)_myDataMessages[i];
+            
+            if ([tmpMessage.status isEqualToString:@"N"])
+            {
+                tmpMessage.status = @"R";
+                [[[MessageModel alloc] init] updateMessage:tmpMessage];
+            }
+        }
+    }
+    
+    [[[ClientModel alloc] init] updateClient:_selectedClient];
+    
+    [self configureView];
+    [self.delegate messagesUpdated];
+}
 
 - (IBAction)updateMessagesToRead:(id)sender
 {
@@ -723,16 +775,16 @@
     }
 }
 
--(NSString*)getProductIdFromMessage;
+-(NSMutableArray*)getProductsIdFromMessage;
 {
-    if (_selectedProduct.product_id == nil)
+    NSMutableArray *selectedProductsArray = [[NSMutableArray alloc] init];
+                                        
+    if (!(_selectedProduct.product_id == nil))
     {
-        return @"";
+        [selectedProductsArray addObject:_selectedProduct.product_id];
     }
-    else
-    {
-        return _selectedProduct.product_id;
-    }
+    
+    return selectedProductsArray;
 }
 
 -(NSString*)getMessageIdFromMessage;
@@ -1341,6 +1393,16 @@
 }
 
 -(void)finishedGettingFBPhotoComments:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedSendingFBPageMessage:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedSendingFBPhotoMessage:(BOOL)succeed;
 {
     // No need to implement
 }

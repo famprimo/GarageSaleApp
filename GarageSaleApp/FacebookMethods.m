@@ -283,6 +283,7 @@
     tempProduct.created_time = [formatFBdates dateFromString:results[@"created_time"]];
     tempProduct.updated_time = [formatFBdates dateFromString:results[@"updated_time"]];
     tempProduct.fb_updated_time = [formatFBdates dateFromString:results[@"updated_time"]];
+    tempProduct.last_inventory_time = [formatFBdates dateFromString:results[@"updated_time"]];
     tempProduct.solddisabled_time = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
     tempProduct.last_promotion_time = [formatFBdates dateFromString:@"2000-01-01T01:01:01+0000"];
     
@@ -418,7 +419,15 @@
             else
             {
                 tempMessage.recipient = @"G";
-                tempMessage.status = @"N";
+
+                if ([tempMessage.datetime compare:_tmpSettings.messages_read_since] == NSOrderedDescending) // Compare if (tempMessage.datetime > _tmpSettings.messages_read_since)
+                {
+                    tempMessage.status = @"N";
+                }
+                else
+                {
+                    tempMessage.status = @"R";
+                }
             }
             
             // Review if client exists
@@ -454,7 +463,6 @@
                 newClient.last_interacted_time = tempMessage.datetime;
                 newClient.replied = @"N";
                 newClient.last_msg_id = tempMessage.fb_msg_id;
-                newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
                 newClient.notes = @"";
                 newClient.agent_id = @"00001";
                 
@@ -650,7 +658,15 @@
             else
             {
                 tempMessage.recipient = @"G";
-                tempMessage.status = @"N";
+                
+                if ([tempMessage.datetime compare:_tmpSettings.messages_read_since] == NSOrderedDescending) // Compare if (tempMessage.datetime > _tmpSettings.messages_read_since)
+                {
+                    tempMessage.status = @"N";
+                }
+                else
+                {
+                    tempMessage.status = @"R";
+                }
                 
                 // Review if client from sub comment exists
                 NSString *fromClientIDFromSubComment = [self getClientIDfromFbId:tempMessage.fb_from_id];
@@ -685,7 +701,6 @@
                     newClient.last_interacted_time = tempMessage.datetime;
                     newClient.replied = @"N";
                     newClient.last_msg_id = tempMessage.fb_msg_id;
-                    newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
                     newClient.notes = @"";
                     newClient.agent_id = @"00001";
                     
@@ -1084,8 +1099,6 @@
             newClient.last_interacted_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
             newClient.replied = @"Y";
             newClient.last_msg_id = @"";
-
-            newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
             newClient.notes = @"";
             newClient.agent_id = @"00001";
 
@@ -1232,7 +1245,15 @@
             else
             {
                 tempMessage.recipient = @"G";
-                tempMessage.status = @"N";
+                
+                if ([tempMessage.datetime compare:_tmpSettings.messages_read_since] == NSOrderedDescending) // Compare if (tempMessage.datetime > _tmpSettings.messages_read_since)
+                {
+                    tempMessage.status = @"N";
+                }
+                else
+                {
+                    tempMessage.status = @"R";
+                }
             }
             
             tempMessage.client_id = fromClientID;
@@ -1389,8 +1410,6 @@
             newClient.last_interacted_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
             newClient.replied = @"Y";
             newClient.last_msg_id = @"";
-
-            newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
             newClient.notes = @"";
             
             [_newClientsArray addObject:newClient];
@@ -1539,7 +1558,15 @@
             else
             {
                 tempMessage.recipient = @"G";
-                tempMessage.status = @"N";
+                
+                if ([tempMessage.datetime compare:_tmpSettings.messages_read_since] == NSOrderedDescending) // Compare if (tempMessage.datetime > _tmpSettings.messages_read_since)
+                {
+                    tempMessage.status = @"N";
+                }
+                else
+                {
+                    tempMessage.status = @"R";
+                }
             }
             
             tempMessage.client_id = fromClientID;
@@ -1793,6 +1820,60 @@
             }
         }
     }
+}
+
+- (void)sendFBPageMessage:(NSString*)messageText forPageMessageID:(NSString*)pageMessageID;
+{
+    // Send messages via Facebook
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params setObject:messageText forKey:@"message"];
+    
+    NSString *url = [NSString stringWithFormat:@"/%@/messages", pageMessageID];
+    
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:params tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"POST"];
+    
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+     {
+         if (!error)
+         {  // FB post was a success!
+             
+             [self.delegate finishedSendingFBPageMessage:YES];
+         }
+         else
+         {
+             // An error occurred, we need to handle the error
+             // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+             NSLog(@"error sendFBPageMessage: %@", error.description);
+             [self.delegate finishedSendingFBPageMessage:NO];
+         }
+     }];
+}
+
+- (void)sendFBPhotoMessage:(NSString*)messageText forMessageRootID:(NSString*)messageRootID;
+{
+    // Post message on Photo via Facebook
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params setObject:messageText forKey:@"message"];
+    
+    NSString *url = [NSString stringWithFormat:@"/%@/comments", messageRootID];
+    
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:params tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"POST"];
+    
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+     {
+         if (!error)
+         {  // FB post was a success!
+             
+             [self.delegate finishedSendingFBPhotoMessage:YES];
+         }
+         else
+         {
+             // An error occurred, we need to handle the error
+             // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
+             NSLog(@"error sendFBPhotoMessage: %@", error.description);
+             [self.delegate finishedSendingFBPhotoMessage:NO];
+         }
+     }];
 }
 
 @end

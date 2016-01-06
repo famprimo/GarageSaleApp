@@ -26,7 +26,7 @@
 @synthesize sharedArrayClients;
 @synthesize sharedArrayOpportunities;
 @synthesize lastProductID;
-@synthesize lastCientID;
+@synthesize lastClientID;
 @synthesize lastOpportunityID;
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -70,22 +70,13 @@
         [settingsMethods saveInitialDataforSettings];
     }
 
-    /* CHANGE: Syncronize with Parse only
-
+    // CHANGE: Syncronize with Parse only
     if ([[settingsMethods getSharedSettings].initial_data_loaded isEqualToString:@"N"])
     {
         // Load initial data
-        [clientMethods saveInitialDataforClients];
-        [productMethods saveInitialDataforProducts];
-        [opportunityMethods saveInitialDataforOpportunities];
-        [messagesMethods saveInitialDataforMessages];
-        [attachmentMethods saveInitialDataforAttachments];
-        [templateMethods saveInitialDataforTemplates];
-     
         [settingsMethods updateSettingsInitialDataSaved];
     }
-    */
-
+    
     // Sync Parse with Core Data
     [clientMethods syncCoreDataWithParse];
     [productMethods syncCoreDataWithParse];

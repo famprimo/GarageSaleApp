@@ -28,6 +28,7 @@
 @property (strong, nonatomic) NSString *additional_pictures;
 @property (strong, nonatomic) NSString *status; // (N)ew (U)pdated (S)old (D)isabled
 @property (strong, nonatomic) NSDate *last_promotion_time;
+@property (strong, nonatomic) NSDate *last_inventory_time;
 @property (strong, nonatomic) NSString *promotion_piority; // 1,2,3 (default is 2)
 @property (strong, nonatomic) NSString *notes;
 @property (strong, nonatomic) NSString *agent_id;

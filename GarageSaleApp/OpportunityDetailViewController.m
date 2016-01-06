@@ -422,9 +422,13 @@
     return _selectedClientOwner.client_id;
 }
 
--(NSString*)getProductIdFromMessage;
+-(NSMutableArray*)getProductsIdFromMessage;
 {
-    return _selectedProduct.product_id;
+    NSMutableArray *selectedProductsArray = [[NSMutableArray alloc] init];
+    
+    [selectedProductsArray addObject:_selectedProduct.product_id];
+    
+    return selectedProductsArray;
 }
 
 -(NSString*)getMessageIdFromMessage;

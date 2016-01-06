@@ -11,10 +11,11 @@
 #import "ProductModel.h"
 #import "ProductDetailViewController.h"
 #import "FacebookMethods.h"
+#import "ProductsFilterTableViewController.h"
 
 @class ProductDetailViewController;
 
-@interface ProductTableViewController : UITableViewController <UISearchBarDelegate, UISearchDisplayDelegate, ProductModelDelegate, ProductDetailViewControllerDelegate, FacebookMethodsDelegate>
+@interface ProductTableViewController : UITableViewController <UISearchBarDelegate, UISearchDisplayDelegate, ProductModelDelegate, ProductDetailViewControllerDelegate, FacebookMethodsDelegate, ProductsFilterTableViewControllerDelegate>
 
 @property (strong, nonatomic) ProductDetailViewController *detailViewController;
 @property IBOutlet UISearchBar *productSearchBar;

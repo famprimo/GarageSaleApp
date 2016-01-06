@@ -13,6 +13,7 @@
 {
     Product *_productToEdit;
     ProductModel *_productMethods;
+    UIActivityIndicatorView *_indicator;
 }
 @end
 
@@ -45,10 +46,11 @@
     // self.imageProduct.image = [UIImage imageWithData:_productToEdit.picture];
     self.imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:_productToEdit]];
 
+    self.labelProductName.text = _productToEdit.name;
+    self.labelProductCreationDate.text = [_productToEdit.created_time formattedAsDateComplete];
     self.textName.text = _productToEdit.name;
     self.textGScode.text = _productToEdit.codeGS;
     self.textDesc.text = _productToEdit.desc;
-    // self.textPublishedPrice.text = [NSString stringWithFormat:@"%.f", _productToEdit.price];
     self.textPublishedPrice.text = [NSString stringWithFormat:@"%@", _productToEdit.price];
     
     if ([_productToEdit.notes isEqualToString:@""])
@@ -78,6 +80,7 @@
         [self.tabCurrency setSelectedSegmentIndex:1];
     }
     
+    [self setProductStatus];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -85,8 +88,42 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)setProductStatus
+{
+    if ([_productToEdit.status isEqualToString:@"N"])
+    {
+        self.buttonChangeStatus.backgroundColor = [UIColor blueColor];
+        [self.buttonChangeStatus setTitle:@"Nuevo" forState:UIControlStateNormal];
+    }
+    else if ([_productToEdit.status isEqualToString:@"U"])
+    {
+        self.buttonChangeStatus.backgroundColor = [UIColor darkGrayColor];
+        [self.buttonChangeStatus setTitle:@"Actualizado" forState:UIControlStateNormal];
+    }
+    else if ([_productToEdit.status isEqualToString:@"S"])
+    {
+        self.buttonChangeStatus.backgroundColor = [UIColor greenColor];
+        [self.buttonChangeStatus setTitle:@"Vendido" forState:UIControlStateNormal];
+     }
+    else if ([_productToEdit.status isEqualToString:@"D"])
+    {
+        self.buttonChangeStatus.backgroundColor = [UIColor redColor];
+        [self.buttonChangeStatus setTitle:@"Desactivado" forState:UIControlStateNormal];
+    }
+}
+
+#pragma mark - Managing button actions
+
 - (IBAction)saveProductEdits:(id)sender
 {
+    // Set spinner
+    _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _indicator.center = CGPointMake((self.view.bounds.size.width / 2) , (self.view.bounds.size.height / 2));
+    
+    [self.view addSubview:_indicator];
+    [_indicator startAnimating];
+    
+
     // Create opportunity
     _productToEdit.name = self.textName.text;
     _productToEdit.codeGS = self.textGScode.text;
@@ -121,6 +158,27 @@
     [_productMethods updateProduct:_productToEdit];
 }
 
+- (IBAction)changeProductStatus:(id)sender
+{
+    if ([_productToEdit.status isEqualToString:@"N"])
+    {
+        _productToEdit.status = @"U";
+    }
+    else if ([_productToEdit.status isEqualToString:@"U"])
+    {
+        _productToEdit.status = @"D";
+    }
+    else if ([_productToEdit.status isEqualToString:@"S"])
+    {
+        _productToEdit.status = @"U";
+    }
+    else if ([_productToEdit.status isEqualToString:@"D"])
+    {
+        _productToEdit.status = @"U";
+    }
+    
+    [self setProductStatus];
+}
 
 
 
@@ -133,6 +191,9 @@
 
 -(void)productAddedOrUpdated:(BOOL)succeed;
 {
+    // Stop spinner
+    [_indicator stopAnimating];
+    
     if (succeed)
     {
         // SI HAY CAMBIOS DE DESCRIPCION CAMBIAR EN FACEBOOK!

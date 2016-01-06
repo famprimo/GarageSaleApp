@@ -41,6 +41,8 @@
 		C029BA671969D26000125C4F /* CustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA641969D26000125C4F /* CustomSegue.m */; };
 		C029BA681969D26000125C4F /* CustomUnwindSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA661969D26000125C4F /* CustomUnwindSegue.m */; };
 		C029BA6B1969EF9400125C4F /* Opportunity.m in Sources */ = {isa = PBXBuildFile; fileRef = C029BA6A1969EF9400125C4F /* Opportunity.m */; };
+		C034AB871C3A16C900D65097 /* ProductsFilterTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C034AB851C3A16C900D65097 /* ProductsFilterTableViewController.m */; settings = {ASSET_TAGS = (); }; };
+		C034AB881C3A16C900D65097 /* ProductsFilterTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C034AB861C3A16C900D65097 /* ProductsFilterTableViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		C038FCAA1AB269D000A6D287 /* ProductPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C038FCA81AB269D000A6D287 /* ProductPickerViewController.m */; };
 		C038FCAB1AB269D000A6D287 /* ProductPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C038FCA91AB269D000A6D287 /* ProductPickerViewController.xib */; };
 		C03E8E6E1A47407400965BF7 /* OpportunityTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C03E8E6D1A47407400965BF7 /* OpportunityTableViewController.m */; };
@@ -152,6 +154,9 @@
 		C029BA661969D26000125C4F /* CustomUnwindSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomUnwindSegue.m; sourceTree = "<group>"; };
 		C029BA691969EF9400125C4F /* Opportunity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Opportunity.h; sourceTree = "<group>"; };
 		C029BA6A1969EF9400125C4F /* Opportunity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Opportunity.m; sourceTree = "<group>"; };
+		C034AB841C3A16C900D65097 /* ProductsFilterTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductsFilterTableViewController.h; sourceTree = "<group>"; };
+		C034AB851C3A16C900D65097 /* ProductsFilterTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductsFilterTableViewController.m; sourceTree = "<group>"; };
+		C034AB861C3A16C900D65097 /* ProductsFilterTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductsFilterTableViewController.xib; sourceTree = "<group>"; };
 		C038FCA71AB269D000A6D287 /* ProductPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductPickerViewController.h; sourceTree = "<group>"; };
 		C038FCA81AB269D000A6D287 /* ProductPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductPickerViewController.m; sourceTree = "<group>"; };
 		C038FCA91AB269D000A6D287 /* ProductPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductPickerViewController.xib; sourceTree = "<group>"; };
@@ -470,6 +475,7 @@
 		C0292AEA1A5E20EB00283E71 /* Popovers */ = {
 			isa = PBXGroup;
 			children = (
+				C034AB831C3A169200D65097 /* Products Filter */,
 				C05B16FD1B0C13EF0006820F /* Opportunities Filter */,
 				C0BC39481AC787330004CFCE /* Messages Since */,
 				C05C815E1AC37AB90097EB42 /* Edit Client */,
@@ -492,6 +498,16 @@
 				C029BA661969D26000125C4F /* CustomUnwindSegue.m */,
 			);
 			name = "Custom Segues";
+			sourceTree = "<group>";
+		};
+		C034AB831C3A169200D65097 /* Products Filter */ = {
+			isa = PBXGroup;
+			children = (
+				C034AB841C3A16C900D65097 /* ProductsFilterTableViewController.h */,
+				C034AB851C3A16C900D65097 /* ProductsFilterTableViewController.m */,
+				C034AB861C3A16C900D65097 /* ProductsFilterTableViewController.xib */,
+			);
+			name = "Products Filter";
 			sourceTree = "<group>";
 		};
 		C05B16FD1B0C13EF0006820F /* Opportunities Filter */ = {
@@ -725,6 +741,7 @@
 				C04E745C1A43D2B300F52E33 /* SendMessageViewController.xib in Resources */,
 				C042ECD01A3934DB00AC9A4D /* ClientPickerViewController.xib in Resources */,
 				C038FCAB1AB269D000A6D287 /* ProductPickerViewController.xib in Resources */,
+				C034AB881C3A16C900D65097 /* ProductsFilterTableViewController.xib in Resources */,
 				C0BC39521AC7878F0004CFCE /* MessagesSinceTableViewController.xib in Resources */,
 				C0B81D731A7D4D5E008B6C1C /* EditProductViewController.xib in Resources */,
 			);
@@ -754,6 +771,7 @@
 				C06F66F31A4114B40013371F /* Template.m in Sources */,
 				C02486F319646ADA005DCBE6 /* ClientDetailViewController.m in Sources */,
 				C069A40D1A84BD1F0059575E /* MessagesTableViewController.m in Sources */,
+				C034AB871C3A16C900D65097 /* ProductsFilterTableViewController.m in Sources */,
 				C0815E1119644C2D0021A153 /* ClientModel.m in Sources */,
 				C0815E1719644C460021A153 /* Product.m in Sources */,
 				C038FCAA1AB269D000A6D287 /* ProductPickerViewController.m in Sources */,

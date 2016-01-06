@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditProductViewController">
             <connections>
+                <outlet property="buttonChangeStatus" destination="217-ZO-RjX" id="t5R-0Y-9de"/>
                 <outlet property="buttonSave" destination="3Pm-6Q-PLe" id="y8g-lb-N3Y"/>
                 <outlet property="imageProduct" destination="Yc2-5h-isr" id="vxV-pa-3jl"/>
                 <outlet property="labelProductCreationDate" destination="jU8-hS-gSa" id="8WN-JK-yNv"/>
@@ -89,13 +90,6 @@
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kBH-Hp-6qw">
-                    <rect key="frame" x="495" y="141" width="131" height="29"/>
-                    <segments>
-                        <segment title="Soles"/>
-                        <segment title="Dólares"/>
-                    </segments>
-                </segmentedControl>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Pm-6Q-PLe">
                     <rect key="frame" x="625" y="23" width="162" height="44"/>
                     <color key="backgroundColor" white="0.66666666669999997" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
@@ -113,10 +107,26 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="L2R-IX-7nF">
-                    <rect key="frame" x="285" y="47" width="181" height="29"/>
+                    <rect key="frame" x="285" y="140" width="181" height="29"/>
                     <segments>
                         <segment title="Venta"/>
                         <segment title="Publicidad"/>
+                    </segments>
+                </segmentedControl>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="217-ZO-RjX">
+                    <rect key="frame" x="285" y="50" width="181" height="30"/>
+                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <state key="normal" title="Estado"/>
+                    <connections>
+                        <action selector="changeProductStatus:" destination="-1" eventType="touchUpInside" id="MpX-Ym-ZJy"/>
+                    </connections>
+                </button>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kBH-Hp-6qw">
+                    <rect key="frame" x="495" y="140" width="131" height="29"/>
+                    <segments>
+                        <segment title="Soles"/>
+                        <segment title="Dólares"/>
                     </segments>
                 </segmentedControl>
             </subviews>

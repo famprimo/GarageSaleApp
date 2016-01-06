@@ -30,6 +30,6 @@
 - (NSString*)getNextTemplateID;
 - (void)addNewTemplate:(Template*)newTemplate;
 - (void)updateTemplate:(Template*)templateToUpdate;
-- (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProduct:(Product*)relatedProduct;
+- (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProducts:(NSMutableArray*)relatedProductsArray;
 
 @end

@@ -39,6 +39,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *picBackground;
 
 @property (weak, nonatomic) IBOutlet UIButton *buttonSave;
+@property (weak, nonatomic) IBOutlet UIButton *buttonChangeStatus;
 
 /*
  @property (weak, nonatomic) IBOutlet UIImageView *imageClient;

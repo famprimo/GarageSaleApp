@@ -185,12 +185,12 @@
         labelNotesFrame.size.height = 75;
         self.labelNotes.frame = labelNotesFrame;
 
-        CGRect labelOwnerAddressFrame = self.labelOwnerAddress.frame;
-        labelOwnerAddressFrame.origin.x = 489;
-        labelOwnerAddressFrame.origin.y = 177;
-        labelOwnerAddressFrame.size.width = 201;
-        labelOwnerAddressFrame.size.height = 51;
-        self.labelOwnerAddress.frame = labelOwnerAddressFrame;
+        CGRect labelOwnerNotesFrame = self.labelOwnerNotes.frame;
+        labelOwnerNotesFrame.origin.x = 489;
+        labelOwnerNotesFrame.origin.y = 177;
+        labelOwnerNotesFrame.size.width = 201;
+        labelOwnerNotesFrame.size.height = 51;
+        self.labelOwnerNotes.frame = labelOwnerNotesFrame;
 
 
         // Set data
@@ -210,13 +210,17 @@
         {
             self.buttonChangeProductStatus.backgroundColor = [UIColor blueColor];
         }
+        else if ([productSelected.status isEqualToString:@"D"])
+        {
+            self.buttonChangeProductStatus.backgroundColor = [UIColor redColor];
+        }
         else
         {
             self.buttonChangeProductStatus.backgroundColor = [UIColor darkGrayColor];
         }
         
         self.labelGSCode.text = productSelected.codeGS;
-        self.labelCreationDate.text = [productSelected.created_time formattedAsDateComplete];
+        self.labelInventoryTime.text = [productSelected.last_inventory_time formattedAsDateComplete];
         
         self.labelDescription.text = productSelected.desc;
         self.labelDescription.numberOfLines = 0;
@@ -255,14 +259,14 @@
             self.labelOwnerPhones.text = ownerForProduct.phone1;
             
             // Owner Address
-            self.labelOwnerAddress.text = ownerForProduct.address;
-            self.labelOwnerAddress.numberOfLines = 0;
-            [self.labelOwnerAddress sizeToFit];
+            self.labelOwnerNotes.text = ownerForProduct.notes;
+            self.labelOwnerNotes.numberOfLines = 0;
+            [self.labelOwnerNotes sizeToFit];
             
-            labelOwnerAddressFrame = self.labelOwnerAddress.frame;
-            if (labelOwnerAddressFrame.size.height > 51)
-            {   labelOwnerAddressFrame.size.height = 51;
-                self.labelOwnerAddress.frame = labelOwnerAddressFrame; }
+            labelOwnerNotesFrame = self.labelOwnerNotes.frame;
+            if (labelOwnerNotesFrame.size.height > 51)
+            {   labelOwnerNotesFrame.size.height = 51;
+                self.labelOwnerNotes.frame = labelOwnerNotesFrame; }
 
             // Owner name and status
             if ([ownerForProduct.status isEqualToString:@"V"])
@@ -288,7 +292,7 @@
             self.labelOwnerName.text = @"";
             self.imageOwnerStatus.image = [UIImage imageNamed:@"Blank"];
             self.labelOwnerZone.text = @"";
-            self.labelOwnerAddress.text = @"";
+            self.labelOwnerNotes.text = @"";
             self.labelOwnerPhones.text = @"";
  
             self.buttonRelateToOwner.hidden = NO;
@@ -379,7 +383,6 @@
     _clientPickerOrigin = @"RELATE";
     
     [self showPopoverClientPicker:sender];
-    
 }
 
 -(IBAction)CreateOpportunity:(id)sender;
@@ -620,12 +623,16 @@
     return productSelected.client_id;
 }
 
--(NSString*)getProductIdFromMessage;
+-(NSMutableArray*)getProductsIdFromMessage;
 {
+    NSMutableArray *selectedProductsArray = [[NSMutableArray alloc] init];
+    
     Product *productSelected = [[Product alloc] init];
     productSelected = (Product *)_detailItem;
     
-    return productSelected.product_id;
+    [selectedProductsArray addObject:productSelected.product_id];
+    
+    return selectedProductsArray;
 }
 
 -(NSString*)getMessageIdFromMessage;
@@ -990,6 +997,16 @@
 }
 
 -(void)finishedGettingFBPhotos:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedSendingFBPageMessage:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedSendingFBPhotoMessage:(BOOL)succeed;
 {
     // No need to implement
 }

@@ -144,7 +144,7 @@
     {
         menuButtonSetup = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"MsgSince6M"] makeThumbnailOfSize:CGSizeMake(20, 20)] style:UIBarButtonItemStylePlain target:self action:@selector(setupButtonClicked:)];
     }
-    
+
     menuButtonSetup.width = 40;
     self.navigationItem.rightBarButtonItem = menuButtonSetup;
 }
@@ -161,7 +161,7 @@
     
     
     self.messagesSincePopover = [[UIPopoverController alloc] initWithContentViewController:messagesSinceController];
-    self.messagesSincePopover.popoverContentSize = CGSizeMake(180.0, 160.0);
+    self.messagesSincePopover.popoverContentSize = CGSizeMake(180.0, 200.0);
     [self.messagesSincePopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
 }
@@ -613,6 +613,16 @@
 }
 
 -(void)finishedGettingFBPhotoComments:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedSendingFBPageMessage:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedSendingFBPhotoMessage:(BOOL)succeed;
 {
     // No need to implement
 }

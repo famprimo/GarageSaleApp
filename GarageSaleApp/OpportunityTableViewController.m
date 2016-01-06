@@ -65,7 +65,7 @@
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MenuIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonClicked:)];
     self.navigationItem.leftBarButtonItem = menuButton;
     
-    UIBarButtonItem *menuButtonSetup = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"Setup"] makeThumbnailOfSize:CGSizeMake(20, 20)] style:UIBarButtonItemStylePlain target:self action:@selector(setupButtonClicked:)];
+    UIBarButtonItem *menuButtonSetup = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"Filter"] makeThumbnailOfSize:CGSizeMake(20, 20)] style:UIBarButtonItemStylePlain target:self action:@selector(setupButtonClicked:)];
     menuButtonSetup.width = 40;
     self.navigationItem.rightBarButtonItem = menuButtonSetup;
     
@@ -83,11 +83,6 @@
     // Get the opportunities data
     _myData = [_opportunityMethods getOpportunitiesArray];
     
-    _filterSelected = @"Activas";  // Default filter
-    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"status like[c] 'O' OR status like[c] 'S'"];
-    NSArray *tempArray = [_myData filteredArrayUsingPredicate:resultPredicate];
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
-
     // Sort array to be sure new opportunities are on top
     [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
         NSDate *first = [(Opportunity*)a created_time];
@@ -95,8 +90,13 @@
         return [second compare:first];
     }];
 
-    // Assign detail view with first item
-    _selectedOpportunity = [_myData firstObject];
+    _filterSelected = @"Activas";  // Default filter
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"status like[c] 'O' OR status like[c] 'S'"];
+    NSArray *tempArray = [_myData filteredArrayUsingPredicate:resultPredicate];
+    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
+   
+    // Assign detail view with first item - From SearchData
+    _selectedOpportunity = [_mySearchData firstObject];
     [self.detailViewController setDetailItem:_selectedOpportunity];
     
     // Uncomment the following line to preserve selection between presentations.
@@ -124,12 +124,18 @@
     OpportunitiesFilterTableViewController *opportunitiesFilterController = [[OpportunitiesFilterTableViewController alloc] initWithNibName:@"OpportunitiesFilterTableViewController" bundle:nil];
     opportunitiesFilterController.delegate = self;
     
-    
     self.opportunitiesFilterPopover = [[UIPopoverController alloc] initWithContentViewController:opportunitiesFilterController];
     self.opportunitiesFilterPopover.popoverContentSize = CGSizeMake(180.0, 160.0);
     [self.opportunitiesFilterPopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    
 }
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark - Opportunities Filter delegate methods
 
 -(NSString*)getCurrentFilter;
 {
@@ -140,7 +146,7 @@
 {
     // Dismiss the popover view
     [self.opportunitiesFilterPopover dismissPopoverAnimated:NO];
-
+    
     _filterSelected = selectedFilter;
     
     // Remove all objects from the filtered search array
@@ -177,11 +183,6 @@
     _mySearchData = [NSMutableArray arrayWithArray:tempArray];
     
     [self.tableView reloadData];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 

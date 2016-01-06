@@ -134,7 +134,6 @@
     _newClient.last_interacted_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
     _newClient.replied = @"Y";
     _newClient.last_msg_id = @"";
-    _newClient.last_inventory_time = [formatFBdates dateFromString:@"2000-01-01T10:00:00+0000"];
     _newClient.notes = @"";
     _newClient.agent_id = @"00001";
     
@@ -152,19 +151,19 @@
     
     
     int numberofClients = _myDataClients.count;
+    int numberofNewClients = [_clientMethods numberOfNewClients];
     
-    if (numberofClients == 0)
+    if ((numberofClients == 0) || (numberofNewClients == 0))
     {
         tableTitle = @"Clientes";
     }
     else
     {
-        tableTitle = [NSString stringWithFormat:@"Clientes (%i)", numberofClients];
+        tableTitle = [NSString stringWithFormat:@"Clientes (%i/%i)", numberofNewClients, numberofClients];
     }
     
     self.navigationItem.title = tableTitle;
 }
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -178,6 +177,7 @@
 -(void)clientUpdated;
 {
     [self.tableView reloadData];
+    [self updateTableTitle];
 }
 
 
@@ -419,13 +419,27 @@
     }
 
     
-    if ([myClient.status isEqualToString:@"V"])
+    if ([myClient.status isEqualToString:@"N"])
     {
+        nameLabel.textColor = [UIColor blueColor];
+        nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
+        verifiedImage.image = [UIImage imageNamed:@"Blank"];
+    }
+    else if ([myClient.status isEqualToString:@"U"])
+    {
+        nameLabel.textColor = [UIColor blackColor];
+        nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
+        verifiedImage.image = [UIImage imageNamed:@"Blank"];
+    }
+    else if ([myClient.status isEqualToString:@"V"])
+    {
+        nameLabel.textColor = [UIColor blackColor];
         nameLabel.text = [NSString stringWithFormat:@"    %@ %@", myClient.name, myClient.last_name];
         verifiedImage.image = [UIImage imageNamed:@"Verified"];
     }
     else
     {
+        nameLabel.textColor = [UIColor blackColor];
         nameLabel.text = [NSString stringWithFormat:@"%@ %@", myClient.name, myClient.last_name];
         verifiedImage.image = [UIImage imageNamed:@"Blank"];
     }

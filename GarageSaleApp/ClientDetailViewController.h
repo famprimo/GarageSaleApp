@@ -11,6 +11,7 @@
 #import "ProductPickerViewController.h"
 #import "ClientPickerViewController.h"
 #import "EditClientViewController.h"
+#import "SendMessageViewController.h"
 
 // Popover help  http://www.appcoda.com/uiactionsheet-uipopovercontroller-tutorial/
 
@@ -20,7 +21,7 @@
 
 @end
 
-@interface ClientDetailViewController : UIViewController<UIActionSheetDelegate, UIAlertViewDelegate, ProductPickerViewControllerDelegate, EditClientViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, ClientPickerViewControllerDelegate>
+@interface ClientDetailViewController : UIViewController<UIActionSheetDelegate, UIAlertViewDelegate, ProductPickerViewControllerDelegate, SendMessageViewControllerDelegate, EditClientViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, ClientPickerViewControllerDelegate>
 
 @property (strong, nonatomic) id detailItem;
 @property (nonatomic, strong) id<ClientDetailViewControllerDelegate> delegate;
@@ -35,16 +36,17 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelClientZone;
 @property (weak, nonatomic) IBOutlet UILabel *labelClientPhones;
 @property (weak, nonatomic) IBOutlet UILabel *labelClientEmail;
-@property (weak, nonatomic) IBOutlet UILabel *labelClientLastInventaryTime;
 @property (weak, nonatomic) IBOutlet UILabel *labelClientCodeGS;
 
 @property (weak, nonatomic) IBOutlet UIImageView *picClientZone;
 @property (weak, nonatomic) IBOutlet UIImageView *picClientPhone;
 @property (weak, nonatomic) IBOutlet UIImageView *picClientEmail;
 
+@property (weak, nonatomic) IBOutlet UIButton *buttonUpdateStatus;
 @property (weak, nonatomic) IBOutlet UIButton *buttonEdit;
 @property (weak, nonatomic) IBOutlet UIButton *buttonRelateProducts;
 @property (weak, nonatomic) IBOutlet UITableView *tableProducts;
 @property (weak, nonatomic) IBOutlet UIButton *buttonCombineProducts;
+@property (weak, nonatomic) IBOutlet UIButton *buttonValidateInventory;
 
 @end

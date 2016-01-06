@@ -31,5 +31,6 @@
 - (NSData*)getClientPhotoFrom:(Client*)clientSelected;
 - (NSString*)getClientIDfromFbId:(NSString*)clientFbIdToValidate;
 - (Client*)getClientFromClientId:(NSString*)clientIDtoSearch;
+- (int)numberOfNewClients;
 
 @end

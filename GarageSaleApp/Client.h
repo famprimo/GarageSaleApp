@@ -31,7 +31,6 @@
 @property (strong, nonatomic) NSDate *last_interacted_time;
 @property (strong, nonatomic) NSString *replied; // (Y)es (N)o
 @property (strong, nonatomic) NSString *last_msg_id;
-@property (strong, nonatomic) NSDate *last_inventory_time;
 @property (strong, nonatomic) NSString *notes;
 @property (strong, nonatomic) NSString *agent_id;
 @property (strong, nonatomic) NSDate *update_db;

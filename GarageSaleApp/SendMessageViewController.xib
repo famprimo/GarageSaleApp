@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SendMessageViewController">
@@ -20,6 +20,7 @@
                 <outlet property="labelBuyerName" destination="t5S-hL-yuj" id="9pi-WM-Swg"/>
                 <outlet property="labelClientName" destination="VhM-1M-UXz" id="Skm-8u-nhC"/>
                 <outlet property="labelOwnerName" destination="7ps-la-j76" id="52E-oj-clu"/>
+                <outlet property="labelProductCount" destination="QRy-0C-nR7" id="bWa-Xg-KFq"/>
                 <outlet property="labelProductDesc" destination="U4G-5z-kmO" id="vxF-eD-HSW"/>
                 <outlet property="labelProductName" destination="wBD-QD-PR5" id="ooB-fM-vfr"/>
                 <outlet property="labelTemplateText" destination="mpg-kr-342" id="QDY-TM-VJK"/>
@@ -85,12 +86,12 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Producto" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wBD-QD-PR5">
-                    <rect key="frame" x="554" y="390" width="239" height="20"/>
+                    <rect key="frame" x="554" y="390" width="226" height="20"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Producto" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U4G-5z-kmO">
-                    <rect key="frame" x="632" y="415" width="161" height="70"/>
+                    <rect key="frame" x="632" y="415" width="148" height="70"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
@@ -142,6 +143,12 @@
                         <action selector="sendMessage:" destination="-1" eventType="touchUpInside" id="ef6-kR-V6J"/>
                     </connections>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="+99" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QRy-0C-nR7">
+                    <rect key="frame" x="729" y="454" width="35" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

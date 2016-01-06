@@ -138,25 +138,6 @@
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Templates"];
     templatesArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
     
-    // Set last product ID
-    Template *templateToReview = [[Template alloc] init];
-    int lastID = 0;
-    
-    for (int i=0; i<templatesArray.count; i=i+1)
-    {
-        templateToReview = [[Template alloc] init];
-        templateToReview = (Template *)templatesArray[i];
-        
-        if ([templateToReview.template_id intValue] > lastID)
-        {
-            lastID = [templateToReview.template_id intValue];
-        }
-    }
-    
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    mainDelegate.lastTemplateID = lastID;
-    
     return templatesArray;
 }
 
@@ -231,11 +212,25 @@
 
 - (NSString*)getNextTemplateID;
 {
-    AppDelegate *mainDelegate;
-    mainDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    mainDelegate.lastTemplateID = mainDelegate.lastTemplateID + 1;
+    NSMutableArray *templatesArray = [self getTemplatesFromCoreData];
     
-    NSString *nextID = [NSString stringWithFormat:@"00000000%d", mainDelegate.lastTemplateID];
+    Template *templateToReview = [[Template alloc] init];
+    int lastID = 0;
+    
+    for (int i=0; i<templatesArray.count; i=i+1)
+    {
+        templateToReview = [[Template alloc] init];
+        templateToReview = (Template *)templatesArray[i];
+        
+        if ([templateToReview.template_id intValue] > lastID)
+        {
+            lastID = [templateToReview.template_id intValue];
+        }
+    }
+    
+    lastID = lastID + 1;
+    
+    NSString *nextID = [NSString stringWithFormat:@"00000000%d", lastID];
     nextID = [nextID substringFromIndex:[nextID length] - 5];
     
     return nextID;
@@ -402,7 +397,7 @@
     return updateResults;
 }
 
-- (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProduct:(Product*)relatedProduct;
+- (NSString*)changeKeysForText:(NSString*)textToReview usingBuyer:(Client*)clientBuyer andOwner:(Client*)clientOwner andProducts:(NSMutableArray*)relatedProductsArray;
 {
     NSMutableString *reviewedText = [NSMutableString stringWithString:textToReview];
     NSRange keyRange;
@@ -496,8 +491,10 @@
        
     }
     
-    if ([relatedProduct.product_id length] > 0)
+    if (relatedProductsArray.count > 0)
     {
+        Product *relatedProduct = (Product*)relatedProductsArray[0];
+        
         keyRange = [reviewedText rangeOfString:@"#PRODUCTO"];
         if ((keyRange.location != NSNotFound) && (relatedProduct.name != nil))
         {
@@ -521,50 +518,23 @@
         {
             [reviewedText replaceCharactersInRange:keyRange withString:[NSString stringWithFormat:@"%@", relatedProduct.fb_link]];
         }
+        
+        keyRange = [reviewedText rangeOfString:@"#LISTAPRODUCTOS"];
+        if ((keyRange.location != NSNotFound) && (relatedProduct.name != nil))
+        {
+            NSMutableString *productList = [[NSMutableString alloc] init];
+            for (int i=0; i<relatedProductsArray.count; i=i+1)
+            {
+                relatedProduct = (Product*)relatedProductsArray[i];
+                [productList appendString:[NSString stringWithFormat:@"\n%@\n", relatedProduct.name]];
+                [productList appendString:[NSString stringWithFormat:@"%@\n", relatedProduct.fb_link]];
+            }
+            [reviewedText replaceCharactersInRange:keyRange withString:productList];
+        }
     }    
     
     return [NSString stringWithString:reviewedText];
 }
 
-
-#pragma mark -  Methods for shorte URL taken from http://www.warewoof.com/goo-gl-url-shortener-in-ios/
-/*
--(void)shortenMapUrl:(NSString*)originalURL
-{
-    
-    NSString* googString = @"https://www.googleapis.com/urlshortener/v1/url";
-    NSURL* googUrl = [NSURL URLWithString:googString];
-    
-    NSMutableURLRequest* googReq = [NSMutableURLRequest requestWithURL:googUrl cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60.0f];
-    [googReq setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    NSString* longUrlString = [NSString stringWithFormat:@"{\"longUrl\": \"%@\"}",originalURL];
-    
-    NSData* longUrlData = [longUrlString dataUsingEncoding:NSUTF8StringEncoding];
-    [googReq setHTTPBody:longUrlData];
-    [googReq setHTTPMethod:@"POST"];
-    
-    NSURLConnection* connect = [[NSURLConnection alloc] initWithRequest:googReq delegate:self];
-    connect = nil;
-    
-}
-
--(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    NSString *returnData = [NSString stringWithUTF8String:[data bytes]];
-    NSError* error = nil;
-    
-    NSArray* jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
-    
-    NSString* shortenedURL;
-    if (error == nil) {
-        if ([jsonArray valueForKey:@"id"] != nil) {
-            shortenedURL = [jsonArray valueForKey:@"id"];
-        }
-    } else {
-        NSLog(@"Error %@", error);
-    }
-    
-    NSLog(@"Returned URL: %@", shortenedURL);
-}
-*/
 @end
+

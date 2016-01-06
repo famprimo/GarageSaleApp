@@ -39,7 +39,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelGSCode;
 @property (weak, nonatomic) IBOutlet UILabel *labelPrice;
 @property (weak, nonatomic) IBOutlet UILabel *labelDescription;
-@property (weak, nonatomic) IBOutlet UILabel *labelCreationDate;
+@property (weak, nonatomic) IBOutlet UILabel *labelInventoryTime;
 @property (weak, nonatomic) IBOutlet UILabel *labelNotes;
 
 @property (weak, nonatomic) IBOutlet UILabel *labelPublishedAgo;
@@ -47,7 +47,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageOwnerStatus;
 @property (weak, nonatomic) IBOutlet UILabel *labelOwnerName;
 @property (weak, nonatomic) IBOutlet UILabel *labelOwnerZone;
-@property (weak, nonatomic) IBOutlet UILabel *labelOwnerAddress;
+@property (weak, nonatomic) IBOutlet UILabel *labelOwnerNotes;
+
 @property (weak, nonatomic) IBOutlet UILabel *labelOwnerPhones;
 @property (weak, nonatomic) IBOutlet UIImageView *picOwnerZone;
 @property (weak, nonatomic) IBOutlet UIImageView *picOwnerPhone;

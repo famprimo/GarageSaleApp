@@ -30,8 +30,7 @@
 @property(nonatomic,retain) NSMutableArray *sharedArrayOpportunities;
 
 @property(nonatomic) int lastProductID;
-@property(nonatomic) int lastCientID;
+@property(nonatomic) int lastClientID;
 @property(nonatomic) int lastOpportunityID;
-@property(nonatomic) int lastTemplateID;
 
 @end

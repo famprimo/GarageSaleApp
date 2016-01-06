@@ -18,6 +18,7 @@
 {
     // Data for the tables
     NSMutableArray *_myDataProducts;
+    NSMutableArray *_selectedProductsArray;
     
     Client *_selectedClient;
     
@@ -28,6 +29,7 @@
 @property (nonatomic, strong) UIPopoverController *productPickerPopover;
 @property (nonatomic, strong) UIPopoverController *clientPickerPopover;
 @property (nonatomic, strong) UIPopoverController *editClientPopover;
+@property (nonatomic, strong) UIPopoverController *sendMessagePopover;
 
 @end
 
@@ -91,36 +93,36 @@
         self.imageClient.frame = imageClientFrame;
         
         CGRect imageClientStatusFrame = self.imageClientStatus.frame;
-        imageClientStatusFrame.origin.x = 59;
-        imageClientStatusFrame.origin.y = 34;
+        imageClientStatusFrame.origin.x = 61;
+        imageClientStatusFrame.origin.y = 29;
         imageClientStatusFrame.size.width = 15;
         imageClientStatusFrame.size.height = 15;
         self.imageClientStatus.frame = imageClientStatusFrame;
 
         CGRect imageClientSexFrame = self.imageClientSex.frame;
         imageClientSexFrame.origin.x = 33;
-        imageClientSexFrame.origin.y = 29;
+        imageClientSexFrame.origin.y = 26;
         imageClientSexFrame.size.width = 20;
         imageClientSexFrame.size.height = 20;
         self.imageClientSex.frame = imageClientSexFrame;
 
         CGRect picClientZoneFrame = self.picClientZone.frame;
         picClientZoneFrame.origin.x = 40;
-        picClientZoneFrame.origin.y = 272;
+        picClientZoneFrame.origin.y = 269;
         picClientZoneFrame.size.width = 15;
         picClientZoneFrame.size.height = 15;
         self.picClientZone.frame = picClientZoneFrame;
         
         CGRect picClientPhoneFrame = self.picClientPhone.frame;
         picClientPhoneFrame.origin.x = 40;
-        picClientPhoneFrame.origin.y = 304;
+        picClientPhoneFrame.origin.y = 295;
         picClientPhoneFrame.size.width = 15;
         picClientPhoneFrame.size.height = 15;
         self.picClientPhone.frame = picClientPhoneFrame;
         
         CGRect picClientEmailFrame = self.picClientEmail.frame;
         picClientEmailFrame.origin.x = 40;
-        picClientEmailFrame.origin.y = 337;
+        picClientEmailFrame.origin.y = 319;
         picClientEmailFrame.size.width = 15;
         picClientEmailFrame.size.height = 15;
         self.picClientEmail.frame = picClientEmailFrame;
@@ -137,7 +139,7 @@
         
         if ([_selectedClient.status isEqualToString:@"V"])
         {
-            self.labelClientName.text = [NSString stringWithFormat:@"    %@ %@", _selectedClient.name, _selectedClient.last_name];
+            self.labelClientName.text = [NSString stringWithFormat:@"     %@ %@", _selectedClient.name, _selectedClient.last_name];
             self.imageClientStatus.image = [UIImage imageNamed:@"Verified"];
         }
         else
@@ -202,21 +204,53 @@
             self.labelClientCodeGS.text = _selectedClient.codeGS;
             self.labelClientCodeGS.textColor = [UIColor blackColor];
         }
+        
+        if ([_selectedClient.status isEqualToString:@"N"])
+        {
+            self.buttonUpdateStatus.backgroundColor = [UIColor blueColor];
+        }
+        else
+        {
+            self.buttonUpdateStatus.backgroundColor = [UIColor darkGrayColor];
+        }
 
         self.labelClientEmail.text = _selectedClient.email;
-        self.labelCreatedTime.text = [NSString stringWithFormat:@"Creado: %@", [_selectedClient.created_time formattedAsDateComplete]];
-        self.labelLastInteractionTime.text = [NSString stringWithFormat:@"Última interacción: %@", [_selectedClient.last_interacted_time formattedAsTimeAgo]];
-        self.labelClientLastInventaryTime.text = [NSString stringWithFormat:@"Último inventario %@", [_selectedClient.last_inventory_time formattedAsTimeAgo]];
-                
+        self.labelCreatedTime.text = [NSString stringWithFormat:@"%@", [_selectedClient.created_time formattedAsDateComplete]];
+        self.labelLastInteractionTime.text = [NSString stringWithFormat:@"%@", [_selectedClient.last_interacted_time formattedAsTimeAgo]];
+        
         // Load products from the client
         _myDataProducts = [[[ProductModel alloc] init] getProductsFromClientId:_selectedClient.client_id];
         
         [self.tableProducts reloadData];
+        
+        self.tableProducts.allowsMultipleSelection = YES;
+        _selectedProductsArray = [[NSMutableArray alloc] init];
     }
 }
 
 
 #pragma mark - Managing button actions
+
+- (IBAction)changeClientStatus:(id)sender
+{
+    if ([_selectedClient.status isEqualToString:@"N"])
+    {
+        _selectedClient.status = @"U";
+    }
+    else if ([_selectedClient.status isEqualToString:@"U"])
+    {
+        _selectedClient.status = @"N";
+    }
+    
+    if ([_selectedClient.status isEqualToString:@"U"] || [_selectedClient.status isEqualToString:@"N"])
+    {
+        // Update only if there were changes (not for status V, B or D)
+        [[[ClientModel alloc] init] updateClient:_selectedClient];
+        
+        [self configureView];
+        [self.delegate clientUpdated];
+    }
+}
 
 - (IBAction)relateToProduct:(id)sender
 {
@@ -255,6 +289,20 @@
     [alert show];
 }
 
+- (IBAction)validateInventory:(id)sender
+{
+    SendMessageViewController *sendMessageController = [[SendMessageViewController alloc] initWithNibName:@"SendMessageViewController" bundle:nil];
+    sendMessageController.delegate = self;
+    
+    
+    self.sendMessagePopover = [[UIPopoverController alloc] initWithContentViewController:sendMessageController];
+    self.sendMessagePopover.popoverContentSize = CGSizeMake(800.0, 500.0);
+    [self.sendMessagePopover presentPopoverFromRect:[(UIButton *)sender frame]
+                                             inView:self.view
+                           permittedArrowDirections:UIPopoverArrowDirectionAny
+                                           animated:YES];
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0)
@@ -282,6 +330,8 @@
     ProductModel *productMethods = [[ProductModel alloc] init];
     Product *selectedProduct = [[Product alloc] init];
     
+    BOOL clientUpdated = NO;
+    
     for (int i=0; i<selectedProductsArray.count; i=i+1)
     {
         selectedProduct = selectedProductsArray[i];
@@ -293,7 +343,16 @@
     // Load products from the client
     _myDataProducts = [[[ProductModel alloc] init] getProductsFromClientId:_selectedClient.client_id];
     
-    [self.tableProducts reloadData];
+    if (clientUpdated)
+    {
+        [[[ClientModel alloc] init] updateClient:_selectedClient];
+        
+        [self configureView];
+    }
+    else
+    {
+        [self.tableProducts reloadData];
+    }
 }
 
 -(BOOL)allowMultipleSelectionfromProductPicker
@@ -334,6 +393,40 @@
 }
 
 
+#pragma mark - Delegate methods for SendMessage
+
+-(NSString*)getTemplateTypeFromMessage;
+{
+    return @"O";
+}
+
+-(NSString*)getBuyerIdFromMessage;
+{
+    return @"";
+}
+
+-(NSString*)getOwnerIdFromMessage;
+{
+    return _selectedClient.client_id;
+}
+
+-(NSMutableArray*)getProductsIdFromMessage;
+{
+    return _selectedProductsArray;
+}
+
+-(NSString*)getMessageIdFromMessage;
+{
+    return @"";
+}
+
+-(void)messageSent:(NSString*)postType; // postType = (P)hoto (I)nbox (M)essage
+{
+    // Dismiss the popover view
+    [self.sendMessagePopover dismissPopoverAnimated:YES];
+}
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -353,13 +446,12 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
     // Retrieve cell
     UITableViewCell *myCell = [tableView dequeueReusableCellWithIdentifier:@"CellProd" forIndexPath:indexPath];
     
     // Get references to images and labels of cell
     UILabel *labelProductName = (UILabel*)[myCell.contentView viewWithTag:1];
-    UILabel *labelProductCreatedTime = (UILabel*)[myCell.contentView viewWithTag:2];
+    UILabel *labelProductInventoryTime = (UILabel*)[myCell.contentView viewWithTag:2];
     UIImageView *imageProduct = (UIImageView*)[myCell.contentView viewWithTag:3];
     
     CGRect imageProductFrame = imageProduct.frame;
@@ -369,14 +461,12 @@
     imageProductFrame.size.height = 40;
     imageProduct.frame = imageProductFrame;
     
-    
     // Get the information to be shown
     Product *myProduct = _myDataProducts[indexPath.row];
     
-    
     // Set product data
     labelProductName.text = myProduct.name;
-    labelProductCreatedTime.text = [myProduct.created_time formattedAsTimeAgo];
+    labelProductInventoryTime.text = [NSString stringWithFormat:@"Ultimo inventario en %@", [myProduct.last_inventory_time formattedAsTimeAgo]];
     
     // imageProduct.image = [UIImage imageWithData:myProduct.picture];
     imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:myProduct]];
@@ -386,7 +476,30 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    Product *productSelected = [[Product alloc] init];
     
+    productSelected = _myDataProducts[indexPath.row];
+
+    [_selectedProductsArray addObject:productSelected.product_id];
+}
+
+-(void) tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    Product *productSelected = [[Product alloc] init];
+    NSString *tmpProductID;
+    
+    productSelected = _myDataProducts[indexPath.row];
+    
+    // Review if selected item is already on the array
+    for (int i=0; i<_selectedProductsArray.count; i=i+1)
+    {
+        tmpProductID = _selectedProductsArray[i];
+        if ([tmpProductID isEqualToString:productSelected.product_id])
+        {
+            [_selectedProductsArray removeObjectAtIndex:i];
+            break;
+        }
+    }
 }
 
 @end

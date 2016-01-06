@@ -22,6 +22,7 @@
     Client *_clientOwner;
     
     OpportunityModel *_opportunityMethods;
+    UIActivityIndicatorView *_indicator;
 }
 @end
 
@@ -174,12 +175,26 @@
         _opportunityToEdit.notes = self.textOpportunityNotes.text;
     }
     
+    // Set spinner
+    _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _indicator.center = CGPointMake((self.view.bounds.size.width / 2) , (self.view.bounds.size.height / 2));
+    
+    [self.view addSubview:_indicator];
+    [_indicator startAnimating];
+
     [opportunityMethods updateOpportunity:_opportunityToEdit];
 }
 
 
 - (IBAction)actionOption2:(id)sender
 {
+    // Set spinner
+    _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _indicator.center = CGPointMake((self.view.bounds.size.width / 2) , (self.view.bounds.size.height / 2));
+    
+    [self.view addSubview:_indicator];
+    [_indicator startAnimating];
+    
     OpportunityModel *opportunityMethods = [[OpportunityModel alloc] init];
     ProductModel *productMethods = [[ProductModel alloc] init];
     
@@ -238,6 +253,9 @@
 
 -(void)opportunityAddedOrUpdated:(BOOL)succeed;
 {
+    // Stop spinner
+    [_indicator stopAnimating];
+    
     if (succeed)
     {
         [self.delegate opportunityEdited:_opportunityToEdit];

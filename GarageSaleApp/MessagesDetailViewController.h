@@ -16,7 +16,6 @@
 #import "NewOpportunityViewController.h"
 #import "EditClientViewController.h"
 
-// Popover help  http://www.appcoda.com/uiactionsheet-uipopovercontroller-tutorial/
 
 @protocol MessagesDetailViewControllerDelegate
 
@@ -29,6 +28,7 @@
 
 @property (strong, nonatomic) id detailItem;
 @property (nonatomic, strong) id<MessagesDetailViewControllerDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UIButton *buttonUpdateReply;
 
 @property (weak, nonatomic) IBOutlet UIButton *buttonReply;
 @property (weak, nonatomic) IBOutlet UIButton *buttonMessageToRelatedClient;
@@ -50,6 +50,8 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableMessages;
 
 @property (weak, nonatomic) IBOutlet UIImageView *picProductBackground;
+@property (weak, nonatomic) IBOutlet UIImageView *picClientBackground;
+@property (weak, nonatomic) IBOutlet UIImageView *picButtonsBackground;
 @property (weak, nonatomic) IBOutlet UILabel *LabelProductRelated;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductName;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductPrice;
@@ -62,8 +64,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageClient2;
 @property (weak, nonatomic) IBOutlet UIImageView *imageClient2Status;
 @property (weak, nonatomic) IBOutlet UILabel *labelClient2Name;
+@property (weak, nonatomic) IBOutlet UILabel *labelClient2Notes;
 
-@property (weak, nonatomic) IBOutlet UILabel *labelClient2Address;
 @property (weak, nonatomic) IBOutlet UILabel *labelClient2Zone;
 @property (weak, nonatomic) IBOutlet UILabel *labelClient2Phones;
 @property (weak, nonatomic) IBOutlet UIImageView *picClient2Zone;

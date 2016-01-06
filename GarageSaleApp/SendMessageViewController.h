@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Client.h"
 #import "Product.h"
+#import "FacebookMethods.h"
 
 @protocol SendMessageViewControllerDelegate
 
@@ -16,12 +17,12 @@
 -(NSString*)getTemplateTypeFromMessage;
 -(NSString*)getBuyerIdFromMessage;
 -(NSString*)getOwnerIdFromMessage;
--(NSString*)getProductIdFromMessage;
+-(NSMutableArray*)getProductsIdFromMessage;
 -(NSString*)getMessageIdFromMessage;
 
 @end
 
-@interface SendMessageViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface SendMessageViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, FacebookMethodsDelegate>
 
 @property (nonatomic, strong) id<SendMessageViewControllerDelegate> delegate;
 
@@ -35,6 +36,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelProductName;
 @property (weak, nonatomic) IBOutlet UIImageView *imageProduct;
 @property (weak, nonatomic) IBOutlet UILabel *labelProductDesc;
+@property (weak, nonatomic) IBOutlet UILabel *labelProductCount;
 
 @property (strong, nonatomic) IBOutlet UIButton *buttonSend;
 @property (weak, nonatomic) IBOutlet UIButton *buttonPostInPhoto;

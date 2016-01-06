@@ -32,11 +32,14 @@
     Client *_clientBuyer;
     Client *_clientOwner;
     NSString *_templateType;
-    Product *_relatedProduct;
     Message *_relatedMessage;
+    NSMutableArray *_relatedProductsArray;
     
     // Temp variables for user and page IDs
     Settings *_tmpSettings;
+
+    FacebookMethods *_facebookMethods;
+    UIActivityIndicatorView *_indicator;
 }
 
 @end
@@ -51,6 +54,10 @@
     // Remember to set ViewControler as the delegate and datasource
     self.tableTemplates.delegate = self;
     self.tableTemplates.dataSource = self;
+    
+    // Initialize objects methods
+    _facebookMethods = [[FacebookMethods alloc] init];
+    _facebookMethods.delegate = self;
     
     // General settings
     _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
@@ -69,11 +76,11 @@
         _clientOwner = [[[ClientModel alloc] init] getClientFromClientId:tmpID];
     }
 
-    _relatedProduct = [[Product alloc] init];
-    tmpID = [self.delegate getProductIdFromMessage];
-    if (![tmpID isEqualToString:@""])
+    NSMutableArray *tmpIDArray = [self.delegate getProductsIdFromMessage];
+    _relatedProductsArray = [[NSMutableArray alloc] init];
+    for (int i=0; i<tmpIDArray.count; i=i+1)
     {
-        _relatedProduct = [[[ProductModel alloc] init] getProductFromProductId:tmpID];
+        [_relatedProductsArray addObject:[[[ProductModel alloc] init] getProductFromProductId:tmpIDArray[i]]];
     }
     
     _relatedMessage = [[Message alloc] init];
@@ -201,24 +208,73 @@
         self.labelOwnerName.text = @"";
     }
     
-
-    if (_relatedProduct)
-    {
-        // self.imageProduct.image = [UIImage imageWithData:_relatedProduct.picture];
-        self.imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:_relatedProduct]];
-        
-        self.labelProductName.text = _relatedProduct.name;
-        self.labelProductDesc.text = _relatedProduct.desc;
-        
-    }
-    else
+    if (_relatedProductsArray.count == 0)
     {
         self.imageProduct.image = [UIImage imageNamed:@"Blank"];
         self.labelProductName.text = @"";
         self.labelProductDesc.text = @"";
         self.buttonPostInPhoto.hidden = YES;
     }
+    else if (_relatedProductsArray.count == 1)
+    {
+        Product *tmpProduct = [[Product alloc] init];
+        tmpProduct = (Product*)_relatedProductsArray[0];
+        self.imageProduct.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:tmpProduct]];
+        self.labelProductName.text = tmpProduct.name;
+        self.labelProductDesc.text = tmpProduct.desc;
+    }
+    else // several photos
+    {
+        self.imageProduct.hidden = YES;
+        self.labelProductName.text = @"Productos seleccionados:";
+        self.labelProductDesc.hidden = YES;
+        self.buttonPostInPhoto.hidden = YES;
+        
+        int initialPosX = 554;
+        int initialPosY = 415;
+        int imagesPerRow = 1;
+        int imageSize = 1;
+        imagesPerRow = MIN(6, _relatedProductsArray.count);
+    
+        if (_relatedProductsArray.count > 6)
+        {
+            imageSize = 30;
+        }
+        else
+        {
+            imageSize = MIN(floor(210 / imagesPerRow), 70);
+        }
+        int imagePosX = 0;
+        int imagePosY = 0;
+        
+        Product *tmpProduct = [[Product alloc] init];
 
+        for (int i = 0; i < _relatedProductsArray.count; i++)
+        {
+            imagePosX = initialPosX +  (i % imagesPerRow) * (imageSize + 5);
+            imagePosY = initialPosY + floor(i / imagesPerRow) * (imageSize + 5);
+            
+            UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(imagePosX, imagePosY, imageSize, imageSize)];
+            
+            tmpProduct = (Product*)_relatedProductsArray[i];
+            imgView.image = [UIImage imageWithData:[[[ProductModel alloc] init] getProductPhotoFrom:tmpProduct]];
+            
+            [self.view addSubview:imgView];
+            
+            if (i >= 10) {
+                break;
+            }
+        }
+    }
+    
+    if (_relatedProductsArray.count > 11)
+    {
+        self.labelProductCount.text = [NSString stringWithFormat:@"%i+", (_relatedProductsArray.count - 11)];
+    }
+    else
+    {
+        self.labelProductCount.hidden = YES;
+    }
     
     // Client (recipient) information
 
@@ -254,8 +310,6 @@
             self.imageClientStatus.image = [UIImage imageNamed:@"Blank"];
         }
     }
-    
-
 }
 
 - (void)didReceiveMemoryWarning
@@ -286,6 +340,14 @@
 
 -(IBAction)sendMessage:(id)sender;
 {
+    // Set spinner
+    _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _indicator.center = CGPointMake((self.view.bounds.size.width / 2) , (self.view.bounds.size.height / 2));
+    
+    [self.view addSubview:_indicator];
+    [_indicator startAnimating];
+    
+
     NSString *pageMessageID;
     
     if ([_templateType isEqualToString:@"B"])
@@ -300,69 +362,105 @@
     if (![self.labelTemplateText.text isEqualToString:@""] && ![pageMessageID isEqualToString:@""])
     {
         // Send messages via Facabook
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setObject:self.labelTemplateText.text forKey:@"message"];
-
-        NSString *url = [NSString stringWithFormat:@"/%@/messages", pageMessageID];
-
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:params tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"POST"];
+        [_facebookMethods initializeMethods];
         
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
-        {
-            if (!error)
-            {  // FB post was a success!
-                
-                [self.delegate messageSent:@"M"];
-            }
-            else
-            {
-                // An error occurred, we need to handle the error
-                // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                NSLog(@"error sendMessage: %@", error.description);
-            }
-        }];
-        
+        [_facebookMethods sendFBPageMessage:self.labelTemplateText.text forPageMessageID:pageMessageID];
     }
 }
 
 - (IBAction)postInPhoto:(id)sender
 {
+    // Set spinner
+    _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _indicator.center = CGPointMake((self.view.bounds.size.width / 2) , (self.view.bounds.size.height / 2));
+    
+    [self.view addSubview:_indicator];
+    [_indicator startAnimating];
+    
+
     if (![self.labelTemplateText.text isEqualToString:@""])
     {
-        // Post message on Photo via Facabook
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setObject:self.labelTemplateText.text forKey:@"message"];
-
-        NSString *url = @"";
-
+        NSString *messageRootID = @"";
+        
         if ([_relatedMessage.recipient isEqualToString:@"G"])
         {
             // Message sent to GS so reply is on the message
-            url = [NSString stringWithFormat:@"/%@/comments", _relatedMessage.fb_msg_id];
+            messageRootID = _relatedMessage.fb_msg_id;
         }
         else
         {
             // Message sent to client so reply is on the photo
-            url = [NSString stringWithFormat:@"/%@/comments", _relatedProduct.fb_photo_id];
+            Product *tmpProduct = [[Product alloc] init];
+            tmpProduct = (Product*)_relatedProductsArray[0];
+
+            messageRootID = tmpProduct.fb_photo_id;
         }
         
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:url parameters:params tokenString:_tmpSettings.fb_page_token version:@"v2.0" HTTPMethod:@"POST"];
+        // Send messages via Facabook
+        [_facebookMethods initializeMethods];
         
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
-         {
-             if (!error)
-             {  // FB post was a success!
-                 
-                 [self.delegate messageSent:@"P"];
-             }
-             else
-             {
-                 // An error occurred, we need to handle the error
-                 // Check out our error handling guide: https://developers.facebook.com/docs/ios/errors/
-                 NSLog(@"error postInPhoto: %@", error.description);
-             }
-         }];
+        [_facebookMethods sendFBPhotoMessage:self.labelTemplateText.text forMessageRootID:messageRootID];
     }
+}
+
+
+#pragma mark - FacebookMethods delegate methods
+
+-(void)finishedSendingFBPageMessage:(BOOL)succeed;
+{
+    // Stop spinner
+    [_indicator stopAnimating];
+    
+    if (succeed)
+    {
+        [self.delegate messageSent:@"M"];
+    }
+}
+
+-(void)finishedSendingFBPhotoMessage:(BOOL)succeed;
+{
+    // Stop spinner
+    [_indicator stopAnimating];
+    
+    if (succeed)
+    {
+        [self.delegate messageSent:@"P"];
+    }
+}
+
+-(void)newMessageAddedFromFB:(Message*)messageAdded;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBpageNotifications:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBInbox:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBPageMessages:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedInsertingNewClientsFound:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBPhotos:(BOOL)succeed;
+{
+    // No need to implement
+}
+
+-(void)finishedGettingFBPhotoComments:(BOOL)succeed;
+{
+    // No need to implement
 }
 
 
@@ -406,10 +504,8 @@
     // Set selected listing to var
     _selectedTemplate = _myDataTemplates[indexPath.row];
     
-    self.labelTemplateText.text = [[[TemplateModel alloc] init] changeKeysForText:_selectedTemplate.text usingBuyer:_clientBuyer andOwner:_clientOwner andProduct:_relatedProduct];
+    self.labelTemplateText.text = [[[TemplateModel alloc] init] changeKeysForText:_selectedTemplate.text usingBuyer:_clientBuyer andOwner:_clientOwner andProducts:_relatedProductsArray];
     self.labelTemplateText.editable = YES;
-    
 }
-
 
 @end

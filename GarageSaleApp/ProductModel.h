@@ -39,8 +39,8 @@
 - (Product*)getProductFromProductId:(NSString*)productIDtoSearch;
 - (NSString*)getTextThatFollows:(NSString*)textToSearch fromMessage:(NSString*)messageText; // Search a text and returns the numbers that follows the text
 - (NSString*)getProductNameFromFBPhotoDesc:(NSString*)messageText;
-- (int)numberOfNewProducts;
-- (void)updateProductsWithCodeGS:(NSString*)codeGSToFind withClientID:(NSString*)clientIDtoUse;
+- (int)numberOfActiveProducts;
+- (NSDate*)updateProductsWithCodeGS:(NSString*)codeGSToFind withClientID:(NSString*)clientIDtoUse;
 - (NSString*)getNextCodeGS;
 
 @end
