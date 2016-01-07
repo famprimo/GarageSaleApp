@@ -44,8 +44,6 @@
 
 @implementation ProductTableViewController 
 
-@synthesize productSearchBar;
-
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -83,28 +81,18 @@
     _facebookMethods = [[FacebookMethods alloc] init];
     _facebookMethods.delegate = self;
     
-    // Get the data
-    _myData = [_productMethods getProductArray];
+    // Get the data based on the filter
     _tmpSettings = [[[SettingsModel alloc] init] getSharedSettings];
+
+    // Set filter and load data
+    [self filterSet:@"Activos"];
 
     // Add title
     [self updateTableTitle];
-
-    // Sort array to be sure new products are on top
-    [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
-        NSDate *first = [(Product*)a last_inventory_time];
-        NSDate *second = [(Product*)b last_inventory_time];
-        return [second compare:first];
-        //return [first compare:second];
-    }];
     
-    _filterSelected = @"Activos";  // Default filter
-    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"status like[c] 'N' OR status like[c] 'U'"];
-    NSArray *tempArray = [_myData filteredArrayUsingPredicate:resultPredicate];
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
+    // Assign detail view with first item
+    _selectedProduct = [_myData firstObject];
     
-    // Assign detail view with first item - From SearchData
-    _selectedProduct = [_mySearchData firstObject];
     [self.detailViewController setDetailItem:_selectedProduct];
     
     // Uncomment the following line to preserve selection between presentations.
@@ -115,6 +103,19 @@
     self.refreshControl.backgroundColor = [UIColor whiteColor];
     self.refreshControl.tintColor = [UIColor grayColor];
     [self.refreshControl addTarget:self action:@selector(refreshTableGesture:) forControlEvents:UIControlEventValueChanged];
+    
+    // Create and setup the search controller
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.searchBar.delegate = self;
+    
+    self.tableView.estimatedRowHeight = 80;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES;
+    [self.searchController.searchBar sizeToFit];
 }
 
 - (void)updateTableTitle
@@ -176,9 +177,9 @@
     _filterSelected = selectedFilter;
     
     // Remove all objects from the filtered search array
-    [_mySearchData removeAllObjects];
+    [_myData removeAllObjects];
     
-    NSArray *tempArray;
+    NSArray *tempArray = [_productMethods getProductArray];
     
     NSString *filterPredicate = @"";
     
@@ -195,15 +196,21 @@
     if (![_filterSelected isEqualToString:@"Todos"])
     {
         NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:filterPredicate];
-        tempArray = [_myData filteredArrayUsingPredicate:resultPredicate];
+        _myData = [NSMutableArray arrayWithArray:[tempArray filteredArrayUsingPredicate:resultPredicate]];
     }
     else
     {
-        tempArray = [NSArray arrayWithArray:_myData];
+        _myData = [NSMutableArray arrayWithArray:tempArray];
     }
     
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
-    
+    // Sort array to be sure new products are on top
+    [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Product*)a last_inventory_time];
+        NSDate *second = [(Product*)b last_inventory_time];
+        return [second compare:first];
+        //return [first compare:second];
+    }];
+
     [self.tableView reloadData];
 }
 
@@ -254,21 +261,17 @@
 }
 
 
-#pragma mark Content Filtering & UISearchDisplayController Delegate Methods
+#pragma mark UISearchController Delegate Methods
 
-- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
-    NSArray *tempArray;
+    NSString *searchString = searchController.searchBar.text;
+    [self filterContentForSearchText:searchString];
+    [self.tableView reloadData];
+}
 
-    if ([_filterSelected isEqualToString:@"Todos"])
-    {
-        tempArray = [NSArray arrayWithArray:_myData];
-    }
-    else
-    {
-        tempArray = [NSArray arrayWithArray:_mySearchData];
-    }
-
+- (void)filterContentForSearchText:(NSString*)searchText
+{
     // Remove all objects from the filtered search array
     [_mySearchData removeAllObjects];
     
@@ -276,71 +279,12 @@
     if (![searchText isEqualToString:@""])
     {
         NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"(name contains[c] %@) OR (codeGS contains[c] %@)", searchText, searchText];
-        tempArray = [tempArray filteredArrayUsingPredicate:resultPredicate];
-    }
-    
-    // Further filter the array with the scope
-    /*
-    if ([scope isEqualToString:@"Nuevos"])
-    {
-        NSPredicate *scopePredicate = [NSPredicate predicateWithFormat:@"status contains[c] %@",@"N"];
-        tempArray = [tempArray filteredArrayUsingPredicate:scopePredicate];
-    }
-    */
-    
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
-}
-
--(void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
-{
-    /*
-
-    // Remove all objects from the filtered search array
-    NSArray *tempArray;
-    
-    if ([_filterSelected isEqualToString:@"Todos"])
-    {
-        tempArray = [NSMutableArray arrayWithArray:_myData];
+        _mySearchData = [NSMutableArray arrayWithArray:[_myData filteredArrayUsingPredicate:resultPredicate]];
     }
     else
     {
-        tempArray = [NSMutableArray arrayWithArray:_mySearchData];
+        _mySearchData = [NSMutableArray arrayWithArray:_myData];
     }
-    
-    // Remove all objects from the filtered search array
-    [_mySearchData removeAllObjects];
-    
-    // Further filter the array with the scope
-    if (selectedScope == 1)
-    {
-        NSPredicate *scopePredicate = [NSPredicate predicateWithFormat:@"status contains[c] %@",@"N"];
-        tempArray = [tempArray filteredArrayUsingPredicate:scopePredicate];
-    }
-    
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
-     */
-}
-
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    // Tells the table data source to reload when text changes
-    [self filterContentForSearchText:searchString scope:
-     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
-}
-
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
-{
-    /*
-    // Tells the table data source to reload when scope bar selection changes
-    [self filterContentForSearchText:self.searchDisplayController.searchBar.text scope:
-     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
-     */
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return NO;
 }
 
 
@@ -360,7 +304,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    if (tableView == self.searchDisplayController.searchResultsTableView || ![_filterSelected isEqualToString:@"Todos"])
+    if (self.searchController.active)
     {
         return _mySearchData.count;
     }
@@ -376,14 +320,13 @@
     UITableViewCell *myCell;
     Product *myProduct = [[Product alloc] init];
     
-    if (tableView == self.searchDisplayController.searchResultsTableView || ![_filterSelected isEqualToString:@"Todos"])
+    myCell = [self.tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    if (self.searchController.active)
     {
-        myCell = [self.tableView dequeueReusableCellWithIdentifier:@"Cell"];
         myProduct = _mySearchData[indexPath.row];;
     }
     else
     {
-        myCell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
         myProduct = _myData[indexPath.row];
     }
     
@@ -429,7 +372,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selected item to detail view
-    if (tableView == self.searchDisplayController.searchResultsTableView || ![_filterSelected isEqualToString:@"Todos"])
+    if (self.searchController.active)
     {
         _selectedProduct = _mySearchData[indexPath.row];;
     }
@@ -442,6 +385,33 @@
     [self.detailViewController setDetailItem:_selectedProduct];
 }
 
+/*
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    
+    UIView *view;
+    if (self.searchController.active)
+    {
+        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 80)];
+    }
+    else
+    {
+        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    }
+    return view;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (self.searchController.active)
+    {
+        return 80;
+    }
+    else
+    {
+        return 0;
+    }
+}
+*/
 
 #pragma mark - FacebookMethods delegate methods
 
@@ -451,16 +421,6 @@
 
     if (succeed)
     {
-        // Reload table to make sure all products are included
-        _myData = [_productMethods getProductArray];
-                
-        // Sort array to be sure new products are on top
-        [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
-            NSDate *first = [(Product*)a last_inventory_time];
-            NSDate *second = [(Product*)b last_inventory_time];
-            return [second compare:first];
-        }];
-        
         // Reload table with filters
         [self filterSet:_filterSelected];
 

@@ -84,6 +84,15 @@
     
     _myData = [NSMutableArray arrayWithArray:_productsArray];
     
+    // Create and setup the search controller
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.searchBar.delegate = self;
+    
+    self.myTable.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES;
+    [self.searchController.searchBar sizeToFit];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -146,79 +155,32 @@
     }
 }
 
-#pragma mark Content Filtering & UISearchDisplayController Delegate Methods
 
-- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+#pragma mark UISearchController Delegate Methods
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
+{
+    NSString *searchString = searchController.searchBar.text;
+    [self filterContentForSearchText:searchString];
+    [self.myTable reloadData];
+}
+
+- (void)filterContentForSearchText:(NSString*)searchText
 {
     // Remove all objects from the filtered search array
     [_mySearchData removeAllObjects];
-    NSArray *tempArray;
     
     // Filter the array using the search text
     if (![searchText isEqualToString:@""])
     {
         NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
-        tempArray = [_myData filteredArrayUsingPredicate:resultPredicate];
+        _mySearchData = [NSMutableArray arrayWithArray:[_myData filteredArrayUsingPredicate:resultPredicate]];
     }
     else
     {
-        tempArray = [NSArray arrayWithArray:_myData];
+        _mySearchData = [NSMutableArray arrayWithArray:_myData];
     }
-    
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
-    
-    CGRect searchResultsTableViewFrame = self.searchDisplayController.searchResultsTableView.frame;
-    searchResultsTableViewFrame.origin.x = 0;
-    searchResultsTableViewFrame.origin.y = 130;
-    searchResultsTableViewFrame.size.width = 500;
-    searchResultsTableViewFrame.size.height = 370;
-    self.searchDisplayController.searchResultsTableView.frame = searchResultsTableViewFrame;
-        
 }
-
--(void) searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
-{
-    
-    // Remove all objects from the filtered search array
-    NSArray *tempArray;
-    
-    if (_mySearchData == nil)
-    {
-        tempArray = [NSMutableArray arrayWithArray:_myData];
-    }
-    else
-    {
-        tempArray = [NSMutableArray arrayWithArray:_mySearchData];
-    }
-    
-    [_mySearchData removeAllObjects];
-    
-    // Remove all objects from the filtered search array
-    
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
-    
-}
-
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    // Tells the table data source to reload when text changes
-    [self filterContentForSearchText:searchString scope:
-     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
-}
-
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
-{
-    // Tells the table data source to reload when scope bar selection changes
-    [self filterContentForSearchText:self.searchDisplayController.searchBar.text scope:
-     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
-}
-
 
 
 #pragma mark - Table view data source
@@ -233,7 +195,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.searchController.active)
+    {
         return _mySearchData.count;
         
     } else {
@@ -252,7 +215,8 @@
 
     Product *myProduct = [[Product alloc] init];
     
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.searchController.active)
+    {
         myProduct = _mySearchData[indexPath.row];;
     } else {
         myProduct = _myData[indexPath.row];
@@ -272,7 +236,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selected cell to client
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.searchController.active)
+    {
         _selectedProduct = _mySearchData[indexPath.row];
     } else {
         _selectedProduct = _myData[indexPath.row];
@@ -284,7 +249,8 @@
 -(void) tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selected cell to client
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.searchController.active)
+    {
         _selectedProduct = _mySearchData[indexPath.row];
     } else {
         _selectedProduct = _myData[indexPath.row];
@@ -303,6 +269,5 @@
         }
     }
 }
-
 
 @end

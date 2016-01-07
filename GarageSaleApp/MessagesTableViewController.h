@@ -15,10 +15,10 @@
 
 @class MessagesDetailViewController;
 
-@interface MessagesTableViewController : UITableViewController <UIActionSheetDelegate, MessagesSinceViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate, FacebookMethodsDelegate, ProductModelDelegate, ClientModelDelegate>
+@interface MessagesTableViewController : UITableViewController <UIActionSheetDelegate, MessagesSinceViewControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, FacebookMethodsDelegate, ProductModelDelegate, ClientModelDelegate>
 
 @property (strong, nonatomic) MessagesDetailViewController *detailViewController;
-@property IBOutlet UISearchBar *clientSearchBar;
+@property (strong, nonatomic) UISearchController *searchController;
 
 @end
 

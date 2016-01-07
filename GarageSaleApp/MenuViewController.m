@@ -242,7 +242,7 @@
     
     if (needRequest)
     {
-        [loginManager logInWithReadPermissions:readPermissionsRequest handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
+        [loginManager logInWithReadPermissions:readPermissionsRequest fromViewController:self handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
          {
              //TODO: process error or result.
              NSLog(@"%@",error);
@@ -262,7 +262,7 @@
     
     if (needRequest)
     {
-        [loginManager logInWithPublishPermissions:writePermissionsRequest handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
+        [loginManager logInWithPublishPermissions:writePermissionsRequest fromViewController:self handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
          {
              //TODO: process error or result.
              NSLog(@"%@",error);

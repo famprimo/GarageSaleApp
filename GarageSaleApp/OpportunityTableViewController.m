@@ -79,24 +79,12 @@
     // Initialize objects methods
     _opportunityMethods = [[OpportunityModel alloc] init];
     _opportunityMethods.delegate = self;
-
-    // Get the opportunities data
-    _myData = [_opportunityMethods getOpportunitiesArray];
     
-    // Sort array to be sure new opportunities are on top
-    [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
-        NSDate *first = [(Opportunity*)a created_time];
-        NSDate *second = [(Opportunity*)b created_time];
-        return [second compare:first];
-    }];
-
-    _filterSelected = @"Activas";  // Default filter
-    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"status like[c] 'O' OR status like[c] 'S'"];
-    NSArray *tempArray = [_myData filteredArrayUsingPredicate:resultPredicate];
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
-   
+    // Set filter and load data
+    [self filterSet:@"Activas"];
+    
     // Assign detail view with first item - From SearchData
-    _selectedOpportunity = [_mySearchData firstObject];
+    _selectedOpportunity = [_myData firstObject];
     [self.detailViewController setDetailItem:_selectedOpportunity];
     
     // Uncomment the following line to preserve selection between presentations.
@@ -107,6 +95,19 @@
     self.refreshControl.backgroundColor = [UIColor whiteColor];
     self.refreshControl.tintColor = [UIColor grayColor];
     [self.refreshControl addTarget:self action:@selector(refreshTableGesture:) forControlEvents:UIControlEventValueChanged];
+    
+    // Create and setup the search controller
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.searchBar.delegate = self;
+    
+    self.tableView.estimatedRowHeight = 80;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES;
+    [self.searchController.searchBar sizeToFit];
 }
 
 - (void)menuButtonClicked:(id)sender
@@ -150,10 +151,11 @@
     _filterSelected = selectedFilter;
     
     // Remove all objects from the filtered search array
-    [_mySearchData removeAllObjects];
+    [_myData removeAllObjects];
     
-    NSArray *tempArray;
-    
+    // Get the opportunities data
+    _myData = [_opportunityMethods getOpportunitiesArray];
+
     NSString *filterPredicate = @"";
     
     if ([_filterSelected isEqualToString:@"Activas"])
@@ -173,15 +175,16 @@
     if (![_filterSelected isEqualToString:@"Todas"])
     {
         NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:filterPredicate];
-        tempArray = [_myData filteredArrayUsingPredicate:resultPredicate];
+        _myData = [NSMutableArray arrayWithArray:[_myData filteredArrayUsingPredicate:resultPredicate]];
     }
-    else
-    {
-        tempArray = [NSArray arrayWithArray:_myData];
-    }
-    
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
-    
+
+    // Sort array to be sure new opportunities are on top
+    [_myData sortUsingComparator:^NSComparisonResult(id a, id b) {
+        NSDate *first = [(Opportunity*)a created_time];
+        NSDate *second = [(Opportunity*)b created_time];
+        return [second compare:first];
+    }];
+
     [self.tableView reloadData];
 }
 
@@ -219,63 +222,44 @@
 }
 
 
-#pragma mark Content Filtering & UISearchDisplayController Delegate Methods
+#pragma mark UISearchController Delegate Methods
 
-- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
-    ProductModel *productMethods = [[ProductModel alloc] init];
-    NSArray *tempArray;
+    NSString *searchString = searchController.searchBar.text;
+    [self filterContentForSearchText:searchString];
+    [self.tableView reloadData];
+}
+
+- (void)filterContentForSearchText:(NSString*)searchText
+{
+    // Remove all objects from the filtered search array
+    [_mySearchData removeAllObjects];
     
-    if ([_filterSelected isEqualToString:@"Todas"])
+    // Filter the array using the search text
+    if (![searchText isEqualToString:@""])
     {
-        tempArray = [NSArray arrayWithArray:_myData];
+        ProductModel *productMethods = [[ProductModel alloc] init];
+
+        // Search for opportunites that matches searchText
+        Opportunity *tempOpportunity = [[Opportunity alloc] init];
+        Product *tempProduct = [[Product alloc] init];
+        
+        for (int i=0; i<_myData.count; i=i+1)
+        {
+            tempOpportunity = [_myData objectAtIndex:i];
+            tempProduct = [productMethods getProductFromProductId:tempOpportunity.product_id];
+            
+            if ([[tempProduct.name uppercaseString] containsString:[searchText uppercaseString]])
+            {
+                [_mySearchData addObject:tempOpportunity];
+            }
+        }
     }
     else
     {
-        tempArray = [NSArray arrayWithArray:_mySearchData];
+        _mySearchData = [NSMutableArray arrayWithArray:_myData];
     }
-
-    // Remove all objects from the filtered search array
-    [_mySearchData removeAllObjects];
-
-    // Search for opportunites that matches searchText
-    Opportunity *tempOpportunity = [[Opportunity alloc] init];
-    Product *tempProduct = [[Product alloc] init];
-    
-    for (int i=0; i<tempArray.count; i=i+1)
-    {
-        tempOpportunity = [tempArray objectAtIndex:i];
-        tempProduct = [productMethods getProductFromProductId:tempOpportunity.product_id];
-        
-        if ([[tempProduct.name uppercaseString] containsString:[searchText uppercaseString]])
-        {
-            [_mySearchData addObject:tempOpportunity];
-        }
-     }
-}
-
--(void) searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
-{
-}
-
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    // Tells the table data source to reload when text changes
-    [self filterContentForSearchText:searchString scope:
-     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
-}
-
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
-{
-    // Tells the table data source to reload when scope bar selection changes
-    [self filterContentForSearchText:self.searchDisplayController.searchBar.text scope:
-     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
 }
 
 
@@ -290,7 +274,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    if (tableView == self.searchDisplayController.searchResultsTableView || ![_filterSelected isEqualToString:@"Todas"])
+    if (self.searchController.active)
     {
         return _mySearchData.count;
     } else
@@ -308,7 +292,7 @@
 {
     UITableViewCell *myCell;
     Opportunity *myOpportunity = [[Opportunity alloc] init];
-    if (tableView == self.searchDisplayController.searchResultsTableView || ![_filterSelected isEqualToString:@"Todas"])
+    if (self.searchController.active)
     {
         myCell = [self.tableView dequeueReusableCellWithIdentifier:@"CellOpp"];
         myOpportunity = _mySearchData[indexPath.row];;
@@ -409,7 +393,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selected item to detail view
-    if (tableView == self.searchDisplayController.searchResultsTableView || ![_filterSelected isEqualToString:@"Todas"])
+    if (self.searchController.active)
     {
         _selectedOpportunity = _mySearchData[indexPath.row];;
     } else

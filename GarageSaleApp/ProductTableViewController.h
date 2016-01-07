@@ -15,9 +15,10 @@
 
 @class ProductDetailViewController;
 
-@interface ProductTableViewController : UITableViewController <UISearchBarDelegate, UISearchDisplayDelegate, ProductModelDelegate, ProductDetailViewControllerDelegate, FacebookMethodsDelegate, ProductsFilterTableViewControllerDelegate>
+@interface ProductTableViewController : UITableViewController <UISearchBarDelegate, UISearchResultsUpdating, ProductModelDelegate, ProductDetailViewControllerDelegate, FacebookMethodsDelegate, ProductsFilterTableViewControllerDelegate>
 
 @property (strong, nonatomic) ProductDetailViewController *detailViewController;
-@property IBOutlet UISearchBar *productSearchBar;
+@property (strong, nonatomic) UISearchController *searchController;
 
 @end
+

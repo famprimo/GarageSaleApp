@@ -14,9 +14,9 @@
 
 @class ClientDetailViewController;
 
-@interface ClientTableViewController : UITableViewController <UIActionSheetDelegate, EditClientViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate, ClientModelDelegate, ClientDetailViewControllerDelegate>
+@interface ClientTableViewController : UITableViewController <UIActionSheetDelegate, EditClientViewControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, ClientModelDelegate, ClientDetailViewControllerDelegate>
 
 @property (strong, nonatomic) ClientDetailViewController *detailViewController;
-@property IBOutlet UISearchBar *clientSearchBar;
+@property (strong, nonatomic) UISearchController *searchController;
 
 @end

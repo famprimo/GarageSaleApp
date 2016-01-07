@@ -13,9 +13,10 @@
 
 @class OpportunityDetailViewController;
 
-@interface OpportunityTableViewController : UITableViewController <UIActionSheetDelegate, OpportunitiesFilterViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate, OpportunityModelDelegate, OpportunityDetailViewControllerDelegate>
+@interface OpportunityTableViewController : UITableViewController <UIActionSheetDelegate, OpportunitiesFilterViewControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, OpportunityModelDelegate, OpportunityDetailViewControllerDelegate>
 
 @property (strong, nonatomic) OpportunityDetailViewController *detailViewController;
-@property (weak, nonatomic) IBOutlet UISearchBar *opportunitySearchBar;
+@property (strong, nonatomic) UISearchController *searchController;
 
 @end
+

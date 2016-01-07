@@ -53,9 +53,6 @@
 
 @implementation MessagesTableViewController
 
-@synthesize clientSearchBar;
-
-
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -121,6 +118,18 @@
     self.refreshControl.tintColor = [UIColor grayColor];
     [self.refreshControl addTarget:self action:@selector(refreshTableGesture:) forControlEvents:UIControlEventValueChanged];
     
+    // Create and setup the search controller
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.searchBar.delegate = self;
+    
+    self.tableView.estimatedRowHeight = 81;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES;
+    [self.searchController.searchBar sizeToFit];
 }
 
 - (void)defineSetupButtonImage;
@@ -221,69 +230,30 @@
 }
 
 
-#pragma mark Content Filtering & UISearchDisplayController Delegate Methods
+#pragma mark UISearchController Delegate Methods
 
-- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
+{
+    NSString *searchString = searchController.searchBar.text;
+    [self filterContentForSearchText:searchString];
+    [self.tableView reloadData];
+}
+
+- (void)filterContentForSearchText:(NSString*)searchText
 {
     // Remove all objects from the filtered search array
     [_mySearchData removeAllObjects];
-    NSArray *tempArray;
     
     // Filter the array using the search text
     if (![searchText isEqualToString:@""])
     {
         NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"(name contains[c] %@) OR (last_name contains[c] %@)", searchText, searchText];
-        tempArray = [_myDataClients filteredArrayUsingPredicate:resultPredicate];
+        _mySearchData = [NSMutableArray arrayWithArray:[_myDataClients filteredArrayUsingPredicate:resultPredicate]];
     }
     else
     {
-        tempArray = [NSArray arrayWithArray:_myDataClients];
+        _mySearchData = [NSMutableArray arrayWithArray:_myDataClients];
     }
-    
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
-    
-}
-
--(void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
-{
-    
-    // Remove all objects from the filtered search array
-    NSArray *tempArray;
-    
-    if (_mySearchData == nil)
-    {
-        tempArray = [NSMutableArray arrayWithArray:_myDataClients];
-    }
-    else
-    {
-        tempArray = [NSMutableArray arrayWithArray:_mySearchData];
-    }
-    
-    [_mySearchData removeAllObjects];
-    
-    // Remove all objects from the filtered search array
-    
-    _mySearchData = [NSMutableArray arrayWithArray:tempArray];
-}
-
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    // Tells the table data source to reload when text changes
-    [self filterContentForSearchText:searchString scope:
-     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
-}
-
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
-{
-    // Tells the table data source to reload when scope bar selection changes
-    [self filterContentForSearchText:self.searchDisplayController.searchBar.text scope:
-     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
 }
 
 
@@ -303,9 +273,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.searchController.active) {
         return _mySearchData.count;
-        
     } else {
         return _myDataClients.count;
     }
@@ -323,7 +292,7 @@
     Client *myClient = [[Client alloc] init];
     
     // Get the client to be shown
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.searchController.active) {
         myCell = [self.tableView dequeueReusableCellWithIdentifier:@"Cell"];
         myClient = _mySearchData[indexPath.row];;
     } else {
@@ -485,7 +454,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Set selected listing to var
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.searchController.active) {
         _selectedClientBox = _mySearchData[indexPath.row];
     } else {
         _selectedClientBox = _myDataClients[indexPath.row];
